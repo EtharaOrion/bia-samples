@@ -1,0 +1,20 @@
+{
+    "task": {
+        "path": "track3-pipeline/task"
+    },
+    "trial_name": "task__bKmpfnk",
+    "trials_dir": "track3-pipeline/runs/agentic_iter02",
+    "agent_setup_timeout_multiplier": 5.0,
+    "agent": {
+        "name": "claude-code",
+        "model_name": "claude-opus-5",
+        "env": {
+            "ANTHROPIC_BASE_URL": "http://172.17.0.1:8765",
+            "ANTHROPIC_API_KEY": "${ANTHROPIC_API_KEY}"
+        }
+    },
+    "extra_instruction_paths": [
+        "track3-pipeline/runs/history/iter02_history.md"
+    ],
+    "job_id": "9cc28652-a21d-44c6-b8c7-c4e94e6c74d7"
+}
