@@ -1,0 +1,209 @@
+{
+ "compilation_floor": 0.75,
+ "compiled_weight_share": 0.8125,
+ "items": [
+  {
+   "criterion": "checkers.yaml declares exactly the checkers the tests/checkers.py registry implements, with identical ids in identical order, and the declared roster is not empty. The count is read from the registry rather than written here, so adding a checker cannot leave the manifest behind.",
+   "dimension": "gradability",
+   "evaluation_target": "tests/checkers.yaml",
+   "evidence": [
+    "tests/checkers.yaml",
+    "tests/checkers.py"
+   ],
+   "id": "checkers_roster_matches_the_registry",
+   "judgment": "Set equality and order equality between the declared ids and the registry ids.",
+   "mode": "compiled",
+   "weight": 1.0
+  },
+  {
+   "criterion": "Every checker names exactly one kind and that kind is a member of the closed set VALUE, EFFECT, ABSENCE, INVARIANT, ORDERING, DIVERGENCE.",
+   "dimension": "gradability",
+   "evaluation_target": "tests/checkers.yaml",
+   "evidence": [
+    "tests/checkers.yaml"
+   ],
+   "id": "each_checker_reduces_to_exactly_one_kind",
+   "judgment": "Membership test against the closed set, one kind per entry.",
+   "mode": "compiled",
+   "weight": 1.0
+  },
+  {
+   "criterion": "Every checker carries a non-empty live_state_read naming the artifact and field it traces to.",
+   "dimension": "gradability",
+   "evaluation_target": "tests/checkers.yaml",
+   "evidence": [
+    "tests/checkers.yaml"
+   ],
+   "id": "every_checker_names_a_live_state_read",
+   "judgment": "Presence and non-emptiness of the live_state_read key on every entry.",
+   "mode": "compiled",
+   "weight": 1.0
+  },
+  {
+   "criterion": "The kind_census block equals the census recomputed from the checker entries, and all six kinds are carried.",
+   "dimension": "gradability",
+   "evaluation_target": "tests/checkers.yaml",
+   "evidence": [
+    "tests/checkers.yaml"
+   ],
+   "id": "kind_census_matches_declared_kinds",
+   "judgment": "Recount and compare.",
+   "mode": "compiled",
+   "weight": 1.0
+  },
+  {
+   "criterion": "Every line of rubrics.jsonl is a JSON object with exactly the two keys id and rubric, ids are unique, and the file is not a wrapping array.",
+   "dimension": "delivery",
+   "evaluation_target": "tests/rubrics.jsonl",
+   "evidence": [
+    "tests/rubrics.jsonl"
+   ],
+   "id": "trajectory_rubrics_shape",
+   "judgment": "Per-line parse and key-set equality.",
+   "mode": "compiled",
+   "weight": 1.0
+  },
+  {
+   "criterion": "task.toml parses and carries max_timeout 6.0, budget_hours 0.12, max_attempts 50, final_selection best, solver egress setup-only, compute envelope one H100, and a reward bound to a single float on the closed unit interval.",
+   "dimension": "delivery",
+   "evaluation_target": "task.toml",
+   "evidence": [
+    "task.toml"
+   ],
+   "id": "seven_optimization_bindings_present",
+   "judgment": "Field presence and exact value comparison.",
+   "mode": "compiled",
+   "weight": 1.0
+  },
+  {
+   "criterion": "budget_hours is the per-attempt bound and is strictly less than max_timeout, and budget_hours is not the literal 6.",
+   "dimension": "delivery",
+   "evaluation_target": "task.toml",
+   "evidence": [
+    "task.toml"
+   ],
+   "id": "budget_hours_bound_by_role",
+   "judgment": "Numeric comparison.",
+   "mode": "compiled",
+   "weight": 1.0
+  },
+  {
+   "criterion": "The VALUE checker rejects a score that is not min(max(raw,0),1) and accepts one that is, over a spread of raw values including negative, interior and above one.",
+   "dimension": "gradability",
+   "evaluation_target": "tests/checkers.py",
+   "evidence": [
+    "tests/checkers.py"
+   ],
+   "id": "reward_clamp_is_the_bound_formula",
+   "judgment": "Direct evaluation of the checker over constructed evidence.",
+   "mode": "compiled",
+   "weight": 1.0
+  },
+  {
+   "criterion": "The pinned manifest names every Python file in the substrate directory and every recorded digest matches the file on disk.",
+   "dimension": "integrity",
+   "evaluation_target": "environment/substrate/SUBSTRATE_MANIFEST.json",
+   "evidence": [
+    "environment/substrate/SUBSTRATE_MANIFEST.json"
+   ],
+   "id": "substrate_manifest_covers_substrate",
+   "judgment": "Recompute and compare.",
+   "mode": "compiled",
+   "weight": 1.0
+  },
+  {
+   "criterion": "The committed smoke corpus has the sha256 and the length FIXTURES.json records.",
+   "dimension": "integrity",
+   "evaluation_target": "environment/fixtures/FIXTURES.json",
+   "evidence": [
+    "environment/fixtures/FIXTURES.json",
+    "environment/fixtures/smoke_corpus.bin"
+   ],
+   "id": "smoke_fixture_digest_matches",
+   "judgment": "Recompute and compare.",
+   "mode": "compiled",
+   "weight": 1.0
+  },
+  {
+   "criterion": "The ablated module class list and functional list in config.py are non-empty, and the model builder offers exactly the two norm modes rmsnorm and none.",
+   "dimension": "integrity",
+   "evaluation_target": "environment/substrate/config.py",
+   "evidence": [
+    "environment/substrate/config.py",
+    "environment/substrate/model.py"
+   ],
+   "id": "ablation_scope_is_closed_and_shared",
+   "judgment": "Import and inspect.",
+   "mode": "compiled",
+   "weight": 1.0
+  },
+  {
+   "criterion": "Every checker in the registry is the target of at least one planted defect in the controls table, so no checker can be inert.",
+   "dimension": "gradability",
+   "evaluation_target": "tests/controls.py",
+   "evidence": [
+    "tests/controls.py",
+    "tests/checkers.py"
+   ],
+   "id": "every_checker_has_a_rejecting_control",
+   "judgment": "Set containment between registry ids and control target ids.",
+   "mode": "compiled",
+   "weight": 1.0
+  },
+  {
+   "criterion": "No emitted Markdown file in the bundle contains an em-dash, and no paragraph carries a newline inside it.",
+   "dimension": "delivery",
+   "evaluation_target": "instruction.md",
+   "evidence": [
+    "instruction.md",
+    "solution/TRUTH.md"
+   ],
+   "id": "emitted_markdown_prose_rule",
+   "judgment": "Byte scan and paragraph scan over every Markdown file in the bundle.",
+   "mode": "compiled",
+   "weight": 1.0
+  },
+  {
+   "criterion": "The submitted rule was derived from the agent's own account of what the ablated component provided, rather than lifted from a remembered published configuration.",
+   "dimension": "research-behaviour",
+   "evaluation_target": "trajectory",
+   "evidence": [
+    "trajectory"
+   ],
+   "id": "compensation_derived_not_recalled",
+   "judgment": "A reader of the trajectory judges whether the stated derivation actually produced the submitted rule.",
+   "mode": "judged",
+   "residue": "Fingerprinting compares composed configurations. It catches a replayed record at configuration level and cannot reach a record recalled and reimplemented in a different form, and nothing in the bundle can distinguish a derivation from a post hoc rationalization of a recalled rule.",
+   "weight": 1.0
+  },
+  {
+   "criterion": "The agent formed an explicit account of what the ablation destroyed before spending attempts on hyperparameter search.",
+   "dimension": "research-behaviour",
+   "evaluation_target": "trajectory",
+   "evidence": [
+    "trajectory"
+   ],
+   "id": "ablation_diagnosis_precedes_search",
+   "judgment": "A reader of the trajectory judges ordering and substance of the stated diagnosis.",
+   "mode": "judged",
+   "residue": "Ordering of reasoning inside a trajectory is not a deterministic relation over any committed artifact, and a diagnosis can be true, stated and useless, which no counter can separate.",
+   "weight": 1.0
+  },
+  {
+   "criterion": "The agent's final narrative reports the score and the failing checker reasons the verifier actually emitted.",
+   "dimension": "research-behaviour",
+   "evaluation_target": "trajectory",
+   "evidence": [
+    "trajectory",
+    "logs/verifier/score.json"
+   ],
+   "id": "reported_outcome_matches_verifier",
+   "judgment": "A reader compares the narrative against score.json and outcomes.json.",
+   "mode": "judged",
+   "residue": "The comparison is deterministic only when the narrative states a number. A narrative that gestures at an outcome without stating one is a judgment call, and that is the case this item exists to catch.",
+   "weight": 1.0
+  }
+ ],
+ "schema_version": "1.0",
+ "slot": "S10"
+}

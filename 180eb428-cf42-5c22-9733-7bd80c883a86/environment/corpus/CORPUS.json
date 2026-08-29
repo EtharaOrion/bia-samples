@@ -1,0 +1,21 @@
+{
+  "_comment": "FROZEN FIXTURE. Provenance for the training corpus of bia slot S07. harness.py re-checks the sha256 below on every run and refuses to train if it moved, so a swapped corpus fails loudly rather than quietly changing the task.",
+  "file": "moby_dick.txt",
+  "sha256": "1cbd5325e9a4adda891a19a44d5ba289941832ad993e3817ace08c93cf15263e",
+  "bytes": 1220626,
+  "distinct_byte_values": 81,
+  "encoding": "7 bit ASCII, every byte is strictly below 128",
+  "title": "Moby Dick; or, The Whale",
+  "author": "Herman Melville",
+  "first_published": 1851,
+  "source": "Project Gutenberg ebook 2701",
+  "source_url": "https://www.gutenberg.org/files/2701/2701-0.txt",
+  "license": "public domain in the United States; the author died in 1891 and the work predates 1929",
+  "preparation": "the Project Gutenberg header and footer were stripped at the START and END OF THE PROJECT GUTENBERG EBOOK markers, CRLF was normalized to LF, the text was folded to 7 bit ASCII, surrounding whitespace was trimmed, and a single trailing newline was added. The ASCII fold maps the em dash to a double hyphen, the en dash to a hyphen, curly quotes to straight quotes and the ellipsis to three periods, then applies NFKD normalization and drops any remaining byte at or above 128. It is recorded here because it is a real transformation of the source and not a no-op: it removes 1728 em dash characters, and it exists so the bundle carries no em dash byte anywhere. Project Gutenberg publishes an ASCII edition of this text for the same reason, so the fold reproduces a rendering the source itself offers rather than inventing one. No word of the text was changed.",
+  "real_not_synthetic": true,
+  "why_real": "the optimization lane requires provided train and validation datasets to be real rather than synthetic stand ins. This is real English prose.",
+  "tokenizer": "none. The model is byte level with a vocabulary of 256, so the raw bytes are the tokens and no tokenizer artifact has to be pinned or downloaded.",
+  "split": "the trailing 10 percent of the byte stream is the validation tail and is never sampled during training",
+  "epochs_at_the_full_operating_point": 2.98,
+  "epochs_note": "400 steps at 8192 tokens per step is 3276800 training tokens against a training split of about 1098563 bytes, so the full operating point makes roughly three passes over the corpus. Validation is measured on the held out tail, which training never sees."
+}

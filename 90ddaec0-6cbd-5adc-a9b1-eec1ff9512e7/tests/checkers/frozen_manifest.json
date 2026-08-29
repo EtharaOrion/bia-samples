@@ -1,0 +1,15 @@
+{
+  "algorithm": "sha256",
+  "banner": "GENERATED SECTION. DO NOT HAND-EDIT.",
+  "files": {
+    "environment/reference_impl.py": "c9c36b76db5e9f6d15428602356561e6fb8010c4bbc0c2cafcb77d56c8d7f7b2",
+    "environment/spec.json": "deb99bc15c265d6c73a913dc6844940065a9ad1d9141ca2e425256b3ed9283df",
+    "tests/checkers/kinds.py": "c71e3d54c21ed801498f07f077527d451f3bafcae64e52d6dcc740a7d01da1c4",
+    "tests/checkers/opcore.py": "c9c36b76db5e9f6d15428602356561e6fb8010c4bbc0c2cafcb77d56c8d7f7b2",
+    "tests/checkers/spec.json": "deb99bc15c265d6c73a913dc6844940065a9ad1d9141ca2e425256b3ed9283df",
+    "tests/checkers/timing.py": "903652a2215c4583c0d14c3e33d0855be8ac85bfbf25ec12ff387b08484b2ae8",
+    "tests/checkers/worker.py": "2214973fd7cdd8df4645268e90d6f73c7ca1b4e40d6eb03d211b1ccfffdba746",
+    "tests/grade.py": "649ca2f144c84fa2abf36eefa597eeae9d560e40501f0bf7b20863f688571646"
+  },
+  "source": "solution/grounding.yaml"
+}

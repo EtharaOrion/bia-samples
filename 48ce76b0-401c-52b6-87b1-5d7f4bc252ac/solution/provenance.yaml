@@ -1,0 +1,165 @@
+schema: bia.provenance/v1
+slot: S03-data-order-optimization
+generated_by: authored beside solution/grounding.yaml, excluded from the canonical content hash by construction
+
+# This file is the only carrier of the canonical content hash and of the derived uuid, and it
+# is excluded from the hash domain. That exclusion is what makes the binding acyclic: no byte
+# inside the hash preimage depends on the hash value.
+
+binding_block:
+  canonical_content_hash: 2db393779731e29533bdfab1e6b4e1c3df27d2c6c812cef95b353ecc46bad9e9
+  uuid: ca8d36b3-cd9a-5fd5-ae26-955705c14af1
+  namespace: c53e8f3b-526f-52c0-a04e-89e2269b237d
+  files_hashed: 23
+  binding_envelope: absent
+  pinned_image_digest: sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
+
+hash_recipe:
+  algorithm: sha256
+  ordering: relative POSIX paths sorted ascending as byte strings
+  per_file_preimage: utf-8 path bytes, then one 0x00 byte, then the file length as 8 bytes big-endian, then the file bytes
+  excluded_path_prefixes:
+    - trajectories/
+  excluded_paths_exact:
+    - solution/provenance.yaml
+  excluded_directory_names:
+    - __pycache__
+  uuid_derivation: uuid5(namespace, canonical_content_hash_hex_lowercase)
+  independent_recompute: |
+    python3 - <<'PY'
+    import hashlib, os, uuid
+    ROOT = "."
+    NS = uuid.UUID("c53e8f3b-526f-52c0-a04e-89e2269b237d")
+    rels = []
+    for dp, dns, fns in os.walk(ROOT):
+        dns[:] = [d for d in dns if d != "__pycache__"]
+        for fn in fns:
+            rel = os.path.relpath(os.path.join(dp, fn), ROOT).replace(os.sep, "/")
+            if rel.startswith("trajectories/") or rel == "solution/provenance.yaml":
+                continue
+            rels.append(rel)
+    h = hashlib.sha256()
+    for rel in sorted(rels):
+        data = open(os.path.join(ROOT, rel), "rb").read()
+        h.update(rel.encode()); h.update(b"\x00")
+        h.update(len(data).to_bytes(8, "big")); h.update(data)
+    print(h.hexdigest()); print(uuid.uuid5(NS, h.hexdigest()))
+    PY
+
+upstream_provenance:
+  origin: original
+  provenance_date: 2026-08-21
+  source_kind: synthetic
+  generator_identity: environment/runner/corpus.py generate_corpus
+  generator_version: bundled with this bundle at the recorded canonical content hash
+  generation_inputs:
+    corpus_seed: 20260821
+    profile_graded_substrate_digest: see environment/corpus_manifest.json profiles.graded.substrate_digest
+    profile_smoke_substrate_digest: see environment/corpus_manifest.json profiles.smoke.substrate_digest
+  upstream_benchmark_identity: none
+  upstream_license: none
+  modifications: none
+  asserts_no_upstream_lift: true
+  ancestry_attestation_digest: absent
+  ancestry_attestation_signer: absent
+  event_attestation_digest: absent
+  event_attestation_signer: absent
+
+reference_measurement:
+  smoke_path:
+    status: executed
+    selector: BIA_SMOKE=1
+    device: cpu
+    cuda_context_created: false
+    wall_clock_seconds: 24
+    wall_clock_note: measured on the authoring host while nine peer authoring lanes were saturating its CPU, with the smoke thread pools bounded to 4; the bound the smoke contract must hold is 90 seconds
+    runs_executed: 9
+    reward: 1.0
+    reason: graded
+    t_statistic: 4.853342
+    mean_delta: 0.146286
+    note: the smoke reward proves the path executes and is not a difficulty measurement, because the smoke profile is not the graded operating point
+  graded_path:
+    status: executed
+    selector: none, the default path of solution/solve.sh
+    device: one H100
+    exit_code: 0
+    wall_clock_seconds: [124, 152]
+    wall_clock_bound_seconds: 432
+    wall_clock_note: two full graded attempts were timed end to end with two sibling repair lanes contending for the same accelerator, so an idle card is an upper bound on these figures and not a lower one
+    runs_executed: 9
+    reward: 0.36194
+    reason: graded
+    baseline_ensemble_mean: 4.555543
+    submitted_mean: 4.537447
+    mean_delta: 0.018097
+    delta_sd: 0.004287
+    t_statistic: 10.339167
+    t_threshold: 2.0
+    n_observations: 6
+    compiled_tests_passed: 9 of 9
+    anchors_moved: none, target_delta_nats stays 0.05 and significance_t stays 2.0
+    reproducibility: bit identical, the same nine final validation losses were observed in an independent earlier execution of the same policy in a different process under a different working directory
+
+optimization_bindings:
+  max_timeout_hours: 6.0
+  budget_hours: 0.12
+  budget_envelope: one H100, single accelerator, no multi-GPU scaling
+  budget_margin: 10 percent
+  max_attempts: 50
+  final_selection: best
+  solver_egress: setup-only
+  compute_envelope: one H100
+  reward_kind: single_float
+  reward_range: [0.0, 1.0]
+  reward_clip: min(max(raw,0),1)
+
+cohort:
+  names: [gpt5.6-sol, anthropic/claude-opus-5, muse-spark-1.2]
+  validity_end: 2026-11-17
+  registry_digest: absent
+
+screening_roots:
+  exclusion_list_root: absent
+  freeze_date_table_root: absent
+  near_duplicate_index_root: absent
+  source_attestation_trust_root: absent
+
+negative_controls_executed_at_smoke_scale:
+  - {control: known_wrong_identity_order, score: 0.0, rejected: true}
+  - {control: known_wrong_unlucky_shuffle, score: 0.0, rejected: true}
+  - {control: known_wrong_non_permutation, score: 0.0, rejected: true}
+  - {control: known_wrong_nondeterministic, score: 0.0, rejected: true}
+  - {control: known_wrong_reshuffle, score: 1.0, rejected: false}
+
+negative_controls_executed_at_graded_scale:
+  - {control: known_wrong_reshuffle_draw_0, mean_delta: 0.003097, t: 1.074, rejected: true}
+  - {control: known_wrong_reshuffle_draw_1, mean_delta: -0.003891, t: -2.575, rejected: true}
+  - {control: known_wrong_reshuffle_draw_2, mean_delta: -0.003759, t: -1.247, rejected: true}
+  - {control: known_wrong_reshuffle_draw_3, mean_delta: 0.003380, t: 2.966, rejected: false}
+  - {control: known_wrong_reshuffle_draw_4, mean_delta: -0.000481, t: -0.344, rejected: true}
+  - {control: known_wrong_reshuffle_draw_5, mean_delta: 0.001681, t: 0.487, rejected: true}
+  - {control: known_wrong_reshuffle_draw_6, mean_delta: 0.000345, t: 0.160, rejected: true}
+  - {control: known_wrong_reshuffle_draw_7, mean_delta: -0.005193, t: -1.680, rejected: true}
+  - {control: known_wrong_entropy_curriculum, mean_delta: 0.001439, t: 0.341, rejected: true}
+  - {control: known_wrong_reverse_frequency_tilt, mean_delta: -0.001934, t: -2.020, rejected: true}
+  - {control: reference_ordering, mean_delta: 0.018097, t: 10.339167, rejected: false}
+
+coverage_gaps:
+  - id: anchors-uncalibrated
+    cap: HOLD:PILOT_REQUIRED
+  - id: comparator-false-positive-rate-one-in-eight
+    cap: HOLD:PILOT_REQUIRED
+  - id: canary-tripwire-absent
+    cap: HOLD:PILOT_REQUIRED
+  - id: contamination-screening-roots-unpinned
+    cap: HOLD:PILOT_REQUIRED
+  - id: cohort-registry-digest-unpinned
+    cap: HOLD:PILOT_REQUIRED
+  - id: image-digest-unresolved
+    cap: HOLD:PILOT_REQUIRED
+  - id: provenance-schema-local
+    cap: HOLD:PILOT_REQUIRED
+
+terminal_disposition: HOLD:PILOT_REQUIRED
+difficulty_tier: unmeasured

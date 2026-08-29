@@ -1,0 +1,119 @@
+{
+ "checkpoint_reported_lr": 0.003,
+ "checkpoint_step": 400,
+ "checkpoint_val_loss": 2.974555,
+ "core_version": "s08-core-1",
+ "corpus": {
+  "train_sha256": "9cff8de79a1d97d1262934050b7275c81b7729ced0db1f180d92c932c99ab24c",
+  "train_shape": [
+   4096,
+   2048
+  ],
+  "val_sha256": "52cf2cb6b6cdfc506ae4efe3650b9e986958d900458aabb648b7601eb559a77f",
+  "val_shape": [
+   128,
+   2048
+  ]
+ },
+ "eval_every": 50,
+ "fixture_bytes": 9099151,
+ "fixture_sha256": "d6df1d068d1f10c1c0684f036ecd6dc4d1552e19631bee5f10a5c7fa8f3d4ce2",
+ "frozen": {
+  "batch_sequences": 32,
+  "d_ff": 512,
+  "d_model": 128,
+  "fwd_bwd_per_step": 1,
+  "n_head": 4,
+  "n_layer": 3,
+  "seq_len": 256,
+  "vocab_size": 1024
+ },
+ "generator_threads": 8,
+ "generator_version": "s08-fixture-1",
+ "max_steps": 6000,
+ "param_names": [
+  "tok.weight",
+  "pos.weight",
+  "blocks.0.ln1.weight",
+  "blocks.0.ln1.bias",
+  "blocks.0.qkv.weight",
+  "blocks.0.proj.weight",
+  "blocks.0.ln2.weight",
+  "blocks.0.ln2.bias",
+  "blocks.0.fc1.weight",
+  "blocks.0.fc2.weight",
+  "blocks.1.ln1.weight",
+  "blocks.1.ln1.bias",
+  "blocks.1.qkv.weight",
+  "blocks.1.proj.weight",
+  "blocks.1.ln2.weight",
+  "blocks.1.ln2.bias",
+  "blocks.1.fc1.weight",
+  "blocks.1.fc2.weight",
+  "blocks.2.ln1.weight",
+  "blocks.2.ln1.bias",
+  "blocks.2.qkv.weight",
+  "blocks.2.proj.weight",
+  "blocks.2.ln2.weight",
+  "blocks.2.ln2.bias",
+  "blocks.2.fc1.weight",
+  "blocks.2.fc2.weight",
+  "lnf.weight",
+  "lnf.bias"
+ ],
+ "pretrain_curve": [
+  {
+   "step": 50,
+   "train_loss": 6.491289,
+   "val_loss": 6.446263
+  },
+  {
+   "step": 100,
+   "train_loss": 4.741441,
+   "val_loss": 4.738592
+  },
+  {
+   "step": 150,
+   "train_loss": 3.866323,
+   "val_loss": 3.859403
+  },
+  {
+   "step": 200,
+   "train_loss": 3.493851,
+   "val_loss": 3.465568
+  },
+  {
+   "step": 250,
+   "train_loss": 3.254812,
+   "val_loss": 3.261151
+  },
+  {
+   "step": 300,
+   "train_loss": 3.147739,
+   "val_loss": 3.129082
+  },
+  {
+   "step": 350,
+   "train_loss": 3.048173,
+   "val_loss": 3.041336
+  },
+  {
+   "step": 400,
+   "train_loss": 2.956475,
+   "val_loss": 2.974555
+  }
+ ],
+ "probe_batches_max": 16,
+ "profile": "scaled",
+ "seeds": [
+  0,
+  1
+ ],
+ "source_entropy_nats": 1.307162,
+ "target_fraction": 0.5,
+ "target_fraction_of_control": 0.2,
+ "target_loss": 2.140858,
+ "target_rule": "checkpoint_val_loss - target_fraction * (checkpoint_val_loss - source_entropy_nats)",
+ "torch_version": "2.13.0+cu132",
+ "weight_digest": "a83dacd47a3555fd9d5a82fa612e074c91b6b509d9eac1c8d7dc2a3d2afa7648"
+}

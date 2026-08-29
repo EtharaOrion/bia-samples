@@ -1,0 +1,12 @@
+{
+  "_status": "UNBOUND. Every value is null because the scaled operating point has not been measured. Nothing in this bundle substitutes a plausible number for a measured one, because that substitution is what voided the prior attempt at this project. train_baseline.py refuses to run while any value is null.",
+  "_bind_by": "Measure one graded run at the candidate scaled shape on one H100, then fill these in and re-trigger Phase 0.5, because binding them changes seed/contract.yaml.",
+  "vocab_size": null,
+  "num_layers": null,
+  "model_dim": null,
+  "head_dim": null,
+  "seq_len": null,
+  "train_token_budget": null,
+  "baseline_batch_size_tokens": null,
+  "target_loss": null
+}

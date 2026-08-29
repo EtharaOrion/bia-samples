@@ -1,0 +1,138 @@
+{
+  "banner": "GENERATED SECTION. DO NOT HAND-EDIT.",
+  "reference_identity": "oer-09-reference-curation-verified-against-harness-observation",
+  "slot": "OER-09",
+  "source": "solution/grounding.yaml",
+  "steps": [
+    {
+      "action": "read instruction.md and environment/frozen_config.yaml",
+      "establishes": "the frozen axes and the fact that the verifier recomputes the graded loss itself",
+      "step": 1
+    },
+    {
+      "action": "read environment/pool/REGISTER.md, then read the first line of environment/pool/source_register.jsonl",
+      "establishes": "REGISTER.md documents quality_bucket; the register carries quality nested under quality.bucket. The documentation is stale.",
+      "step": 2
+    },
+    {
+      "action": "write a filter chain naming quality.bucket, lang, holdout and dup_group",
+      "establishes": "a chain expressed against the field the register actually carries",
+      "step": 3
+    },
+    {
+      "action": "run environment/curate.py --filters work/filters.json --out work/curated_pool.jsonl --explain",
+      "establishes": "exit status 0 and status: ok, which on its own establish nothing",
+      "step": 4
+    },
+    {
+      "action": "run environment/pool_probe.py and compare the harness-observed digest against the claimed digest",
+      "establishes": "the pool actually moved from 4096 documents to 1959, before any training token is spent",
+      "step": 5
+    },
+    {
+      "action": "run environment/train.py --pool work/curated_pool.jsonl",
+      "establishes": "the frozen budget is fed once over the curated pool",
+      "step": 6
+    },
+    {
+      "action": "let the verifier's evaluation schedule complete through the last scheduled point",
+      "establishes": "the improvement is re-tested at the bound point and at both sustain points",
+      "step": 7
+    }
+  ],
+  "terminal_reward": 1.0,
+  "terminal_state": {
+    "claim": {
+      "curated_digest": "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9",
+      "curated_documents": 1959,
+      "exit_status": 0,
+      "match_count": 2137,
+      "pool_state": "curated",
+      "source_digest": "sha256:e6906c89673963d9bc1dfa408364782e482e9e8ab5cb3d8a9c5e765c0f1bdf4e",
+      "source_documents": 4096,
+      "stages": 4,
+      "status": "ok"
+    },
+    "curation": {
+      "completed_at_seq": 5,
+      "verdict": "applied"
+    },
+    "evaluation": {
+      "bound_point": 600,
+      "computed_on": "held-out-split",
+      "control_loss": 3.42,
+      "graded_loss": 3.05,
+      "last_scheduled_point": 800,
+      "points": [
+        {
+          "loss": 3.05,
+          "point": 600,
+          "smoothed": false,
+          "weights_digest": "w-0600"
+        },
+        {
+          "loss": 3.04,
+          "point": 700,
+          "smoothed": false,
+          "weights_digest": "w-0700"
+        },
+        {
+          "loss": 3.03,
+          "point": 800,
+          "smoothed": false,
+          "weights_digest": "w-0800"
+        }
+      ],
+      "readout_mode": "raw",
+      "reference_loss": 3.05,
+      "source": "harness-recomputed",
+      "sustain_points": [
+        700,
+        800
+      ]
+    },
+    "feed": {
+      "budget_tokens": 3145728,
+      "first_feed_seq": 6,
+      "frozen_budget_tokens": 3145728,
+      "resolved_quality_field": "quality.bucket",
+      "resolved_register_schema": "curation/v4",
+      "stream_digest": "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9",
+      "tokens_fed": 3145728
+    },
+    "pool": {
+      "curated_digest": "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9",
+      "curated_documents": 1959,
+      "observed_at_seq": 4,
+      "source_digest": "sha256:e6906c89673963d9bc1dfa408364782e482e9e8ab5cb3d8a9c5e765c0f1bdf4e",
+      "source_documents": 4096
+    },
+    "register": {
+      "observed_at_seq": 3,
+      "quality_field": "quality.bucket",
+      "schema": "curation/v4"
+    },
+    "run": {
+      "halt_reason": "schedule-complete",
+      "terminated_at_point": 800
+    },
+    "split": {
+      "audited_by": "harness",
+      "audited_documents": 455,
+      "audited_split_digest": "sha-holdout-v2",
+      "audited_split_id": "held-out-v2",
+      "eval_split_digest": "sha-holdout-v2",
+      "eval_split_id": "held-out-v2",
+      "train_eval_overlap": 0
+    },
+    "weights": {
+      "ledger": {
+        "600": "w-0600",
+        "700": "w-0700",
+        "800": "w-0800"
+      },
+      "owner": "harness",
+      "selected_by": "harness"
+    }
+  }
+}

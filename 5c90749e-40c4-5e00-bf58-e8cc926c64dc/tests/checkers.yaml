@@ -1,0 +1,121 @@
+# GENERATED SECTION. DO NOT HAND-EDIT.
+# Source: solution/grounding.yaml via solution/recompute.py
+schema: forge.checkers/v1
+reduction_kinds: [VALUE, EFFECT, ABSENCE, INVARIANT, ORDERING, DIVERGENCE]
+reward_path: /logs/verifier/reward.txt
+score_document_path: /logs/verifier/score.json
+aggregation:
+  mode: required_pass
+  rationale: "tests/grade.py returns the floor the moment any one checker is false, and never blends a partial pass into a partial reward, so required_pass is the mode that describes it and weighted_mean is not. All eleven checkers are marked required because all eleven gate: nine are refused in the gates loop and the remaining two, crossing_sustained and steps_to_target_within_baseline, drive the graded step to a value the reward expression clamps to zero. The magnitude above the floor is the reward expression recorded here, which required_pass does not itself compute."
+checkers:
+  - id: frozen_batch_contract
+    statement: "the batch contract and the evaluation contract held at every logged step of the run rather than at some sampled step"
+    reduction: INVARIANT
+    reached_by: tests/grade.py
+    selector: check_batch_contract
+    zero_reason: frozen-batch-contract-violated
+    required: true
+    weight: 7
+    live_state_read: "the tokens_per_step, sequences_per_forward, sequence_length, forward_calls_this_step, backward_calls_this_step, vocab_size, early_stop and eval_weights_source fields of every record the verifier received on its own channel from the training process it spawned, each measured from the batch tensor actually fed and from counters attached to the model the harness owns rather than asserted by the training loop"
+    compiled_test: "tests/test_output.py::test_frozen_batch_contract"
+  - id: frozen_init_digest
+    statement: "the weights the run started from are exactly the weights the frozen initializer produces for that seed"
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: check_init_digest
+    zero_reason: frozen-init-digest-unproven
+    required: true
+    weight: 7
+    live_state_read: "the parameters the verifier's measurement process reads out of the step zero checkpoint the training process streamed to it, taken after the submission has had its one chance to touch them, digested by that process and compared against the digest it recomputes by instantiating environment/bia_core.py frozen_init at the same seed"
+    compiled_test: "tests/test_output.py::test_frozen_init_digest"
+  - id: frozen_architecture_signature
+    statement: "the module tree and every parameter shape equal the frozen architecture"
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: check_arch_and_corpus
+    zero_reason: frozen-architecture-signature-changed
+    required: true
+    weight: 7
+    live_state_read: "the sorted named parameter shapes the verifier's measurement process reads off every streamed checkpoint, digested by that process and required to equal the single pinned signature in environment/frozen_manifest.json at every evaluation point of every seed"
+    compiled_test: "tests/test_output.py::test_frozen_architecture_signature"
+  - id: frozen_corpus_digest
+    statement: "the run trained and evaluated on the frozen corpus and not on a substitute"
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: check_arch_and_corpus
+    zero_reason: frozen-corpus-digest-changed
+    required: true
+    weight: 7
+    live_state_read: "the digest of the token arrays the verifier's measurement process built for itself in order to evaluate, compared against the pinned digest in environment/frozen_manifest.json and against the digest the training process recorded for the arrays it loaded"
+    compiled_test: "tests/test_output.py::test_frozen_corpus_digest"
+  - id: telemetry_bound_to_submission
+    statement: "every graded record was produced by the exact submission being graded, held across the whole run rather than at its first step"
+    reduction: INVARIANT
+    reached_by: tests/grade.py
+    selector: check_binding
+    zero_reason: telemetry-not-bound-to-submission
+    required: true
+    weight: 7
+    live_state_read: "the sha256 the verifier computes over submission/optimizer.py before it spawns the training process, the sha256 the training process computes immediately before and immediately after executing that module, and the sha256 the verifier computes again after the run, all required to be the same value"
+    compiled_test: "tests/test_output.py::test_telemetry_bound_to_submission"
+  - id: no_submission_writes
+    statement: "no write by submitted code exists in the roots the verifier monitored and none was observed by the guard, so nothing the submission wrote reached the run the score rests on"
+    reduction: ABSENCE
+    reached_by: tests/grade.py
+    selector: check_no_writes
+    zero_reason: no-submission-writes-unproven
+    required: true
+    weight: 7
+    live_state_read: "the verifier's own before-and-after digest map of every file under the roots the training process could reach, taken around that process, and the write guard record populated inside it across import, build_optimizer, build_schedule, every schedule call and every optimizer step call"
+    compiled_test: "tests/test_output.py::test_no_submission_writes"
+  - id: optimizer_step_moves_parameters
+    statement: "calling the submitted step changed live model state in the named way rather than leaving the parameters where it found them"
+    reduction: EFFECT
+    reached_by: tests/grade.py
+    selector: check_param_movement
+    zero_reason: optimizer-step-movement-unproven
+    required: true
+    weight: 7
+    live_state_read: "the absolute change the verifier's measurement process computes between the parameters of consecutive streamed checkpoints, over every parameter of the model rather than over a probe tensor"
+    compiled_test: "tests/test_output.py::test_optimizer_step_moves_parameters"
+  - id: crossing_sustained
+    statement: "the target crossing happens and every later logged evaluation stays at or below the target, so the required sequence is crossing followed only by steps that hold rather than crossing followed by a rise back above target"
+    reduction: ORDERING
+    reached_by: tests/grade.py
+    selector: graded_step
+    zero_reason: crossing-not-sustained
+    required: true
+    weight: 7
+    live_state_read: "the ordered validation loss series the verifier's measurement process computed itself from the streamed parameters of each evaluation point, read per seed in increasing step order"
+    compiled_test: "tests/test_output.py::test_crossing_sustained"
+  - id: report_matches_telemetry
+    statement: "the account the agent reports and the account the verifier measured during its own re-execution agree on every step and value in both directions"
+    reduction: DIVERGENCE
+    reached_by: tests/grade.py
+    selector: check_reconciliation
+    zero_reason: report-telemetry-reconciliation-unproven
+    required: true
+    weight: 7
+    live_state_read: "the parsed step and val_loss pairs of submission/logs/full_seed*.log read by tests/checkers/parser.py, set against the loss series the verifier measured for itself during its own re-execution"
+    compiled_test: "tests/test_output.py::test_report_matches_telemetry"
+  - id: steps_to_target_within_baseline
+    statement: "the produced step count is at or below the baseline anchor, which is the bound the reward expression is defined against"
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: graded_step
+    zero_reason: steps-to-target-not-within-baseline
+    required: true
+    weight: 7
+    live_state_read: "the graded step derived from the validation loss series the verifier measured for itself, bounded against the baseline_steps anchor resolved for the scale the verifier ran"
+    compiled_test: "tests/test_output.py::test_steps_to_target_within_baseline"
+  - id: no_verbatim_record_copy
+    statement: "no near-verbatim copy of an excluded published recipe or of the baseline anchor exists in the submitted file at or above the bound similarity"
+    reduction: ABSENCE
+    reached_by: tests/grade.py
+    selector: check_no_verbatim_copy
+    zero_reason: no-verbatim-record-copy-unproven
+    required: true
+    weight: 7
+    live_state_read: "the abstract syntax tree of submission/optimizer.py on disk, normalized by docstring removal, set against the same normalization of every file in tests/corpus and of environment/baseline_optimizer.py"
+    compiled_test: "tests/test_output.py::test_no_verbatim_record_copy"
+    bounded_claim: "the check establishes only that no member of the named exclusion set was matched at or above the bound similarity under the named normalization, and never that the submission is free of recall"

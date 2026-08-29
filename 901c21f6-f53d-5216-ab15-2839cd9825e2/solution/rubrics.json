@@ -1,0 +1,39 @@
+{
+  "banner": "GENERATED SECTION. DO NOT HAND-EDIT.",
+  "judged": "the solution against its reference answer",
+  "not_this_file": "tests/rubrics.jsonl is a different artifact judged against the trajectory; neither substitutes for the other",
+  "rows": [
+    {
+      "criterion": "The submitted run's graded step, recomputed by the verifier, is at or below the reference graded step of 2600.",
+      "id": "sol-graded-step-matches-reference",
+      "reference_value": 2600
+    },
+    {
+      "criterion": "The crossing holds at the graded step and at each of the three subsequent verifier-scheduled evaluation points.",
+      "id": "sol-crossing-sustained",
+      "reference_value": 3
+    },
+    {
+      "criterion": "The graded readout is the raw verifier evaluation, with no filter applied.",
+      "id": "sol-readout-unsmoothed",
+      "reference_value": "raw"
+    },
+    {
+      "criterion": "Dataset, batch size, architecture and the one-forward-backward-pass-per-step rule are unmoved.",
+      "id": "sol-frozen-axes-held",
+      "reference_value": 480
+    },
+    {
+      "criterion": "Extending the schedule past the sustained crossing changes neither the graded step nor the reward.",
+      "id": "sol-schedule-extension-inert",
+      "reference_value": 1.0
+    },
+    {
+      "criterion": "A run that fails to reach a sustained crossing leaves a reward of 0.0 carrying a machine-readable reason, never an absent result.",
+      "id": "sol-non-convergence-attributed",
+      "reference_value": "non-convergence-ungraded"
+    }
+  ],
+  "slot": "OER-03",
+  "source": "solution/grounding.yaml"
+}

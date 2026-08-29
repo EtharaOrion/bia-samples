@@ -1,0 +1,105 @@
+# Provenance carrier for BIA slot S04.
+# The canonical content hash and the uuid it derives are NOT recorded inside this
+# file, because this file is itself inside the hash domain and storing the result
+# inside its own input is circular. The directory name carries the uuid, and the
+# recipe below is sufficient to recompute both from the frozen bytes alone.
+
+schema_version: 1
+slot: S04
+bundle_name: memory-budget-architecture-search
+
+namespace:
+  forge_task_namespace: c53e8f3b-526f-52c0-a04e-89e2269b237d
+  rule: uuid5(FORGE_TASK_NAMESPACE, canonical_content_hash)
+  invented: false
+
+canonical_content_hash_recipe:
+  algorithm: sha256
+  domain_version: s04-hash-domain-1
+  steps:
+    - Walk the bundle directory recursively from its root.
+    - Drop every path whose first component is "trajectories".
+    - Drop every path with a "__pycache__" component and every path ending in ".pyc".
+    - For each surviving file compute relpath as the POSIX relative path from the bundle root, using "/" as the separator.
+    - For each surviving file compute filehash as the lowercase hex sha256 of its exact bytes.
+    - Sort the (relpath, filehash) pairs ascending by relpath under Python's default string ordering.
+    - Build one payload by concatenating, for each pair in that order, the UTF-8 bytes of relpath, then a single 0x00 byte, then the UTF-8 bytes of filehash, then a single 0x0a byte.
+    - canonical_content_hash is the lowercase hex sha256 of that payload.
+  reference_implementation: |
+    import hashlib, os, uuid
+    NS = uuid.UUID("c53e8f3b-526f-52c0-a04e-89e2269b237d")
+    def canonical_content_hash(root):
+        pairs = []
+        for base, dirs, files in os.walk(root):
+            dirs[:] = [d for d in dirs if d != "__pycache__"]
+            for name in files:
+                if name.endswith(".pyc"):
+                    continue
+                full = os.path.join(base, name)
+                rel = os.path.relpath(full, root).replace(os.sep, "/")
+                if rel.split("/")[0] == "trajectories":
+                    continue
+                with open(full, "rb") as fh:
+                    pairs.append((rel, hashlib.sha256(fh.read()).hexdigest()))
+        pairs.sort(key=lambda p: p[0])
+        outer = hashlib.sha256()
+        for rel, digest in pairs:
+            outer.update(rel.encode("utf-8") + b"\x00" + digest.encode("utf-8") + b"\n")
+        return outer.hexdigest()
+    def bundle_uuid(root):
+        return str(uuid.uuid5(NS, canonical_content_hash(root)))
+  excluded_from_hash:
+    - trajectories/
+    - __pycache__/
+    - "*.pyc"
+  freeze_order:
+    - Author every byte into a temporary directory under /tmp.
+    - Regenerate every generated artifact from solution/grounding.yaml through solution/recompute.py and confirm --check reports no drift.
+    - Compute canonical_content_hash over the frozen bytes.
+    - Derive the uuid.
+    - Rename the temporary directory to dataset/<uuid>/.
+
+generated_artifacts:
+  source_of_truth: solution/grounding.yaml
+  generator: solution/recompute.py
+  regeneration_check: "python3 solution/recompute.py --check"
+  targets:
+    - tests/checkers.yaml
+    - tests/rubrics.jsonl
+    - tests/test_output.py
+    - solution/rubrics.json
+    - solution/TRUTH.md
+
+frozen_tree_duplication:
+  fact: "environment/frozen and tests/frozen hold byte-identical copies of the same three JSON files."
+  reason: "The agent side copy is what the runner reads and the verifier side copy is what the grader trusts. The no_frozen_recipe_tree_edit checker asserts the digest recorded from the agent side equals the digest the verifier recomputes from its own side, which is only an assertion if the two trees are separate objects."
+
+authoring_run:
+  date: 2026-08-21
+  accelerator_used: none
+  gpu_work_performed: none
+  reason: "The host's single H100 was at full utilization carrying a live evaluation campaign, so no CUDA allocation, no training run and no benchmark loop was executed by this authoring run."
+  smoke_path_executed: true
+  reference_score: "unmeasured, pending orchestrator GPU run"
+
+named_gaps:
+  - id: reference-score-unmeasured
+    caps_at: "HOLD:PILOT_REQUIRED"
+    statement: "The harness score solution/solve.sh earns on one H100 has not been measured. No estimate is recorded anywhere in this bundle."
+  - id: anchors-provisional
+    caps_at: "HOLD:PILOT_REQUIRED"
+    statement: "The reward bar rel_target of 0.05 is an authored bar rather than a measured one. The paired reference arm makes the denominator measured in run; only the scale of the bar remains provisional."
+  - id: image-pin-unverified
+    caps_at: "HOLD:PILOT_REQUIRED"
+    statement: "The environment image digest is carried from the recorded build base of the verified track3 bundle and was not pulled or re-resolved during this authoring run."
+  - id: budget-unverified
+    caps_at: "HOLD:PILOT_REQUIRED"
+    statement: "No signed duration evidence exists for the declared budget_hours of 0.12 under the bound envelope, so budget conformance is declared rather than proven."
+  - id: cohort-refresh-overdue
+    caps_at: "HOLD:PILOT_REQUIRED"
+    statement: "The three named cohorts carry no solver registry digest, so the cohort is named and not pinned."
+  - id: screening-unverified
+    caps_at: "HOLD:PILOT_REQUIRED"
+    statement: "No ENGRAM owned exclusion list root, freeze date table or calibrated near duplicate index is resolvable in this project, so contamination screening is declared and not run."
+
+disposition: "HOLD:PILOT_REQUIRED"

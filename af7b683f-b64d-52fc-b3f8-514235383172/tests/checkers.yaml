@@ -1,0 +1,171 @@
+schema: forge.checkers/v1
+reduction_kinds: [VALUE, EFFECT, ABSENCE, INVARIANT, ORDERING, DIVERGENCE]
+reward_path: /logs/verifier/reward.txt
+score_document_path: /logs/verifier/score.json
+
+clock_ownership: >-
+  THE HARNESS OWNS THE CLOCK. This slot's metric is a timing metric and a checker is forbidden
+  from reading a clock; ownership is what resolves that. environment/serving_sim.py instruments
+  the serving loop and emits timing telemetry records carrying a virtual integer-millisecond
+  stamp derived arithmetically from the frozen envelope. tests/runner.py launches that
+  simulator over the BUNDLE's frozen trace and envelope in an isolated subprocess, and every
+  checker below reads the resulting records through the tests/checkers.py Harness handle. No
+  checker calls time, datetime, perf_counter, monotonic or any other clock, directly or
+  transitively. That is what keeps every checker pure, deterministic and replayable over a
+  recorded trace, and it is also what makes the grading reproducible.
+
+purity: >-
+  Every checker is a pure function of the harness handle and the bound constants. Imports in
+  tests/checkers.py are confined to json, math, hashlib, pathlib, dataclasses and typing. No
+  planted answer file is read, no environment secret is read, no random source is consulted,
+  no socket is opened, and the grading process never imports the submission: tests/runner.py
+  copies the submission's configuration alone into a fresh temporary directory, launches the
+  harness simulator against it as a new session leader under a five-key environment
+  allowlist, and kills the whole process group in a finally block.
+
+readout_manipulation: >-
+  Both graded readouts are computed by the verifier and neither is ever read from a number the
+  submission reported. The graded metric is tokens per second, direction: higher is better.
+  Throughput is the raw quotient of harness-owned completed output tokens over the whole
+  measured span. p99 latency is computed over EVERY request in the frozen
+  request trace, so a configuration that drops, defers or refuses requests to flatter its p99
+  is caught by every_request_accounted rather than rewarded. No smoothing exists anywhere on
+  the graded path.
+
+aggregation:
+  mode: required_pass
+  rationale: >-
+    tests/grade.py walks the eight checkers below in the declared order and returns 0.0 with
+    the first failing checker's machine-readable reason. Only when every required checker
+    passes does it compute the continuous term, the clamped normalised throughput. That is
+    exactly required_pass over the required set, composed with a bounded-continuous score
+    inside the passing region, so the reward is never binary and every zero is attributed.
+  reward_formula: raw = (agent_metric - baseline_metric) / (target_metric - baseline_metric)
+  clip: score = min(max(raw, 0.0), 1.0)
+  direction: higher is better
+  never_binary: true
+
+anchors:
+  anchors_state: absent
+  gap_id: gap-oer-per-family-anchors-unmeasured
+  family_baseline_metric: null
+  family_target_metric: null
+  note: >-
+    F11 anchors are unmeasured, so the reward SCHEMA is bound in full and no family baseline
+    or target number is invented. The two numbers tests/bound.json carries are instance-local,
+    measured by solution/recompute.py on this slot's own frozen substrate, and are declared
+    under gap-oer-24-instance-local-anchors-not-family-anchors as NOT family anchors.
+
+fixture_substitutions:
+  - checker: measurement_windows_sustained
+    substitution: planted telemetry fixture
+    fixture: solution/fixtures/planted/unsustained_telemetry.jsonl
+    why: >-
+      solution/recompute.py enumerated the whole closed free space by exhaustive arithmetic.
+      The lowest per-window throughput ratio reached by ANY configuration that also holds
+      inside the p99 objective is 0.539 against a sustain floor of 2/5. No submission can
+      therefore breach the sustain floor and still reach this checker, so its rejecting half
+      is carried on a planted telemetry fixture rather than on a configuration. Recorded here
+      rather than papered over.
+
+checkers:
+  - id: trace_and_envelope_unmodified
+    statement: "The frozen request trace and the frozen hardware envelope are byte-identical to the bound digests, both on disk and as the run declared them."
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: check_trace_and_envelope_unmodified
+    zero_reason: frozen-inputs-modified
+    required: true
+    weight: 1
+    basis: computed
+    live_state_read: "sha256 over the bundle's environment/trace.json and environment/envelope.json as they stand on disk, and the run's own logs/inputs.json digest record."
+    compiled_test: "tests/test_output.py::test_trace_and_envelope_unmodified"
+
+  - id: iteration_sequence_ordered
+    statement: "The durable ledger's iteration sequence is contiguous from one, strictly ascending, covers every iteration the harness recorded, and ends at the iteration the submission names as final."
+    reduction: ORDERING
+    reached_by: tests/grade.py
+    selector: check_iteration_sequence_ordered
+    zero_reason: iteration-sequence-disordered
+    required: true
+    weight: 1
+    basis: computed
+    live_state_read: "the run's notes/ledger.jsonl and the harness-owned logs/iterations.jsonl, plus submission.json's final_iteration field."
+    compiled_test: "tests/test_output.py::test_iteration_sequence_ordered"
+
+  - id: summary_matches_durable_record
+    statement: "Every claim the submission carries forward agrees with the durable record: the set of objective-violating configurations it reports equals the set the harness-owned iteration record holds, including the iterations the compacted context summary dropped."
+    reduction: DIVERGENCE
+    reached_by: tests/grade.py
+    selector: check_summary_matches_durable_record
+    zero_reason: summary-contradicts-durable-record
+    required: true
+    weight: 1
+    basis: computed
+    live_state_read: "the run's context/summary.json, its notes/ledger.jsonl, the harness-owned logs/iterations.jsonl, and submission.json's recovered_slo_violating_configs and recovered_iterations."
+    compiled_test: "tests/test_output.py::test_summary_matches_durable_record"
+    grades_drift_key: summary_iterations_retained
+
+  - id: every_request_accounted
+    statement: "Every request in the frozen trace carries exactly one completion record in the harness telemetry, and the telemetry carries no rejection record at all."
+    reduction: ABSENCE
+    reached_by: tests/grade.py
+    selector: check_every_request_accounted
+    zero_reason: requests-unaccounted
+    required: true
+    weight: 1
+    basis: computed
+    live_state_read: "the completion and rejection records the harness simulator emitted during the verifier's own replay, against the frozen trace's request identifiers."
+    compiled_test: "tests/test_output.py::test_every_request_accounted"
+    grades_drift_key: admission_policy_default
+
+  - id: no_early_stop_harvest
+    statement: "The declared measurement interval spans the whole harness run, so a reading harvested by halting on a favourable window is graded as not having established the throughput."
+    reduction: EFFECT
+    reached_by: tests/grade.py
+    selector: check_no_early_stop_harvest
+    zero_reason: early-stop-window-harvest
+    required: true
+    weight: 1
+    basis: computed
+    live_state_read: "the first arrival and last completion stamps in the harness telemetry, against submission.json's measurement block."
+    compiled_test: "tests/test_output.py::test_no_early_stop_harvest"
+
+  - id: unsmoothed_graded_readout
+    statement: "The graded throughput is the raw quotient over the whole measured span, and the submission declares no smoothing and reports the same figure the verifier recomputed."
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: check_unsmoothed_graded_readout
+    zero_reason: readout-smoothed
+    required: true
+    weight: 1
+    basis: computed
+    live_state_read: "the harness completion records, recomputed raw by the verifier, against submission.json's readout block and reported_tokens_per_second."
+    compiled_test: "tests/test_output.py::test_unsmoothed_graded_readout"
+
+  - id: slo_p99_respected
+    statement: "The p99 latency computed over every request in the frozen trace holds inside the bound service level objective. The objective is a hard constraint: exceeding it scores zero however high the throughput."
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: check_slo_p99_respected
+    zero_reason: p99-slo-exceeded
+    required: true
+    weight: 1
+    basis: computed
+    live_state_read: "the latency_ms field of every completion record the harness simulator emitted during the verifier's own replay."
+    compiled_test: "tests/test_output.py::test_slo_p99_respected"
+    grades_drift_key: envelope_decode_ms_per_request
+
+  - id: measurement_windows_sustained
+    statement: "The reading holds across every verifier-scheduled measurement window: each window carries completions and at least the bound fraction of the graded throughput."
+    reduction: INVARIANT
+    reached_by: tests/grade.py
+    selector: check_measurement_windows_sustained
+    zero_reason: reading-not-sustained
+    required: true
+    weight: 1
+    basis: computed
+    live_state_read: "the harness completion records partitioned into windows the verifier itself schedules over the harness virtual clock, never over an interval the submission declared."
+    compiled_test: "tests/test_output.py::test_measurement_windows_sustained"
+    grades_drift_key: measurement_window_count
+    rejecting_half: planted fixture, see fixture_substitutions

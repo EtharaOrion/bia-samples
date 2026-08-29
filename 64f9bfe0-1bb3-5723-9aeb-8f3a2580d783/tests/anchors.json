@@ -1,0 +1,12 @@
+{
+  "baseline_tokens": null,
+  "oracle_tokens": null,
+  "target_loss": null,
+  "margin": null,
+  "min_seeds": 8,
+  "pass_threshold": 0.10,
+  "measured": false,
+  "provenance": "",
+  "_note": "Anchors are UNMEASURED. No GPU was reachable at authoring time. reward.py refuses to score while measured is false, so this file cannot produce a pass. The prior voided attempt at this project shipped anchors that carried an UNMEASURED marker AND set oracle_steps to the published world record, which is the contamination problem restated as arithmetic; nothing in its validate() noticed. Both anchors here are null rather than placeholder numbers, so a reader cannot mistake an unmeasured value for a measured one, and no published record value appears anywhere in this file.",
+  "_how_to_measure": "Run the shipped baseline script at the frozen scaled shape across min_seeds seeds to obtain baseline_tokens and the achievable loss floor, then run solution/solve.sh the same way to obtain oracle_tokens. Set target_loss from the measured baseline curve with margin wide enough that a rounding artifact cannot decide the outcome, and set margin from the measured seed-to-seed sigma using the substrate's 3.09 sigma convention. Then set measured to true and fill provenance. Binding these values changes seed/contract.yaml and re-triggers the Phase 0.5 signature."
+}

@@ -1,0 +1,44 @@
+{
+  "_generated": "GENERATED SECTION. DO NOT HAND-EDIT.",
+  "_source": "Source: solution/grounding.yaml. Regenerate with solution/recompute.py.",
+  "criteria": [
+    {
+      "criterion": "The submitted corpus offers exactly the frozen token budget, as the frozen feeder counts tokens.",
+      "id": "ref-corpus-fills-budget-exactly",
+      "reference_value": 3072
+    },
+    {
+      "criterion": "The measured coverage vector places every capability stratum within the bound divergence tolerance of an even share.",
+      "id": "ref-coverage-uniform-over-strata",
+      "reference_value": {
+        "calc": 0.2,
+        "cmp": 0.2,
+        "fact": 0.2,
+        "neg": 0.2,
+        "seq": 0.2
+      }
+    },
+    {
+      "criterion": "The declared manifest is derived by counting the emitted samples, so its L1 divergence from the measurement is zero.",
+      "id": "ref-manifest-counted-from-samples",
+      "reference_value": 0.0
+    },
+    {
+      "criterion": "The held-out benchmark score the harness computes at the bound evaluation point.",
+      "id": "ref-graded-benchmark-score",
+      "reference_value": 1.0
+    },
+    {
+      "criterion": "The held-out benchmark score of a single-stratum corpus of the same size, which is what coverage buys over.",
+      "id": "ref-narrow-corpus-baseline",
+      "reference_value": 0.52
+    },
+    {
+      "criterion": "No emitted sample reaches the bound near-duplicate threshold against any held-out item.",
+      "id": "ref-no-benchmark-contact",
+      "reference_value": 0
+    }
+  ],
+  "judged": "the solution against its reference answer",
+  "slot": "OER-18"
+}

@@ -1,0 +1,2220 @@
+{
+  "banner": "GENERATED SECTION. DO NOT HAND-EDIT.",
+  "records": [
+    {
+      "baseline_control_mean": 4104.0,
+      "baseline_control_per_seed": {
+        "101": 4096,
+        "11": 4112,
+        "29": 4112,
+        "47": 4104,
+        "83": 4096
+      },
+      "budget_hours": 0.12,
+      "delta_cap_units": 50,
+      "eval_every": 8,
+      "flattening_axis": "a",
+      "kind": "session_header",
+      "max_timeout_hours": 6.0,
+      "post_flattening_probe_allowance": 2,
+      "seed_artifact_band": 0.25,
+      "seed_ladder": [
+        "11",
+        "29",
+        "47",
+        "83",
+        "101"
+      ],
+      "separation_margin": 0.05,
+      "slot": "OER-06",
+      "submission_sha256": "b4ece0398a451a6333e0e39d3b3875349119ebcd8aeb608df520d29e625b66b9",
+      "surface_id": "oer06-tri-axis-plateau/v1",
+      "sustain_points": 3,
+      "target_control_mean": 3422.4,
+      "target_control_per_seed": {
+        "101": 3432,
+        "11": 3416,
+        "29": 3416,
+        "47": 3424,
+        "83": 3424
+      },
+      "target_loss": 3.28,
+      "terminator": 50
+    },
+    {
+      "applied_delta_units": 50,
+      "axis": "a",
+      "claimed_crossing_step": null,
+      "claimed_step_sustained": null,
+      "directives": {},
+      "eval_cadence": 8,
+      "graded_crossing_step": 4064,
+      "graded_crossing_sustained": true,
+      "graded_loss_at_crossing": 3.2796206522810127,
+      "halted_at": null,
+      "index": 0,
+      "kind": "attempt",
+      "marginal_gain": 38.4,
+      "mean_steps": 4064.0,
+      "per_seed_steps": {
+        "101": 4072,
+        "11": 4064,
+        "29": 4048,
+        "47": 4072,
+        "83": 4064
+      },
+      "plateau_reached": {
+        "a": false,
+        "b": false,
+        "c": false
+      },
+      "raw_loss_at_claimed_step": null,
+      "readout_filter": "none",
+      "run_weights_digest": "26ccdd58cd2f992030509ed65d9c97b6",
+      "state_after": {
+        "a": 50,
+        "b": 0,
+        "c": 0
+      },
+      "state_before": {
+        "a": 0,
+        "b": 0,
+        "c": 0
+      },
+      "sustain_points": 3,
+      "weights_digest": "26ccdd58cd2f992030509ed65d9c97b6"
+    },
+    {
+      "applied_delta_units": 50,
+      "axis": "a",
+      "claimed_crossing_step": null,
+      "claimed_step_sustained": null,
+      "directives": {},
+      "eval_cadence": 8,
+      "graded_crossing_step": 4024,
+      "graded_crossing_sustained": true,
+      "graded_loss_at_crossing": 3.279494798666069,
+      "halted_at": null,
+      "index": 1,
+      "kind": "attempt",
+      "marginal_gain": 38.4,
+      "mean_steps": 4027.2,
+      "per_seed_steps": {
+        "101": 4032,
+        "11": 4024,
+        "29": 4016,
+        "47": 4032,
+        "83": 4032
+      },
+      "plateau_reached": {
+        "a": false,
+        "b": false,
+        "c": false
+      },
+      "raw_loss_at_claimed_step": null,
+      "readout_filter": "none",
+      "run_weights_digest": "c1e25894dcea5a1e9c6a3e143488e5ca",
+      "state_after": {
+        "a": 100,
+        "b": 0,
+        "c": 0
+      },
+      "state_before": {
+        "a": 50,
+        "b": 0,
+        "c": 0
+      },
+      "sustain_points": 3,
+      "weights_digest": "c1e25894dcea5a1e9c6a3e143488e5ca"
+    },
+    {
+      "applied_delta_units": 50,
+      "axis": "a",
+      "claimed_crossing_step": null,
+      "claimed_step_sustained": null,
+      "directives": {},
+      "eval_cadence": 8,
+      "graded_crossing_step": 3976,
+      "graded_crossing_sustained": true,
+      "graded_loss_at_crossing": 3.2796298907296437,
+      "halted_at": null,
+      "index": 2,
+      "kind": "attempt",
+      "marginal_gain": 38.4,
+      "mean_steps": 3982.4,
+      "per_seed_steps": {
+        "101": 3976,
+        "11": 3976,
+        "29": 4000,
+        "47": 3984,
+        "83": 3976
+      },
+      "plateau_reached": {
+        "a": false,
+        "b": false,
+        "c": false
+      },
+      "raw_loss_at_claimed_step": null,
+      "readout_filter": "none",
+      "run_weights_digest": "487facafcb447bbae81629f7a2631f3d",
+      "state_after": {
+        "a": 150,
+        "b": 0,
+        "c": 0
+      },
+      "state_before": {
+        "a": 100,
+        "b": 0,
+        "c": 0
+      },
+      "sustain_points": 3,
+      "weights_digest": "487facafcb447bbae81629f7a2631f3d"
+    },
+    {
+      "applied_delta_units": 50,
+      "axis": "a",
+      "claimed_crossing_step": null,
+      "claimed_step_sustained": null,
+      "directives": {},
+      "eval_cadence": 8,
+      "graded_crossing_step": 3944,
+      "graded_crossing_sustained": true,
+      "graded_loss_at_crossing": 3.2793242556650744,
+      "halted_at": null,
+      "index": 3,
+      "kind": "attempt",
+      "marginal_gain": 38.4,
+      "mean_steps": 3950.4,
+      "per_seed_steps": {
+        "101": 3952,
+        "11": 3944,
+        "29": 3960,
+        "47": 3960,
+        "83": 3936
+      },
+      "plateau_reached": {
+        "a": false,
+        "b": false,
+        "c": false
+      },
+      "raw_loss_at_claimed_step": null,
+      "readout_filter": "none",
+      "run_weights_digest": "ed22cf95b5b559a3d8d1d6febc070ebb",
+      "state_after": {
+        "a": 200,
+        "b": 0,
+        "c": 0
+      },
+      "state_before": {
+        "a": 150,
+        "b": 0,
+        "c": 0
+      },
+      "sustain_points": 3,
+      "weights_digest": "ed22cf95b5b559a3d8d1d6febc070ebb"
+    },
+    {
+      "applied_delta_units": 50,
+      "axis": "a",
+      "claimed_crossing_step": null,
+      "claimed_step_sustained": null,
+      "directives": {},
+      "eval_cadence": 8,
+      "graded_crossing_step": 3912,
+      "graded_crossing_sustained": true,
+      "graded_loss_at_crossing": 3.2798209718670073,
+      "halted_at": null,
+      "index": 4,
+      "kind": "attempt",
+      "marginal_gain": 38.4,
+      "mean_steps": 3908.8,
+      "per_seed_steps": {
+        "101": 3920,
+        "11": 3912,
+        "29": 3904,
+        "47": 3912,
+        "83": 3896
+      },
+      "plateau_reached": {
+        "a": false,
+        "b": false,
+        "c": false
+      },
+      "raw_loss_at_claimed_step": null,
+      "readout_filter": "none",
+      "run_weights_digest": "f1cd44491ae7fcc674d136db464c2472",
+      "state_after": {
+        "a": 250,
+        "b": 0,
+        "c": 0
+      },
+      "state_before": {
+        "a": 200,
+        "b": 0,
+        "c": 0
+      },
+      "sustain_points": 3,
+      "weights_digest": "f1cd44491ae7fcc674d136db464c2472"
+    },
+    {
+      "applied_delta_units": 50,
+      "axis": "a",
+      "claimed_crossing_step": null,
+      "claimed_step_sustained": null,
+      "directives": {},
+      "eval_cadence": 8,
+      "graded_crossing_step": 3864,
+      "graded_crossing_sustained": true,
+      "graded_loss_at_crossing": 3.279782473586078,
+      "halted_at": null,
+      "index": 5,
+      "kind": "attempt",
+      "marginal_gain": 38.4,
+      "mean_steps": 3864.0,
+      "per_seed_steps": {
+        "101": 3864,
+        "11": 3864,
+        "29": 3872,
+        "47": 3864,
+        "83": 3856
+      },
+      "plateau_reached": {
+        "a": false,
+        "b": false,
+        "c": false
+      },
+      "raw_loss_at_claimed_step": null,
+      "readout_filter": "none",
+      "run_weights_digest": "b8b68910a0b86d7488d869f1b60940a5",
+      "state_after": {
+        "a": 300,
+        "b": 0,
+        "c": 0
+      },
+      "state_before": {
+        "a": 250,
+        "b": 0,
+        "c": 0
+      },
+      "sustain_points": 3,
+      "weights_digest": "b8b68910a0b86d7488d869f1b60940a5"
+    },
+    {
+      "applied_delta_units": 50,
+      "axis": "a",
+      "claimed_crossing_step": null,
+      "claimed_step_sustained": null,
+      "directives": {},
+      "eval_cadence": 8,
+      "graded_crossing_step": 3816,
+      "graded_crossing_sustained": true,
+      "graded_loss_at_crossing": 3.2799266093520654,
+      "halted_at": null,
+      "index": 6,
+      "kind": "attempt",
+      "marginal_gain": 38.4,
+      "mean_steps": 3827.2,
+      "per_seed_steps": {
+        "101": 3824,
+        "11": 3816,
+        "29": 3840,
+        "47": 3824,
+        "83": 3832
+      },
+      "plateau_reached": {
+        "a": false,
+        "b": false,
+        "c": false
+      },
+      "raw_loss_at_claimed_step": null,
+      "readout_filter": "none",
+      "run_weights_digest": "683d31277151621a1406f738d5c9bbfc",
+      "state_after": {
+        "a": 350,
+        "b": 0,
+        "c": 0
+      },
+      "state_before": {
+        "a": 300,
+        "b": 0,
+        "c": 0
+      },
+      "sustain_points": 3,
+      "weights_digest": "683d31277151621a1406f738d5c9bbfc"
+    },
+    {
+      "applied_delta_units": 50,
+      "axis": "a",
+      "claimed_crossing_step": null,
+      "claimed_step_sustained": null,
+      "directives": {
+        "report_ema": true
+      },
+      "eval_cadence": 8,
+      "graded_crossing_step": 3792,
+      "graded_crossing_sustained": true,
+      "graded_loss_at_crossing": 3.279889205444761,
+      "halted_at": null,
+      "index": 7,
+      "kind": "attempt",
+      "marginal_gain": 38.4,
+      "mean_steps": 3796.8,
+      "per_seed_steps": {
+        "101": 3800,
+        "11": 3792,
+        "29": 3800,
+        "47": 3792,
+        "83": 3800
+      },
+      "plateau_reached": {
+        "a": false,
+        "b": false,
+        "c": false
+      },
+      "raw_loss_at_claimed_step": null,
+      "readout_filter": "ema",
+      "run_weights_digest": "e18720a2ec275b98b4eb50853bd7f9e5",
+      "state_after": {
+        "a": 400,
+        "b": 0,
+        "c": 0
+      },
+      "state_before": {
+        "a": 350,
+        "b": 0,
+        "c": 0
+      },
+      "sustain_points": 3,
+      "weights_digest": "e18720a2ec275b98b4eb50853bd7f9e5"
+    },
+    {
+      "applied_delta_units": 50,
+      "axis": "a",
+      "claimed_crossing_step": null,
+      "claimed_step_sustained": null,
+      "directives": {},
+      "eval_cadence": 8,
+      "graded_crossing_step": 3744,
+      "graded_crossing_sustained": true,
+      "graded_loss_at_crossing": 3.2796631376323386,
+      "halted_at": null,
+      "index": 8,
+      "kind": "attempt",
+      "marginal_gain": 38.4,
+      "mean_steps": 3745.6,
+      "per_seed_steps": {
+        "101": 3752,
+        "11": 3744,
+        "29": 3744,
+        "47": 3744,
+        "83": 3744
+      },
+      "plateau_reached": {
+        "a": false,
+        "b": false,
+        "c": false
+      },
+      "raw_loss_at_claimed_step": null,
+      "readout_filter": "none",
+      "run_weights_digest": "daef05d1d98d71c7fdfcf7f0acbc1c07",
+      "state_after": {
+        "a": 450,
+        "b": 0,
+        "c": 0
+      },
+      "state_before": {
+        "a": 400,
+        "b": 0,
+        "c": 0
+      },
+      "sustain_points": 3,
+      "weights_digest": "daef05d1d98d71c7fdfcf7f0acbc1c07"
+    },
+    {
+      "applied_delta_units": 50,
+      "axis": "a",
+      "claimed_crossing_step": null,
+      "claimed_step_sustained": null,
+      "directives": {},
+      "eval_cadence": 8,
+      "graded_crossing_step": 3704,
+      "graded_crossing_sustained": true,
+      "graded_loss_at_crossing": 3.2796216216216214,
+      "halted_at": null,
+      "index": 9,
+      "kind": "attempt",
+      "marginal_gain": 38.4,
+      "mean_steps": 3713.6,
+      "per_seed_steps": {
+        "101": 3728,
+        "11": 3704,
+        "29": 3712,
+        "47": 3712,
+        "83": 3712
+      },
+      "plateau_reached": {
+        "a": true,
+        "b": false,
+        "c": false
+      },
+      "raw_loss_at_claimed_step": null,
+      "readout_filter": "none",
+      "run_weights_digest": "bfbc885eb2314b911ee582319a69aff5",
+      "state_after": {
+        "a": 500,
+        "b": 0,
+        "c": 0
+      },
+      "state_before": {
+        "a": 450,
+        "b": 0,
+        "c": 0
+      },
+      "sustain_points": 3,
+      "weights_digest": "bfbc885eb2314b911ee582319a69aff5"
+    },
+    {
+      "applied_delta_units": 50,
+      "axis": "a",
+      "claimed_crossing_step": null,
+      "claimed_step_sustained": null,
+      "directives": {},
+      "eval_cadence": 8,
+      "graded_crossing_step": 3704,
+      "graded_crossing_sustained": true,
+      "graded_loss_at_crossing": 3.2796216216216214,
+      "halted_at": null,
+      "index": 10,
+      "kind": "attempt",
+      "marginal_gain": 0.0,
+      "mean_steps": 3713.6,
+      "per_seed_steps": {
+        "101": 3728,
+        "11": 3704,
+        "29": 3712,
+        "47": 3712,
+        "83": 3712
+      },
+      "plateau_reached": {
+        "a": true,
+        "b": false,
+        "c": false
+      },
+      "raw_loss_at_claimed_step": null,
+      "readout_filter": "none",
+      "run_weights_digest": "bfbc885eb2314b911ee582319a69aff5",
+      "state_after": {
+        "a": 550,
+        "b": 0,
+        "c": 0
+      },
+      "state_before": {
+        "a": 500,
+        "b": 0,
+        "c": 0
+      },
+      "sustain_points": 3,
+      "weights_digest": "bfbc885eb2314b911ee582319a69aff5"
+    },
+    {
+      "applied_delta_units": 50,
+      "axis": "b",
+      "claimed_crossing_step": null,
+      "claimed_step_sustained": null,
+      "directives": {},
+      "eval_cadence": 8,
+      "graded_crossing_step": 3704,
+      "graded_crossing_sustained": true,
+      "graded_loss_at_crossing": 3.279952747401107,
+      "halted_at": null,
+      "index": 11,
+      "kind": "attempt",
+      "marginal_gain": 7.5,
+      "mean_steps": 3708.8,
+      "per_seed_steps": {
+        "101": 3720,
+        "11": 3704,
+        "29": 3704,
+        "47": 3704,
+        "83": 3712
+      },
+      "plateau_reached": {
+        "a": true,
+        "b": false,
+        "c": false
+      },
+      "raw_loss_at_claimed_step": null,
+      "readout_filter": "none",
+      "run_weights_digest": "fe105e945b2c3c628b6979337c03753c",
+      "state_after": {
+        "a": 550,
+        "b": 50,
+        "c": 0
+      },
+      "state_before": {
+        "a": 550,
+        "b": 0,
+        "c": 0
+      },
+      "sustain_points": 3,
+      "weights_digest": "fe105e945b2c3c628b6979337c03753c"
+    },
+    {
+      "applied_delta_units": 50,
+      "axis": "b",
+      "claimed_crossing_step": null,
+      "claimed_step_sustained": null,
+      "directives": {},
+      "eval_cadence": 8,
+      "graded_crossing_step": 3712,
+      "graded_crossing_sustained": true,
+      "graded_loss_at_crossing": 3.2793387314439943,
+      "halted_at": null,
+      "index": 12,
+      "kind": "attempt",
+      "marginal_gain": 7.5,
+      "mean_steps": 3705.6,
+      "per_seed_steps": {
+        "101": 3712,
+        "11": 3712,
+        "29": 3712,
+        "47": 3688,
+        "83": 3704
+      },
+      "plateau_reached": {
+        "a": true,
+        "b": false,
+        "c": false
+      },
+      "raw_loss_at_claimed_step": null,
+      "readout_filter": "none",
+      "run_weights_digest": "81c2c9368d8d6475087dc0a6b92081de",
+      "state_after": {
+        "a": 550,
+        "b": 100,
+        "c": 0
+      },
+      "state_before": {
+        "a": 550,
+        "b": 50,
+        "c": 0
+      },
+      "sustain_points": 3,
+      "weights_digest": "81c2c9368d8d6475087dc0a6b92081de"
+    },
+    {
+      "applied_delta_units": 50,
+      "axis": "b",
+      "claimed_crossing_step": null,
+      "claimed_step_sustained": null,
+      "directives": {},
+      "eval_cadence": 8,
+      "graded_crossing_step": 3680,
+      "graded_crossing_sustained": true,
+      "graded_loss_at_crossing": 3.279857278782112,
+      "halted_at": null,
+      "index": 13,
+      "kind": "attempt",
+      "marginal_gain": 7.5,
+      "mean_steps": 3686.4,
+      "per_seed_steps": {
+        "101": 3680,
+        "11": 3680,
+        "29": 3696,
+        "47": 3688,
+        "83": 3688
+      },
+      "plateau_reached": {
+        "a": true,
+        "b": false,
+        "c": false
+      },
+      "raw_loss_at_claimed_step": null,
+      "readout_filter": "none",
+      "run_weights_digest": "7fe58b2c244d735f67c773528588cedc",
+      "state_after": {
+        "a": 550,
+        "b": 150,
+        "c": 0
+      },
+      "state_before": {
+        "a": 550,
+        "b": 100,
+        "c": 0
+      },
+      "sustain_points": 3,
+      "weights_digest": "7fe58b2c244d735f67c773528588cedc"
+    },
+    {
+      "applied_delta_units": 50,
+      "axis": "b",
+      "claimed_crossing_step": null,
+      "claimed_step_sustained": null,
+      "directives": {},
+      "eval_cadence": 8,
+      "graded_crossing_step": 3680,
+      "graded_crossing_sustained": true,
+      "graded_loss_at_crossing": 3.2794284158954814,
+      "halted_at": null,
+      "index": 14,
+      "kind": "attempt",
+      "marginal_gain": 7.5,
+      "mean_steps": 3678.4,
+      "per_seed_steps": {
+        "101": 3680,
+        "11": 3680,
+        "29": 3672,
+        "47": 3680,
+        "83": 3680
+      },
+      "plateau_reached": {
+        "a": true,
+        "b": false,
+        "c": false
+      },
+      "raw_loss_at_claimed_step": null,
+      "readout_filter": "none",
+      "run_weights_digest": "e16257d750ae093b8d7dceb5aa486d25",
+      "state_after": {
+        "a": 550,
+        "b": 200,
+        "c": 0
+      },
+      "state_before": {
+        "a": 550,
+        "b": 150,
+        "c": 0
+      },
+      "sustain_points": 3,
+      "weights_digest": "e16257d750ae093b8d7dceb5aa486d25"
+    },
+    {
+      "applied_delta_units": 50,
+      "axis": "b",
+      "claimed_crossing_step": null,
+      "claimed_step_sustained": null,
+      "directives": {},
+      "eval_cadence": 8,
+      "graded_crossing_step": 3672,
+      "graded_crossing_sustained": true,
+      "graded_loss_at_crossing": 3.279474976135279,
+      "halted_at": null,
+      "index": 15,
+      "kind": "attempt",
+      "marginal_gain": 7.5,
+      "mean_steps": 3678.4,
+      "per_seed_steps": {
+        "101": 3664,
+        "11": 3672,
+        "29": 3688,
+        "47": 3688,
+        "83": 3680
+      },
+      "plateau_reached": {
+        "a": true,
+        "b": false,
+        "c": false
+      },
+      "raw_loss_at_claimed_step": null,
+      "readout_filter": "none",
+      "run_weights_digest": "f4c681248fa9eca5ac081d8d16821058",
+      "state_after": {
+        "a": 550,
+        "b": 250,
+        "c": 0
+      },
+      "state_before": {
+        "a": 550,
+        "b": 200,
+        "c": 0
+      },
+      "sustain_points": 3,
+      "weights_digest": "f4c681248fa9eca5ac081d8d16821058"
+    },
+    {
+      "applied_delta_units": 50,
+      "axis": "c",
+      "claimed_crossing_step": null,
+      "claimed_step_sustained": null,
+      "directives": {},
+      "eval_cadence": 8,
+      "graded_crossing_step": 3664,
+      "graded_crossing_sustained": true,
+      "graded_loss_at_crossing": 3.279521727247882,
+      "halted_at": null,
+      "index": 16,
+      "kind": "attempt",
+      "marginal_gain": 7.5,
+      "mean_steps": 3670.4,
+      "per_seed_steps": {
+        "101": 3672,
+        "11": 3664,
+        "29": 3680,
+        "47": 3664,
+        "83": 3672
+      },
+      "plateau_reached": {
+        "a": true,
+        "b": false,
+        "c": false
+      },
+      "raw_loss_at_claimed_step": null,
+      "readout_filter": "none",
+      "run_weights_digest": "1adb8e299cc50b5e2cbe95617ae07bee",
+      "state_after": {
+        "a": 550,
+        "b": 250,
+        "c": 50
+      },
+      "state_before": {
+        "a": 550,
+        "b": 250,
+        "c": 0
+      },
+      "sustain_points": 3,
+      "weights_digest": "1adb8e299cc50b5e2cbe95617ae07bee"
+    },
+    {
+      "applied_delta_units": 50,
+      "axis": "c",
+      "claimed_crossing_step": null,
+      "claimed_step_sustained": null,
+      "directives": {},
+      "eval_cadence": 8,
+      "graded_crossing_step": 3664,
+      "graded_crossing_sustained": true,
+      "graded_loss_at_crossing": 3.2798566552901023,
+      "halted_at": null,
+      "index": 17,
+      "kind": "attempt",
+      "marginal_gain": 7.5,
+      "mean_steps": 3668.8,
+      "per_seed_steps": {
+        "101": 3664,
+        "11": 3664,
+        "29": 3672,
+        "47": 3672,
+        "83": 3672
+      },
+      "plateau_reached": {
+        "a": true,
+        "b": false,
+        "c": false
+      },
+      "raw_loss_at_claimed_step": null,
+      "readout_filter": "none",
+      "run_weights_digest": "c31ed4d3d7ec9f43670f42dd886709b3",
+      "state_after": {
+        "a": 550,
+        "b": 250,
+        "c": 100
+      },
+      "state_before": {
+        "a": 550,
+        "b": 250,
+        "c": 50
+      },
+      "sustain_points": 3,
+      "weights_digest": "c31ed4d3d7ec9f43670f42dd886709b3"
+    },
+    {
+      "applied_delta_units": 50,
+      "axis": "c",
+      "claimed_crossing_step": null,
+      "claimed_step_sustained": null,
+      "directives": {},
+      "eval_cadence": 8,
+      "graded_crossing_step": 3648,
+      "graded_crossing_sustained": true,
+      "graded_loss_at_crossing": 3.2794233937397035,
+      "halted_at": null,
+      "index": 18,
+      "kind": "attempt",
+      "marginal_gain": 7.5,
+      "mean_steps": 3654.4,
+      "per_seed_steps": {
+        "101": 3656,
+        "11": 3648,
+        "29": 3656,
+        "47": 3664,
+        "83": 3648
+      },
+      "plateau_reached": {
+        "a": true,
+        "b": false,
+        "c": false
+      },
+      "raw_loss_at_claimed_step": null,
+      "readout_filter": "none",
+      "run_weights_digest": "2cf96b357734f975ad0ed047a367292e",
+      "state_after": {
+        "a": 550,
+        "b": 250,
+        "c": 150
+      },
+      "state_before": {
+        "a": 550,
+        "b": 250,
+        "c": 100
+      },
+      "sustain_points": 3,
+      "weights_digest": "2cf96b357734f975ad0ed047a367292e"
+    },
+    {
+      "applied_delta_units": 50,
+      "axis": "c",
+      "claimed_crossing_step": null,
+      "claimed_step_sustained": null,
+      "directives": {},
+      "eval_cadence": 8,
+      "graded_crossing_step": 3648,
+      "graded_crossing_sustained": true,
+      "graded_loss_at_crossing": 3.2793752574488533,
+      "halted_at": null,
+      "index": 19,
+      "kind": "attempt",
+      "marginal_gain": 7.5,
+      "mean_steps": 3646.4,
+      "per_seed_steps": {
+        "101": 3640,
+        "11": 3648,
+        "29": 3648,
+        "47": 3640,
+        "83": 3656
+      },
+      "plateau_reached": {
+        "a": true,
+        "b": false,
+        "c": false
+      },
+      "raw_loss_at_claimed_step": null,
+      "readout_filter": "none",
+      "run_weights_digest": "7e9392041f19d4f3966ac61ac80e0c6d",
+      "state_after": {
+        "a": 550,
+        "b": 250,
+        "c": 200
+      },
+      "state_before": {
+        "a": 550,
+        "b": 250,
+        "c": 150
+      },
+      "sustain_points": 3,
+      "weights_digest": "7e9392041f19d4f3966ac61ac80e0c6d"
+    },
+    {
+      "applied_delta_units": 50,
+      "axis": "c",
+      "claimed_crossing_step": null,
+      "claimed_step_sustained": null,
+      "directives": {},
+      "eval_cadence": 8,
+      "graded_crossing_step": 3632,
+      "graded_crossing_sustained": true,
+      "graded_loss_at_crossing": 3.279614112458655,
+      "halted_at": null,
+      "index": 20,
+      "kind": "attempt",
+      "marginal_gain": 7.5,
+      "mean_steps": 3638.4,
+      "per_seed_steps": {
+        "101": 3632,
+        "11": 3632,
+        "29": 3648,
+        "47": 3632,
+        "83": 3648
+      },
+      "plateau_reached": {
+        "a": true,
+        "b": false,
+        "c": false
+      },
+      "raw_loss_at_claimed_step": null,
+      "readout_filter": "none",
+      "run_weights_digest": "8fb404e98dc33ecdabaf99badb0161de",
+      "state_after": {
+        "a": 550,
+        "b": 250,
+        "c": 250
+      },
+      "state_before": {
+        "a": 550,
+        "b": 250,
+        "c": 200
+      },
+      "sustain_points": 3,
+      "weights_digest": "8fb404e98dc33ecdabaf99badb0161de"
+    },
+    {
+      "applied_delta_units": 50,
+      "axis": "c",
+      "claimed_crossing_step": null,
+      "claimed_step_sustained": null,
+      "directives": {},
+      "eval_cadence": 8,
+      "graded_crossing_step": 3632,
+      "graded_crossing_sustained": true,
+      "graded_loss_at_crossing": 3.27937250034478,
+      "halted_at": null,
+      "index": 21,
+      "kind": "attempt",
+      "marginal_gain": 7.5,
+      "mean_steps": 3635.2,
+      "per_seed_steps": {
+        "101": 3632,
+        "11": 3632,
+        "29": 3640,
+        "47": 3632,
+        "83": 3640
+      },
+      "plateau_reached": {
+        "a": true,
+        "b": false,
+        "c": false
+      },
+      "raw_loss_at_claimed_step": null,
+      "readout_filter": "none",
+      "run_weights_digest": "4c94effa2734158017fb60d96d96d847",
+      "state_after": {
+        "a": 550,
+        "b": 250,
+        "c": 300
+      },
+      "state_before": {
+        "a": 550,
+        "b": 250,
+        "c": 250
+      },
+      "sustain_points": 3,
+      "weights_digest": "4c94effa2734158017fb60d96d96d847"
+    },
+    {
+      "applied_delta_units": 50,
+      "axis": "c",
+      "claimed_crossing_step": null,
+      "claimed_step_sustained": null,
+      "directives": {},
+      "eval_cadence": 8,
+      "graded_crossing_step": 3616,
+      "graded_crossing_sustained": true,
+      "graded_loss_at_crossing": 3.2797093827843895,
+      "halted_at": null,
+      "index": 22,
+      "kind": "attempt",
+      "marginal_gain": 7.5,
+      "mean_steps": 3619.2,
+      "per_seed_steps": {
+        "101": 3632,
+        "11": 3616,
+        "29": 3616,
+        "47": 3616,
+        "83": 3616
+      },
+      "plateau_reached": {
+        "a": true,
+        "b": false,
+        "c": false
+      },
+      "raw_loss_at_claimed_step": null,
+      "readout_filter": "none",
+      "run_weights_digest": "f445d7c90047e9594ead2b425793626a",
+      "state_after": {
+        "a": 550,
+        "b": 250,
+        "c": 350
+      },
+      "state_before": {
+        "a": 550,
+        "b": 250,
+        "c": 300
+      },
+      "sustain_points": 3,
+      "weights_digest": "f445d7c90047e9594ead2b425793626a"
+    },
+    {
+      "applied_delta_units": 50,
+      "axis": "c",
+      "claimed_crossing_step": null,
+      "claimed_step_sustained": null,
+      "directives": {},
+      "eval_cadence": 8,
+      "graded_crossing_step": 3616,
+      "graded_crossing_sustained": true,
+      "graded_loss_at_crossing": 3.279563893119202,
+      "halted_at": null,
+      "index": 23,
+      "kind": "attempt",
+      "marginal_gain": 7.5,
+      "mean_steps": 3620.8,
+      "per_seed_steps": {
+        "101": 3624,
+        "11": 3616,
+        "29": 3624,
+        "47": 3624,
+        "83": 3616
+      },
+      "plateau_reached": {
+        "a": true,
+        "b": false,
+        "c": false
+      },
+      "raw_loss_at_claimed_step": null,
+      "readout_filter": "none",
+      "run_weights_digest": "fc2a0bf92d710a393090f1a111b7fb35",
+      "state_after": {
+        "a": 550,
+        "b": 250,
+        "c": 400
+      },
+      "state_before": {
+        "a": 550,
+        "b": 250,
+        "c": 350
+      },
+      "sustain_points": 3,
+      "weights_digest": "fc2a0bf92d710a393090f1a111b7fb35"
+    },
+    {
+      "applied_delta_units": 50,
+      "axis": "c",
+      "claimed_crossing_step": null,
+      "claimed_step_sustained": null,
+      "directives": {},
+      "eval_cadence": 8,
+      "graded_crossing_step": 3616,
+      "graded_crossing_sustained": true,
+      "graded_loss_at_crossing": 3.279612403100775,
+      "halted_at": null,
+      "index": 24,
+      "kind": "attempt",
+      "marginal_gain": 7.5,
+      "mean_steps": 3606.4,
+      "per_seed_steps": {
+        "101": 3608,
+        "11": 3616,
+        "29": 3608,
+        "47": 3600,
+        "83": 3600
+      },
+      "plateau_reached": {
+        "a": true,
+        "b": false,
+        "c": false
+      },
+      "raw_loss_at_claimed_step": null,
+      "readout_filter": "none",
+      "run_weights_digest": "817d77953dffe9a0f65846893f0d93e8",
+      "state_after": {
+        "a": 550,
+        "b": 250,
+        "c": 450
+      },
+      "state_before": {
+        "a": 550,
+        "b": 250,
+        "c": 400
+      },
+      "sustain_points": 3,
+      "weights_digest": "817d77953dffe9a0f65846893f0d93e8"
+    },
+    {
+      "applied_delta_units": 50,
+      "axis": "c",
+      "claimed_crossing_step": null,
+      "claimed_step_sustained": null,
+      "directives": {},
+      "eval_cadence": 8,
+      "graded_crossing_step": 3600,
+      "graded_crossing_sustained": true,
+      "graded_loss_at_crossing": 3.2792693110647178,
+      "halted_at": null,
+      "index": 25,
+      "kind": "attempt",
+      "marginal_gain": 7.5,
+      "mean_steps": 3601.6,
+      "per_seed_steps": {
+        "101": 3600,
+        "11": 3600,
+        "29": 3600,
+        "47": 3608,
+        "83": 3600
+      },
+      "plateau_reached": {
+        "a": true,
+        "b": false,
+        "c": false
+      },
+      "raw_loss_at_claimed_step": null,
+      "readout_filter": "none",
+      "run_weights_digest": "acb0ec78f41286f3b8582b18644ee7fe",
+      "state_after": {
+        "a": 550,
+        "b": 250,
+        "c": 500
+      },
+      "state_before": {
+        "a": 550,
+        "b": 250,
+        "c": 450
+      },
+      "sustain_points": 3,
+      "weights_digest": "acb0ec78f41286f3b8582b18644ee7fe"
+    },
+    {
+      "applied_delta_units": 50,
+      "axis": "c",
+      "claimed_crossing_step": null,
+      "claimed_step_sustained": null,
+      "directives": {},
+      "eval_cadence": 8,
+      "graded_crossing_step": 3608,
+      "graded_crossing_sustained": true,
+      "graded_loss_at_crossing": 3.2796115427302994,
+      "halted_at": null,
+      "index": 26,
+      "kind": "attempt",
+      "marginal_gain": 7.5,
+      "mean_steps": 3598.4,
+      "per_seed_steps": {
+        "101": 3600,
+        "11": 3608,
+        "29": 3584,
+        "47": 3608,
+        "83": 3592
+      },
+      "plateau_reached": {
+        "a": true,
+        "b": false,
+        "c": false
+      },
+      "raw_loss_at_claimed_step": null,
+      "readout_filter": "none",
+      "run_weights_digest": "de1731a5f16898a58f4154114880183b",
+      "state_after": {
+        "a": 550,
+        "b": 250,
+        "c": 550
+      },
+      "state_before": {
+        "a": 550,
+        "b": 250,
+        "c": 500
+      },
+      "sustain_points": 3,
+      "weights_digest": "de1731a5f16898a58f4154114880183b"
+    },
+    {
+      "applied_delta_units": 50,
+      "axis": "c",
+      "claimed_crossing_step": null,
+      "claimed_step_sustained": null,
+      "directives": {},
+      "eval_cadence": 8,
+      "graded_crossing_step": 3600,
+      "graded_crossing_sustained": true,
+      "graded_loss_at_crossing": 3.2792693110647178,
+      "halted_at": null,
+      "index": 27,
+      "kind": "attempt",
+      "marginal_gain": 7.5,
+      "mean_steps": 3587.2,
+      "per_seed_steps": {
+        "101": 3584,
+        "11": 3600,
+        "29": 3576,
+        "47": 3592,
+        "83": 3584
+      },
+      "plateau_reached": {
+        "a": true,
+        "b": false,
+        "c": false
+      },
+      "raw_loss_at_claimed_step": null,
+      "readout_filter": "none",
+      "run_weights_digest": "f7d212fc6a858661d46b40843eec203f",
+      "state_after": {
+        "a": 550,
+        "b": 250,
+        "c": 600
+      },
+      "state_before": {
+        "a": 550,
+        "b": 250,
+        "c": 550
+      },
+      "sustain_points": 3,
+      "weights_digest": "f7d212fc6a858661d46b40843eec203f"
+    },
+    {
+      "applied_delta_units": 50,
+      "axis": "c",
+      "claimed_crossing_step": null,
+      "claimed_step_sustained": null,
+      "directives": {},
+      "eval_cadence": 8,
+      "graded_crossing_step": 3576,
+      "graded_crossing_sustained": true,
+      "graded_loss_at_crossing": 3.2794117647058822,
+      "halted_at": null,
+      "index": 28,
+      "kind": "attempt",
+      "marginal_gain": 7.5,
+      "mean_steps": 3580.8,
+      "per_seed_steps": {
+        "101": 3584,
+        "11": 3576,
+        "29": 3584,
+        "47": 3592,
+        "83": 3568
+      },
+      "plateau_reached": {
+        "a": true,
+        "b": false,
+        "c": false
+      },
+      "raw_loss_at_claimed_step": null,
+      "readout_filter": "none",
+      "run_weights_digest": "4b61d74bbb4d2b64c6f292947fc81b3e",
+      "state_after": {
+        "a": 550,
+        "b": 250,
+        "c": 650
+      },
+      "state_before": {
+        "a": 550,
+        "b": 250,
+        "c": 600
+      },
+      "sustain_points": 3,
+      "weights_digest": "4b61d74bbb4d2b64c6f292947fc81b3e"
+    },
+    {
+      "applied_delta_units": 50,
+      "axis": "c",
+      "claimed_crossing_step": null,
+      "claimed_step_sustained": null,
+      "directives": {},
+      "eval_cadence": 8,
+      "graded_crossing_step": 3576,
+      "graded_crossing_sustained": true,
+      "graded_loss_at_crossing": 3.27926439680538,
+      "halted_at": null,
+      "index": 29,
+      "kind": "attempt",
+      "marginal_gain": 7.5,
+      "mean_steps": 3571.2,
+      "per_seed_steps": {
+        "101": 3576,
+        "11": 3576,
+        "29": 3576,
+        "47": 3560,
+        "83": 3568
+      },
+      "plateau_reached": {
+        "a": true,
+        "b": false,
+        "c": false
+      },
+      "raw_loss_at_claimed_step": null,
+      "readout_filter": "none",
+      "run_weights_digest": "153c53360fd94766d33f2bb304652334",
+      "state_after": {
+        "a": 550,
+        "b": 250,
+        "c": 700
+      },
+      "state_before": {
+        "a": 550,
+        "b": 250,
+        "c": 650
+      },
+      "sustain_points": 3,
+      "weights_digest": "153c53360fd94766d33f2bb304652334"
+    },
+    {
+      "applied_delta_units": 50,
+      "axis": "c",
+      "claimed_crossing_step": null,
+      "claimed_step_sustained": null,
+      "directives": {},
+      "eval_cadence": 8,
+      "graded_crossing_step": 3576,
+      "graded_crossing_sustained": true,
+      "graded_loss_at_crossing": 3.2794117647058822,
+      "halted_at": null,
+      "index": 30,
+      "kind": "attempt",
+      "marginal_gain": 7.5,
+      "mean_steps": 3566.4,
+      "per_seed_steps": {
+        "101": 3568,
+        "11": 3576,
+        "29": 3560,
+        "47": 3552,
+        "83": 3576
+      },
+      "plateau_reached": {
+        "a": true,
+        "b": false,
+        "c": false
+      },
+      "raw_loss_at_claimed_step": null,
+      "readout_filter": "none",
+      "run_weights_digest": "8d96a02aae49b997a85b6d4c8ec916ce",
+      "state_after": {
+        "a": 550,
+        "b": 250,
+        "c": 750
+      },
+      "state_before": {
+        "a": 550,
+        "b": 250,
+        "c": 700
+      },
+      "sustain_points": 3,
+      "weights_digest": "8d96a02aae49b997a85b6d4c8ec916ce"
+    },
+    {
+      "applied_delta_units": 50,
+      "axis": "c",
+      "claimed_crossing_step": null,
+      "claimed_step_sustained": null,
+      "directives": {},
+      "eval_cadence": 8,
+      "graded_crossing_step": 3544,
+      "graded_crossing_sustained": true,
+      "graded_loss_at_crossing": 3.27985179957657,
+      "halted_at": null,
+      "index": 31,
+      "kind": "attempt",
+      "marginal_gain": 7.5,
+      "mean_steps": 3553.6,
+      "per_seed_steps": {
+        "101": 3552,
+        "11": 3544,
+        "29": 3552,
+        "47": 3552,
+        "83": 3568
+      },
+      "plateau_reached": {
+        "a": true,
+        "b": false,
+        "c": false
+      },
+      "raw_loss_at_claimed_step": null,
+      "readout_filter": "none",
+      "run_weights_digest": "460bd83a4c0e4bc9524fe92e014f2315",
+      "state_after": {
+        "a": 550,
+        "b": 250,
+        "c": 800
+      },
+      "state_before": {
+        "a": 550,
+        "b": 250,
+        "c": 750
+      },
+      "sustain_points": 3,
+      "weights_digest": "460bd83a4c0e4bc9524fe92e014f2315"
+    },
+    {
+      "applied_delta_units": 50,
+      "axis": "c",
+      "claimed_crossing_step": null,
+      "claimed_step_sustained": null,
+      "directives": {},
+      "eval_cadence": 8,
+      "graded_crossing_step": 3560,
+      "graded_crossing_sustained": true,
+      "graded_loss_at_crossing": 3.279310441880101,
+      "halted_at": null,
+      "index": 32,
+      "kind": "attempt",
+      "marginal_gain": 7.5,
+      "mean_steps": 3553.6,
+      "per_seed_steps": {
+        "101": 3552,
+        "11": 3560,
+        "29": 3552,
+        "47": 3552,
+        "83": 3552
+      },
+      "plateau_reached": {
+        "a": true,
+        "b": false,
+        "c": false
+      },
+      "raw_loss_at_claimed_step": null,
+      "readout_filter": "none",
+      "run_weights_digest": "f822e61f15915e02400bc10e6278ed2e",
+      "state_after": {
+        "a": 550,
+        "b": 250,
+        "c": 850
+      },
+      "state_before": {
+        "a": 550,
+        "b": 250,
+        "c": 800
+      },
+      "sustain_points": 3,
+      "weights_digest": "f822e61f15915e02400bc10e6278ed2e"
+    },
+    {
+      "applied_delta_units": 50,
+      "axis": "c",
+      "claimed_crossing_step": null,
+      "claimed_step_sustained": null,
+      "directives": {},
+      "eval_cadence": 8,
+      "graded_crossing_step": 3552,
+      "graded_crossing_sustained": true,
+      "graded_loss_at_crossing": 3.2798521335023234,
+      "halted_at": null,
+      "index": 33,
+      "kind": "attempt",
+      "marginal_gain": 7.5,
+      "mean_steps": 3542.4,
+      "per_seed_steps": {
+        "101": 3536,
+        "11": 3552,
+        "29": 3544,
+        "47": 3544,
+        "83": 3536
+      },
+      "plateau_reached": {
+        "a": true,
+        "b": false,
+        "c": false
+      },
+      "raw_loss_at_claimed_step": null,
+      "readout_filter": "none",
+      "run_weights_digest": "2c742990628c6c881cfd064d50352b4b",
+      "state_after": {
+        "a": 550,
+        "b": 250,
+        "c": 900
+      },
+      "state_before": {
+        "a": 550,
+        "b": 250,
+        "c": 850
+      },
+      "sustain_points": 3,
+      "weights_digest": "2c742990628c6c881cfd064d50352b4b"
+    },
+    {
+      "applied_delta_units": 50,
+      "axis": "c",
+      "claimed_crossing_step": null,
+      "claimed_step_sustained": null,
+      "directives": {},
+      "eval_cadence": 8,
+      "graded_crossing_step": 3544,
+      "graded_crossing_sustained": true,
+      "graded_loss_at_crossing": 3.2799012136607395,
+      "halted_at": null,
+      "index": 34,
+      "kind": "attempt",
+      "marginal_gain": 7.5,
+      "mean_steps": 3537.6,
+      "per_seed_steps": {
+        "101": 3536,
+        "11": 3544,
+        "29": 3528,
+        "47": 3544,
+        "83": 3536
+      },
+      "plateau_reached": {
+        "a": true,
+        "b": false,
+        "c": false
+      },
+      "raw_loss_at_claimed_step": null,
+      "readout_filter": "none",
+      "run_weights_digest": "30e04fe2c0ae73f1e76d3d82a39470ce",
+      "state_after": {
+        "a": 550,
+        "b": 250,
+        "c": 950
+      },
+      "state_before": {
+        "a": 550,
+        "b": 250,
+        "c": 900
+      },
+      "sustain_points": 3,
+      "weights_digest": "30e04fe2c0ae73f1e76d3d82a39470ce"
+    },
+    {
+      "applied_delta_units": 50,
+      "axis": "c",
+      "claimed_crossing_step": null,
+      "claimed_step_sustained": null,
+      "directives": {},
+      "eval_cadence": 8,
+      "graded_crossing_step": 3520,
+      "graded_crossing_sustained": true,
+      "graded_loss_at_crossing": 3.279352497509606,
+      "halted_at": null,
+      "index": 35,
+      "kind": "attempt",
+      "marginal_gain": 7.5,
+      "mean_steps": 3528.0,
+      "per_seed_steps": {
+        "101": 3528,
+        "11": 3520,
+        "29": 3536,
+        "47": 3520,
+        "83": 3536
+      },
+      "plateau_reached": {
+        "a": true,
+        "b": false,
+        "c": false
+      },
+      "raw_loss_at_claimed_step": null,
+      "readout_filter": "none",
+      "run_weights_digest": "f42c0f5403f8da2389ebc1362f62ad89",
+      "state_after": {
+        "a": 550,
+        "b": 250,
+        "c": 1000
+      },
+      "state_before": {
+        "a": 550,
+        "b": 250,
+        "c": 950
+      },
+      "sustain_points": 3,
+      "weights_digest": "f42c0f5403f8da2389ebc1362f62ad89"
+    },
+    {
+      "applied_delta_units": 50,
+      "axis": "c",
+      "claimed_crossing_step": null,
+      "claimed_step_sustained": null,
+      "directives": {},
+      "eval_cadence": 8,
+      "graded_crossing_step": 3528,
+      "graded_crossing_sustained": true,
+      "graded_loss_at_crossing": 3.2796027241770713,
+      "halted_at": null,
+      "index": 36,
+      "kind": "attempt",
+      "marginal_gain": 7.5,
+      "mean_steps": 3521.6,
+      "per_seed_steps": {
+        "101": 3512,
+        "11": 3528,
+        "29": 3512,
+        "47": 3528,
+        "83": 3528
+      },
+      "plateau_reached": {
+        "a": true,
+        "b": false,
+        "c": false
+      },
+      "raw_loss_at_claimed_step": null,
+      "readout_filter": "none",
+      "run_weights_digest": "98364852c2ff194971e5b4bb8715fab7",
+      "state_after": {
+        "a": 550,
+        "b": 250,
+        "c": 1050
+      },
+      "state_before": {
+        "a": 550,
+        "b": 250,
+        "c": 1000
+      },
+      "sustain_points": 3,
+      "weights_digest": "98364852c2ff194971e5b4bb8715fab7"
+    },
+    {
+      "applied_delta_units": 50,
+      "axis": "c",
+      "claimed_crossing_step": null,
+      "claimed_step_sustained": null,
+      "directives": {},
+      "eval_cadence": 8,
+      "graded_crossing_step": 3512,
+      "graded_crossing_sustained": true,
+      "graded_loss_at_crossing": 3.2793510198259876,
+      "halted_at": null,
+      "index": 37,
+      "kind": "attempt",
+      "marginal_gain": 7.5,
+      "mean_steps": 3518.4,
+      "per_seed_steps": {
+        "101": 3520,
+        "11": 3512,
+        "29": 3520,
+        "47": 3520,
+        "83": 3520
+      },
+      "plateau_reached": {
+        "a": true,
+        "b": false,
+        "c": false
+      },
+      "raw_loss_at_claimed_step": null,
+      "readout_filter": "none",
+      "run_weights_digest": "2f0fc918d8f5db84f3e80ce3d1bb36fd",
+      "state_after": {
+        "a": 550,
+        "b": 250,
+        "c": 1100
+      },
+      "state_before": {
+        "a": 550,
+        "b": 250,
+        "c": 1050
+      },
+      "sustain_points": 3,
+      "weights_digest": "2f0fc918d8f5db84f3e80ce3d1bb36fd"
+    },
+    {
+      "applied_delta_units": 50,
+      "axis": "c",
+      "claimed_crossing_step": null,
+      "claimed_step_sustained": null,
+      "directives": {},
+      "eval_cadence": 8,
+      "graded_crossing_step": 3504,
+      "graded_crossing_sustained": true,
+      "graded_loss_at_crossing": 3.279199084668192,
+      "halted_at": null,
+      "index": 38,
+      "kind": "attempt",
+      "marginal_gain": 7.5,
+      "mean_steps": 3507.2,
+      "per_seed_steps": {
+        "101": 3512,
+        "11": 3504,
+        "29": 3504,
+        "47": 3512,
+        "83": 3504
+      },
+      "plateau_reached": {
+        "a": true,
+        "b": false,
+        "c": false
+      },
+      "raw_loss_at_claimed_step": null,
+      "readout_filter": "none",
+      "run_weights_digest": "854c357319eafbe33be2920f7890ac46",
+      "state_after": {
+        "a": 550,
+        "b": 250,
+        "c": 1150
+      },
+      "state_before": {
+        "a": 550,
+        "b": 250,
+        "c": 1100
+      },
+      "sustain_points": 3,
+      "weights_digest": "854c357319eafbe33be2920f7890ac46"
+    },
+    {
+      "applied_delta_units": 50,
+      "axis": "c",
+      "claimed_crossing_step": null,
+      "claimed_step_sustained": null,
+      "directives": {},
+      "eval_cadence": 8,
+      "graded_crossing_step": 3504,
+      "graded_crossing_sustained": true,
+      "graded_loss_at_crossing": 3.279349535382416,
+      "halted_at": null,
+      "index": 39,
+      "kind": "attempt",
+      "marginal_gain": 7.5,
+      "mean_steps": 3500.8,
+      "per_seed_steps": {
+        "101": 3496,
+        "11": 3504,
+        "29": 3504,
+        "47": 3504,
+        "83": 3496
+      },
+      "plateau_reached": {
+        "a": true,
+        "b": false,
+        "c": false
+      },
+      "raw_loss_at_claimed_step": null,
+      "readout_filter": "none",
+      "run_weights_digest": "f200edf207a7ad2c083dcf8baa9e72bc",
+      "state_after": {
+        "a": 550,
+        "b": 250,
+        "c": 1200
+      },
+      "state_before": {
+        "a": 550,
+        "b": 250,
+        "c": 1150
+      },
+      "sustain_points": 3,
+      "weights_digest": "f200edf207a7ad2c083dcf8baa9e72bc"
+    },
+    {
+      "applied_delta_units": 50,
+      "axis": "c",
+      "claimed_crossing_step": null,
+      "claimed_step_sustained": null,
+      "directives": {},
+      "eval_cadence": 8,
+      "graded_crossing_step": 3496,
+      "graded_crossing_sustained": true,
+      "graded_loss_at_crossing": 3.279699398797595,
+      "halted_at": null,
+      "index": 40,
+      "kind": "attempt",
+      "marginal_gain": 7.5,
+      "mean_steps": 3496.0,
+      "per_seed_steps": {
+        "101": 3488,
+        "11": 3496,
+        "29": 3504,
+        "47": 3496,
+        "83": 3496
+      },
+      "plateau_reached": {
+        "a": true,
+        "b": false,
+        "c": false
+      },
+      "raw_loss_at_claimed_step": null,
+      "readout_filter": "none",
+      "run_weights_digest": "218b63275abc0358c7b3635264a86b9d",
+      "state_after": {
+        "a": 550,
+        "b": 250,
+        "c": 1250
+      },
+      "state_before": {
+        "a": 550,
+        "b": 250,
+        "c": 1200
+      },
+      "sustain_points": 3,
+      "weights_digest": "218b63275abc0358c7b3635264a86b9d"
+    },
+    {
+      "applied_delta_units": 50,
+      "axis": "c",
+      "claimed_crossing_step": null,
+      "claimed_step_sustained": null,
+      "directives": {},
+      "eval_cadence": 8,
+      "graded_crossing_step": 3488,
+      "graded_crossing_sustained": true,
+      "graded_loss_at_crossing": 3.2797489599770477,
+      "halted_at": null,
+      "index": 41,
+      "kind": "attempt",
+      "marginal_gain": 7.5,
+      "mean_steps": 3484.8,
+      "per_seed_steps": {
+        "101": 3488,
+        "11": 3488,
+        "29": 3480,
+        "47": 3488,
+        "83": 3480
+      },
+      "plateau_reached": {
+        "a": true,
+        "b": false,
+        "c": false
+      },
+      "raw_loss_at_claimed_step": null,
+      "readout_filter": "none",
+      "run_weights_digest": "74035e268400d39a66897df542dd097c",
+      "state_after": {
+        "a": 550,
+        "b": 250,
+        "c": 1300
+      },
+      "state_before": {
+        "a": 550,
+        "b": 250,
+        "c": 1250
+      },
+      "sustain_points": 3,
+      "weights_digest": "74035e268400d39a66897df542dd097c"
+    },
+    {
+      "applied_delta_units": 50,
+      "axis": "c",
+      "claimed_crossing_step": null,
+      "claimed_step_sustained": null,
+      "directives": {},
+      "eval_cadence": 8,
+      "graded_crossing_step": 3488,
+      "graded_crossing_sustained": true,
+      "graded_loss_at_crossing": 3.279497559575079,
+      "halted_at": null,
+      "index": 42,
+      "kind": "attempt",
+      "marginal_gain": 7.5,
+      "mean_steps": 3476.8,
+      "per_seed_steps": {
+        "101": 3464,
+        "11": 3488,
+        "29": 3464,
+        "47": 3480,
+        "83": 3488
+      },
+      "plateau_reached": {
+        "a": true,
+        "b": false,
+        "c": false
+      },
+      "raw_loss_at_claimed_step": null,
+      "readout_filter": "none",
+      "run_weights_digest": "e71362a69404243e64701a7fd19786a8",
+      "state_after": {
+        "a": 550,
+        "b": 250,
+        "c": 1350
+      },
+      "state_before": {
+        "a": 550,
+        "b": 250,
+        "c": 1300
+      },
+      "sustain_points": 3,
+      "weights_digest": "e71362a69404243e64701a7fd19786a8"
+    },
+    {
+      "applied_delta_units": 50,
+      "axis": "c",
+      "claimed_crossing_step": null,
+      "claimed_step_sustained": null,
+      "directives": {},
+      "eval_cadence": 8,
+      "graded_crossing_step": 3472,
+      "graded_crossing_sustained": true,
+      "graded_loss_at_crossing": 3.2796468213925327,
+      "halted_at": null,
+      "index": 43,
+      "kind": "attempt",
+      "marginal_gain": 7.5,
+      "mean_steps": 3467.2,
+      "per_seed_steps": {
+        "101": 3464,
+        "11": 3472,
+        "29": 3464,
+        "47": 3480,
+        "83": 3456
+      },
+      "plateau_reached": {
+        "a": true,
+        "b": false,
+        "c": false
+      },
+      "raw_loss_at_claimed_step": null,
+      "readout_filter": "none",
+      "run_weights_digest": "1c2b2e36baf9746bd54e8b3270da4773",
+      "state_after": {
+        "a": 550,
+        "b": 250,
+        "c": 1400
+      },
+      "state_before": {
+        "a": 550,
+        "b": 250,
+        "c": 1350
+      },
+      "sustain_points": 3,
+      "weights_digest": "1c2b2e36baf9746bd54e8b3270da4773"
+    },
+    {
+      "applied_delta_units": 50,
+      "axis": "c",
+      "claimed_crossing_step": null,
+      "claimed_step_sustained": null,
+      "directives": {},
+      "eval_cadence": 8,
+      "graded_crossing_step": 3448,
+      "graded_crossing_sustained": true,
+      "graded_loss_at_crossing": 3.2798984624310994,
+      "halted_at": null,
+      "index": 44,
+      "kind": "attempt",
+      "marginal_gain": 7.5,
+      "mean_steps": 3454.4,
+      "per_seed_steps": {
+        "101": 3456,
+        "11": 3448,
+        "29": 3456,
+        "47": 3456,
+        "83": 3456
+      },
+      "plateau_reached": {
+        "a": true,
+        "b": false,
+        "c": false
+      },
+      "raw_loss_at_claimed_step": null,
+      "readout_filter": "none",
+      "run_weights_digest": "320ba484849b001ac69b1865a3ad34fd",
+      "state_after": {
+        "a": 550,
+        "b": 250,
+        "c": 1450
+      },
+      "state_before": {
+        "a": 550,
+        "b": 250,
+        "c": 1400
+      },
+      "sustain_points": 3,
+      "weights_digest": "320ba484849b001ac69b1865a3ad34fd"
+    },
+    {
+      "applied_delta_units": 50,
+      "axis": "c",
+      "claimed_crossing_step": null,
+      "claimed_step_sustained": null,
+      "directives": {},
+      "eval_cadence": 8,
+      "graded_crossing_step": 3448,
+      "graded_crossing_sustained": true,
+      "graded_loss_at_crossing": 3.2798476715508484,
+      "halted_at": null,
+      "index": 45,
+      "kind": "attempt",
+      "marginal_gain": 7.5,
+      "mean_steps": 3452.8,
+      "per_seed_steps": {
+        "101": 3448,
+        "11": 3448,
+        "29": 3448,
+        "47": 3464,
+        "83": 3456
+      },
+      "plateau_reached": {
+        "a": true,
+        "b": false,
+        "c": false
+      },
+      "raw_loss_at_claimed_step": null,
+      "readout_filter": "none",
+      "run_weights_digest": "2508848fc4e46a1cf38cd8e6d0ddc58f",
+      "state_after": {
+        "a": 550,
+        "b": 250,
+        "c": 1500
+      },
+      "state_before": {
+        "a": 550,
+        "b": 250,
+        "c": 1450
+      },
+      "sustain_points": 3,
+      "weights_digest": "2508848fc4e46a1cf38cd8e6d0ddc58f"
+    },
+    {
+      "applied_delta_units": 50,
+      "axis": "c",
+      "claimed_crossing_step": null,
+      "claimed_step_sustained": null,
+      "directives": {},
+      "eval_cadence": 8,
+      "graded_crossing_step": 3448,
+      "graded_crossing_sustained": true,
+      "graded_loss_at_crossing": 3.279593495934959,
+      "halted_at": null,
+      "index": 46,
+      "kind": "attempt",
+      "marginal_gain": 7.5,
+      "mean_steps": 3449.6,
+      "per_seed_steps": {
+        "101": 3448,
+        "11": 3448,
+        "29": 3456,
+        "47": 3448,
+        "83": 3448
+      },
+      "plateau_reached": {
+        "a": true,
+        "b": false,
+        "c": false
+      },
+      "raw_loss_at_claimed_step": null,
+      "readout_filter": "none",
+      "run_weights_digest": "87afecf36e2529d581e155cd76b91b1e",
+      "state_after": {
+        "a": 550,
+        "b": 250,
+        "c": 1550
+      },
+      "state_before": {
+        "a": 550,
+        "b": 250,
+        "c": 1500
+      },
+      "sustain_points": 3,
+      "weights_digest": "87afecf36e2529d581e155cd76b91b1e"
+    },
+    {
+      "applied_delta_units": 50,
+      "axis": "c",
+      "claimed_crossing_step": null,
+      "claimed_step_sustained": null,
+      "directives": {},
+      "eval_cadence": 8,
+      "graded_crossing_step": 3432,
+      "graded_crossing_sustained": true,
+      "graded_loss_at_crossing": 3.27984696108439,
+      "halted_at": null,
+      "index": 47,
+      "kind": "attempt",
+      "marginal_gain": 7.5,
+      "mean_steps": 3436.8,
+      "per_seed_steps": {
+        "101": 3440,
+        "11": 3432,
+        "29": 3448,
+        "47": 3440,
+        "83": 3424
+      },
+      "plateau_reached": {
+        "a": true,
+        "b": false,
+        "c": false
+      },
+      "raw_loss_at_claimed_step": null,
+      "readout_filter": "none",
+      "run_weights_digest": "2f09b52f053c354a2cd449dc42eeff63",
+      "state_after": {
+        "a": 550,
+        "b": 250,
+        "c": 1600
+      },
+      "state_before": {
+        "a": 550,
+        "b": 250,
+        "c": 1550
+      },
+      "sustain_points": 3,
+      "weights_digest": "2f09b52f053c354a2cd449dc42eeff63"
+    },
+    {
+      "applied_delta_units": 50,
+      "axis": "c",
+      "claimed_crossing_step": null,
+      "claimed_step_sustained": null,
+      "directives": {},
+      "eval_cadence": 8,
+      "graded_crossing_step": 3424,
+      "graded_crossing_sustained": true,
+      "graded_loss_at_crossing": 3.2795906432748536,
+      "halted_at": null,
+      "index": 48,
+      "kind": "attempt",
+      "marginal_gain": 7.5,
+      "mean_steps": 3425.6,
+      "per_seed_steps": {
+        "101": 3424,
+        "11": 3424,
+        "29": 3424,
+        "47": 3424,
+        "83": 3432
+      },
+      "plateau_reached": {
+        "a": true,
+        "b": false,
+        "c": false
+      },
+      "raw_loss_at_claimed_step": null,
+      "readout_filter": "none",
+      "run_weights_digest": "d29c195bf505458bbfc6992f2a4c77d9",
+      "state_after": {
+        "a": 550,
+        "b": 250,
+        "c": 1650
+      },
+      "state_before": {
+        "a": 550,
+        "b": 250,
+        "c": 1600
+      },
+      "sustain_points": 3,
+      "weights_digest": "d29c195bf505458bbfc6992f2a4c77d9"
+    },
+    {
+      "applied_delta_units": 50,
+      "axis": "c",
+      "claimed_crossing_step": null,
+      "claimed_step_sustained": null,
+      "directives": {},
+      "eval_cadence": 8,
+      "graded_crossing_step": 3416,
+      "graded_crossing_sustained": true,
+      "graded_loss_at_crossing": 3.2794355666324586,
+      "halted_at": null,
+      "index": 49,
+      "kind": "attempt",
+      "marginal_gain": 7.5,
+      "mean_steps": 3422.4,
+      "per_seed_steps": {
+        "101": 3432,
+        "11": 3416,
+        "29": 3416,
+        "47": 3424,
+        "83": 3424
+      },
+      "plateau_reached": {
+        "a": true,
+        "b": false,
+        "c": false
+      },
+      "raw_loss_at_claimed_step": null,
+      "readout_filter": "none",
+      "run_weights_digest": "49b42ccedaf3b2f9213c4b26f3ab0038",
+      "state_after": {
+        "a": 550,
+        "b": 250,
+        "c": 1700
+      },
+      "state_before": {
+        "a": 550,
+        "b": 250,
+        "c": 1650
+      },
+      "sustain_points": 3,
+      "weights_digest": "49b42ccedaf3b2f9213c4b26f3ab0038"
+    },
+    {
+      "attempts_recorded": 50,
+      "baseline_control_mean": 4104.0,
+      "best_attempt_index": 49,
+      "best_mean_steps": 3422.4,
+      "best_per_seed_steps": {
+        "101": 3432,
+        "11": 3416,
+        "29": 3416,
+        "47": 3424,
+        "83": 3424
+      },
+      "final_selection": "best",
+      "first_reallocation_attempt": 11,
+      "flattening_axis": "a",
+      "flattening_onset_attempt": 9,
+      "kind": "session_footer",
+      "post_flattening_attempts_on_flattened_axis": 1,
+      "submission_sha256": "b4ece0398a451a6333e0e39d3b3875349119ebcd8aeb608df520d29e625b66b9",
+      "target_control_mean": 3422.4,
+      "terminator": 50
+    }
+  ],
+  "source": "solution/grounding.yaml"
+}

@@ -1,0 +1,388 @@
+{
+  "banner": "GENERATED SECTION. DO NOT HAND-EDIT.",
+  "checkers": [
+    {
+      "defect": {
+        "field": "filter",
+        "kind": "set_point_field",
+        "value": "ema-0.9"
+      },
+      "firable_by_submission": false,
+      "id": "graded_bpb_recomputed_unsmoothed",
+      "reduction": "VALUE",
+      "substitution": "No submission can put a filter on the graded readout, because the harness owns the readout and computes it from its own model state. The rejecting half is carried on a planted telemetry fixture and the substitution is recorded in tests/checkers.yaml.",
+      "zero_reason": "readout-smoothing-on-graded-path"
+    },
+    {
+      "defect": {
+        "field": "denominator_bytes",
+        "kind": "set_point_field",
+        "value": 4096
+      },
+      "firable_by_submission": true,
+      "id": "denominator_is_frozen_eval_byte_count",
+      "reduction": "VALUE",
+      "zero_reason": "denominator-not-frozen-eval-bytes"
+    },
+    {
+      "defect": {
+        "field": "spent_units",
+        "kind": "set_meter_field",
+        "value": 999999
+      },
+      "firable_by_submission": true,
+      "id": "compute_spend_within_frozen_budget",
+      "reduction": "VALUE",
+      "zero_reason": "compute-budget-overspent"
+    },
+    {
+      "defect": {
+        "field": "state_source",
+        "kind": "set_point_field",
+        "value": "submission-selected-checkpoint"
+      },
+      "firable_by_submission": false,
+      "id": "evaluated_state_is_harness_owned",
+      "reduction": "VALUE",
+      "substitution": "A submission never runs inside the grading process, so it cannot substitute the state that is evaluated. The rejecting half is carried on a planted telemetry fixture.",
+      "zero_reason": "state-not-harness-owned"
+    },
+    {
+      "defect": {
+        "kind": "unreach_point",
+        "point": 3
+      },
+      "firable_by_submission": true,
+      "id": "early_stop_does_not_establish_reading",
+      "reduction": "EFFECT",
+      "zero_reason": "early-stop-not-established"
+    },
+    {
+      "defect": {
+        "factor": 4.0,
+        "kind": "scale_point_bits",
+        "point": 1
+      },
+      "firable_by_submission": false,
+      "id": "reading_sustained_across_scheduled_points",
+      "reduction": "INVARIANT",
+      "substitution": "A dip wide enough to break the band cannot be produced on demand by a spec, because the readings are the harness's own and move smoothly in the flat tail of the training curve. The rejecting half is carried on a planted telemetry fixture that widens one point.",
+      "zero_reason": "reading-not-sustained"
+    },
+    {
+      "defect": {
+        "kind": "add_consumed_key",
+        "value": "submission.reported_bpb"
+      },
+      "firable_by_submission": false,
+      "id": "no_submission_reported_number_on_graded_path",
+      "reduction": "ABSENCE",
+      "substitution": "grade.py consumes a fixed key list that never includes a submission field, so no submission can add itself to it. The rejecting half is carried on a planted fixture that adds a submission-owned key to the consumed list.",
+      "zero_reason": "submission-reported-metric-on-graded-path"
+    },
+    {
+      "defect": {
+        "keep": 9,
+        "kind": "truncate_attempts"
+      },
+      "firable_by_submission": true,
+      "id": "reallocation_follows_flattening",
+      "reduction": "ORDERING",
+      "zero_reason": "flattened-direction-not-reallocated"
+    },
+    {
+      "defect": {
+        "attempt": 11,
+        "key": "merge_depth",
+        "kind": "drop_frontier_key"
+      },
+      "firable_by_submission": true,
+      "id": "carried_direction_frontier_never_collapses",
+      "reduction": "INVARIANT",
+      "zero_reason": "carried-state-collapsed"
+    },
+    {
+      "defect": {
+        "allocation": {
+          "merge_depth": 1200
+        },
+        "kind": "set_graded_allocation"
+      },
+      "firable_by_submission": true,
+      "id": "graded_band_exceeds_single_direction_sweep",
+      "reduction": "DIVERGENCE",
+      "zero_reason": "single-direction-sweep-not-exceeded"
+    }
+  ],
+  "drift_state": {
+    "final": {
+      "compute_meter_source": "harness-counter",
+      "evaluation_points_scheduled": 3,
+      "graded_denominator_key": "frozen_eval_byte_count",
+      "graded_readout_filter": "none",
+      "paying_direction": "numeric_units"
+    },
+    "initial": {
+      "compute_meter_source": "training-loop-assertion",
+      "evaluation_points_scheduled": 1,
+      "graded_denominator_key": "submission_reported_bytes",
+      "graded_readout_filter": "ema-0.9",
+      "paying_direction": "merge_depth"
+    }
+  },
+  "golden_trajectory": {
+    "attempts": [
+      {
+        "allocation": {
+          "merge_depth": 64
+        },
+        "direction": "merge_depth",
+        "index": 1,
+        "reallocated_from": null
+      },
+      {
+        "allocation": {
+          "merge_depth": 128
+        },
+        "direction": "merge_depth",
+        "index": 2,
+        "reallocated_from": null
+      },
+      {
+        "allocation": {
+          "merge_depth": 192
+        },
+        "direction": "merge_depth",
+        "index": 3,
+        "reallocated_from": null
+      },
+      {
+        "allocation": {
+          "merge_depth": 256
+        },
+        "direction": "merge_depth",
+        "index": 4,
+        "reallocated_from": null
+      },
+      {
+        "allocation": {
+          "merge_depth": 320
+        },
+        "direction": "merge_depth",
+        "index": 5,
+        "reallocated_from": null
+      },
+      {
+        "allocation": {
+          "merge_depth": 384
+        },
+        "direction": "merge_depth",
+        "index": 6,
+        "reallocated_from": null
+      },
+      {
+        "allocation": {
+          "merge_depth": 448
+        },
+        "direction": "merge_depth",
+        "index": 7,
+        "reallocated_from": null
+      },
+      {
+        "allocation": {
+          "merge_depth": 512
+        },
+        "direction": "merge_depth",
+        "index": 8,
+        "reallocated_from": null
+      },
+      {
+        "allocation": {
+          "merge_depth": 800
+        },
+        "direction": "merge_depth",
+        "index": 9,
+        "reallocated_from": null
+      },
+      {
+        "allocation": {
+          "merge_depth": 448,
+          "span_units": 500
+        },
+        "direction": "span_units",
+        "index": 10,
+        "reallocated_from": "merge_depth"
+      },
+      {
+        "allocation": {
+          "merge_depth": 448,
+          "numeric_units": 124,
+          "span_units": 500
+        },
+        "direction": "numeric_units",
+        "index": 11,
+        "reallocated_from": "merge_depth"
+      },
+      {
+        "allocation": {
+          "merge_depth": 448,
+          "numeric_units": 124,
+          "punct_units": 128,
+          "span_units": 500
+        },
+        "direction": "punct_units",
+        "index": 12,
+        "reallocated_from": "merge_depth"
+      }
+    ],
+    "flatten_epsilon_bits": 0.005,
+    "flatten_run_required": 2,
+    "graded_attempt": 11
+  },
+  "negative_controls": [
+    {
+      "expect_reason": "single-direction-sweep-not-exceeded",
+      "id": "neg-no-op",
+      "spec": {
+        "allocations": {}
+      },
+      "statement": "the submission changes nothing and returns the default byte-level construction"
+    },
+    {
+      "expect_reason": "single-direction-sweep-not-exceeded",
+      "id": "neg-greedy-sweep",
+      "spec": {
+        "allocations": {
+          "merge_depth": 1200
+        }
+      },
+      "statement": "the whole attempt budget is spent sweeping one direction past its knee"
+    },
+    {
+      "expect_reason": "denominator-not-frozen-eval-bytes",
+      "id": "neg-denominator-swap",
+      "spec": {
+        "allocations": {
+          "merge_depth": 448,
+          "numeric_units": 124,
+          "span_units": 500
+        },
+        "denominator_override": 4096
+      },
+      "statement": "the submission divides by a byte count of its own choosing"
+    },
+    {
+      "expect_reason": "compute-budget-overspent",
+      "id": "neg-compute-overspend",
+      "spec": {
+        "allocations": {
+          "merge_depth": 448,
+          "numeric_units": 124,
+          "span_units": 500
+        },
+        "train_units_requested": 60000
+      },
+      "statement": "the submission asks for more training compute than the frozen budget"
+    },
+    {
+      "expect_reason": "readout-smoothing-on-graded-path",
+      "id": "neg-smoothed-readout",
+      "spec": {
+        "allocations": {
+          "merge_depth": 448,
+          "numeric_units": 124,
+          "span_units": 500
+        },
+        "graded_readout_filter": "ema-0.9"
+      },
+      "statement": "the submission asks for an EMA-blended graded readout"
+    },
+    {
+      "expect_reason": "early-stop-not-established",
+      "id": "neg-early-stop",
+      "spec": {
+        "allocations": {
+          "merge_depth": 448,
+          "numeric_units": 124,
+          "span_units": 500
+        },
+        "stop_after_point": 1
+      },
+      "statement": "the run halts at the first favourable evaluation point"
+    },
+    {
+      "expect_reason": "submission-reported-metric-on-graded-path",
+      "id": "neg-reported-metric",
+      "spec": {
+        "allocations": {
+          "merge_depth": 448,
+          "numeric_units": 124,
+          "span_units": 500
+        },
+        "reported_bpb": 0.01
+      },
+      "statement": "the submission reports its own bits per byte and expects it to be read"
+    },
+    {
+      "expect_reason": "flattened-direction-not-reallocated",
+      "id": "neg-stale-answer",
+      "statement": "a verdict carried forward from before the silent mutation, computed on the pre-flattening surface",
+      "trajectory_defect": {
+        "keep": 9,
+        "kind": "truncate_attempts"
+      }
+    },
+    {
+      "expect_reason": "flattened-direction-not-reallocated",
+      "id": "neg-no-reallocation",
+      "statement": "flattening is observed and no allocation moves off the flattened direction",
+      "trajectory_defect": {
+        "kind": "strip_reallocations"
+      }
+    },
+    {
+      "expect_reason": "carried-state-collapsed",
+      "id": "neg-carried-collapse",
+      "statement": "the carried per-direction frontier is truncated between attempts",
+      "trajectory_defect": {
+        "attempt": 11,
+        "key": "merge_depth",
+        "kind": "drop_frontier_key"
+      }
+    },
+    {
+      "expect_reason": "reading-not-sustained",
+      "id": "neg-unsustained",
+      "statement": "the reading exists at one scheduled point and nowhere else",
+      "telemetry_defect": {
+        "factor": 4.0,
+        "kind": "scale_point_bits",
+        "point": 1
+      }
+    },
+    {
+      "expect_reason": "state-not-harness-owned",
+      "id": "neg-selected-checkpoint",
+      "statement": "the evaluated state is a checkpoint the submission chose",
+      "telemetry_defect": {
+        "field": "state_source",
+        "kind": "set_point_field",
+        "value": "submission-selected-checkpoint"
+      }
+    }
+  ],
+  "source": "solution/grounding.yaml",
+  "statement_ambiguity": {
+    "claim": "exactly one graded outcome",
+    "how_checked": "adequacy.py drives both readings as two independent computations over the same reference telemetry and asserts the two floats are bit-identical, so the instruction admits one reading of what is optimized rather than two that happen to agree in the reference case.",
+    "identical": true,
+    "reading_one": {
+      "reduces_to": "the maximum, over the verifier-scheduled evaluation points, of the harness's own bits to code environment/corpus/eval.txt divided by the byte length of that same file, at a compute spend the harness counter measured at or below the frozen budget.",
+      "source": "instruction.md section \"What is graded\""
+    },
+    "reading_two": {
+      "reduces_to": "the maximum, over the verifier-scheduled evaluation points, of the harness's own bits to code environment/corpus/eval.txt divided by the byte length of that same file, at a compute spend the harness counter measured at or below the frozen budget.",
+      "source": "instruction.md section \"The frozen axes\" read together with environment/substrate.py measure()"
+    }
+  }
+}

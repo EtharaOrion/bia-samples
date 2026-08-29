@@ -1,0 +1,543 @@
+--- # GENERATED SECTION. DO NOT HAND-EDIT. Regenerate with solution/recompute.py.
+# checkers.yaml for bia slot S07, mixed-precision-stability.
+#
+# Every graded assertion below reduces to EXACTLY ONE of VALUE, EFFECT, ABSENCE,
+# INVARIANT, ORDERING, DIVERGENCE, and names the live-state read it traces to. A checker
+# reducing to none or to two kinds is invalid. Several checkers share a kind; that is
+# lawful, because the rule binds each checker to one kind and does not require the six
+# kinds to partition the set.
+#
+# Each row also carries the three facts seed/forge/verifier.py reads from frozen bytes
+# rather than from an author's word: reached_by, the carrier file the entry point can
+# actually reach; selector, the function that carrier actually defines; and zero_reason,
+# the machine-readable code that carrier actually emits alongside the zero it explains.
+# recompute.py refuses to emit this file unless all three are true of the carrier bytes.
+#
+# Source of truth is the `rubric` block of solution/grounding.yaml. This file is
+# generated from it, tests/grade.py implements it, and recompute.py refuses to emit
+# anything unless the two identifier sets are equal.
+
+schema: forge.checkers/v1
+schema_version: 1
+slot: S07
+task: bia/mixed-precision-stability
+implementation: tests/grade.py
+outcome_carrier: /logs/verifier/outcomes.json
+reward_path: /logs/verifier/reward.txt
+gate_rule: every checker must pass; any failure emits score 0.0 with reason checker_failed:<names>
+
+aggregation:
+  mode: all_pass
+  note: >-
+    Every checker below is a gate rather than a weighted contributor: tests/grade.py returns 0.0
+    the moment any one of them is false, and only a run in which all of them hold reaches the
+    metric ratio at all. No threshold is declared, because this bundle binds no contract
+    threshold and authoring one here would invent the bar instead of carrying it.
+
+checkers:
+
+  - id: frozen_format_digest_matches
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: chk_frozen_format_digest_matches
+    zero_reason: frozen-format-digest-mismatched
+    statement: >-
+      The sha256 of the two files that define the frozen numeric surface equals the pair pinned
+      at authoring time, so the format the run used is the format the task froze.
+    live_state_read: >-
+      hashlib.sha256 over the bytes of environment/format.json and environment/bia_numerics.py
+      as they exist on the verifier filesystem at grade time, compared against the pinned pair
+      in tests/checkers/format_digest.json.
+    accepting_half: >-
+      the reference solution leaves both files untouched and the digests match.
+    rejecting_half: >-
+      mutating one byte of the max_normal field in environment/format.json changes the digest
+      and fails this checker, which is the route a solver would take to widen the dynamic range
+      instead of solving the accumulation problem.
+    negative_control: format_bytes_mutated
+
+  - id: no_overflow_flag_raised_in_agent_phase
+    reduction: ABSENCE
+    reached_by: tests/grade.py
+    selector: chk_no_overflow_flag_raised_in_agent_phase
+    zero_reason: overflow-flag-raised-in-agent-phase
+    statement: >-
+      No overflow event record exists for the graded phase. The thing that must not exist is a
+      raised overflow flag, and the assertion is that the list holding those flags is empty.
+    live_state_read: >-
+      the overflow_events list and the overflow_event_count field on the phase_end record whose
+      phase is agent_run, inside the harness written artifacts/telemetry.json. The counter lives
+      on the harness owned bia_numerics.LEDGER, which no submitted policy can reach or reset.
+    accepting_half: >-
+      the reference policy records overflow_event_count 0 and an empty event list.
+    rejecting_half: >-
+      the shipped starter policy, which is the standard dynamic loss scaling recipe, raises the
+      flag because its scale discovery mechanism IS overflow. Measured in smoke mode as
+      overflow_event_count 3, score 0.0, reason overflow_in_agent_phase.
+    negative_control: recalled_dynamic_loss_scale
+
+  - id: format_in_force_at_every_reduction
+    reduction: INVARIANT
+    reached_by: tests/grade.py
+    selector: chk_format_in_force_at_every_reduction
+    zero_reason: reduction-escaped-the-frozen-format
+    statement: >-
+      A property held across the whole run rather than at a sampled point: every gradient
+      reduction of the graded phase executed under BIA-E4M3N-v1 and actually quantized, so no
+      step escaped the frozen format.
+    live_state_read: >-
+      every record whose record field is reduction and whose phase is agent_run in
+      artifacts/telemetry.json, checking format_id equals BIA-E4M3N-v1 and quantize_calls is
+      strictly positive on each one.
+    accepting_half: >-
+      the reference run emits one conforming reduction record per step.
+    rejecting_half: >-
+      a policy that routed any step through the float32 path would emit format_id float32 or
+      quantize_calls 0 on that step and fail, and a run with zero reduction records fails
+      because an empty universe is not a held invariant.
+    negative_control: reduction_records_relabelled_float32
+
+  - id: agent_improves_on_standard_control
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: chk_agent_improves_on_standard_control
+    zero_reason: agent-did-not-improve-on-standard-control
+    statement: >-
+      A produced value bounds a target: the graded phase's final validation loss is strictly
+      below the standard control's final validation loss.
+    live_state_read: >-
+      the final_val_loss fields on the phase_end records for agent_run and for standard_control
+      in artifacts/telemetry.json, both computed by the same frozen validate() over the same
+      held out tail of the frozen corpus.
+    accepting_half: >-
+      measured in smoke mode, reference 3.9686 against standard control 4.5379.
+    rejecting_half: >-
+      measured in smoke mode, the conservative_global_scale route reaches 5.5380 and the
+      master_weights_only route reaches 4.6337, both above the control, both failing.
+    negative_control: conservative_global_scale
+
+  - id: phases_ran_in_declared_order
+    reduction: ORDERING
+    reached_by: tests/grade.py
+    selector: chk_phases_ran_in_declared_order
+    zero_reason: phases-out-of-declared-order
+    statement: >-
+      Events occurred in the required sequence: both scoring anchors were established before the
+      graded phase began. This is load bearing because the reward is a ratio over those anchors,
+      so an anchor computed after or during the graded phase could be fitted to it.
+    live_state_read: >-
+      the monotonically increasing seq field on the phase_begin and phase_end records in
+      artifacts/telemetry.json, requiring end(fp32_control) < end(standard_control) <
+      begin(agent_run) < end(agent_run).
+    accepting_half: >-
+      run_attempt.py appends the phases in the declared order and the check passes.
+    rejecting_half: >-
+      a telemetry file whose agent_run phase_begin precedes either control phase_end fails,
+      which is what a reordered or interleaved harness would produce.
+    negative_control: phases_reordered
+
+  - id: reduction_agrees_with_independent_replay
+    reduction: DIVERGENCE
+    reached_by: tests/grade.py
+    selector: chk_reduction_agrees_with_independent_replay
+    zero_reason: replay-diverged-from-recorded-reduction
+    statement: >-
+      Two independently derived results agree: the harness reduction recorded during the graded
+      run and a scalar re-implementation written from the fixture rather than from the harness
+      produce identical values element for element.
+    live_state_read: >-
+      the reduction_replay record in artifacts/telemetry.json, carrying the recorded chunk
+      values, the validated plan and the harness output for a fixed element slice, recomputed by
+      tests/checkers/reference_reducer.py which shares no code with environment/bia_numerics.py.
+    accepting_half: >-
+      measured over 64 elements of the reference run, 0 mismatches between the torch tensor
+      implementation and the pure Python scalar implementation.
+    rejecting_half: >-
+      a harness or submission that altered the arithmetic while leaving the plan intact diverges
+      from the scalar replay and fails, since the replay is driven by the recorded plan alone.
+    negative_control: replay_expectation_perturbed
+
+  - id: master_weights_updated_in_declared_dtype
+    reduction: EFFECT
+    reached_by: tests/grade.py
+    selector: chk_master_weights_updated_in_declared_dtype
+    zero_reason: master-weights-not-updated-in-declared-dtype
+    statement: >-
+      An action changed live state in a named way: the optimizer step actually wrote the master
+      weights, and it wrote them in the dtype the submitted policy declared, so the declaration
+      describes the tensors that existed rather than an intention.
+    live_state_read: >-
+      master_dtype, master_param_dtype_observed, master_checksum_first and master_checksum_final
+      on the agent_run phase_end record. The observed dtype is read off the live master tensor
+      and the two checksums are sha256 over the live tensor bytes at step 0 and after the final
+      step.
+    accepting_half: >-
+      the reference declares float32, the observed dtype reads torch.float32, and the checksums
+      differ, so the update landed.
+    rejecting_half: >-
+      a policy declaring a dtype the harness did not materialize fails on the dtype comparison,
+      and a run whose every step was skipped leaves the two checksums equal and fails on the
+      state change.
+    negative_control: master_weights_never_moved
+
+  - id: frozen_harness_bytes_unmodified
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: chk_frozen_harness_bytes_unmodified
+    zero_reason: frozen-harness-bytes-modified
+    statement: >-
+      The sha256 of the four frozen files instruction.md red-lines but the format digest pin
+      does not cover equals the map pinned at authoring time. This closes the mutation routes
+      format_digest.json leaves open: rewriting the training loop, rewriting the attempt driver,
+      editing the operating point that declares the step count and the budget, and swapping the
+      corpus together with the digest that guards it.
+    live_state_read: >-
+      hashlib.sha256 over the bytes of environment/harness.py, environment/run_attempt.py,
+      environment/operating_point.json and environment/corpus/moby_dick.txt as they exist on the
+      verifier filesystem at grade time, compared against the pinned map in
+      tests/checkers/frozen_bytes.json. A file the pin names but the filesystem lacks fails; the
+      checker never treats an absent file as unmodified.
+    accepting_half: >-
+      the reference solution edits none of the four and every digest matches.
+    rejecting_half: >-
+      the harness_bytes_mutated control appends one byte to environment/harness.py and the
+      corpus_bytes_mutated control flips one byte of environment/corpus/moby_dick.txt; each
+      changes exactly one entry of the map and fails. The corpus route is the one ByteCorpus
+      cannot catch on its own, because editing operating_point.json's corpus_sha256 alongside
+      the corpus satisfies the runtime digest check, and this pin covers both files.
+    negative_control: harness_bytes_mutated
+
+  - id: overflow_ledger_accounting_is_consistent
+    reduction: INVARIANT
+    reached_by: tests/grade.py
+    selector: chk_overflow_ledger_accounting_is_consistent
+    zero_reason: overflow-ledger-accounting-inconsistent
+    statement: >-
+      A property held across the whole phase: the harness owned overflow ledger was never reset,
+      rewound or otherwise reached between the first reduction and the phase_end snapshot. The
+      per reduction audit records and the end of phase snapshot are two independent projections
+      of the same counter, so they reconcile in an untampered run and diverge the moment the
+      counter is touched.
+    live_state_read: >-
+      for each of standard_control and agent_run in artifacts/telemetry.json, the quantize_calls
+      and overflow_elements deltas on every reduction record of that phase, summed and compared
+      against quantize_calls, overflow_elements and overflow_event_count on that phase's
+      phase_end record. An empty record set never reconciles vacuously: agent_run is never
+      cached, so it must carry reduction records or fail, and standard_control may carry none
+      only when its phase_end declares from_cache, in which case that anchor was reconciled on
+      the attempt that computed it.
+    accepting_half: >-
+      measured on the reference run in smoke mode: agent_run sums 2410 quantize_calls and 0
+      overflow elements against a phase_end snapshot of 2410 and 0, and standard_control sums
+      310 and 360 against 310 and 360.
+    rejecting_half: >-
+      the ledger_snapshot_overstated control inflates the end-of-phase overflow_elements on a
+      clean artifact tree so the snapshot no longer equals the sum of the per-reduction deltas
+      that produced it, and this checker alone fails. That is the general shape of every
+      snapshot a journal does not support. The policy-level route that used to exercise it,
+      clearing bia_numerics.LEDGER from inside plan(), is now structurally unreachable: the
+      policy runs in its own interpreter, so the ledger it can reach is not the ledger the
+      measurement journals. Measured after the redesign, that route records overflow_event_count
+      0 with 520 quantize calls reconciling exactly.
+    negative_control: ledger_snapshot_overstated
+
+  - id: agent_phase_covered_every_declared_step
+    reduction: INVARIANT
+    reached_by: tests/grade.py
+    selector: chk_agent_phase_covered_every_declared_step
+    zero_reason: declared-step-coverage-incomplete
+    statement: >-
+      A property held across the whole graded phase: it covered the declared schedule. steps_run
+      equals the step count environment/operating_point.json declares for the mode the attempt
+      recorded, steps_skipped is zero, and the set of step indices on the agent_run reduction
+      records equals the full range of declared steps with no gap and no duplicate.
+    live_state_read: >-
+      steps_run and steps_skipped on the agent_run phase_end record and the step field of every
+      agent_run reduction record in artifacts/telemetry.json, against schedule.steps or
+      smoke.steps in environment/operating_point.json selected by the mode field of the
+      attempt_begin record. The operating point file is itself pinned by
+      frozen_harness_bytes_unmodified, so the declared step count cannot be lowered to meet a
+      short run.
+    accepting_half: >-
+      the reference run in smoke mode records steps_run 10, steps_skipped 0 and reduction
+      records for steps 0 through 9.
+    rejecting_half: >-
+      the recalled_dynamic_loss_scale policy returns skip from on_overflow and records
+      steps_skipped 3, so a third of its declared schedule never trained; it fails. The
+      reduction_records_dropped artifact control removes half the agent_run reduction records
+      and fails on step coverage, which is the route a run that reduced once and reported per
+      step would take.
+    negative_control: reduction_records_dropped
+
+  - id: fp32_control_ran_outside_the_frozen_format
+    reduction: ABSENCE
+    reached_by: tests/grade.py
+    selector: chk_fp32_control_ran_outside_the_frozen_format
+    zero_reason: fp32-control-ran-inside-the-frozen-format
+    statement: >-
+      The thing that must not exist is a quantization inside the target anchor. The target
+      anchor is the bar the score is measured against, so a target computed under the frozen
+      format rather than in float32 would be a bar the narrow format had already lowered, and
+      the ratio would flatter every submission.
+    live_state_read: >-
+      format_id, quantize_calls and overflow_event_count on the fp32_control phase_end record,
+      and the format_id and quantize_calls fields of every reduction record whose phase is
+      fp32_control, in artifacts/telemetry.json. A missing fp32_control phase fails rather than
+      vacuously passing. The three phase_end fields carry the assertion on their own and survive
+      the control cache, so the check decides identically on a cold attempt and on a cached one;
+      the per reduction sweep is an additional read that is available only on a cold attempt.
+    accepting_half: >-
+      the reference attempt records fp32_control with format_id float32, quantize_calls 0,
+      overflow_event_count 0 and ten float32 reduction records.
+    rejecting_half: >-
+      the fp32_control_ran_narrow control rewrites the target anchor as a narrow format phase in
+      both the telemetry and the control cache, which is what lowering the bar looks like from
+      the outside; it fails on format_id and on quantize_calls.
+    negative_control: fp32_control_ran_narrow
+
+  - id: baseline_anchor_ran_the_shipped_narrow_recipe
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: chk_baseline_anchor_ran_the_shipped_narrow_recipe
+    zero_reason: baseline-anchor-is-not-the-shipped-narrow-recipe
+    statement: >-
+      A produced value meets a declared floor. instruction.md declares the baseline to be the
+      shipped standard mixed precision recipe reducing under BIA-E4M3N-v1, and the whole design
+      rests on that recipe overflowing under this format. A baseline that quantized nothing, or
+      that never overflowed, is not the recipe the task declares and is not a bar this task
+      authorised.
+    live_state_read: >-
+      format_id, quantize_calls and overflow_event_count on the standard_control phase_end
+      record in artifacts/telemetry.json. These three fields survive the control cache, so the
+      check decides identically on a cold first attempt and on the forty nine cached attempts
+      that follow it.
+    accepting_half: >-
+      measured on the reference attempt: standard_control reports BIA-E4M3N-v1, 310 quantize
+      calls and 3 overflow events in smoke mode, and 4 overflow events at the graded operating
+      point.
+    rejecting_half: >-
+      the baseline_anchor_declared_clean control rewrites the baseline in both the telemetry and
+      the control cache as a phase that quantized nothing and never overflowed, which is how a
+      fabricated or foreign baseline record reads; it fails on quantize_calls and on
+      overflow_event_count while leaving the anchor span intact, so it is this checker and not
+      anchor_span_is_positive_and_finite that catches it.
+    negative_control: baseline_anchor_declared_clean
+
+  - id: anchor_span_is_positive_and_finite
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: chk_anchor_span_is_positive_and_finite
+    zero_reason: anchor-span-degenerate
+    statement: >-
+      A produced value bounds a target. The reward is (baseline - agent) / (baseline - target),
+      so a span that is zero, negative or non finite makes every score undefined. The harness
+      already reports degenerate_anchor_span as a reason, but a reason is not a graded
+      assertion, and before this checker a degenerate span produced a silent zero that no test
+      distinguished from an honest miss.
+    live_state_read: >-
+      final_val_loss on the fp32_control, standard_control and agent_run phase_end records in
+      artifacts/telemetry.json, requiring each to be finite and requiring fp32_control strictly
+      less than standard_control.
+    accepting_half: >-
+      measured on the reference attempt in smoke mode: target 3.9700 strictly below baseline
+      4.5379, span 0.5679, all three finite.
+    rejecting_half: >-
+      the anchor_span_inverted control lowers the baseline below the target consistently across
+      the telemetry, the control cache and score.json, and recomputes the reported score to the
+      degenerate_anchor_span outcome the harness rule produces, so every cross artifact
+      agreement checker still passes and this checker alone fails. That is exactly the inversion
+      this slot measured and repaired at authoring time, when a 2 sequence micro batch left the
+      float32 control above the narrow format recipe.
+    negative_control: anchor_span_inverted
+
+  - id: all_phases_started_from_the_same_initialization
+    reduction: INVARIANT
+    reached_by: tests/grade.py
+    selector: chk_all_phases_started_from_the_same_initialization
+    zero_reason: phases-started-from-different-initializations
+    statement: >-
+      A property held across the whole attempt: the two anchors and the graded run are the same
+      experiment. instruction.md promises the model is trained three times from the same seed on
+      the same data, which is the only thing that makes a ratio over the three losses
+      meaningful. A record imported from a different configuration, a different seed or a
+      different session carries a different initialization checksum and breaks the invariant.
+    live_state_read: >-
+      master_checksum_first and master_checksum_final on all three phase_end records in
+      artifacts/telemetry.json. Both fields survive the control cache, so a cached anchor is
+      checked on exactly the same evidence as a freshly computed one.
+    accepting_half: >-
+      measured on the reference attempt: all three phases report master_checksum_first
+      d54c7e507015d8bee121d4bc1a626e20 and all three report a different master_checksum_final.
+    rejecting_half: >-
+      the foreign_initialization_in_baseline control substitutes a baseline record carrying a
+      different initialization checksum, consistently across the telemetry and the control
+      cache, which is what pasting a cheaper or a stale run into the anchor looks like; it fails
+      while the span, the recipe fields and every cross artifact agreement still hold.
+    negative_control: foreign_initialization_in_baseline
+
+  - id: control_cache_agrees_with_graded_telemetry
+    reduction: DIVERGENCE
+    reached_by: tests/grade.py
+    selector: chk_control_cache_agrees_with_graded_telemetry
+    zero_reason: control-cache-diverged-from-graded-telemetry
+    statement: >-
+      Two independently written carriers of the same fact agree. run_attempt.py writes the
+      anchors into the telemetry and into artifacts/controls_<config_digest>.json, and after the
+      attempt those two carriers are separately editable. This checker binds them to each other.
+      Its claim is bounded and it is stated here rather than implied: it detects a cache
+      rewritten AFTER the attempt recorded its telemetry. A cache rewritten BEFORE the attempt
+      began is consumed by run_attempt.py into the telemetry, so both carriers agree and this
+      checker cannot see it. That remaining hole is named in the judged residue of
+      red_line_routes_recognised_and_declined and closing it needs the cache moved outside the
+      agent's writable boundary, which is a harness change and not a bundle change.
+    live_state_read: >-
+      the file artifacts/controls_<first sixteen hex characters of the config_digest recorded on
+      the attempt_begin record>.json, located by that digest rather than by a glob, compared
+      field by field against the fp32_control and standard_control phase_end records in
+      artifacts/telemetry.json. A missing cache file fails, because the attempt driver writes it
+      on every path.
+    accepting_half: >-
+      the reference attempt writes controls_b4c9ed7141f2f7a6.json in smoke mode and every
+      compared field matches its telemetry counterpart.
+    rejecting_half: >-
+      the control_cache_rewritten_after_the_run control edits the cached standard_control loss
+      and leaves the telemetry alone, which is exactly the post hoc anchor move it is built to
+      catch; it fails while every telemetry-only checker still passes.
+    negative_control: control_cache_rewritten_after_the_run
+
+  - id: reported_outcome_agrees_with_telemetry
+    reduction: DIVERGENCE
+    reached_by: tests/grade.py
+    selector: chk_reported_outcome_agrees_with_telemetry
+    zero_reason: reported-outcome-diverged-from-telemetry
+    statement: >-
+      Two independently editable statements of the same outcome agree. artifacts/score.json is
+      the number a submission reads and quotes, it sits in the agent's writable space, and the
+      verifier never uses it as a reward input. This checker makes a doctored score.json a
+      graded failure rather than a harmless fiction, by re-deriving the score and the reason
+      from the telemetry under the exact rule run_attempt.reward_from documents: zero with
+      reason overflow_in_agent_phase when the graded phase raised any overflow event, zero with
+      reason degenerate_anchor_span when the span is not positive, otherwise the clamp of
+      (baseline - agent) / (baseline - target) with reason scored.
+    live_state_read: >-
+      baseline_metric, target_metric, agent_metric, agent_overflow_events, score, raw and reason
+      in artifacts/score.json, the same fields on the attempt_end record, and final_val_loss and
+      overflow_event_count on the three phase_end records, all in artifacts/telemetry.json.
+    accepting_half: >-
+      the reference attempt reports score 1.0 with reason scored, and the metrics it quotes are
+      the phase_end losses to the last bit.
+    rejecting_half: >-
+      the score_json_overstated control rewrites artifacts/score.json to quote a final
+      validation loss a full nat better than the telemetry recorded, and touches nothing else;
+      it fails while every telemetry-only checker still passes. The control deliberately
+      falsifies the METRIC rather than the score, because the reference already earns a clamped
+      1.0 and a control that only overstated the score would be a no-op the checker accepted
+      alongside the oracle, which FORGE 7e makes inert and BLOCK. This checker was measured
+      accepting both halves on the first liveness run and the control was rebuilt until it
+      discriminated.
+    negative_control: score_json_overstated
+
+  - id: attempt_wallclock_within_declared_budget
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: chk_attempt_wallclock_within_declared_budget
+    zero_reason: attempt-wallclock-outside-declared-budget
+    statement: >-
+      A produced value bounds a target: the recorded duration of the attempt sits inside the
+      budget the operating point declares, which is 432 seconds for the graded mode from a per
+      attempt bound of 0.12 hours and 90 seconds for the smoke mode. The bound is read from
+      environment/operating_point.json, which frozen_harness_bytes_unmodified pins, so the
+      budget cannot be widened to fit an attempt that overran it. This checker grades the
+      RECORDED duration and claims nothing more; it is not a measurement of true elapsed time
+      and it does not establish that the agent reasoned about the budget, which is why the
+      deliberation stays in the judged lane.
+    live_state_read: >-
+      wallclock_seconds on the attempt_end record in artifacts/telemetry.json and on
+      artifacts/score.json, against derivation.per_attempt_budget_hours or
+      smoke.wallclock_target_seconds in environment/operating_point.json, selected by the mode
+      field of the attempt_begin record.
+    accepting_half: >-
+      measured on the reference attempt: 3.805 seconds recorded against a smoke bound of 90, and
+      153.9 seconds measured at the graded operating point against a bound of 432.
+    rejecting_half: >-
+      the wallclock_over_budget control raises the recorded duration past the declared bound
+      consistently in the telemetry and in score.json, which is what an attempt that overran its
+      budget and shipped anyway records; it fails while every other checker still passes.
+    negative_control: wallclock_over_budget
+
+  - id: policy_ran_outside_the_measuring_process
+    reduction: INVARIANT
+    reached_by: tests/grade.py
+    selector: chk_policy_ran_outside_the_measuring_process
+    zero_reason: policy-ran-inside-the-measuring-process
+    statement: >-
+      A property held across the whole attempt rather than at a sampled point: no phase of the
+      measurement shared an interpreter with submitted bytes. This is the structural fact the
+      rest of the instrument rests on, because a policy co-resident with the measuring loop can
+      rebind any function in it, and a record produced under such a policy is not evidence of a
+      measurement.
+    live_state_read: >-
+      the policy_isolation block on the attempt_begin record of both the verifier-authored
+      graded record and the agent-reported artifacts/telemetry.json, comparing driver_pid
+      against the worker_pids map and requiring mode subprocess and worker policy_worker.py.
+    accepting_half: >-
+      the reference attempt records mode subprocess with distinct worker pids for
+      standard_control and agent_run, and passes.
+    rejecting_half: >-
+      the policy_isolation_downgraded control rewrites that block on a clean artifact tree to
+      claim in-process hosting, which is exactly what a driver that exec_module the submission
+      into itself would record, and this checker alone fails.
+    negative_control: policy_isolation_downgraded
+
+  - id: graded_record_authored_by_the_verifier
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: chk_graded_record_authored_by_the_verifier
+    zero_reason: graded-record-not-authored-by-the-verifier
+    statement: >-
+      A produced value equals a required value: the origin stamp on the graded record equals the
+      nonce this process minted after it started. Nothing written before this process existed
+      can carry that value, so a planted, replayed or hand-authored record fails here however
+      internally consistent it is. This is the checker that makes the reward a measurement
+      rather than a report.
+    live_state_read: >-
+      the run_nonce and graded_submission_sha256 fields on the attempt_begin record of the
+      authoritative graded record, compared against the nonce held only in this verifier process
+      and against hashlib.sha256 over the deliverable file on the verifier filesystem at grade
+      time.
+    accepting_half: >-
+      the verifier starts its own attempt, stamps it, and the stamp matches; measured on the
+      reference run.
+    rejecting_half: >-
+      the authoritative_record_not_authored_by_this_verifier control supplies a byte-identical
+      copy of a real earlier graded record through the control-only external-record input, so
+      every other checker still passes and this one alone fails, proving the origin test is what
+      rejects it rather than any defect in its contents.
+    negative_control: authoritative_record_not_authored_by_this_verifier
+
+  - id: agent_report_reproduces_under_verifier_execution
+    reduction: DIVERGENCE
+    reached_by: tests/grade.py
+    selector: chk_agent_report_reproduces_under_verifier_execution
+    zero_reason: agent-report-did-not-reproduce-under-verifier-execution
+    statement: >-
+      Two independently produced records of the same frozen experiment agree. Independence here
+      is independence of PRODUCER and not merely of arithmetic: one record the submission could
+      write, the other it could not, because the verifier draws its own output directory from
+      system entropy and hosts the policy behind a process boundary. A submission that edits its
+      own reported metric therefore diverges from a record it has no handle on.
+    live_state_read: >-
+      the final_val_loss and overflow_event_count fields of each phase_end record in the agent
+      written artifacts/telemetry.json, compared against the same fields of the
+      verifier-authored graded record, against reproduction.final_val_loss_absolute_tolerance in
+      environment/operating_point.json.
+    accepting_half: >-
+      the reference attempt reproduces exactly on the smoke path and within tolerance on an
+      accelerator, and passes.
+    rejecting_half: >-
+      the agent_metric_understated control lowers the reported graded loss in the telemetry and
+      in score.json together, so the internal-consistency checkers still pass and only this one
+      fails; that is the post-hoc form of the in-process rebinding attack this redesign closes,
+      and it establishes that the divergence check and not some incidental inconsistency is what
+      rejects it.
+    negative_control: agent_metric_understated

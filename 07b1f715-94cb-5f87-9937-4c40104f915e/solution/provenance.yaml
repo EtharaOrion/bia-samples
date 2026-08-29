@@ -1,0 +1,173 @@
+# BIA S02 per-unit provenance carrier. Private, ships inside solution/.
+# Excluded from the canonical content hash by the recipe recorded below, which is
+# what makes the binding acyclic: this file records the hash and therefore cannot
+# be inside the domain the hash is computed over.
+schema: bia.s02.provenance/v1
+
+unit:
+  slot: S02
+  slot_name: optimizer-search-frozen-schedule
+  task_name: bia/s02-optimizer-search-frozen-schedule
+  version: 1.0.0
+  authored_at: 2026-08-21
+  disposition: HOLD:PILOT_REQUIRED
+
+identity:
+  namespace: c53e8f3b-526f-52c0-a04e-89e2269b237d
+  canonical_content_hash: 3ca2a9017f0dd29590ee62cde2b0616d811219ed65a16c9b1d03735bb0e566d5
+  uuid: 82fbb69e-63d8-5e31-9e93-e5bc15c5a890
+  recompute_command: python3 solution/recompute.py --hash
+  manifest_command: python3 solution/recompute.py --manifest
+
+# The exact recipe. An auditor recomputes it independently from these words, and
+# solution/recompute.py implements the same steps in code.
+hash_recipe:
+  algorithm: sha256
+  domain: every regular file under the bundle root
+  exclusions:
+    - trajectories/
+    - solution/provenance.yaml
+    - any __pycache__ directory and any .pyc file
+  steps:
+    - walk the bundle root and collect every regular file that survives the exclusions
+    - express each path relative to the bundle root using forward slashes
+    - sort the relative paths as UTF-8 byte strings
+    - for each path emit one line: the file sha256 in lowercase hex, two spaces, the relative path, a newline
+    - concatenate every line into one UTF-8 manifest
+    - canonical_content_hash is the sha256 of that manifest, lowercase hex
+    - the directory name is uuid5 of the namespace above over that lowercase hex string
+  rationale: >-
+    trajectories/ is excluded because rollout evidence must never change frozen bundle identity,
+    and this file is excluded because it carries the hash and cannot be inside its own preimage.
+    Nothing else is excluded, so every runtime-relevant byte sits inside the domain.
+
+upstream_provenance:
+  origin: derived
+  provenance_date: 2026-08-21
+  upstream_identity: >-
+    github.com/KellerJordan/modded-nanogpt, records/track_3_optimization, the F1 family benchmark
+    the bia environment spec registers
+  license: MIT for the upstream training code, ODC-By for the FineWeb corpus the shards tokenize
+  source_kind: public_repository
+  modifications:
+    - The operating point is scaled down from the upstream 124M parameter, 524288 token per step
+      configuration to a 6 layer, 384 width, 24576 token per step configuration so one graded
+      attempt fits the per-attempt budget of 7.2 minutes of single-H100 time.
+    - The free axis is narrowed from the upstream optimizer, its schedules and initialization to
+      the update rule alone. The learning-rate schedule is frozen, published and harness-applied,
+      and the initialization is harness-owned.
+    - A schedule foreign to every published record is substituted for the co-designed schedules
+      those records use, which is the whole point of this slot.
+    - The update rule is denied the step horizon, so a record cooldown cannot be reimplemented
+      inside the free axis.
+    - The metric keeps the upstream steps-to-target shape and takes the spec's clipped linear
+      scoring form rather than the upstream soft-saturating tail.
+  attestation_status: attestation-unavailable
+  attestation_note: >-
+    No signed platform attestation of fork ancestry or task-generating event time is bound here,
+    because this project pins no source-attestation trust root. Recorded as a named gap rather
+    than accepted on the author's word.
+
+data_provenance:
+  corpus: FineWeb-10B, GPT-2 tokenized, public shards
+  distribution: huggingface.co/datasets/kjj0/fineweb10B-gpt2
+  train_shard: fineweb_train_000001.bin
+  train_shard_sha256: 771fa4a99b9fe0946ffb6e848b4ba5c6a9b0fe87860ebf03bc2c1c7e45f8178e
+  val_shard: fineweb_val_000000.bin
+  val_shard_sha256: 5b95c8e0966f0861685b307b23dc5ae42b228ef74b28cb499784ae021f201640
+  smoke_fixtures:
+    - path: environment/fixtures/smoke_train.bin
+      sha256: a81a534750858bb96848ad8f2f726066dc8afd9356ea49f5b8a71f486ac6c7ab
+      derivation: the first 262144 tokens of fineweb_train_000001.bin, header rewritten for the new length
+    - path: environment/fixtures/smoke_val.bin
+      sha256: fbc35229e0d9e78b155b0b228ce34619c68d6d7305d0634dbbf0b38e88f641ee
+      derivation: the first 32768 tokens of fineweb_val_000000.bin, header rewritten for the new length
+  synthetic: false
+  note: >-
+    Both the graded profile and the CPU proof profile read real tokens from the same public
+    corpus. No synthetic stand-in exists anywhere in this bundle.
+
+generated_artifacts:
+  source_of_truth: solution/grounding.yaml
+  generator: solution/recompute.py
+  determinism: >-
+    The generator reads grounding.yaml and nothing else. It invokes no model, no network, no
+    clock, no locale and no random source, so two runs on two hosts produce byte-identical output.
+    Verify with python3 solution/recompute.py --check.
+  files:
+    - tests/anchors.py
+    - tests/checkers.yaml
+    - tests/rubrics.jsonl
+    - tests/test_output.py
+    - solution/rubrics.json
+    - solution/TRUTH.md
+
+measurements:
+  reference_score_at_operating_point:
+    value: 0.6547619047619048
+    graded_step: 1125
+    measured_on: 2026-08-21
+    command: bash solution/solve.sh
+    device: one H100 80GB shared with concurrent sibling lanes
+    checkers_true: 13 of 13
+    repeats: 4
+    status: measured
+    note: >-
+      Two seeds of 1400 steps each, both completed with stop_reason completed, and the same score
+      returned by all four repeats of the graded attempt. The score follows
+      from the anchors recorded in solution/grounding.yaml under calibration_measurement, and the
+      reference lands strictly inside the reward interval rather than at either end of it. This is
+      a reference measurement and it is not a difficulty measurement.
+  smoke_path:
+    command: BIA_SMOKE=1 bash solution/solve.sh
+    device: CPU, CUDA_VISIBLE_DEVICES empty, no CUDA allocation
+    status: executed during authoring
+    note: >-
+      The smoke result is a proof that the oracle path runs end to end. It is never a difficulty
+      measurement, never the reference score at the graded operating point, and never comparable
+      across profiles.
+  wallclock_at_operating_point:
+    status: measured on a shared card, unmeasured on an idle one
+    bound_by: the runner wall-clock guard of 420 seconds per graded invocation
+    observed_slowest_invocation_per_repeat_s: [239, 190, 165, 230]
+    observed_two_seed_total_s: [481, 343, 265, 433]
+    best_invocation_s: 89
+    note: >-
+      Measured while sibling workloads shared the same H100, so every figure here is an upper
+      bound and none of them describes an idle card. Every invocation finished inside the 420
+      second guard with stop_reason completed, and two of the four two-seed totals sit inside the
+      432 second per-attempt budget. The same reference in its earlier
+      synchronization-bound form was measured at 157 optimizer steps in 60 seconds against 576 in
+      the same window for the form that ships, so the shipped form carries roughly a factor of
+      three point seven in throughput against the contention this figure was taken under. What is
+      not measured is the two-seed total on an idle H100, and it is not estimated here.
+
+cohort:
+  pinned: [gpt5.6-sol, anthropic/claude-opus-5, muse-spark-1.2]
+  valid_to: 2026-11-17
+  registry_digest: unpinned
+  registry_note: >-
+    The spec names the three cohorts and pins no solver registry digest, so cohort identity is
+    supplied and cohort pinning is not. Recorded as carried, not closed.
+
+coverage_gaps:
+  - id: full-reward-attainability-unmeasured
+    cap: HOLD:PILOT_REQUIRED
+  - id: idle-card-wallclock-unmeasured
+    cap: HOLD:PILOT_REQUIRED
+  - id: difficulty-unmeasured
+    cap: HOLD:PILOT_REQUIRED
+  - id: image-digest-unpinned
+    cap: HOLD:PILOT_REQUIRED
+  - id: screening-unverified
+    cap: HOLD:PILOT_REQUIRED
+  - id: attestation-unavailable
+    cap: HOLD:PILOT_REQUIRED
+
+claims_not_made:
+  - no pass probability
+  - no self-solve claim
+  - no difficulty tier
+  - no claim that full reward is attainable, only that no measured rule attained it
+  - no wall clock on an idle card, only an upper bound measured on a shared one
+  - no claim that this instance is uncontaminated, only that the named methods screened the named surfaces

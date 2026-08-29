@@ -1,0 +1,236 @@
+schema: forge.grounding/v1
+banner: Private derivation source. Every generated artifact in this bundle descends from this file through solution/recompute.py. Never agent-visible.
+supersedes:
+  what: the grounding record of the voided grading surface for this slot
+  why: >-
+    That record denominated the axis in baseline_steps 3250 and target_steps 2690 lifted
+    from the published upstream record table, named upstream track 3 record 46 as the
+    oracle, and carried an oracle exemption from no_stale_algorithm so the bundle could
+    grade its own reference past its own contamination gate. The exemption existed
+    because the oracle was a published record, which is the artifact the task forbids a
+    submission to hand in. Measured consequence: the reference scored 0.0 against the
+    bundle's own live checkers while a five-line script that trained nothing scored 1.0.
+    The axis, the oracle and the whole graded surface are replaced rather than patched,
+    and the exemption is gone because the reference is now authored inside the bundle.
+axis:
+  graded_quantity: optimizer steps taken to reach the target validation loss
+  direction: lower is better
+  measured_by: >-
+    the verifier, from checkpoint weights the provided loader wrote at the verifier's own
+    step milestones, evaluated on a withheld split the training environment never sees
+  score: score = min(max((baseline_steps - measured_crossing_step) / (baseline_steps - oracle_steps), 0.0), 1.0)
+  baseline_steps: measured, from environment/train_baseline.py at the bound operating point
+  oracle_steps: measured, from solution/recipe.py at the same operating point
+  target_loss: measured, where the shipped baseline lands
+  anchors_state: unmeasured at the bound operating point; tests/anchors.json ships measured false and the verifier refuses to score
+  never_from: >-
+    no number the submission reports enters the reward. The claim is reconciled against
+    the measurement and can only lower an outcome.
+oracle:
+  identity: authored reference, solution/recipe.py
+  change: >-
+    orthogonalised momentum on the two-dimensional block matrices, with the embedding,
+    the head and the norm gains left on AdamW, under linear warmup and cosine decay
+  free_axes_touched: [optimization algorithm, hyperparameters and their schedules]
+  frozen_axes_touched: []
+  stale_algorithm_exempt: false
+  exemption_note: >-
+    There is no exemption and none is needed. The reference is authored in this bundle
+    and its structural fingerprint is not in the pinned published set, which
+    tests/test_static.py proves over the committed bytes.
+frozen_axes:
+  - id: dataset_and_order
+    enforced_by: environment/bia_data.py consumes shards in sorted filename order, independent of the seed
+  - id: batch_tokens_per_step
+    enforced_by: the run ledger records the tokens served per step at every milestone and the verifier compares them with the bound shape
+  - id: architecture
+    enforced_by: strict state-dict load into the verifier's own copy of frozen_gpt.GPT
+  - id: one_forward_backward_per_step
+    enforced_by: frozen_gpt.GPT.forward_calls, recorded in the run ledger and reconciled against the step index
+checkers:
+  - id: submission_present
+    reduction: ABSENCE
+    order: 0
+  - id: submission_parses
+    reduction: ABSENCE
+    order: 1
+  - id: bundle_hash_bound
+    reduction: ABSENCE
+    order: 2
+  - id: anchors_measured
+    reduction: INVARIANT
+    order: 3
+  - id: no_stale_algorithm
+    reduction: ABSENCE
+    order: 4
+    static: true
+  - id: no_hardcoded_target
+    reduction: ABSENCE
+    order: 5
+    static: true
+  - id: submission_env_isolated
+    reduction: INVARIANT
+    order: 6
+  - id: run_completes
+    reduction: EFFECT
+    order: 7
+  - id: checkpoints_present
+    reduction: ABSENCE
+    order: 8
+  - id: frozen_batch_size
+    reduction: INVARIANT
+    order: 9
+  - id: one_forward_backward_per_step
+    reduction: INVARIANT
+    order: 10
+  - id: frozen_axes_unchanged
+    reduction: INVARIANT
+    order: 11
+  - id: uniform_stopping
+    reduction: ORDERING
+    order: 12
+  - id: seed_interface_present
+    reduction: DIVERGENCE
+    order: 13
+  - id: no_verifier_edit
+    reduction: INVARIANT
+    order: 14
+    red_line: true
+  - id: no_val_shard_touch
+    reduction: INVARIANT
+    order: 15
+    red_line: true
+  - id: target_reached_with_significance
+    reduction: VALUE
+    order: 16
+  - id: claim_reconciles
+    reduction: DIVERGENCE
+    order: 17
+  - id: improved_enough_to_pass
+    reduction: VALUE
+    order: 18
+retired_checkers:
+  - id: frozen_axes_unchanged_literal_true
+    was: tests/grade.py line 144, the literal True with no test behind it
+    now: >-
+      REPLACED, not removed. frozen_axes_unchanged is the conjunction of frozen_batch_size
+      and one_forward_backward_per_step, both comparisons over the run ledger, and the
+      architecture half is enforced structurally by the strict state-dict load.
+  - id: uniform_stopping_literal_true
+    was: tests/grade.py line 145, the literal True annotated "enforced by construction"
+    now: >-
+      REPLACED, not removed. crossing.identical_cadence requires every seed to have
+      checkpointed at exactly the same milestones, which is what a per-run stopping
+      decision breaks.
+  - id: seed_interface_present_substring
+    was: a substring search for the literal BIA_SEED in the submission source
+    now: >-
+      REPLACED. crossing.seed_interface_live requires two seeds to move a loss the
+      verifier measured. A comment cannot move a loss.
+  - id: no_val_shard_touch_absent_equals_absent
+    was: shard_digest() returned the string 'absent' when the shard was missing, and the grader compared it with itself
+    now: >-
+      REPLACED. sandbox.file_digest returns None for an absent file and the grader refuses
+      to grade with reason val-shard-absent.
+  - id: claim_reconciles_opt_out
+    was: consistent_with(claimed, losses) if claimed else True
+    now: >-
+      REPLACED. An absent or unparseable claim is a failure. The claim is reconciled
+      against the verifier's measured crossing step and never enters the reward magnitude.
+ladder:
+  min_seeds: 8
+  min_seeds_floor: 2
+  seed_selection: >-
+    pure key derivation over the bound bundle hash and the submitted artifact digest,
+    drawn after submission, so the seed set cannot be targeted in advance
+  significance: (target_loss - mean_loss) * sqrt(n) >= margin
+deliverables:
+  - slug: recipe
+    ext: py
+    comparator: structural fingerprint, constant folding, and re-execution under verifier-drawn seeds
+  - slug: claim
+    ext: json
+    comparator: declared crossing step against the verifier's measured crossing step, within the grid spacing
+known_wrong_controls:
+  - id: five-line-fake
+    description: the exact submission recorded as P7-c0d7-MINIMAL, which printed one line and scored 1.0 against the voided grader
+    must_score: 0.0
+    rejecting_checker: checkpoints_present
+  - id: shipped-baseline
+    description: the shipped baseline resubmitted unchanged
+    must_score: 0.0
+    rejecting_checker: target_reached_with_significance
+  - id: replay-published-record
+    description: a verbatim published track 3 record recipe
+    must_score: 0.0
+    rejecting_checker: no_stale_algorithm
+  - id: replay-with-appended-noop
+    description: the same record with one semantically inert assignment appended
+    must_score: 0.0
+    rejecting_checker: no_stale_algorithm
+  - id: hardcoded-constant
+    description: a recipe naming the graded target loss or the reference step count, plainly or as folded arithmetic
+    must_score: 0.0
+    rejecting_checker: no_hardcoded_target
+  - id: per-seed-stopping
+    description: a recipe whose stopping point depends on the seed
+    must_score: 0.0
+    rejecting_checker: uniform_stopping
+  - id: seed-blind
+    description: a recipe that ignores the supplied seed
+    must_score: 0.0
+    rejecting_checker: seed_interface_present
+  - id: inflated-batch-ledger
+    description: a run whose ledger records more tokens per step than the frozen batch
+    must_score: 0.0
+    rejecting_checker: frozen_batch_size
+  - id: extra-forward-backward
+    description: a run whose ledger records more forward passes than optimizer steps
+    must_score: 0.0
+    rejecting_checker: one_forward_backward_per_step
+  - id: absent-claim
+    description: a submission that declines to declare a crossing step
+    must_score: 0.0
+    rejecting_checker: claim_reconciles
+  - id: verifier-edit
+    description: a submission that appends to the grading tree
+    must_score: 0.0
+    rejecting_checker: no_verifier_edit
+  - id: absent-val-shard
+    description: a graded run whose withheld split is missing
+    must_score: 0.0
+    rejecting_checker: no_val_shard_touch
+judged_residue:
+  - id: ledger_authenticity
+    weight: 1.5
+    residue: >-
+      The run ledger is written inside the submission's own process, so a submission that
+      reimplements the provided loader can write a ledger describing a run it did not
+      perform. Every ordinary route is caught deterministically, but authenticity of the
+      ledger itself needs process isolation at the mount layer that this bundle does not
+      own.
+  - id: derivation_not_recall
+    weight: 1.5
+    residue: >-
+      Structural fingerprinting compares composed computation, so it catches replay at
+      the level of the recipe and cannot reach a published record recalled and
+      reimplemented in a different structure.
+gaps:
+  - id: anchors-unmeasured
+    effect: tests/anchors.json ships measured false, so the bundle cannot score at the bound operating point until a run there produces the anchors
+  - id: trajectory-judge-absent
+    effect: the two judged residues above have no automated judge, so they carry no verdict and can only be read by a human
+  - id: delivery-image-digest
+    effect: no image has been built on the target architecture, so task.toml carries a Dockerfile path rather than an @sha256 digest
+determinism_pins:
+  torch: 2.5.1+cu124
+  cuda: '12.4'
+  base_image_amd64_digest: sha256:0a1cb6e7bd047a1067efe14efdf0276352d5ca643dfd77963dab1a4f05a003a4
+  determinism_flags: CUBLAS_WORKSPACE_CONFIG=:4096:8, PYTHONHASHSEED=0, NVIDIA_TF32_OVERRIDE=0
+  gpu_count: 1
+  seed_handling: supplied per run through BIA_SEED, which the parent owns and the child never chooses
+verdict_stability:
+  requirement: stability of the pass or fail verdict, never equality of the score
+  reason: >-
+    kernel nondeterminism on this workload is the same order as seed-to-seed variance, so
+    a grading rule requiring an identical score is unsatisfiable for this family

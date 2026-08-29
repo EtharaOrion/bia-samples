@@ -1,0 +1,371 @@
+{
+  "_generated": "GENERATED SECTION. DO NOT HAND-EDIT. source: solution/grounding.yaml",
+  "cases": [
+    {
+      "expect_reason": "target-scale-point-reached",
+      "expect_reward": 1.0,
+      "id": "reference-accepted",
+      "note": "the accepting half: the live checkers accept THIS reference, bound by sha256 below",
+      "submission": {
+        "allocation": {
+          "blk00.attn.out": 3,
+          "blk00.attn.qkv": 4,
+          "blk00.mlp.down": 4,
+          "blk00.mlp.up": 4,
+          "blk01.attn.out": 3,
+          "blk01.attn.qkv": 5,
+          "blk01.mlp.down": 4,
+          "blk01.mlp.up": 4,
+          "blk02.attn.out": 4,
+          "blk02.attn.qkv": 4,
+          "blk02.mlp.down": 3,
+          "blk02.mlp.up": 5
+        },
+        "calibration_fit_witness": "a9423c6abebd3d9c269e80b51a514058f7ed31db6c27dfaeaac55303a06dffd5",
+        "derived_against_calibration_version": 2,
+        "observed_calibration_ledger": [
+          1,
+          2
+        ],
+        "protocol": {
+          "halted_early": false,
+          "points_completed": 4
+        },
+        "quantization_scheme": {
+          "group_size": 128,
+          "scale_bits": 16
+        },
+        "readout": {
+          "filter": "none",
+          "reported_degradation": 0.269349757
+        },
+        "schema": "oer22.submission/v1"
+      },
+      "workspace_mutation": null
+    },
+    {
+      "expect_reason": "allocation-malformed",
+      "expect_reward": 0.0,
+      "id": "ctl-no-op-submission",
+      "note": "a no-op submission carrying no allocation at all",
+      "submission": {
+        "allocation": {},
+        "calibration_fit_witness": "a9423c6abebd3d9c269e80b51a514058f7ed31db6c27dfaeaac55303a06dffd5",
+        "derived_against_calibration_version": 2,
+        "observed_calibration_ledger": [
+          1,
+          2
+        ],
+        "protocol": {
+          "halted_early": false,
+          "points_completed": 4
+        },
+        "quantization_scheme": {
+          "group_size": 128,
+          "scale_bits": 16
+        },
+        "readout": {
+          "filter": "none",
+          "reported_degradation": 0.269349757
+        },
+        "schema": "oer22.submission/v1"
+      },
+      "workspace_mutation": null
+    },
+    {
+      "expect_reason": "frozen-artifact-modified",
+      "expect_reward": 0.0,
+      "id": "ctl-frozen-artifact-modified",
+      "note": "the evaluation reference edited in the run workspace",
+      "submission": {
+        "allocation": {
+          "blk00.attn.out": 3,
+          "blk00.attn.qkv": 4,
+          "blk00.mlp.down": 4,
+          "blk00.mlp.up": 4,
+          "blk01.attn.out": 3,
+          "blk01.attn.qkv": 5,
+          "blk01.mlp.down": 4,
+          "blk01.mlp.up": 4,
+          "blk02.attn.out": 4,
+          "blk02.attn.qkv": 4,
+          "blk02.mlp.down": 3,
+          "blk02.mlp.up": 5
+        },
+        "calibration_fit_witness": "a9423c6abebd3d9c269e80b51a514058f7ed31db6c27dfaeaac55303a06dffd5",
+        "derived_against_calibration_version": 2,
+        "observed_calibration_ledger": [
+          1,
+          2
+        ],
+        "protocol": {
+          "halted_early": false,
+          "points_completed": 4
+        },
+        "quantization_scheme": {
+          "group_size": 128,
+          "scale_bits": 16
+        },
+        "readout": {
+          "filter": "none",
+          "reported_degradation": 0.269349757
+        },
+        "schema": "oer22.submission/v1"
+      },
+      "workspace_mutation": "environment/reference_model.json"
+    },
+    {
+      "expect_reason": "bit-budget-overspent",
+      "expect_reward": 0.0,
+      "id": "ctl-budget-accounted-weights-only",
+      "note": "stale control for silent mutation bit-budget-accounting-includes-scale-tensors",
+      "submission": {
+        "allocation": {
+          "blk00.attn.out": 3,
+          "blk00.attn.qkv": 4,
+          "blk00.mlp.down": 4,
+          "blk00.mlp.up": 4,
+          "blk01.attn.out": 4,
+          "blk01.attn.qkv": 5,
+          "blk01.mlp.down": 4,
+          "blk01.mlp.up": 4,
+          "blk02.attn.out": 4,
+          "blk02.attn.qkv": 4,
+          "blk02.mlp.down": 4,
+          "blk02.mlp.up": 5
+        },
+        "calibration_fit_witness": "a9423c6abebd3d9c269e80b51a514058f7ed31db6c27dfaeaac55303a06dffd5",
+        "derived_against_calibration_version": 2,
+        "observed_calibration_ledger": [
+          1,
+          2
+        ],
+        "protocol": {
+          "halted_early": false,
+          "points_completed": 4
+        },
+        "quantization_scheme": {
+          "group_size": 128,
+          "scale_bits": 16
+        },
+        "readout": {
+          "filter": "none",
+          "reported_degradation": null
+        },
+        "schema": "oer22.submission/v1"
+      },
+      "workspace_mutation": null
+    },
+    {
+      "expect_reason": "calibration-version-sequence-disordered",
+      "expect_reward": 0.0,
+      "id": "ctl-probe-ledger-truncated-at-v1",
+      "note": "stale control for silent mutation calibration-probe-ledger-appends-v2",
+      "submission": {
+        "allocation": {
+          "blk00.attn.out": 3,
+          "blk00.attn.qkv": 4,
+          "blk00.mlp.down": 4,
+          "blk00.mlp.up": 4,
+          "blk01.attn.out": 3,
+          "blk01.attn.qkv": 5,
+          "blk01.mlp.down": 4,
+          "blk01.mlp.up": 4,
+          "blk02.attn.out": 4,
+          "blk02.attn.qkv": 4,
+          "blk02.mlp.down": 3,
+          "blk02.mlp.up": 5
+        },
+        "calibration_fit_witness": "a9423c6abebd3d9c269e80b51a514058f7ed31db6c27dfaeaac55303a06dffd5",
+        "derived_against_calibration_version": 2,
+        "observed_calibration_ledger": [
+          1
+        ],
+        "protocol": {
+          "halted_early": false,
+          "points_completed": 4
+        },
+        "quantization_scheme": {
+          "group_size": 128,
+          "scale_bits": 16
+        },
+        "readout": {
+          "filter": "none",
+          "reported_degradation": null
+        },
+        "schema": "oer22.submission/v1"
+      },
+      "workspace_mutation": null
+    },
+    {
+      "expect_reason": "allocation-derived-against-stale-calibration",
+      "expect_reward": 0.0,
+      "id": "ctl-allocation-frozen-at-calibration-v1",
+      "note": "stale control for the headline silent mutation calibration-set-drifts-to-v2",
+      "submission": {
+        "allocation": {
+          "blk00.attn.out": 3,
+          "blk00.attn.qkv": 4,
+          "blk00.mlp.down": 3,
+          "blk00.mlp.up": 4,
+          "blk01.attn.out": 3,
+          "blk01.attn.qkv": 5,
+          "blk01.mlp.down": 4,
+          "blk01.mlp.up": 4,
+          "blk02.attn.out": 4,
+          "blk02.attn.qkv": 3,
+          "blk02.mlp.down": 4,
+          "blk02.mlp.up": 5
+        },
+        "calibration_fit_witness": "496ee180f108ba799e52415138c238ef713f167c08711e4a8ff8c48e0a384685",
+        "derived_against_calibration_version": 1,
+        "observed_calibration_ledger": [
+          1,
+          2
+        ],
+        "protocol": {
+          "halted_early": false,
+          "points_completed": 4
+        },
+        "quantization_scheme": {
+          "group_size": 128,
+          "scale_bits": 16
+        },
+        "readout": {
+          "filter": "none",
+          "reported_degradation": null
+        },
+        "schema": "oer22.submission/v1"
+      },
+      "workspace_mutation": null
+    },
+    {
+      "expect_reason": "readout-smoothed",
+      "expect_reward": 0.0,
+      "id": "ctl-readout-ema-blended",
+      "note": "stale control for silent mutation readout-filter-registry-closes-ema",
+      "submission": {
+        "allocation": {
+          "blk00.attn.out": 3,
+          "blk00.attn.qkv": 4,
+          "blk00.mlp.down": 4,
+          "blk00.mlp.up": 4,
+          "blk01.attn.out": 3,
+          "blk01.attn.qkv": 5,
+          "blk01.mlp.down": 4,
+          "blk01.mlp.up": 4,
+          "blk02.attn.out": 4,
+          "blk02.attn.qkv": 4,
+          "blk02.mlp.down": 3,
+          "blk02.mlp.up": 5
+        },
+        "calibration_fit_witness": "a9423c6abebd3d9c269e80b51a514058f7ed31db6c27dfaeaac55303a06dffd5",
+        "derived_against_calibration_version": 2,
+        "observed_calibration_ledger": [
+          1,
+          2
+        ],
+        "protocol": {
+          "halted_early": false,
+          "points_completed": 4
+        },
+        "quantization_scheme": {
+          "group_size": 128,
+          "scale_bits": 16
+        },
+        "readout": {
+          "filter": "ema",
+          "reported_degradation": null
+        },
+        "schema": "oer22.submission/v1"
+      },
+      "workspace_mutation": null
+    },
+    {
+      "expect_reason": "early-stop-metric-not-established",
+      "expect_reward": 0.0,
+      "id": "ctl-early-stop-on-favourable-point",
+      "note": "halted at the first favourable evaluation point",
+      "submission": {
+        "allocation": {
+          "blk00.attn.out": 3,
+          "blk00.attn.qkv": 4,
+          "blk00.mlp.down": 4,
+          "blk00.mlp.up": 4,
+          "blk01.attn.out": 3,
+          "blk01.attn.qkv": 5,
+          "blk01.mlp.down": 4,
+          "blk01.mlp.up": 4,
+          "blk02.attn.out": 4,
+          "blk02.attn.qkv": 4,
+          "blk02.mlp.down": 3,
+          "blk02.mlp.up": 5
+        },
+        "calibration_fit_witness": "a9423c6abebd3d9c269e80b51a514058f7ed31db6c27dfaeaac55303a06dffd5",
+        "derived_against_calibration_version": 2,
+        "observed_calibration_ledger": [
+          1,
+          2
+        ],
+        "protocol": {
+          "halted_early": true,
+          "points_completed": 1
+        },
+        "quantization_scheme": {
+          "group_size": 128,
+          "scale_bits": 16
+        },
+        "readout": {
+          "filter": "none",
+          "reported_degradation": null
+        },
+        "schema": "oer22.submission/v1"
+      },
+      "workspace_mutation": null
+    },
+    {
+      "expect_reason": "degradation-not-sustained",
+      "expect_reward": 0.0,
+      "id": "ctl-sustained-claim-over-two-points",
+      "note": "stale control for silent mutation evaluation-point-schedule-extends",
+      "submission": {
+        "allocation": {
+          "blk00.attn.out": 2,
+          "blk00.attn.qkv": 4,
+          "blk00.mlp.down": 2,
+          "blk00.mlp.up": 4,
+          "blk01.attn.out": 3,
+          "blk01.attn.qkv": 5,
+          "blk01.mlp.down": 5,
+          "blk01.mlp.up": 4,
+          "blk02.attn.out": 4,
+          "blk02.attn.qkv": 2,
+          "blk02.mlp.down": 4,
+          "blk02.mlp.up": 5
+        },
+        "calibration_fit_witness": "a9423c6abebd3d9c269e80b51a514058f7ed31db6c27dfaeaac55303a06dffd5",
+        "derived_against_calibration_version": 2,
+        "observed_calibration_ledger": [
+          1,
+          2
+        ],
+        "protocol": {
+          "halted_early": false,
+          "points_completed": 4
+        },
+        "quantization_scheme": {
+          "group_size": 128,
+          "scale_bits": 16
+        },
+        "readout": {
+          "filter": "none",
+          "reported_degradation": null
+        },
+        "schema": "oer22.submission/v1"
+      },
+      "workspace_mutation": null
+    }
+  ],
+  "reference_module_sha256": "c30ca45fc4fa06b8a265e7e0fdcf7026ccc899035936def2693fedd243a27be8",
+  "reference_submission_sha256": "ece21e8d537841d351de798ef643f544786649d2513d0458e1edf7a48f94c2d6"
+}

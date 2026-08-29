@@ -1,0 +1,162 @@
+schema_version = "1.4"
+
+# Every deliverable the verifier grades or a reviewer replays is snapshotted out
+# of the environment before teardown, rather than reconstructed after the fact.
+artifacts = [
+  "/workspace/submission/arch.json",
+  "/logs/verifier/run_record.jsonl",
+  "/logs/verifier/score.json",
+  "/logs/verifier/score_detail.json",
+  "/logs/verifier/outcomes.json",
+  "/logs/verifier/grade-stdout.md",
+  "/logs/verifier/test-stdout.md",
+]
+
+[task]
+name = "bia/s04-memory-budget-architecture-search"
+version = "1.0.0"
+description = "Spend a frozen parameter count better. The optimizer, the token budget and the parameter count are fixed; only the allocation across depth, width and attention heads is free, and the reward is the relative validation loss reduction against a paired reference arm at a fixed step."
+authors = [{ name = "Bia" }]
+keywords = ["optimization", "bounded-continuous", "architecture-search", "language-model", "scaling-laws"]
+tags = ["optimization", "bounded-continuous"]
+
+[metadata]
+category = "optimization"
+slot = "S04"
+maturity = "draft"
+disposition = "HOLD:PILOT_REQUIRED"
+# Difficulty is measured, never claimed. No tier, no pass probability and no
+# self-solve claim appears anywhere in this bundle.
+difficulty_tier = "unassigned"
+difficulty_status = "UNMEASURED"
+reference_score_status = "unmeasured, pending orchestrator GPU run"
+
+# ---------------------------------------------------------------------------
+# The seven optimization bindings. max_timeout and budget_hours are distinct and
+# are never aliases. The consolidated spec names a 6 that bounds ONE session of
+# fifty attempts, which is max_timeout's role. budget_hours is the per attempt
+# bound, and it is 6 hours divided by 50 attempts, which is 7.2 minutes or 0.12
+# hours. Writing 6 into budget_hours would encode a 300 hour session.
+# ---------------------------------------------------------------------------
+[optimization]
+max_timeout_hours = 6.0          # binding 1, terminates the refinement loop
+budget_hours = 0.12              # binding 2, per attempt, 7.2 minutes
+max_attempts = 50                # binding 3, ceiling is 100
+final_selection = "best"         # binding 4
+solver_egress = "setup-only"     # binding 5, no network during scored work
+compute_envelope = "one-H100"    # binding 6
+reward_shape = "single-float-unit-interval"  # binding 7
+budget_envelope = "One H100, single accelerator, no multi-GPU scaling"
+budget_margin = "10 percent, carried by name from requirements/bia-environment-spec.md"
+per_attempt_minutes = 7.2
+attempts_per_session = 50
+session_hours = 6.0
+refinement_loop = "Each iteration the harness lets the agent submit an allocation, grades it, summarizes the trajectory, and starts the next iteration carrying every prior allocation and its reward, so the agent chooses between exploring a new allocation and exploiting a recorded one."
+
+[reward]
+kind = "single_float"
+range = [0.0, 1.0]
+higher_is_better = true
+binary = false
+expression = "raw = (ref_final_val_loss - sub_final_val_loss) / (0.05 * ref_final_val_loss); score = min(max(raw, 0), 1)"
+full_reward = 1.0
+zero_reason_required = true
+verifier_reward_path = "/logs/verifier/score.json"
+graded_run_owner = "verifier"
+detail_path = "/logs/verifier/score_detail.json"
+
+[grading]
+entry_point = "tests/test.sh"
+checkers = "tests/checkers.yaml"
+trajectory_rubrics = "tests/rubrics.jsonl"
+compiled_tests = "tests/test_output.py"
+checker_count = 9
+checker_kinds = ["VALUE", "EFFECT", "ABSENCE", "INVARIANT", "ORDERING", "DIVERGENCE"]
+hard_pass = true
+note = "Every checker reduces to exactly one of the six kinds and names the live-state read it traces to. Any one failing sets the score to exactly 0.0 with a machine-readable reason naming that checker."
+
+[agent]
+# Equal to max_timeout_hours above and equal to what instruction.md promises.
+timeout_sec = 21600.0
+network_mode = "setup-only"
+allowed_hosts = []
+submission_path = "/workspace/submission/arch.json"
+# Agent-side, for the solver's own exploration only. The graded run executes the
+# verifier's private copy at tests/runner/run_arch.py; nothing the agent-visible
+# runner writes is ever an input to the reward.
+exploration_runner = "environment/runner/run_arch.py"
+graded_runner = "tests/runner/run_arch.py"
+
+[verifier]
+timeout_sec = 1800.0
+# The verifier owns the graded run. grade.py mints a chain key with secrets for
+# that invocation alone, executes tests/runner/run_arch.py in a private working
+# directory, and grades only the record set that run produced. No key ships, no
+# key is injected, and no campaign has to hold one: a key nobody outside the
+# grading process ever sees cannot be forged with.
+env = { }
+
+[environment]
+# Pinned by digest rather than by tag. This digest is the base image recorded by
+# the verified track3 bundle at /home/bia-gpu/oer/track3-pipeline as its own
+# build base. It was NOT pulled or verified during this authoring run, because
+# the only accelerator on the authoring host was carrying a live evaluation
+# campaign, so the pin is carried rather than re-resolved. That is recorded as
+# the named gap image-pin-unverified in solution/provenance.yaml.
+docker_image = "pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407"
+gpus = 1
+gpu_types = ["H100"]
+cpus = 8
+memory_mb = 65536
+storage_mb = 20480
+# Baseline for environment setup only. [agent] narrows to setup-only for the
+# graded run, which is a precedence pair rather than a contradiction.
+network_mode = "public"
+env = { BIA_TELEMETRY_DIR = "/telemetry", BIA_FROZEN_DIR = "/workspace/environment/frozen" }
+
+[scaled_operating_point]
+# The upstream nanogpt operating point costs 84 minutes per graded run, which is
+# 11.7 times the per attempt budget, so this slot is authored at a scaled point.
+parameter_budget = 12000000
+parameter_tolerance = 0.01
+vocab_size = 256
+sequence_length = 512
+batch_sequences = 64
+steps = 1200
+token_budget = 39321600
+arms_per_graded_attempt = 2
+runner_deadline_seconds = 420
+wall_clock_on_one_h100 = "UNMEASURED"
+
+[smoke]
+# The identical code path at tiny scale, CPU only, with CUDA hidden. It exists so
+# the bundle can be proven to execute end to end without an accelerator. A smoke
+# record cannot be graded as full and a full record cannot be graded as smoke:
+# grade.py compares the mode field on every record against the profile it grades.
+invocation = "BIA_SMOKE=1 bash solution/solve.sh"
+profile = "smoke"
+device = "cpu"
+parameter_budget = 250000
+steps = 32
+target_seconds = 90
+
+[cohort]
+named = ["gpt5.6-sol", "anthropic/claude-opus-5", "muse-spark-1.2"]
+valid_to = "2026-11-17"
+registry_digest = "unpinned"
+registry_status = "named but not pinned, recorded as a gap rather than smoothed over"
+
+[upstream_provenance]
+origin = "original"
+provenance_date = "2026-08-21"
+source_kind = "synthetic"
+generator_identity = "solution/recompute.py over solution/grounding.yaml"
+asserts_no_upstream_lift = true
+note = "The model family is a conventional pre-norm transformer and the corpus is the pinned image's own Python standard library source. No upstream benchmark instance, record log or published leaderboard artifact is lifted into this bundle."
+
+[declared_surfaces]
+reference_emulation = false
+reference_emulation_reason = "greenfield: no external command-line tool, wire protocol, file format or named public specification is emulated, and no golden string, exit code or upstream literal is asserted"
+verifier_parses_runner_output = true
+reference_based_rubric = true
+contamination_screening = "always on, no exemption"

@@ -1,0 +1,78 @@
+{
+  "recipe_version": "s04-1.0.0",
+  "vocab_size": 256,
+  "tokenizer": "raw-byte",
+  "optimizer": {
+    "name": "adamw",
+    "lr": 0.003,
+    "beta1": 0.9,
+    "beta2": 0.95,
+    "eps": 1e-08,
+    "weight_decay": 0.1,
+    "grad_clip": 1.0
+  },
+  "init": {
+    "rule": "normal_std_then_residual_depth_scaled",
+    "std": 0.02
+  },
+  "corpus": {
+    "source": "python_stdlib_py_files",
+    "separator_hex": "0a0a",
+    "exclude_dir_names": [
+      "__pycache__",
+      "site-packages",
+      "test",
+      "tests",
+      "idle_test",
+      "lib2to3"
+    ]
+  },
+  "reward": {
+    "form": "relative_validation_loss_reduction_against_paired_reference_arm",
+    "rel_target": 0.05,
+    "clip": [
+      0.0,
+      1.0
+    ]
+  },
+  "profiles": {
+    "full": {
+      "device": "cuda",
+      "seq_len": 512,
+      "batch_sequences": 64,
+      "steps": 1200,
+      "warmup_steps": 100,
+      "final_lr_frac": 0.1,
+      "corpus_bytes": 8000000,
+      "val_frac": 0.05,
+      "eval_steps": [
+        600,
+        1200
+      ],
+      "eval_batches": 16,
+      "seed": 1337,
+      "deadline_seconds": 420,
+      "param_budget": 12000000,
+      "param_tolerance": 0.01
+    },
+    "smoke": {
+      "device": "cpu",
+      "seq_len": 64,
+      "batch_sequences": 4,
+      "steps": 32,
+      "warmup_steps": 4,
+      "final_lr_frac": 0.1,
+      "corpus_bytes": 200000,
+      "val_frac": 0.05,
+      "eval_steps": [
+        16,
+        32
+      ],
+      "eval_batches": 2,
+      "seed": 1337,
+      "deadline_seconds": 300,
+      "param_budget": 250000,
+      "param_tolerance": 0.02
+    }
+  }
+}

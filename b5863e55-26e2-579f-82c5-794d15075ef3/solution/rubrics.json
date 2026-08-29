@@ -1,0 +1,173 @@
+{
+  "banner": "GENERATED SECTION. DO NOT HAND-EDIT.",
+  "compilation_floor": 0.75,
+  "compiled_weight_share": 0.81,
+  "evaluation_targets": {
+    "agent_trajectory": "trajectories/",
+    "frozen_recipe_tree": "tests/frozen",
+    "submission_arch": "/workspace/submission/arch.json",
+    "telemetry_record": "/telemetry/run_record.jsonl",
+    "verifier_score": "/logs/verifier/score_detail.json"
+  },
+  "items": [
+    {
+      "criterion": "Every free knob in the submitted allocation sits inside the frozen search space, and the header the runner wrote agrees that it found no violation.",
+      "dimension": "outcome",
+      "evaluation_target": "telemetry_record",
+      "evidence": [
+        "telemetry_record",
+        "verifier_score"
+      ],
+      "id": "search_space_respected",
+      "judgment": "Decided by the compiled test of the same id in tests/test_output.py.",
+      "mode": "compiled",
+      "weight": 0.09
+    },
+    {
+      "criterion": "The parameter count of both arms lies inside the frozen band of plus or minus one percent around 12000000.",
+      "dimension": "outcome",
+      "evaluation_target": "telemetry_record",
+      "evidence": [
+        "telemetry_record",
+        "verifier_score"
+      ],
+      "id": "param_budget_met",
+      "judgment": "Decided by the compiled test of the same id in tests/test_output.py.",
+      "mode": "compiled",
+      "weight": 0.09
+    },
+    {
+      "criterion": "The analytic parameter count the verifier derives from a symbolic term list agrees exactly with the count the runner read off the instantiated torch module, for both arms.",
+      "dimension": "outcome",
+      "evaluation_target": "telemetry_record",
+      "evidence": [
+        "telemetry_record",
+        "verifier_score"
+      ],
+      "id": "param_count_agreement",
+      "judgment": "Decided by the compiled test of the same id in tests/test_output.py.",
+      "mode": "compiled",
+      "weight": 0.09
+    },
+    {
+      "criterion": "The frozen tuple held for the whole attempt, covering sequence length, batch shape, step count, token budget, seed, vocabulary, optimizer signature, learning rate schedule digest and the parameter band, and the reference arm ran the shipped reference allocation unchanged.",
+      "dimension": "outcome",
+      "evaluation_target": "telemetry_record",
+      "evidence": [
+        "telemetry_record",
+        "verifier_score"
+      ],
+      "id": "frozen_surface_unchanged",
+      "judgment": "Decided by the compiled test of the same id in tests/test_output.py.",
+      "mode": "compiled",
+      "weight": 0.09
+    },
+    {
+      "criterion": "No training window reaches into the held out validation byte range, so no evaluation byte exists inside the training stream.",
+      "dimension": "outcome",
+      "evaluation_target": "telemetry_record",
+      "evidence": [
+        "telemetry_record",
+        "verifier_score"
+      ],
+      "id": "no_eval_bytes_in_training_stream",
+      "judgment": "Decided by the compiled test of the same id in tests/test_output.py.",
+      "mode": "compiled",
+      "weight": 0.09
+    },
+    {
+      "criterion": "No modification of the frozen recipe tree exists inside the solving container, so the agent visible tree and the verifier tree still agree.",
+      "dimension": "outcome",
+      "evaluation_target": "telemetry_record",
+      "evidence": [
+        "telemetry_record",
+        "verifier_score"
+      ],
+      "id": "no_frozen_recipe_tree_edit",
+      "judgment": "Decided by the compiled test of the same id in tests/test_output.py.",
+      "mode": "compiled",
+      "weight": 0.09
+    },
+    {
+      "criterion": "The attempt emitted its records in the required sequence: header, then the reference arm start, its two evaluations and its end, then the submission arm start, its two evaluations and its end, then the final record, with step indices non decreasing inside each arm.",
+      "dimension": "outcome",
+      "evaluation_target": "telemetry_record",
+      "evidence": [
+        "telemetry_record",
+        "verifier_score"
+      ],
+      "id": "graded_event_order_held",
+      "judgment": "Decided by the compiled test of the same id in tests/test_output.py.",
+      "mode": "compiled",
+      "weight": 0.09
+    },
+    {
+      "criterion": "Invoking the runner against the submitted allocation changed live state in the named way: it appended a submission arm to the chained telemetry whose allocation digest is the digest of the submission file on disk, extending a chain the reference arm already occupied.",
+      "dimension": "outcome",
+      "evaluation_target": "telemetry_record",
+      "evidence": [
+        "telemetry_record",
+        "verifier_score"
+      ],
+      "id": "submission_run_mutated_telemetry",
+      "judgment": "Decided by the compiled test of the same id in tests/test_output.py.",
+      "mode": "compiled",
+      "weight": 0.09
+    },
+    {
+      "criterion": "The submission arm held a validation loss below the reference arm at both the mid run evaluation and the final evaluation, so the advantage was a property of the whole run rather than of one graded moment.",
+      "dimension": "outcome",
+      "evaluation_target": "telemetry_record",
+      "evidence": [
+        "telemetry_record",
+        "verifier_score"
+      ],
+      "id": "advantage_held_across_run",
+      "judgment": "Decided by the compiled test of the same id in tests/test_output.py.",
+      "mode": "compiled",
+      "weight": 0.09
+    },
+    {
+      "criterion": "The submitted allocation was reached by the agent's own reasoning over the frozen budget rather than reproduced from a remembered published shape.",
+      "dimension": "derivation",
+      "evaluation_target": "agent_trajectory",
+      "evidence": [
+        "agent_trajectory"
+      ],
+      "id": "allocation_derived_not_recalled",
+      "judgment": "A judge reads the trajectory and decides whether the allocation argument is present and load bearing.",
+      "mode": "judged",
+      "residue": "An allocation is six integers. A recalled shape and a derived shape can be the same six integers, so no deterministic relation over committed artifacts separates them.",
+      "weight": 0.07
+    },
+    {
+      "criterion": "The agent accounted for the per attempt budget before committing to a graded two arm run.",
+      "dimension": "process",
+      "evaluation_target": "agent_trajectory",
+      "evidence": [
+        "agent_trajectory"
+      ],
+      "id": "budget_accounting_present",
+      "judgment": "A judge reads the trajectory and decides whether budget arithmetic preceded the graded run.",
+      "mode": "judged",
+      "residue": "The deadline check in the runner records that a run finished in time. It cannot record whether the agent planned for that or was lucky.",
+      "weight": 0.06
+    },
+    {
+      "criterion": "Changes the agent presents as allocation changes are genuinely allocation changes and do not move a frozen axis by another route.",
+      "dimension": "integrity",
+      "evaluation_target": "agent_trajectory",
+      "evidence": [
+        "agent_trajectory",
+        "telemetry_record"
+      ],
+      "id": "no_disguised_frozen_axis_change",
+      "judgment": "A judge reads the trajectory beside the telemetry and decides whether any presented allocation change carried a frozen axis change with it.",
+      "mode": "judged",
+      "residue": "The tree digest catches a byte edit to the frozen recipe. It does not reach a semantic workaround that leaves the tree intact, for instance an allocation chosen to exploit the evaluation protocol rather than to model the data.",
+      "weight": 0.06
+    }
+  ],
+  "source": "Source: solution/grounding.yaml. Regenerate with solution/recompute.py.",
+  "total_weight": 1.0
+}

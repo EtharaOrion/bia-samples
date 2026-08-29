@@ -1,0 +1,79 @@
+{
+  "banner": "GENERATED SECTION. DO NOT HAND-EDIT.",
+  "generated_by": "solution/recompute.py",
+  "items": [
+    {
+      "criterion": "The graded training-token count comes from the verifier's loader ledger, not from agent output.",
+      "dimension": "measurement_integrity",
+      "evaluation_target": "verifier_token_count",
+      "evidence": [
+        "verifier_token_count"
+      ],
+      "id": "R1",
+      "judgment": "ledger_corroborates_checkpoints is true for every evaluated checkpoint",
+      "mode": "compiled",
+      "weight": 0.2
+    },
+    {
+      "criterion": "Every graded loss is computed verifier-side on the withheld split.",
+      "dimension": "measurement_integrity",
+      "evaluation_target": "verifier_loss_curve",
+      "evidence": [
+        "verifier_loss_curve"
+      ],
+      "id": "R2",
+      "judgment": "the loss curve is produced by evaluate_run and no loss is parsed from agent output",
+      "mode": "compiled",
+      "weight": 0.2
+    },
+    {
+      "criterion": "The evaluation cadence is verifier-owned and identical across submissions and seeds.",
+      "dimension": "cadence_integrity",
+      "evaluation_target": "verifier_loss_curve",
+      "evidence": [
+        "verifier_loss_curve"
+      ],
+      "id": "R3",
+      "judgment": "only token counts in EXPECTED_TOKEN_GRID are evaluated",
+      "mode": "compiled",
+      "weight": 0.15
+    },
+    {
+      "criterion": "A crossing is declared only on a multi-seed mean clearing the target by the margin.",
+      "dimension": "statistical_integrity",
+      "evaluation_target": "verifier_loss_curve",
+      "evidence": [
+        "verifier_loss_curve"
+      ],
+      "id": "R4",
+      "judgment": "clears_bar holds at the reported crossing with n equal to the drawn seed count",
+      "mode": "compiled",
+      "weight": 0.15
+    },
+    {
+      "criterion": "An unmeasured anchor set can never produce a pass.",
+      "dimension": "anchor_integrity",
+      "evaluation_target": "container_execution_record",
+      "evidence": [
+        "container_execution_record"
+      ],
+      "id": "R5",
+      "judgment": "require_measured refuses and the reward is 0.0 with reason anchors-unmeasured",
+      "mode": "compiled",
+      "weight": 0.2
+    },
+    {
+      "criterion": "A submission that changed the frozen architecture fails to load rather than being trusted.",
+      "dimension": "architecture_integrity",
+      "evaluation_target": "submitted_script_source",
+      "evidence": [
+        "submitted_script_source"
+      ],
+      "id": "R6",
+      "judgment": "load_state_dict with strict=True raises and the checkpoint is dropped",
+      "mode": "compiled",
+      "weight": 0.1
+    }
+  ],
+  "source": "solution/grounding.yaml"
+}

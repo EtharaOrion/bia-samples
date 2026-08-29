@@ -1,0 +1,201 @@
+{
+  "_generated": "GENERATED SECTION. DO NOT HAND-EDIT. source: solution/grounding.yaml",
+  "graded_mean_degradation": 0.269349757,
+  "graded_points": [
+    {
+      "degradation": 0.254201061,
+      "point_id": "shard-a"
+    },
+    {
+      "degradation": 0.267239092,
+      "point_id": "shard-b"
+    },
+    {
+      "degradation": 0.265941922,
+      "point_id": "shard-c"
+    },
+    {
+      "degradation": 0.290016952,
+      "point_id": "shard-d"
+    }
+  ],
+  "graded_reward": 1.0,
+  "schema": "oer22.golden_trajectory/v1",
+  "steps": [
+    {
+      "action": "read instruction.md and enumerate the frozen and free axes",
+      "allocation_if_fitted_here": {
+        "blk00.attn.out": 3,
+        "blk00.attn.qkv": 4,
+        "blk00.mlp.down": 3,
+        "blk00.mlp.up": 4,
+        "blk01.attn.out": 3,
+        "blk01.attn.qkv": 5,
+        "blk01.mlp.down": 4,
+        "blk01.mlp.up": 4,
+        "blk02.attn.out": 4,
+        "blk02.attn.qkv": 3,
+        "blk02.mlp.down": 4,
+        "blk02.mlp.up": 5
+      },
+      "calibration_fit_witness": "496ee180f108ba799e52415138c238ef713f167c08711e4a8ff8c48e0a384685",
+      "calibration_version_observed": 1,
+      "step": 1
+    },
+    {
+      "action": "probe the calibration handle and record version and tick",
+      "allocation_if_fitted_here": {
+        "blk00.attn.out": 3,
+        "blk00.attn.qkv": 4,
+        "blk00.mlp.down": 3,
+        "blk00.mlp.up": 4,
+        "blk01.attn.out": 3,
+        "blk01.attn.qkv": 5,
+        "blk01.mlp.down": 4,
+        "blk01.mlp.up": 4,
+        "blk02.attn.out": 4,
+        "blk02.attn.qkv": 3,
+        "blk02.mlp.down": 4,
+        "blk02.mlp.up": 5
+      },
+      "calibration_fit_witness": "496ee180f108ba799e52415138c238ef713f167c08711e4a8ff8c48e0a384685",
+      "calibration_version_observed": 1,
+      "step": 2
+    },
+    {
+      "action": "fit a greedy marginal-gain allocation against the observed calibration statistics",
+      "allocation_if_fitted_here": {
+        "blk00.attn.out": 3,
+        "blk00.attn.qkv": 4,
+        "blk00.mlp.down": 3,
+        "blk00.mlp.up": 4,
+        "blk01.attn.out": 3,
+        "blk01.attn.qkv": 5,
+        "blk01.mlp.down": 4,
+        "blk01.mlp.up": 4,
+        "blk02.attn.out": 4,
+        "blk02.attn.qkv": 3,
+        "blk02.mlp.down": 4,
+        "blk02.mlp.up": 5
+      },
+      "calibration_fit_witness": "496ee180f108ba799e52415138c238ef713f167c08711e4a8ff8c48e0a384685",
+      "calibration_version_observed": 1,
+      "step": 3
+    },
+    {
+      "action": "re-probe the calibration handle before submitting rather than assuming the iteration-three observation is still true, and observe that the version in force has moved",
+      "allocation_if_fitted_here": {
+        "blk00.attn.out": 3,
+        "blk00.attn.qkv": 4,
+        "blk00.mlp.down": 4,
+        "blk00.mlp.up": 4,
+        "blk01.attn.out": 3,
+        "blk01.attn.qkv": 5,
+        "blk01.mlp.down": 4,
+        "blk01.mlp.up": 4,
+        "blk02.attn.out": 4,
+        "blk02.attn.qkv": 4,
+        "blk02.mlp.down": 3,
+        "blk02.mlp.up": 5
+      },
+      "calibration_fit_witness": "a9423c6abebd3d9c269e80b51a514058f7ed31db6c27dfaeaac55303a06dffd5",
+      "calibration_version_observed": 2,
+      "step": 4
+    },
+    {
+      "action": "refit the allocation against the version now in force and record the fit witness over its bytes",
+      "allocation_if_fitted_here": {
+        "blk00.attn.out": 3,
+        "blk00.attn.qkv": 4,
+        "blk00.mlp.down": 4,
+        "blk00.mlp.up": 4,
+        "blk01.attn.out": 3,
+        "blk01.attn.qkv": 5,
+        "blk01.mlp.down": 4,
+        "blk01.mlp.up": 4,
+        "blk02.attn.out": 4,
+        "blk02.attn.qkv": 4,
+        "blk02.mlp.down": 3,
+        "blk02.mlp.up": 5
+      },
+      "calibration_fit_witness": "a9423c6abebd3d9c269e80b51a514058f7ed31db6c27dfaeaac55303a06dffd5",
+      "calibration_version_observed": 2,
+      "step": 5
+    },
+    {
+      "action": "account the bit budget including the per-group scale tensors and confirm the allocation fits",
+      "allocation_if_fitted_here": {
+        "blk00.attn.out": 3,
+        "blk00.attn.qkv": 4,
+        "blk00.mlp.down": 4,
+        "blk00.mlp.up": 4,
+        "blk01.attn.out": 3,
+        "blk01.attn.qkv": 5,
+        "blk01.mlp.down": 4,
+        "blk01.mlp.up": 4,
+        "blk02.attn.out": 4,
+        "blk02.attn.qkv": 4,
+        "blk02.mlp.down": 3,
+        "blk02.mlp.up": 5
+      },
+      "calibration_fit_witness": "a9423c6abebd3d9c269e80b51a514058f7ed31db6c27dfaeaac55303a06dffd5",
+      "calibration_version_observed": 2,
+      "step": 6
+    },
+    {
+      "action": "complete every evaluation point the verifier schedules, declare no readout filter, and write submission.json",
+      "allocation_if_fitted_here": {
+        "blk00.attn.out": 3,
+        "blk00.attn.qkv": 4,
+        "blk00.mlp.down": 4,
+        "blk00.mlp.up": 4,
+        "blk01.attn.out": 3,
+        "blk01.attn.qkv": 5,
+        "blk01.mlp.down": 4,
+        "blk01.mlp.up": 4,
+        "blk02.attn.out": 4,
+        "blk02.attn.qkv": 4,
+        "blk02.mlp.down": 3,
+        "blk02.mlp.up": 5
+      },
+      "calibration_fit_witness": "a9423c6abebd3d9c269e80b51a514058f7ed31db6c27dfaeaac55303a06dffd5",
+      "calibration_version_observed": 2,
+      "step": 7
+    }
+  ],
+  "submitted": {
+    "allocation": {
+      "blk00.attn.out": 3,
+      "blk00.attn.qkv": 4,
+      "blk00.mlp.down": 4,
+      "blk00.mlp.up": 4,
+      "blk01.attn.out": 3,
+      "blk01.attn.qkv": 5,
+      "blk01.mlp.down": 4,
+      "blk01.mlp.up": 4,
+      "blk02.attn.out": 4,
+      "blk02.attn.qkv": 4,
+      "blk02.mlp.down": 3,
+      "blk02.mlp.up": 5
+    },
+    "calibration_fit_witness": "a9423c6abebd3d9c269e80b51a514058f7ed31db6c27dfaeaac55303a06dffd5",
+    "derived_against_calibration_version": 2,
+    "observed_calibration_ledger": [
+      1,
+      2
+    ],
+    "protocol": {
+      "halted_early": false,
+      "points_completed": 4
+    },
+    "quantization_scheme": {
+      "group_size": 128,
+      "scale_bits": 16
+    },
+    "readout": {
+      "filter": "none",
+      "reported_degradation": 0.269349757
+    },
+    "schema": "oer22.submission/v1"
+  }
+}

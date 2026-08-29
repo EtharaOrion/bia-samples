@@ -1,0 +1,49 @@
+{
+  "_generated": "GENERATED SECTION. DO NOT HAND-EDIT.",
+  "_source": "solution/grounding.yaml",
+  "pool": {
+    "budget_unit_documents": {
+      "budget_unit": "documents",
+      "note": "The budget ledger silently redenominated. Nothing announces it."
+    },
+    "filter_declared_but_ineffective": {
+      "filter_declared": "heldout-shard-drop",
+      "note": "The pool declares heldout-shard-drop while forum-dump still carries a held-out-seeded document. The reference plan never feeds forum-dump, so the leak checker stays silent and only the divergence checker fires.",
+      "seeds": {
+        "0": "heldout:0"
+      },
+      "source": "forum-dump"
+    },
+    "heldout_shard_injected": {
+      "note": "A shard refresh silently pulled evaluation-partition bytes into technical. The reference plan feeds technical:0..3 and therefore leaks.",
+      "seeds": {
+        "0": "heldout:20",
+        "1": "heldout:21",
+        "2": "heldout:22",
+        "3": "heldout:23"
+      },
+      "source": "technical"
+    }
+  },
+  "readout": {
+    "ema": {
+      "ema_beta": 0.9,
+      "smoothing": "ema"
+    }
+  },
+  "telemetry": {
+    "eval_batch_index": {
+      "handle": "eval",
+      "note": "an evaluation recorded at a batch the feed never reached",
+      "set_record_batch_index": 999
+    },
+    "model_counts": {
+      "handle": "model",
+      "note": "a count table that does not derive from the feed ledger",
+      "scale_counts": 0.5,
+      "set": {
+        "counts_substituted": true
+      }
+    }
+  }
+}

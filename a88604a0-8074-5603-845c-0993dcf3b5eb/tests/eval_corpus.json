@@ -1,0 +1,93 @@
+{
+  "_generated": "GENERATED SECTION. DO NOT HAND-EDIT. source: solution/grounding.yaml",
+  "schema": "oer22.eval_corpus/v1",
+  "shards": [
+    {
+      "id": "shard-a",
+      "sensitivity": [
+        0.9,
+        0.15,
+        0.6,
+        0.08,
+        1.3,
+        0.22,
+        0.45,
+        0.95,
+        0.12,
+        0.7,
+        1.6,
+        0.3
+      ],
+      "tokens": 262144
+    },
+    {
+      "id": "shard-b",
+      "sensitivity": [
+        0.99,
+        0.1425,
+        0.63,
+        0.24,
+        1.17,
+        0.242,
+        0.45,
+        0.9025,
+        0.36,
+        0.77,
+        1.44,
+        0.3
+      ],
+      "tokens": 262144
+    },
+    {
+      "id": "shard-c",
+      "sensitivity": [
+        0.81,
+        0.165,
+        0.57,
+        0.48,
+        1.495,
+        0.209,
+        0.495,
+        0.9975,
+        0.72,
+        0.63,
+        1.84,
+        0.3
+      ],
+      "tokens": 262144
+    },
+    {
+      "id": "shard-d",
+      "sensitivity": [
+        0.945,
+        0.1575,
+        0.66,
+        0.72,
+        1.3,
+        0.231,
+        0.4275,
+        1.045,
+        1.08,
+        0.7,
+        1.68,
+        0.315
+      ],
+      "tokens": 262144
+    }
+  ],
+  "statement": "Held out. Never assembled onto the non-oracle agent surface.",
+  "tensor_order": [
+    "blk00.attn.qkv",
+    "blk00.attn.out",
+    "blk00.mlp.up",
+    "blk00.mlp.down",
+    "blk01.attn.qkv",
+    "blk01.attn.out",
+    "blk01.mlp.up",
+    "blk01.mlp.down",
+    "blk02.attn.qkv",
+    "blk02.attn.out",
+    "blk02.mlp.up",
+    "blk02.mlp.down"
+  ]
+}

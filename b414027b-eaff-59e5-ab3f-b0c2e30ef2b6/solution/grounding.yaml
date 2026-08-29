@@ -1,0 +1,164 @@
+# Private derivation source. Every generated artifact in this bundle descends from this file.
+# solution/recompute.py reads only this file and regenerates solution/TRUTH.md,
+# solution/rubrics.json and tests/test_output.py from it. Nothing generated is hand-authored.
+
+bundle:
+  objective: training_tokens_to_target
+  objective_axis: training_tokens
+  not_measured: [optimizer_steps, wallclock_seconds]
+  reward_range: [0.0, 1.0]
+  reward_full: 1.0
+  higher_is_better: true
+
+frozen:
+  - model_architecture
+  - dataset_and_ordering
+  - validation_split
+  - evaluation_cadence
+  - seed_set_derivation
+free:
+  - optimizer
+  - schedule
+  - initialization
+  - hyperparameters
+  - batch_size
+
+deliverables:
+  - id: D1
+    slug: training_script
+    ext: py
+    description: "The submitted training script, executed by the verifier in a clean container."
+    comparator: executed_by_verifier
+  - id: D2
+    slug: checkpoints
+    ext: pt
+    description: "Checkpoints written by the provided loader at verifier-owned token milestones."
+    comparator: loaded_by_verifier_strict_state_dict
+
+# Ordered path through instruction.md. Each step names one action, the state it
+# establishes, and the checker identifier it satisfies. TRUTH.md is generated
+# from this list and must reconcile with the committed checker set by identifier
+# set equality in both directions.
+truth_steps:
+  - id: T1
+    action: "Read the provided training script and the loader interface it must use."
+    establishes: "The submission knows the frozen surface and the free surface."
+    checker: submission_present
+  - id: T2
+    action: "Change only the optimizer, its schedule, its hyperparameters, the initialization, and the batch size."
+    establishes: "The architecture, data order and validation split are untouched."
+    checker: architecture_loads_strict
+  - id: T3
+    action: "Draw every training token through the provided loader, which counts them and writes the ledger."
+    establishes: "The verifier holds an independent count of training tokens consumed."
+    checker: ledger_corroborates_checkpoints
+  - id: T4
+    action: "Let the loader write a checkpoint at each verifier-owned token milestone."
+    establishes: "Checkpoints exist on the common token grid for every drawn seed."
+    checker: checkpoints_present
+  - id: T5
+    action: "Run to the declared token budget without consulting any validation loss to decide where to stop."
+    establishes: "The stopping point is fixed in advance and identical across seeds."
+    checker: no_validation_based_stopping
+  - id: T6
+    action: "The verifier evaluates each on-grid checkpoint on the withheld split and takes the seed-mean."
+    establishes: "A loss curve keyed by training tokens, produced entirely verifier-side."
+    checker: target_reached_with_significance
+  - id: T7
+    action: "The verifier locates the earliest token count whose seed-mean clears the target by the significance margin."
+    establishes: "A crossing in training tokens, or a machine-readable reason there is none."
+    checker: improved_enough_to_pass
+
+# Known-wrong routes. Each names the control that must reject it, and Phase 2
+# measures that rejection. Explanatory prose is Bucket N and may only lower
+# disposition.
+rejected_routes:
+  - id: X1
+    route: "Report a smaller training-token count than the loader served."
+    rejected_by: ledger_corroborates_checkpoints
+    cheat_id: C1
+  - id: X2
+    route: "Evaluate more often, or on a hand-placed grid, to catch an earlier crossing."
+    rejected_by: verifier_owned_token_grid
+    cheat_id: C2
+  - id: X3
+    route: "Choose the stopping point using the scored validation loss."
+    rejected_by: no_validation_based_stopping
+    cheat_id: C3
+  - id: X4
+    route: "Train on data belonging to the graded split."
+    rejected_by: withheld_split_never_delivered
+    cheat_id: C4
+  - id: X5
+    route: "Run many seeds and submit the luckiest."
+    rejected_by: seeds_drawn_from_submission_digest
+    cheat_id: C5
+  - id: X6
+    route: "Write or manipulate a metrics file to inflate the score."
+    rejected_by: no_graded_number_read_from_agent_output
+    cheat_id: C6
+  - id: X7
+    route: "Submit weights not produced by training on loader-served tokens."
+    rejected_by: rubric_no_smuggled_pretraining
+    cheat_id: C7
+
+# Legitimate strategies. A control that blocks any of these is a defect in the
+# control, not a cheat by the agent.
+legitimate:
+  - id: L1
+    strategy: "Reduce batch size to spend fewer training tokens reaching the target."
+    note: "This is the task. It must never be blocked."
+  - id: L2
+    strategy: "Schedule the batch size over training rather than fixing it."
+  - id: L3
+    strategy: "Replace the optimizer, its schedule, or the initialization."
+
+rubric_items:
+  - id: R1
+    dimension: measurement_integrity
+    weight: 0.20
+    evaluation_target: verifier_token_count
+    criterion: "The graded training-token count comes from the verifier's loader ledger, not from agent output."
+    judgment: "ledger_corroborates_checkpoints is true for every evaluated checkpoint"
+    evidence: [verifier_token_count]
+    mode: compiled
+  - id: R2
+    dimension: measurement_integrity
+    weight: 0.20
+    evaluation_target: verifier_loss_curve
+    criterion: "Every graded loss is computed verifier-side on the withheld split."
+    judgment: "the loss curve is produced by evaluate_run and no loss is parsed from agent output"
+    evidence: [verifier_loss_curve]
+    mode: compiled
+  - id: R3
+    dimension: cadence_integrity
+    weight: 0.15
+    evaluation_target: verifier_loss_curve
+    criterion: "The evaluation cadence is verifier-owned and identical across submissions and seeds."
+    judgment: "only token counts in EXPECTED_TOKEN_GRID are evaluated"
+    evidence: [verifier_loss_curve]
+    mode: compiled
+  - id: R4
+    dimension: statistical_integrity
+    weight: 0.15
+    evaluation_target: verifier_loss_curve
+    criterion: "A crossing is declared only on a multi-seed mean clearing the target by the margin."
+    judgment: "clears_bar holds at the reported crossing with n equal to the drawn seed count"
+    evidence: [verifier_loss_curve]
+    mode: compiled
+  - id: R5
+    dimension: anchor_integrity
+    weight: 0.20
+    evaluation_target: container_execution_record
+    criterion: "An unmeasured anchor set can never produce a pass."
+    judgment: "require_measured refuses and the reward is 0.0 with reason anchors-unmeasured"
+    evidence: [container_execution_record]
+    mode: compiled
+  - id: R6
+    dimension: architecture_integrity
+    weight: 0.10
+    evaluation_target: submitted_script_source
+    criterion: "A submission that changed the frozen architecture fails to load rather than being trusted."
+    judgment: "load_state_dict with strict=True raises and the checkpoint is dropped"
+    evidence: [submitted_script_source]
+    mode: compiled

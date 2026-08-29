@@ -1,0 +1,14 @@
+{
+ "files": {
+  "__init__.py": "de7617f8fdab493585117f8f7f4c3405de22bc9c41f55401160521bbb967094d",
+  "config.py": "23a312f20b7a8ffe8aecdcb7a76b784e2c539817d9d40742107a69af417a261b",
+  "data.py": "9b9c0e0aac8c6a5940a8d801cf54f36dbaccfc3edf5cd1d6212f1bc21ed41eff",
+  "model.py": "27f95182f457797b685acb34f52517fc14ad64ee1175d64c597b4749236890d0",
+  "probe.py": "3e93a14317f1d6f8d8c56cbc007bbfa4171be9debe60b24076f038c2e7e0a609",
+  "reference_recipe.py": "80ec37f58b7e1bde5938426939e9191f4e6ea1439bc0b394873c13b800b34b29",
+  "runlog.py": "b704b18c3af3a166edcb49fee7d33cc7911880960ba06da40730a2c8300b1c1c",
+  "trainer.py": "bcce95d176c851643b18c0e1af4451023a596defebfb65da7443772ae192d868"
+ },
+ "note": "Pinned hashes of every frozen substrate file. The verifier recomputes this at run start and again at run end. This manifest is not itself hashed here; its own integrity travels with the image digest and with the bundle content hash.",
+ "schema_version": "1.0"
+}

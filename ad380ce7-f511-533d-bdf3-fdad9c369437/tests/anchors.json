@@ -1,0 +1,19 @@
+{
+  "schema": "bia.oer15.anchors/v1",
+  "_banner": "VERIFIER-SIDE ONLY. tests/ is never assembled onto the agent surface.",
+  "note": "The ceiling of the OER-15 reward scale, and the endpoint gap from which the ceiling is recoverable by subtraction. Both lived in environment/manifest.json until this file existed, which published the exact bits-per-byte reading that scores 1.0 to the solver. environment/ is agent-visible; tests/ is not. The floor (default_construction_optimum_bpb), the separation margin and the acceptance bar stay in the manifest: the floor is a property of a script the agent is handed and told to run, and the bar is a threshold on a statistic the agent computes for itself. Neither locates the ceiling without this file.",
+  "anchor_authority": "seed/staging/oer1/OER-15/solution/grounding.yaml measured_operating_points, measured by the authoring lane over the full 60-row handed option grid and the reference construction",
+  "anchors_state": "absent",
+  "anchors_gap": "gap-oer-per-family-anchors-unmeasured",
+  "baseline_metric": null,
+  "target_metric": null,
+  "direction": "lower is better",
+  "reward_formula": "raw = (floor - agent_metric) / (floor - ceiling); score = min(max(raw, 0.0), 1.0)",
+  "reward_clip": "score = min(max(raw, 0.0), 1.0)",
+  "floor_carrier": "environment/manifest.json measured_operating_points.default_construction_optimum_bpb",
+  "ceiling_carrier": "tests/anchors.json measured_operating_points.reference_construction_optimum_bpb",
+  "measured_operating_points": {
+    "reference_construction_optimum_bpb": 0.2818765313056418,
+    "measured_plateau_gap_bpb": 0.055475307487323655
+  }
+}

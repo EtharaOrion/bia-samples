@@ -1,0 +1,211 @@
+{
+  "banner": "GENERATED SECTION. DO NOT HAND-EDIT. Source of truth: solution/grounding.yaml.",
+  "compilation_floor": 0.75,
+  "compiled_weight_share": 0.868421,
+  "evaluation_targets": [
+    "telemetry_record",
+    "submission_bytes",
+    "submission_logs",
+    "verifier_score",
+    "agent_trajectory"
+  ],
+  "generated_from": "solution/grounding.yaml",
+  "items": [
+    {
+      "criterion": "The applied learning rate at every recorded step of every parameter group equals the frozen schedule recomputed independently by the verifier.",
+      "dimension": "frozen_surface",
+      "evaluation_target": "telemetry_record",
+      "evidence": [
+        "telemetry_record"
+      ],
+      "id": "R01",
+      "judgment": "applied_lr_matches_frozen_schedule is true",
+      "mode": "compiled",
+      "outcome_kind": "DIVERGENCE",
+      "weight": 3
+    },
+    {
+      "criterion": "The frozen schedule module the run used is byte-identical to the module this bundle ships.",
+      "dimension": "frozen_surface",
+      "evaluation_target": "telemetry_record",
+      "evidence": [
+        "telemetry_record"
+      ],
+      "id": "R02",
+      "judgment": "frozen_schedule_bytes_match is true",
+      "mode": "compiled",
+      "outcome_kind": "VALUE",
+      "weight": 2
+    },
+    {
+      "criterion": "The submitted update rule applies a parameter delta exactly proportional to the learning rate the harness supplies.",
+      "dimension": "free_surface",
+      "evaluation_target": "submission_bytes",
+      "evidence": [
+        "submission_bytes"
+      ],
+      "id": "R03",
+      "judgment": "update_is_lr_homogeneous is true",
+      "mode": "compiled",
+      "outcome_kind": "EFFECT",
+      "weight": 3
+    },
+    {
+      "criterion": "The submitted update rule has no route by which it could learn the step horizon.",
+      "dimension": "free_surface",
+      "evaluation_target": "submission_bytes",
+      "evidence": [
+        "submission_bytes"
+      ],
+      "id": "R04",
+      "judgment": "no_horizon_leak_into_update_rule is true",
+      "mode": "compiled",
+      "outcome_kind": "ABSENCE",
+      "weight": 2
+    },
+    {
+      "criterion": "No write of a learning rate by the submission occurred at any step of the run.",
+      "dimension": "frozen_surface",
+      "evaluation_target": "telemetry_record",
+      "evidence": [
+        "telemetry_record"
+      ],
+      "id": "R05",
+      "judgment": "submission_never_writes_lr is true",
+      "mode": "compiled",
+      "outcome_kind": "ABSENCE",
+      "weight": 2
+    },
+    {
+      "criterion": "Exactly one forward-backward pass occurred per optimizer step across the whole run.",
+      "dimension": "frozen_surface",
+      "evaluation_target": "telemetry_record",
+      "evidence": [
+        "telemetry_record"
+      ],
+      "id": "R06",
+      "judgment": "one_forward_backward_per_step is true",
+      "mode": "compiled",
+      "outcome_kind": "INVARIANT",
+      "weight": 2
+    },
+    {
+      "criterion": "The telemetry records form one unbroken chain in the required order from genesis.",
+      "dimension": "integrity",
+      "evaluation_target": "telemetry_record",
+      "evidence": [
+        "telemetry_record"
+      ],
+      "id": "R07",
+      "judgment": "telemetry_chain_ordered is true",
+      "mode": "compiled",
+      "outcome_kind": "ORDERING",
+      "weight": 3
+    },
+    {
+      "criterion": "The validation losses the agent reported and the losses the harness recorded agree in both directions.",
+      "dimension": "integrity",
+      "evaluation_target": "submission_logs",
+      "evidence": [
+        "submission_logs"
+      ],
+      "id": "R08",
+      "judgment": "reported_logs_reconcile is true",
+      "mode": "compiled",
+      "outcome_kind": "DIVERGENCE",
+      "weight": 3
+    },
+    {
+      "criterion": "Every frozen recipe field recorded by the runner equals the constant this bundle binds.",
+      "dimension": "frozen_surface",
+      "evaluation_target": "telemetry_record",
+      "evidence": [
+        "telemetry_record"
+      ],
+      "id": "R09",
+      "judgment": "frozen_recipe_fields_match is true",
+      "mode": "compiled",
+      "outcome_kind": "VALUE",
+      "weight": 2
+    },
+    {
+      "criterion": "No parameter mutation outside optimizer.step() occurred at any point in the run.",
+      "dimension": "integrity",
+      "evaluation_target": "telemetry_record",
+      "evidence": [
+        "telemetry_record"
+      ],
+      "id": "R10",
+      "judgment": "no_out_of_step_parameter_mutation is true",
+      "mode": "compiled",
+      "outcome_kind": "ABSENCE",
+      "weight": 2
+    },
+    {
+      "criterion": "The submitted update rule is not a replay of any pinned published record above the fingerprint threshold.",
+      "dimension": "contamination",
+      "evaluation_target": "submission_bytes",
+      "evidence": [
+        "submission_bytes"
+      ],
+      "id": "R11",
+      "judgment": "update_rule_not_record_replay is true",
+      "mode": "compiled",
+      "outcome_kind": "ABSENCE",
+      "weight": 3
+    },
+    {
+      "criterion": "Every telemetry record carries the profile the verifier grades, so a proof-scale run cannot be graded as a full one.",
+      "dimension": "integrity",
+      "evaluation_target": "telemetry_record",
+      "evidence": [
+        "telemetry_record"
+      ],
+      "id": "R12",
+      "judgment": "run_profile_matches_verifier is true",
+      "mode": "compiled",
+      "outcome_kind": "INVARIANT",
+      "weight": 2
+    },
+    {
+      "criterion": "An earliest sustained multi-seed crossing of the target loss exists in the recorded series, which is the quantity the reward is computed from. Full reward additionally requires that crossing to be at or below target_steps, and the reward form measures the shortfall rather than this checker.",
+      "dimension": "objective",
+      "evaluation_target": "verifier_score",
+      "evidence": [
+        "verifier_score"
+      ],
+      "id": "R13",
+      "judgment": "graded_step_reaches_target is true",
+      "mode": "compiled",
+      "outcome_kind": "VALUE",
+      "weight": 4
+    },
+    {
+      "criterion": "The submitted update rule was derived from the agent's own experimentation against the frozen schedule rather than recalled and reimplemented from a published record.",
+      "dimension": "derivation",
+      "evaluation_target": "agent_trajectory",
+      "evidence": [
+        "agent_trajectory"
+      ],
+      "id": "R14",
+      "judgment": "judged against the recorded trajectory",
+      "mode": "judged",
+      "residue": "The fingerprint check compares composed configurations, so it catches replay at configuration level and cannot reach a record recalled and reimplemented in a different form. What is left is an authorship question over the reasoning, and no available deterministic check reads it.",
+      "weight": 3
+    },
+    {
+      "criterion": "The agent discloses which part of any ported record it kept, which part the frozen schedule broke, and what it substituted for the missing half.",
+      "dimension": "derivation",
+      "evaluation_target": "agent_trajectory",
+      "evidence": [
+        "agent_trajectory"
+      ],
+      "id": "R15",
+      "judgment": "judged against the recorded trajectory",
+      "mode": "judged",
+      "residue": "Disclosure is a property of the narrative rather than of the bytes. A rule can satisfy every deterministic check while its trajectory says nothing about provenance, and no deterministic read distinguishes silence from absence of a port.",
+      "weight": 2
+    }
+  ],
+  "schema": "bia.s02.rubric/v1"
+}

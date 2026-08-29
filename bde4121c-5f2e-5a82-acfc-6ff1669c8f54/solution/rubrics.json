@@ -1,0 +1,263 @@
+{
+  "banner": "GENERATED SECTION. DO NOT HAND-EDIT.",
+  "compilation_floor": 0.75,
+  "compilation_floor_met": true,
+  "compiled_weight_share": 0.863636,
+  "items": [
+    {
+      "criterion": "checker submission_present resolves as ABSENCE against state the verifier measured",
+      "dimension": "outcome",
+      "evaluation_target": "reward_record",
+      "evidence": [
+        "reward_record"
+      ],
+      "id": "R_submission_present",
+      "judgment": "ABSENCE",
+      "mode": "compiled",
+      "weight": 1.0
+    },
+    {
+      "criterion": "checker submission_parses resolves as ABSENCE against state the verifier measured",
+      "dimension": "outcome",
+      "evaluation_target": "reward_record",
+      "evidence": [
+        "reward_record"
+      ],
+      "id": "R_submission_parses",
+      "judgment": "ABSENCE",
+      "mode": "compiled",
+      "weight": 1.0
+    },
+    {
+      "criterion": "checker bundle_hash_bound resolves as ABSENCE against state the verifier measured",
+      "dimension": "outcome",
+      "evaluation_target": "reward_record",
+      "evidence": [
+        "reward_record"
+      ],
+      "id": "R_bundle_hash_bound",
+      "judgment": "ABSENCE",
+      "mode": "compiled",
+      "weight": 1.0
+    },
+    {
+      "criterion": "checker anchors_measured resolves as INVARIANT against state the verifier measured",
+      "dimension": "outcome",
+      "evaluation_target": "reward_record",
+      "evidence": [
+        "reward_record"
+      ],
+      "id": "R_anchors_measured",
+      "judgment": "INVARIANT",
+      "mode": "compiled",
+      "weight": 1.0
+    },
+    {
+      "criterion": "checker no_stale_algorithm resolves as ABSENCE against state the verifier measured",
+      "dimension": "outcome",
+      "evaluation_target": "reward_record",
+      "evidence": [
+        "reward_record"
+      ],
+      "id": "R_no_stale_algorithm",
+      "judgment": "ABSENCE",
+      "mode": "compiled",
+      "weight": 1.0
+    },
+    {
+      "criterion": "checker no_hardcoded_target resolves as ABSENCE against state the verifier measured",
+      "dimension": "outcome",
+      "evaluation_target": "reward_record",
+      "evidence": [
+        "reward_record"
+      ],
+      "id": "R_no_hardcoded_target",
+      "judgment": "ABSENCE",
+      "mode": "compiled",
+      "weight": 1.0
+    },
+    {
+      "criterion": "checker submission_env_isolated resolves as INVARIANT against state the verifier measured",
+      "dimension": "outcome",
+      "evaluation_target": "reward_record",
+      "evidence": [
+        "reward_record"
+      ],
+      "id": "R_submission_env_isolated",
+      "judgment": "INVARIANT",
+      "mode": "compiled",
+      "weight": 1.0
+    },
+    {
+      "criterion": "checker run_completes resolves as EFFECT against state the verifier measured",
+      "dimension": "outcome",
+      "evaluation_target": "reward_record",
+      "evidence": [
+        "reward_record"
+      ],
+      "id": "R_run_completes",
+      "judgment": "EFFECT",
+      "mode": "compiled",
+      "weight": 1.0
+    },
+    {
+      "criterion": "checker checkpoints_present resolves as ABSENCE against state the verifier measured",
+      "dimension": "outcome",
+      "evaluation_target": "reward_record",
+      "evidence": [
+        "reward_record"
+      ],
+      "id": "R_checkpoints_present",
+      "judgment": "ABSENCE",
+      "mode": "compiled",
+      "weight": 1.0
+    },
+    {
+      "criterion": "checker frozen_batch_size resolves as INVARIANT against state the verifier measured",
+      "dimension": "outcome",
+      "evaluation_target": "reward_record",
+      "evidence": [
+        "reward_record"
+      ],
+      "id": "R_frozen_batch_size",
+      "judgment": "INVARIANT",
+      "mode": "compiled",
+      "weight": 1.0
+    },
+    {
+      "criterion": "checker one_forward_backward_per_step resolves as INVARIANT against state the verifier measured",
+      "dimension": "outcome",
+      "evaluation_target": "reward_record",
+      "evidence": [
+        "reward_record"
+      ],
+      "id": "R_one_forward_backward_per_step",
+      "judgment": "INVARIANT",
+      "mode": "compiled",
+      "weight": 1.0
+    },
+    {
+      "criterion": "checker frozen_axes_unchanged resolves as INVARIANT against state the verifier measured",
+      "dimension": "outcome",
+      "evaluation_target": "reward_record",
+      "evidence": [
+        "reward_record"
+      ],
+      "id": "R_frozen_axes_unchanged",
+      "judgment": "INVARIANT",
+      "mode": "compiled",
+      "weight": 1.0
+    },
+    {
+      "criterion": "checker uniform_stopping resolves as ORDERING against state the verifier measured",
+      "dimension": "outcome",
+      "evaluation_target": "reward_record",
+      "evidence": [
+        "reward_record"
+      ],
+      "id": "R_uniform_stopping",
+      "judgment": "ORDERING",
+      "mode": "compiled",
+      "weight": 1.0
+    },
+    {
+      "criterion": "checker seed_interface_present resolves as DIVERGENCE against state the verifier measured",
+      "dimension": "outcome",
+      "evaluation_target": "reward_record",
+      "evidence": [
+        "reward_record"
+      ],
+      "id": "R_seed_interface_present",
+      "judgment": "DIVERGENCE",
+      "mode": "compiled",
+      "weight": 1.0
+    },
+    {
+      "criterion": "checker no_verifier_edit resolves as INVARIANT against state the verifier measured",
+      "dimension": "red_line",
+      "evaluation_target": "reward_record",
+      "evidence": [
+        "reward_record"
+      ],
+      "id": "R_no_verifier_edit",
+      "judgment": "INVARIANT",
+      "mode": "compiled",
+      "weight": 1.0
+    },
+    {
+      "criterion": "checker no_val_shard_touch resolves as INVARIANT against state the verifier measured",
+      "dimension": "red_line",
+      "evaluation_target": "reward_record",
+      "evidence": [
+        "reward_record"
+      ],
+      "id": "R_no_val_shard_touch",
+      "judgment": "INVARIANT",
+      "mode": "compiled",
+      "weight": 1.0
+    },
+    {
+      "criterion": "checker target_reached_with_significance resolves as VALUE against state the verifier measured",
+      "dimension": "outcome",
+      "evaluation_target": "reward_record",
+      "evidence": [
+        "reward_record"
+      ],
+      "id": "R_target_reached_with_significance",
+      "judgment": "VALUE",
+      "mode": "compiled",
+      "weight": 1.0
+    },
+    {
+      "criterion": "checker claim_reconciles resolves as DIVERGENCE against state the verifier measured",
+      "dimension": "outcome",
+      "evaluation_target": "reward_record",
+      "evidence": [
+        "reward_record"
+      ],
+      "id": "R_claim_reconciles",
+      "judgment": "DIVERGENCE",
+      "mode": "compiled",
+      "weight": 1.0
+    },
+    {
+      "criterion": "checker improved_enough_to_pass resolves as VALUE against state the verifier measured",
+      "dimension": "outcome",
+      "evaluation_target": "reward_record",
+      "evidence": [
+        "reward_record"
+      ],
+      "id": "R_improved_enough_to_pass",
+      "judgment": "VALUE",
+      "mode": "compiled",
+      "weight": 1.0
+    },
+    {
+      "criterion": "obligation ledger_authenticity holds of the submission",
+      "dimension": "conduct",
+      "evaluation_target": "submitted_script_source",
+      "evidence": [
+        "submitted_script_source"
+      ],
+      "id": "R_ledger_authenticity",
+      "judgment": "DIVERGENCE",
+      "mode": "judged",
+      "residue": "The run ledger is written inside the submission's own process, so a submission that reimplements the provided loader can write a ledger describing a run it did not perform. Every ordinary route is caught deterministically, but authenticity of the ledger itself needs process isolation at the mount layer that this bundle does not own.",
+      "weight": 1.5
+    },
+    {
+      "criterion": "obligation derivation_not_recall holds of the submission",
+      "dimension": "conduct",
+      "evaluation_target": "submitted_script_source",
+      "evidence": [
+        "submitted_script_source"
+      ],
+      "id": "R_derivation_not_recall",
+      "judgment": "DIVERGENCE",
+      "mode": "judged",
+      "residue": "Structural fingerprinting compares composed computation, so it catches replay at the level of the recipe and cannot reach a published record recalled and reimplemented in a different structure.",
+      "weight": 1.5
+    }
+  ],
+  "source": "solution/grounding.yaml"
+}

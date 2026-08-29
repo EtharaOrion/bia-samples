@@ -1,0 +1,30 @@
+{
+  "banner": "GENERATED SECTION. DO NOT HAND-EDIT.",
+  "entries": [
+    {
+      "file": "rec_adamw_aux.py",
+      "sha256": "d57608627edf260d36daa3aa3c414062b7bd6179afe9be078be537653b4c655a"
+    },
+    {
+      "file": "rec_lion.py",
+      "sha256": "f9b4c9f0a6fad661da2c761a7e479c22a45c55dfa7519c4dca1e32e70191d6e1"
+    },
+    {
+      "file": "rec_muon_ns.py",
+      "sha256": "8e4a2366ce6195e2813431ad77bdd9522d936b65f6380533cdea9bd60eaed93c"
+    },
+    {
+      "file": "rec_shampoo_mini.py",
+      "sha256": "120ae80441ffcb2fb7d654ed2cd740f4d8050837d459020bf4b4fdc4d63a67ea"
+    },
+    {
+      "file": "rec_soap_light.py",
+      "sha256": "65423f3e6e64224d98267b23bc2777c09a103caf1a42f8add3fc7683f1227603"
+    }
+  ],
+  "normalization": "python abstract syntax tree dump with docstrings removed",
+  "purpose": "the pinned exclusion set the no_verbatim_record_copy checker compares a submission against, standing for the published record lineage this family names as its leakage surface",
+  "schema": "bia.s01/exclusion_corpus/v1",
+  "similarity_threshold": 0.9,
+  "source": "solution/grounding.yaml via solution/recompute.py"
+}

@@ -1,0 +1,123 @@
+# Provenance for bia S09 multi-objective-frontier.
+#
+# The canonical content hash is deliberately NOT recorded in this file. This
+# file is inside the hash domain, so recording the hash here would change the
+# hash it records. The hash and its uuid5 are carried by the directory name,
+# which is exactly what an independent party recomputes and compares.
+#
+# Recompute both with:  python3 solution/recompute.py --hash
+
+schema: bia.provenance/v1
+
+identity:
+  namespace: c53e8f3b-526f-52c0-a04e-89e2269b237d
+  namespace_name: FORGE_TASK_NAMESPACE
+  derivation: uuid5(FORGE_TASK_NAMESPACE, canonical_content_hash)
+  directory_name_equals: the uuid5 above, as a lowercase hyphenated string
+  recompute_command: python3 solution/recompute.py --hash
+  implemented_by: solution/recompute.py::canonical_content_hash and solution/recompute.py::mode_hash
+
+# The exact recipe, stated so it can be reimplemented independently rather than
+# only re-executed. Any implementation following these eight steps over the
+# frozen bytes must produce the same hex digest.
+hash_recipe:
+  algorithm: SHA-256, single pass, one running hasher over the whole bundle
+  steps:
+    - 1. Walk the bundle directory recursively and collect every regular file. Symlinks and directories are not entries.
+    - 2. Express each entry as a POSIX relative path from the bundle root, with forward slashes and no leading slash.
+    - 3. Exclude every entry whose first path component is `trajectories`. Rollout evidence must never change frozen bundle identity.
+    - 4. Exclude every entry any of whose path components is `__pycache__`, and every entry whose suffix is `.pyc`. Interpreter cache is not bundle content.
+    - 5. Sort the surviving relative paths ascending, as Python sorts str, which for these paths is byte order.
+    - 6. For each path in that order, update the hasher with, in this exact sequence, the UTF-8 bytes of the relative path, one 0x00 byte, the ASCII decimal byte length of the file contents, one 0x00 byte, and the raw file contents.
+    - 7. canonical_content_hash is the lowercase hex digest of the hasher.
+    - 8. The directory name is str(uuid.uuid5(uuid.UUID(namespace), canonical_content_hash)), where the second argument is the hex digest string, not its bytes.
+  excluded_from_hash:
+    - trajectories/
+    - "**/__pycache__/**"
+    - "*.pyc"
+  included_in_hash:
+    - task.toml
+    - instruction.md
+    - environment/
+    - tests/
+    - solution/
+  length_framing_rationale: >-
+    The path, a null, the decimal length, a null, then the contents. Without the length framing, two different file sets whose concatenated contents happen to coincide across a path boundary would hash identically, so the framing is what makes the digest a function of the file set rather than of its concatenation.
+
+upstream_provenance:
+  origin: original
+  provenance_date: "2026-08-21"
+  provenance_date_meaning: the authored-instance date, because this is an original instance and no upstream benchmark instance was lifted
+  source_kind: synthetic
+  generator_identity: environment/harness/engine.py::build_source and environment/harness/engine.py::generate_tokens
+  generation_inputs:
+    source_seed: 20260821
+    chain_order: 1
+    vocab_size: 4096
+    successors_per_state: 64
+    uniform_floor: 0.02
+  upstream_lift: none
+  upstream_lift_note: >-
+    The data source is a first-order Markov chain generated in-process from a frozen seed. No public corpus, no public benchmark instance and no published record is carried into this bundle, so the contamination surface of the surrounding families, a public record lineage with reproduction scripts, does not exist here. What does exist is published multi-objective optimization method knowledge, which is prior art an agent is entitled to use and which is not screened against.
+  ancestry_attestation_digest: unavailable
+  ancestry_attestation_signer: unavailable
+  event_attestation_digest: unavailable
+  event_attestation_signer: unavailable
+  attestation_note: >-
+    attestation-unavailable. This bundle has no repository ancestry to attest, because source_kind is synthetic and the generator ships inside the bundle. The generator identity and its generation inputs are recomputable from the frozen bytes by any reader, which is the checkable substitute this record offers in place of a platform attestation.
+
+runtime_pin:
+  docker_image: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
+  digest_source: >-
+    The digest is the linux/amd64 base recorded in the verified working track3 reference bundle at /home/bia-gpu/oer/track3-pipeline/ship-task/_session_fixed_source/environment/Dockerfile, where it is named as pytorch/pytorch:2.13.0-cuda13.0-cudnn9-runtime. It is reused here rather than resolved locally, because no network egress was used during authoring.
+  digest_verified_locally: false
+  digest_verified_locally_note: >-
+    UNMEASURED. The digest was not pulled or verified during authoring. A run that cannot resolve it is a configuration fault and must be reported as such rather than as a score.
+  authoring_host_runtime:
+    python: "3.x, as reported by the authoring host"
+    torch: "2.13.0+cu132"
+    numpy: "2.5.2"
+    pyyaml: "6.0.3"
+    pytest: "9.1.1"
+  imports_required: [torch, numpy, yaml, pytest]
+
+generated_artifacts:
+  source: solution/grounding.yaml
+  regenerate: python3 solution/recompute.py --regen
+  verify_without_writing: python3 solution/recompute.py --regen --check
+  files:
+    - solution/TRUTH.md
+    - solution/rubrics.json
+    - tests/rubrics.jsonl
+    - tests/test_output.py
+
+execution_evidence:
+  graded_reference_score: unmeasured, pending orchestrator GPU run
+  graded_reference_score_reason: >-
+    The host's single H100 was at full utilization running a live evaluation campaign for the whole authoring window. No GPU workload was started, no CUDA memory was allocated, and no torch.cuda call that reserves memory was made. The graded reference score is therefore absent. It is not estimated, not extrapolated from the smoke run and not inferred from any published figure.
+  smoke_path_executed: true
+  smoke_path_invocation: BIA_SMOKE=1 bash solution/solve.sh
+  smoke_path_envelope: CPU only, CUDA_VISIBLE_DEVICES emptied, BIA_S09_FORCE_CPU set
+  smoke_path_proves: >-
+    That solution/solve.sh runs end to end, that the frozen runner seals a real record, that six real training runs produce six real pairs of objective values, that a real Pareto front is filtered from them, that a real hypervolume is integrated from that front, that the verifier reproduces that number through an independent implementation, and that solution/recompute.py re-derives the same reward from the raw achieved values.
+  smoke_path_does_not_prove: >-
+    Anything about the graded operating point, the graded per-point wall clock, the graded reference score, or the difficulty of this task against any cohort.
+
+verification_performed_by_author:
+  - id: 1
+    step: task.toml parses under tomllib
+  - id: 2
+    step: all seven optimization bindings present, budget_hours bound by role
+  - id: 3
+    step: every checker reduces to exactly one of the six kinds and names its live-state read
+  - id: 4
+    step: rubrics.jsonl parses line by line with exactly two keys
+  - id: 5
+    step: no em-dash and no intra-paragraph newline in any emitted Markdown
+  - id: 6
+    step: solve.sh executed against the harness and the score recorded
+    status: DEFERRED, not performed by the author
+    deferred_reason: >-
+      Running the graded reference requires the host's single H100, which was fully committed to a live evaluation campaign. The measurement is deferred to the orchestrator, which runs all reference measurements serially on an idle accelerator. The smoke path was executed instead, which proves the reference executes without proving what it scores.
+  - id: 7
+    step: directory name equals uuid5 over the frozen content hash

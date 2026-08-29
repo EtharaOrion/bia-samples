@@ -1,0 +1,162 @@
+# Harbor delivery manifest, slot OER-16.
+#
+# schema_version is a TOP-LEVEL scalar and is written above the first table
+# header on purpose. TOML scopes every key to the most recent header, so an
+# assignment written after `[task]` becomes `task.schema_version` and leaves the
+# top-level scalar absent while the file still reads correct to a human.
+schema_version = "1.4"
+
+multi_step_reward_strategy = "last"
+
+# Graded deliverables, TOP-LEVEL list, written above the first table header for
+# the same scoping reason: an `artifacts` list nested under `[metadata]` becomes
+# `metadata.artifacts` and the real list stays empty, which Harbor accepts in
+# silence while snapshotting nothing.
+artifacts = [
+  "/app/submission.py",
+  "/logs/agent/trajectory.jsonl",
+  "/logs/verifier/reward.txt",
+  "/logs/verifier/score.json",
+]
+
+[task]
+name = "bia/oer-16-claimed-bits-per-byte-contradicted"
+version = "1.0.0"
+description = """
+Lower bits per byte at fixed compute by constructing a better tokenizer and
+vocabulary. The graded figure is always the verifier's own measurement over the
+frozen evaluation corpus in BYTES, computed from harness-owned model state. A
+figure the submission asserts is input to a divergence check and is never a
+source of reward.
+"""
+authors = ["Bia"]
+keywords = ["optimization", "bounded-continuous", "hallucination-override"]
+
+[metadata]
+tags = ["optimization", "bounded-continuous"]
+category = "optimization"
+batch = "OER-2026-08-20"
+wave = 1
+slot = "OER-16"
+provisional_identifier = "OER-16"
+title = "Claimed bits per byte that the measured run contradicts"
+family = "F10"
+family_title = "tokenizer design"
+frozen = "the compute budget, the model, the optimizer, the evaluation corpus"
+free = "the tokenizer and vocabulary construction"
+metric = "bits per byte at fixed compute"
+metric_direction = "lower"
+primary_archetype = "AR8"
+archetype_name = "Language Hallucination Override"
+archetype_exclusivity = "exactly one primary archetype, fixed at scope time. No buffet within the slot."
+entry_point_tests = "tests/test.sh"
+entry_point_solution = "solution/solve.sh"
+
+target_tier = "Frontier-defeat"
+tier_exemption_granted = "none"
+anchorable_tier = "capped below Hard by the standing batch-level Perception-axis exemption"
+perception_axis_exemption = """
+This task family is text and code only, so the Perception axis carries no
+category; the exemption is batch-level, recorded once, closes by nothing, and no
+perception lever is authored to fill it. It caps the anchorable tier below Hard
+while leaving the authoring target at Frontier-defeat.
+"""
+
+# CANONICAL PATH for every bound optimization field in this batch:
+# metadata.optimization.<field>. One table, one deterministic lookup. Nothing
+# optimization-bound lives anywhere else in this manifest.
+#
+# ROLES, named here because the two bounds are never aliases:
+#   max_timeout_hours -> refinement-loop terminator ACROSS attempts.
+#   budget_hours      -> per-attempt completion bound, ONE attempt, 7.2 minutes.
+[metadata.optimization]
+max_timeout_hours = 6.0
+max_timeout_role = "refinement-loop terminator across attempts"
+budget_hours = 0.12
+budget_hours_minutes = 7.2
+budget_hours_role = "per-attempt completion bound"
+budget_hours_state = "provisional"
+budget_hours_note = """
+The upstream field named budget_hours carries the value 6 while the per-attempt
+bound is stated as 7.2 minutes and 7.2 minutes is the number a conforming task is
+designed against. 0.12 is bound here into the per-attempt field and marked
+provisional, rather than silently binding 6 into a per-attempt role.
+"""
+max_attempts = 50
+final_selection = "best"
+budget_envelope = "one H100, single accelerator, no multi-GPU scaling"
+budget_margin = "10 percent"
+compute_envelope_accelerators = 1
+
+[environment]
+docker_image = "pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407"
+os = "linux"
+cpus = 8
+memory_mb = 65536
+storage_mb = 32768
+gpus = 1
+gpu_types = ["H100"]
+workdir = "/app"
+build_timeout_sec = 3600
+# Provisioning egress is public and unrestricted, which is the grant the solving
+# agent needs to fetch its own packages, datasets and models. No host allowlist is
+# expressible here: allowed_hosts is only meaningful under
+# network_mode = "allowlist". Denying egress would leave the task unable to
+# install.
+network_mode = "public"
+
+[agent]
+# Solver egress asymmetry, bound as a byte rather than left to an accident. The
+# solving agent gets open internet egress inside the sandbox so it can fetch its
+# own packages, datasets and models.
+solver_egress = "setup-only"
+solver_egress_deny = ["github.com", "raw.githubusercontent.com", "objects.githubusercontent.com"]
+solver_egress_divergence_recorded_in = "solution/grounding.yaml"
+submission_path = "/app/submission.py"
+trajectory_path = "/logs/agent/trajectory.jsonl"
+network_mode = "none"
+
+[verifier]
+# The verifier keeps the bound network policy. The asymmetry against [agent] is
+# deliberate; the two surfaces differ by design and the divergence is recorded
+# in solution/grounding.yaml under solver_egress_divergence.
+egress = "denied"
+network_mode = "none"
+docker_image = "pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407"
+reward_path = "/logs/verifier/reward.txt"
+score_document_path = "/logs/verifier/score.json"
+reward_kind = "single float on the closed interval 0.0 to 1.0, higher is better, never binary"
+never_imports_submission = true
+checker_manifest = "tests/checkers.yaml"
+
+[verifier.reward]
+schema = "single float, closed interval [0.0, 1.0], higher is better, never binary"
+full_reward = 1.0
+floor = 0.0
+formula_lower_is_better = "raw = (baseline_metric - agent_metric) / (baseline_metric - target_metric)"
+clip = "score = min(max(raw, 0.0), 1.0)"
+target_is_a_bar = "reaching the target scores exactly 1.0 and beating it also scores 1.0"
+zero_carries_reason = true
+
+[verifier.anchors]
+baseline_metric_declared = "absent"
+target_metric_declared = "absent"
+pass_threshold_declared = "absent"
+note = """
+This family's anchors are unmeasured. The reward SCHEMA above is bound in full;
+the two numbers that schema divides by are absent for this family and no value is
+invented here. No baseline_metric or target_metric key carries a number anywhere
+in this bundle. A live run under absent anchors passes the whole gate chain and
+then fails closed at 0.0 with machine-readable reason anchors-absent, because a
+score computed from an invented denominator would be worse than no score at all.
+"""
+
+[solution]
+oracle = "solution/reference.py"
+derivation_source = "solution/grounding.yaml"
+recompute = "solution/recompute.py"
+policy = "solution/policy.yaml"
+
+[source]
+batch = "OER-2026-08-20"
+slot = "OER-16"

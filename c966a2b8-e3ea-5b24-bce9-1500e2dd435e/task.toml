@@ -1,0 +1,170 @@
+schema_version = "1.4"
+
+# Every deliverable the verifier grades or a reviewer replays is snapshotted out
+# of the environment before teardown rather than reconstructed afterwards.
+artifacts = [
+  "/workspace/submission/update_rule.py",
+  "/workspace/artifacts",
+  "/logs/verifier/score.json",
+  "/logs/verifier/outcomes.json",
+  "/logs/verifier/evidence.json",
+  "/logs/verifier/run_record.jsonl",
+  "/logs/verifier/reward.json",
+]
+
+[task]
+name = "bia/s10-reproduction-under-ablation"
+version = "1.0.0"
+description = "Recover a published pre-normalization training result on a norm-free transformer, using the optimizer alone, against two anchors the harness measures at grade time."
+authors = [{ name = "Bia" }]
+keywords = ["optimization", "bounded-continuous", "ablation", "reproduction", "language-model"]
+tags = ["optimization", "bounded-continuous"]
+
+# ---------------------------------------------------------------------------
+# The seven optimization bindings. All seven are here or the bundle is invalid.
+#
+# budget_hours is bound BY ROLE. requirements/bia-environment-spec.md names a 6
+# that bounds one fifty-attempt session, which is max_timeout's role. Writing
+# that 6 into budget_hours would encode a 300 hour session, which passes a
+# well-formedness check because nothing compares the fields. The per-attempt
+# bound is 6 hours divided by 50 attempts, which is 0.12 hours, 7.2 minutes.
+# ---------------------------------------------------------------------------
+[optimization]
+max_timeout = 6.0
+budget_hours = 0.12
+max_attempts = 50
+final_selection = "best"
+solver_egress = "setup-only"
+compute_envelope = "one-H100"
+reward_range = [0.0, 1.0]
+reward_clamp = "min(max(raw,0),1)"
+reward_kind = "single-float-continuous"
+reward_formula = "raw = (baseline_metric - agent_metric) / (baseline_metric - target_metric)"
+reward_direction = "higher-is-better"
+attempt_summary_carried_forward = true
+
+[budget]
+budget_hours = 0.12
+budget_envelope = "One H100, single accelerator, no multi-GPU scaling"
+budget_margin = 0.10
+source = "requirements/bia-environment-spec.md, budget declaration block and the operating point the two client numbers jointly define"
+per_attempt_derivation = "6 hours of session wallclock divided by 50 attempts"
+conformance_status = "MEASURED LOCALLY, PILOT EVIDENCE STILL OWED. A graded attempt measured 50 seconds against a warm anchor cache and a three-arm first attempt costs about 110 seconds of arm time, both inside the 432 second per-attempt bound, on one NVIDIA H100 80GB HBM3 shared with other work. Signed pilot duration evidence is still owed before any external conformance claim."
+
+[metadata]
+category = "optimization"
+slot = "S10"
+slot_name = "reproduction-under-ablation"
+max_timeout_hours = 6.0
+attempt_cap = 50
+frozen_surface = "a published result and one ablated component"
+free_surface = "everything else in the optimizer"
+disposition = "HOLD:PILOT_REQUIRED"
+disposition_reason = "Local design complete and locally verified, reference score measured on the grading device, wallclock measured and inside budget. Difficulty unmeasured, substrate metastability recorded as an open threat to gradability, no external signed pilot."
+difficulty_tier = "unassigned"
+
+[metadata.cohort]
+pinned_by_name = ["gpt5.6-sol", "anthropic/claude-opus-5", "muse-spark-1.2"]
+valid_to = "2026-11-17"
+registry_digest = "absent"
+registry_digest_note = "The consolidated spec carries cohorts-unpinned as an open decision: identity is supplied by the client, the frozen solver registry digest is not."
+
+[metadata.operating_point]
+profile = "scaled"
+reason = "F1 at the upstream operating point costs 84 minutes per graded run, which is 11.7 times the 7.2 minute per-attempt budget, so a scaled operating point is mandatory."
+corpus = "enwik8, byte level, vocabulary 256"
+d_model = 256
+n_layer = 10
+n_head = 4
+seq_len = 512
+batch_size = 24
+tokens_per_step = 12288
+steps = 1200
+tokens_per_arm = 14745600
+forward_backward_per_step = 1
+arms_first_attempt = 3
+arms_later_attempts = 1
+anchor_cache = "keyed over the substrate manifest, the frozen config digest, the corpus digest and the device name"
+wallclock_status = "MEASURED on one NVIDIA H100 80GB HBM3. Per arm 32.8, 29.4 and 46.2 seconds; a graded attempt against a warm anchor cache completed in 50 seconds, and a three-arm first attempt costs about 110 seconds of arm time. Both are inside the 432 second per-attempt bound."
+
+[grading]
+entry_point = "tests/test.sh"
+reward_path = "/logs/verifier/reward.json"
+score_path = "/logs/verifier/score.json"
+metric = "recovered_fraction_of_measured_ablation_gap"
+metric_range = [0.0, 1.0]
+full_reward = 1.0
+direction = "higher-is-better"
+hard_pass_checkers = true
+zero_score_carries_machine_readable_reason = true
+anchors = "measured by the harness at grade time, never authored. Enforced rather than declared: the verifier reads the anchor cache before any submitted byte is loaded, it never loads a submitted byte into its own interpreter at all, and every cache entry carries an HMAC taken with a key in the verifier tree that no attempt can read. An entry whose tag does not verify is a graded zero with reason anchor_cache_entry_failed_authentication, not a cache miss."
+seeds_per_attempt = 1
+seed_owner = "harness"
+seed_value = 0
+
+[agent]
+timeout_sec = 21600.0
+network_mode = "none"
+allowed_hosts = []
+network_note = "Setup-only egress. The image is built with network and the scored work runs without it, which is the stricter of the two readings the client brief supports."
+
+[verifier]
+timeout_sec = 3600.0
+env = { }
+environment_mode = "shared"
+shared_environment_note = "A separate verifier container could not reach /opt/bia/substrate or the agent's checkpoint, both of which grade.py must read."
+
+[environment]
+docker_image = "pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407"
+build_context = "environment/"
+dockerfile = "environment/Dockerfile"
+gpus = 1
+gpu_types = ["H100"]
+cpus = 8
+memory_mb = 65536
+storage_mb = 40960
+network_mode = "public"
+network_precedence_note = "Baseline for environment setup only. [agent] overrides to none for the graded run. A precedence pair, not a contradiction."
+env = { BIA_SUBSTRATE_DIR = "/opt/bia/substrate", BIA_SUBMISSION_DIR = "/workspace/submission", BIA_WORKDIR = "/workspace/artifacts", BIA_LOGDIR = "/logs/verifier", BIA_ANCHOR_DIR = "/anchors", BIA_CORPUS = "/opt/bia/data/enwik8", PYTHONPATH = "/opt/bia" }
+
+[upstream_provenance]
+origin = "derived"
+provenance_date = "2026-08-21"
+upstream_identity = "modded-nanogpt track 3 optimization lineage, github.com/KellerJordan/modded-nanogpt"
+upstream_license = "MIT"
+source_kind = "synthetic"
+generator_identity = "solution/recompute.py over solution/grounding.yaml"
+modifications = [
+  "Scaled operating point: byte level enwik8 at vocabulary 256 rather than GPT-2 tokenized FineWeb, 10.7M parameters rather than upstream scale, 1200 steps rather than the upstream step budget.",
+  "Metric changed from steps to target loss to fraction of a measured ablation gap recovered, because the ablation makes the upstream target unreachable at the upstream step count.",
+  "Architecture ablated: every activation normalization removed from the graded model.",
+  "Anchors measured by the harness at grade time rather than transcribed from a published leaderboard.",
+]
+attestation_status = "attestation-unavailable"
+attestation_note = "No signed platform attestation for ancestry or task-generating event ships with this bundle. Recorded as a named gap rather than asserted."
+
+[contamination]
+primary_leakage_surface = "the modded-nanogpt published record lineage, whose logfiles carry complete reproduction scripts"
+fingerprint_check = "absent"
+fingerprint_check_note = "No deterministic fingerprint against a pinned exclusion set ships here. Recorded as a coverage gap. The scoring geometry makes a replayed record land at raw zero by construction, because that replay is the measured baseline anchor, which is weaker than an exclusion set and is recorded as weaker."
+freeze_holdout = "not_applicable"
+freeze_holdout_reason = "The graded instance is generated by this bundle's own substrate rather than lifted from a named public evaluation set."
+
+[metadata.rollout_population]
+population_predicate = "no rollouts have been recorded for this bundle"
+attempts_made = 0
+attempts_shipped = 0
+attempts_excluded = 0
+attempts_scored = 0
+attempts_faulted = 0
+attempts_unrun = 0
+scored_attempts_all_shipped = true
+note = "The optimization lane asks for one rollout per model for at least three models plus an inspection page. None exists. Producing them requires the accelerator and the pinned cohort, and neither was available to the authoring run."
+shipped = []
+excluded = []
+
+[metadata.reference]
+reference_solution = "solution/solve.sh"
+reference_score = 0.4683473899549122
+reference_score_note = "MEASURED on the shipped bytes, on one NVIDIA H100 80GB HBM3, through the ordinary graded pipeline, reason scored, all checkers of the roster in force at that measurement passing, which was seven, and all 18 control halves of that roster passing. The roster is now nine checkers with 25 control halves after the isolation rehardening; that rehardening changed which process runs the agent arm and how the anchor cache is authenticated, and it did not change the reference score, which re-measured on the smoke path at exactly its previous 0.031294992117203595. agent_metric 1.9083885649840038 against target_metric 1.7892686973015468 and baseline_metric 2.0133245289325714, both anchors measured by the harness on that device rather than transcribed. The substrate is metastable so this is a draw: four further runs of the identical configuration measured 1.896, 1.902, 1.908 and 1.962, placing the reference between 0.23 and 0.52 of the measured gap."
+smoke_path = "BIA_SMOKE=1 solution/solve.sh, which runs the identical code path at tiny scale on CPU with no CUDA allocation"

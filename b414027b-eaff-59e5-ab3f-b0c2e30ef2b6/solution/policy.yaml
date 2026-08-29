@@ -1,0 +1,20 @@
+# Capability policy manifest for this bundle.
+# Transcribed verbatim from the policy block under families.F1 in seed/contract.yaml.
+# It states intent and nothing more. Whether a control was enforced is the operator attestation's claim alone.
+note: enumerates every capability channel exactly once. Phase 1 item 2d emits this to dataset/<uuid>/solution/policy.yaml and includes it in the canonical content hash, so policy can never drift from the bytes it governs. The manifest states intent and settles nothing; whether a control was enforced is the operator attestation's claim alone.
+channels:
+  network_egress_solver: denied
+  network_egress_verifier: denied
+  filesystem_write_outside_workdir: denied
+  filesystem_read_solution_tree: denied
+  filesystem_read_tests_tree: denied
+  subprocess_spawn: restricted
+  accelerator: denied
+  clock_read: restricted
+  random_source: restricted
+  environment_variable_read: restricted
+channel_rationale:
+  accelerator: denied because F3 grading is exact and runs offline on CPU, so an accelerator is never required and its presence would only widen the surface
+  network_egress_solver: denied because the contamination defense for this family rests on the instance being generated rather than published, and egress would reopen the lookup route the family exists to close
+  clock_read: restricted because the recomputation script must never read a clock, a locale or a random source
+gap: gap-policy-block-absent

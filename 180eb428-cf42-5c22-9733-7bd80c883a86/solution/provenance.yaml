@@ -1,0 +1,122 @@
+--- # solution/provenance.yaml
+# PRIVATE. Records the exact recipe by which this bundle's directory name was derived, so the
+# orchestrator can recompute it independently rather than taking the author's word for it.
+#
+# This file is itself EXCLUDED from the canonical content hash. It has to be, because it
+# records the hash: including it would make the digest a fixed point of its own output. The
+# exclusion is declared here rather than left implicit, and it is one of exactly two.
+
+slot: S07
+slot_name: mixed-precision-stability
+task_name: bia/mixed-precision-stability
+authored: 2026-08-21
+disposition: HOLD:PILOT_REQUIRED
+
+identity:
+  namespace: c53e8f3b-526f-52c0-a04e-89e2269b237d
+  namespace_name: FORGE_TASK_NAMESPACE
+  namespace_source: AUTHORING-PACKET.md, read-only, never invented and never rotated
+  canonical_content_hash: bc9be47f128828bf408556d02b2bb6346c748cadfcbb4f41c370b7546aee5988
+  uuid: 75c0cf74-c204-5594-bc30-b1ef830dbcac
+  derivation: uuid5(FORGE_TASK_NAMESPACE, canonical_content_hash)
+  uuid_name_argument: the 64 character lowercase hexadecimal digest string, not its raw bytes
+
+canonical_content_hash_recipe:
+  implementation: solution/recompute.py, functions hash_members, canonical_content_hash, bundle_uuid
+  recompute_command: python3 solution/recompute.py --hash
+  algorithm: SHA-256
+  steps:
+    - 1: Walk the bundle root recursively and keep regular files only.
+    - 2: Express each path relative to the bundle root using forward slashes.
+    - 3: >-
+        Exclude any path beginning with trajectories/ because rollout evidence must never change
+        frozen bundle identity. Exclude solution/provenance.yaml because it records the digest.
+        Exclude any path containing __pycache__, .DS_Store or .pyc because those are build
+        residue rather than bundle bytes.
+    - 4: Sort the surviving relative paths by the byte-wise ordering of their UTF-8 encoding.
+    - 5: >-
+        For each path in that order feed the hash: the UTF-8 path bytes, then one 0x00 byte,
+        then the content length as an 8 byte big-endian unsigned integer, then the content bytes
+        verbatim. The length prefix and the NUL separator make the framing injective, so no
+        rename or content shift can collide with a different file set.
+    - 6: canonical_content_hash is the lowercase hexadecimal digest.
+    - 7: uuid is uuid5 over the namespace with that hexadecimal string as the name.
+  excluded_prefixes: ["trajectories/"]
+  excluded_paths: ["solution/provenance.yaml"]
+  excluded_name_fragments: ["__pycache__", ".DS_Store", ".pyc"]
+  member_count: 25
+  members_are_listed_by: python3 -c "import sys; sys.path.insert(0,'solution'); import recompute; print('\n'.join(recompute.hash_members()))"
+
+upstream_provenance:
+  origin: original
+  provenance_date: 2026-08-21
+  provenance_date_meaning: authored-instance date, since origin is original and nothing was lifted
+  source_kind: synthetic
+  generator: bia FORGE authoring lane S07
+  generation_inputs:
+    - AUTHORING-PACKET.md
+    - requirements/bia-environment-spec.md
+    - trinity/FORGE.md at the vendored submodule commit
+    - trinity/CRUCIBLE.md at the vendored submodule commit
+  upstream_lift: none
+  upstream_note: >-
+    The numeric format BIA-E4M3N-v1, the plan driven reduction interface, the three phase
+    self-calibrating attempt, the harness, the checkers and the reference policy are authored
+    for this slot. No benchmark instance, no published record and no third party recipe was
+    copied. The only external artifact is the corpus.
+  external_artifacts:
+    - path: environment/corpus/moby_dick.txt
+      identity: Project Gutenberg ebook 2701, Moby Dick by Herman Melville, first published 1851
+      license: public domain in the United States
+      sha256: 1cbd5325e9a4adda891a19a44d5ba289941832ad993e3817ace08c93cf15263e
+      bytes: 1220626
+      transformation: header and footer stripped, CRLF to LF, folded to 7 bit ASCII, trimmed, one trailing newline
+      transformation_note: >-
+        The ASCII fold is recorded because it is real and not a no-op. It removes 1728 em dash
+        characters so the bundle carries no em dash byte anywhere. No word of the text changed.
+  attestation_status: attestation-unavailable
+  attestation_note: >-
+    No signed platform attestation binds the corpus fetch instant or its ancestry. The source is
+    a public domain text with a stable published identity and a recorded digest, and the digest
+    is re-checked by the harness on every run, but that is a content binding rather than a
+    signed provenance attestation. Recorded as a named gap rather than accepted on trust.
+
+measurement_status:
+  reference_score: 0.770542
+  reference_score_reason: >-
+    MEASURED on 2026-08-21 on one H100 by running solution/solve.sh at the graded operating point
+    with no control cache and no smoke switch. Anchors from that same attempt: standard control
+    baseline 3.1191, float32 control target 2.6831, reference 2.7831, standard control overflow
+    events 4, reference overflow events 0. RE-MEASURED on 2026-08-21 against the recompiled
+    rubric under identical conditions: the same anchors to four decimals, the same score
+    0.770542, seventeen of seventeen checkers passing and nineteen of nineteen test_output
+    assertions passing. The accelerator was simultaneously carrying an unrelated
+    production campaign at 100 percent utilization, so this is a contended single seed
+    measurement. No value is estimated, extrapolated, or carried across from the CPU smoke path.
+  wallclock_on_one_h100: >-
+    153.9 seconds, contended, against a 432 second per attempt bound; the re-measurement of the
+    same attempt under the recompiled rubric recorded 153.44 seconds under the same contention
+  difficulty: UNMEASURED
+  difficulty_reason: >-
+    Difficulty is measured, never claimed. Only an external signed pilot over these frozen bytes
+    against the frozen solver registry can establish it. No pass probability is authored, no
+    self-solve is claimed, and no tier is asserted.
+
+what_was_measured_here:
+  device: >-
+    CPU for the format emulation, the reduction physics and the smoke suite, and one contended
+    H100 for the graded attempt and for the operating point sweep that set the micro batch
+  items:
+    - the format emulation against the fixture's own representable set and rounding rules
+    - the reduction physics at full operating point dimensions for every candidate plan
+    - the end to end adequacy suite in smoke mode, accepting three routes and rejecting five
+    - the independent scalar replay agreeing with the harness on 64 elements with 0 mismatches
+    - the smoke wall clock, reproducible across three runs
+    - >-
+      the graded attempt on one H100, score 0.770542 with anchors 3.1191 and 2.6831, in 153.9
+      contended seconds against a 432 second bound
+    - >-
+      the operating point sweep that set the micro batch to 16 sequences: at 2 sequences the
+      float32 control lost to the standard narrow format recipe at learning rates 0.003, 0.001
+      and 0.0003 and at 400, 800 and 1200 steps, which is the inversion this repair removed
+  see: solution/grounding.yaml and solution/TRUTH.md for the recorded numbers

@@ -1,0 +1,134 @@
+schema: forge.checkers/v1
+reduction_kinds: [VALUE, EFFECT, ABSENCE, INVARIANT, ORDERING, DIVERGENCE]
+
+# MEASURED CORRECTION carried from wave-1 lanes OER-01 through OER-04: the live
+# seed/forge/verifier.py binds the reward carrier to reward.txt, a bare float,
+# not reward.json. The reason and metric block travel in the companion score
+# document. Both are written from the one trap in tests/test.sh, so the
+# instrument's binding and the reason carrier can never disagree.
+reward_path: /logs/verifier/reward.txt
+score_document_path: /logs/verifier/score.json
+
+aggregation:
+  mode: required_pass
+  rationale: "tests/grade.py walks the declared set in order, and if any required checker fails it emits the floor carrying that checker's zero_reason without computing a number. That is exactly a required_pass reduction over the required criteria, and it is a gate rather than the score: past the gate grade.py computes the continuous bound formula, so the mode describes what the gate does and never claims the reward is binary."
+  gate_is_not_the_score: "Passing every required checker admits the run to grading. The reward past that point is min(max(clip(raw_agent) * margin_factor, 0.0), 1.0), continuous in the multi-seed mean and continuous through the separation margin."
+
+anchors:
+  anchors_state: absent
+  gap: gap-oer-per-family-anchors-unmeasured
+  note: "baseline_metric and target_metric are not authored anywhere in this bundle. The graded run resolves them from the harness record at /logs/verifier/anchors.json; an unresolved record scores 0.0 with reason anchors-unresolved."
+
+substitutions:
+  note: "No checker's rejecting half is carried by substitution. Every one of the nine is fired by a planted telemetry fixture in seed/tasks/OER-07/adequacy.py, and each planted defect fires exactly one checker. Nothing here is papered over, and there is nothing to record under this key."
+  entries: []
+
+checkers:
+  - id: graded_crossing_recomputed_unsmoothed
+    statement: "The graded step on every seed equals the verifier's own recomputation of the first sustained crossing from raw, unsmoothed loss values."
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: check_graded_crossing_recomputed_unsmoothed
+    zero_reason: readout-smoothed-on-graded-path
+    required: true
+    weight: 3
+    basis: live
+    live_state_read: "/logs/verifier/eval/schedule.json and /logs/verifier/eval/seed-<s>/evaluations.json, both written by the verifier's own evaluation pass over harness-owned weights."
+    compiled_test: "tests/test_output.py::test_graded_crossing_recomputed_unsmoothed"
+
+  - id: crossing_sustained_across_scheduled_points
+    statement: "The target validation loss holds at the graded step and at every one of the bound number of subsequent verifier-scheduled evaluation points."
+    reduction: INVARIANT
+    reached_by: tests/grade.py
+    selector: check_crossing_sustained_across_scheduled_points
+    zero_reason: crossing-not-sustained
+    required: true
+    weight: 3
+    basis: live
+    live_state_read: "/logs/verifier/eval/schedule.json sustain_points_required, against the point series in /logs/verifier/eval/seed-<s>/evaluations.json."
+    compiled_test: "tests/test_output.py::test_crossing_sustained_across_scheduled_points"
+
+  - id: early_stop_is_not_a_crossing
+    statement: "No seed leaves evidence of halting inside the verifier's evaluation schedule, and no scheduled point is missing from the evaluated record."
+    reduction: ABSENCE
+    reached_by: tests/grade.py
+    selector: check_early_stop_is_not_a_crossing
+    zero_reason: early-stop-without-sustained-crossing
+    required: true
+    weight: 2
+    basis: live
+    live_state_read: "the halted_at_step field and the evaluated point set in /logs/verifier/eval/seed-<s>/evaluations.json, against the point list the verifier scheduled in /logs/verifier/eval/schedule.json."
+    compiled_test: "tests/test_output.py::test_early_stop_is_not_a_crossing"
+
+  - id: graded_weights_are_harness_owned
+    statement: "The weights evaluated at the graded step carry the digest the harness's own checkpoint manifest records for that step."
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: check_graded_weights_are_harness_owned
+    zero_reason: graded-weights-not-harness-owned
+    required: true
+    weight: 3
+    basis: live
+    live_state_read: "/logs/verifier/eval/seed-<s>/checkpoint_manifest.json, owner harness, against the weights_digest recorded per point in the same seed's evaluations.json."
+    compiled_test: "tests/test_output.py::test_graded_weights_are_harness_owned"
+
+  - id: multi_seed_mean_clears_margin
+    statement: "The graded mean rests on at least the bound seed count and separates below the verifier's own reference arm on the shared seeds."
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: check_multi_seed_mean_clears_margin
+    zero_reason: multi-seed-separation-not-cleared
+    required: true
+    weight: 3
+    basis: live
+    live_state_read: "min_seeds from /logs/verifier/eval/schedule.json, the per-seed graded_step values, and /logs/verifier/eval/reference_arm.json which the verifier produced on the same seeds."
+    margin_is_continuous: "This checker fires only when the arms do not separate at all. The 0.05 margin itself is a linear ramp inside tests/grade.py, so the reward degrades continuously through it and there is no cliff at the margin."
+    compiled_test: "tests/test_output.py::test_multi_seed_mean_clears_margin"
+
+  - id: iteration_sequence_ordered
+    statement: "The recorded iteration timeline is strictly ascending, the durable ledger never shrinks across it, every iteration's summary digest matches the summary bytes it was handed, and the compaction lands at the bound point and nowhere earlier."
+    reduction: ORDERING
+    reached_by: tests/grade.py
+    selector: check_iteration_sequence_ordered
+    zero_reason: iteration-sequence-out-of-order
+    required: true
+    weight: 2
+    basis: live
+    live_state_read: "/logs/verifier/loop/iterations.json written by the loop driver, against the exact summary bytes at /logs/verifier/loop/summaries/iter-<n>.json."
+    compiled_test: "tests/test_output.py::test_iteration_sequence_ordered"
+
+  - id: summary_agrees_with_durable_ledger
+    statement: "No claim a summary asserts contradicts the durable ledger: nothing the record shows as tried is asserted untried, nothing is asserted with a status the record does not carry, and no constraint the record establishes is asserted absent."
+    reduction: DIVERGENCE
+    reached_by: tests/grade.py
+    selector: check_summary_agrees_with_durable_ledger
+    zero_reason: post-compaction-claim-contradicts-ledger
+    required: true
+    weight: 3
+    basis: live
+    live_state_read: "the asserts block of every /logs/verifier/loop/summaries/iter-<n>.json against /logs/verifier/loop/ledger.jsonl, the harness-captured copy of the agent's durable record."
+    compiled_test: "tests/test_output.py::test_summary_agrees_with_durable_ledger"
+
+  - id: compaction_dropped_entries_reconstructed
+    statement: "Every approach id the compaction dropped from the summary is reconstructed from the durable ledger, and every iteration handed a compacted summary was reconciled against that ledger."
+    reduction: EFFECT
+    reached_by: tests/grade.py
+    selector: check_compaction_dropped_entries_reconstructed
+    zero_reason: compaction-dropped-entry-not-reconstructed
+    required: true
+    weight: 3
+    basis: live
+    live_state_read: "the entry sets of consecutive /logs/verifier/loop/summaries/iter-<n>.json files, the reconstructed_from_ledger records in /logs/verifier/loop/ledger.jsonl, and reconciled_against_ledger in /logs/verifier/loop/iterations.json."
+    compiled_test: "tests/test_output.py::test_compaction_dropped_entries_reconstructed"
+
+  - id: frozen_axes_unmoved
+    statement: "Every declared frozen axis is observed by the verifier's own instrumentation to hold the value it was declared with."
+    reduction: INVARIANT
+    reached_by: tests/grade.py
+    selector: check_frozen_axes_unmoved
+    zero_reason: frozen-axis-moved
+    required: true
+    weight: 2
+    basis: live
+    live_state_read: "/logs/verifier/frozen_axes.json, whose observed side is instrumented from the live loader and the live model rather than copied from the declared side."
+    compiled_test: "tests/test_output.py::test_frozen_axes_unmoved"

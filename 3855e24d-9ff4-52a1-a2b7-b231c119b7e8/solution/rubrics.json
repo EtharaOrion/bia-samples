@@ -1,0 +1,203 @@
+{
+ "_banner": "GENERATED SECTION. DO NOT HAND-EDIT.",
+ "_generated_by": "solution/recompute.py from solution/grounding.yaml",
+ "compilation_floor": 0.75,
+ "compiled_weight_share": 0.84,
+ "evaluation_target_vocabulary": [
+  "bundle_bytes",
+  "agent_trajectory"
+ ],
+ "items": [
+  {
+   "criterion": "The checker identifiers declared in tests/checkers.yaml equal, as a set in both directions, the checker identifiers the verifier executes in tests/grade.py.",
+   "dimension": "gradability",
+   "evaluation_target": "bundle_bytes",
+   "evidence": [
+    "tests/checkers.yaml",
+    "tests/grade.py"
+   ],
+   "id": "checker_roster_reconciles",
+   "judgment": "set equality between the identifiers parsed from tests/checkers.yaml and the CHECKER_IDS list in tests/grade.py",
+   "mode": "compiled",
+   "outcome_kind": "VALUE",
+   "weight": 8
+  },
+  {
+   "criterion": "Every checker in tests/checkers.yaml declares exactly one reduction kind drawn from VALUE, EFFECT, ABSENCE, INVARIANT, ORDERING and DIVERGENCE.",
+   "dimension": "gradability",
+   "evaluation_target": "bundle_bytes",
+   "evidence": [
+    "tests/checkers.yaml"
+   ],
+   "id": "checker_kinds_are_singleton",
+   "judgment": "each checker entry carries exactly one reduction field whose value is a member of the closed six element set",
+   "mode": "compiled",
+   "outcome_kind": "VALUE",
+   "weight": 8
+  },
+  {
+   "criterion": "All six checker kinds appear at least once across the roster in tests/checkers.yaml.",
+   "dimension": "gradability",
+   "evaluation_target": "bundle_bytes",
+   "evidence": [
+    "tests/checkers.yaml"
+   ],
+   "id": "checker_kinds_cover_six",
+   "judgment": "the set of declared kinds equals the closed six element set",
+   "mode": "compiled",
+   "outcome_kind": "VALUE",
+   "weight": 6
+  },
+  {
+   "criterion": "Every checker in tests/checkers.yaml names a non empty live state read that the verifier actually consults.",
+   "dimension": "gradability",
+   "evaluation_target": "bundle_bytes",
+   "evidence": [
+    "tests/checkers.yaml"
+   ],
+   "id": "each_checker_names_live_state_read",
+   "judgment": "each checker entry carries a non empty live_state_read field",
+   "mode": "compiled",
+   "outcome_kind": "VALUE",
+   "weight": 8
+  },
+  {
+   "criterion": "The reward is one float clamped to the closed interval from zero to one by min of max of raw with zero and one, in both the declared contract and the executing verifier.",
+   "dimension": "reward_shape",
+   "evaluation_target": "bundle_bytes",
+   "evidence": [
+    "tests/checkers.yaml",
+    "tests/grade.py"
+   ],
+   "id": "reward_clamped_to_unit_interval",
+   "judgment": "tests/checkers.yaml declares the clamp and tests/grade.py contains the clamping expression on the path that emits the score",
+   "mode": "compiled",
+   "outcome_kind": "VALUE",
+   "weight": 8
+  },
+  {
+   "criterion": "Every line of tests/rubrics.jsonl is one JSON object carrying exactly the two keys id and rubric.",
+   "dimension": "delivery",
+   "evaluation_target": "bundle_bytes",
+   "evidence": [
+    "tests/rubrics.jsonl"
+   ],
+   "id": "rubrics_jsonl_shape",
+   "judgment": "each non empty line parses as a JSON object whose key set equals the two element set id and rubric",
+   "mode": "compiled",
+   "outcome_kind": "VALUE",
+   "weight": 6
+  },
+  {
+   "criterion": "task.toml carries all seven optimization bindings, with max_timeout at 6.0 hours, budget_hours at 0.12 hours per attempt, max_attempts at 50, final_selection best, solver egress setup only, the one H100 compute envelope, and a reward declared as a single float on the closed interval from zero to one.",
+   "dimension": "delivery",
+   "evaluation_target": "bundle_bytes",
+   "evidence": [
+    "task.toml"
+   ],
+   "id": "optimization_bindings_present",
+   "judgment": "task.toml parses and the seven named fields hold the named values, with budget_hours strictly less than max_timeout",
+   "mode": "compiled",
+   "outcome_kind": "VALUE",
+   "weight": 10
+  },
+  {
+   "criterion": "The noise fixture digest and corpus digest bound in tests/checkers.yaml equal the sha256 of the shipped fixture bytes.",
+   "dimension": "reproducibility",
+   "evaluation_target": "bundle_bytes",
+   "evidence": [
+    "tests/checkers.yaml",
+    "environment/fixtures/noise_process.py",
+    "environment/fixtures/corpus.bin"
+   ],
+   "id": "frozen_fixture_digests_bound",
+   "judgment": "sha256 of environment/fixtures/noise_process.py and of environment/fixtures/corpus.bin equal the bound values",
+   "mode": "compiled",
+   "outcome_kind": "VALUE",
+   "weight": 8
+  },
+  {
+   "criterion": "Every zero score path in the verifier writes a non empty machine readable reason into the score record.",
+   "dimension": "gradability",
+   "evaluation_target": "bundle_bytes",
+   "evidence": [
+    "tests/grade.py",
+    "tests/test.sh"
+   ],
+   "id": "zero_score_has_machine_reason",
+   "judgment": "every emit call in tests/grade.py passes a non empty reason literal or a reason variable, and tests/test.sh writes a reason on each of its own zero paths",
+   "mode": "compiled",
+   "outcome_kind": "VALUE",
+   "weight": 6
+  },
+  {
+   "criterion": "Under BIA_SMOKE the reference path forces an empty CUDA device list and selects the CPU operating point, so the smoke run allocates no accelerator memory.",
+   "dimension": "reproducibility",
+   "evaluation_target": "bundle_bytes",
+   "evidence": [
+    "solution/solve.sh",
+    "tests/grade.py",
+    "environment/harness/train.py"
+   ],
+   "id": "smoke_path_is_cpu_only",
+   "judgment": "solution/solve.sh and tests/grade.py both set CUDA_VISIBLE_DEVICES to empty under BIA_SMOKE and environment/harness/train.py selects the SMOKE config and the cpu device",
+   "mode": "compiled",
+   "outcome_kind": "VALUE",
+   "weight": 6
+  },
+  {
+   "criterion": "No emitted Markdown file in the bundle contains an em dash character.",
+   "dimension": "delivery",
+   "evaluation_target": "bundle_bytes",
+   "evidence": [
+    "instruction.md",
+    "solution/TRUTH.md"
+   ],
+   "id": "no_em_dash_in_markdown",
+   "judgment": "no file ending in .md under the bundle root contains the em dash code point",
+   "mode": "compiled",
+   "outcome_kind": "VALUE",
+   "weight": 6
+  },
+  {
+   "criterion": "instruction.md names the exact submission entry point and the exact method the harness calls on it.",
+   "dimension": "delivery",
+   "evaluation_target": "bundle_bytes",
+   "evidence": [
+    "instruction.md"
+   ],
+   "id": "estimator_contract_documented",
+   "judgment": "instruction.md contains the literals build_estimator and estimate and names submission/estimator.py",
+   "mode": "compiled",
+   "outcome_kind": "VALUE",
+   "weight": 4
+  },
+  {
+   "criterion": "The submitted estimator was designed from the agent's own inspection and probing of the injected process rather than recalled as a named published variance reduction recipe and applied unexamined.",
+   "dimension": "authenticity",
+   "evaluation_target": "agent_trajectory",
+   "evidence": [
+    "agent_trajectory"
+   ],
+   "id": "estimator_is_derived_not_recalled",
+   "judgment": "whether the design was derived or recalled",
+   "mode": "judged",
+   "residue": "Whether a design was derived or recalled is a property of the reasoning that produced it and not of the bytes it produced. Two agents can submit byte identical estimators, one having derived it and one having recalled it, so no deterministic relation over committed artifacts separates them.",
+   "weight": 8
+  },
+  {
+   "criterion": "The agent recognized that the injected process violates the independence and zero mean assumptions that standard variance reduction rests on, and said so, rather than reporting a reward without accounting for why the reflex answer fell short.",
+   "dimension": "authenticity",
+   "evaluation_target": "agent_trajectory",
+   "evidence": [
+    "agent_trajectory"
+   ],
+   "id": "defeat_mechanism_engaged",
+   "judgment": "whether the trajectory shows the assumption being identified and tested",
+   "mode": "judged",
+   "residue": "Recognition is a semantic property of trajectory prose. A deterministic test can confirm that an estimator subtracts the drift term and cannot confirm that the agent understood why the term had to be subtracted rather than smoothed.",
+   "weight": 8
+  }
+ ],
+ "slot": "S06"
+}

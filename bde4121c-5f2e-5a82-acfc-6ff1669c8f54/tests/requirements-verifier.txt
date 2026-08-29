@@ -1,0 +1,8 @@
+torch==2.5.1
+numpy
+tqdm
+huggingface-hub
+setuptools
+typing-extensions==4.15.0
+datasets
+tiktoken

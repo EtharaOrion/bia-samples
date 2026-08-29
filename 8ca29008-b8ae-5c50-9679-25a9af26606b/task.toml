@@ -1,0 +1,126 @@
+schema_version = "1.4"
+
+artifacts = [
+  "/telemetry/run_record.jsonl",
+  "/telemetry/recover_effect.json",
+  "/telemetry/resume_digests.json",
+  "/telemetry/corpus_meta.json",
+  "/workspace/submission/recover.py",
+  "/workspace/submission/report.json",
+  "/logs/verifier/score.json",
+  "/logs/verifier/outcomes.json",
+]
+
+[task]
+name = "bia/s08-checkpoint-recovery"
+version = "1.0.0"
+description = "Diagnose and recover from a mid-training checkpoint whose optimizer state is deliberately poor, and reach the target validation loss in the fewest steps."
+authors = [{ name = "Bia" }]
+keywords = ["optimization", "checkpoint-recovery", "bounded-continuous", "language-model"]
+
+[metadata]
+slot = "S08"
+category = "optimization"
+maturity = "draft"
+disposition = "HOLD:PILOT_REQUIRED"
+
+# ---------------------------------------------------------------------------
+# The seven optimization bindings.
+#
+# max_timeout and budget_hours are DISTINCT and are bound BY ROLE, not by number.
+# requirements/bia-environment-spec.md names a 6 that bounds one fifty-attempt
+# session: that 6 is max_timeout_hours. budget_hours is the per-attempt bound and
+# is 6 hours divided by 50 attempts, which is 0.12 hours or 7.2 minutes. Writing
+# the 6 into budget_hours would encode a 300 hour session.
+# ---------------------------------------------------------------------------
+max_timeout_hours = 6.0
+budget_hours = 0.12
+budget_envelope = "one H100, single accelerator, no multi-GPU scaling"
+budget_margin = "10 percent"
+max_attempts = 50
+attempt_cap = 100
+final_selection = "best"
+solver_egress = "setup-only"
+compute_envelope = "one H100"
+
+[metadata.optimization]
+max_timeout_hours = 6.0
+budget_hours = 0.12
+max_attempts = 50
+final_selection = "best"
+solver_egress = "setup-only"
+compute_envelope = "one H100"
+reward_range = [0.0, 1.0]
+reward_transform = "min(max(raw, 0.0), 1.0)"
+per_attempt_budget_minutes = 7.2
+per_attempt_budget_source = "requirements/bia-environment-spec.md lines 122 to 135, six session hours divided by fifty attempts"
+
+[metadata.reward]
+kind = "float"
+range = [0.0, 1.0]
+full_reward = 1.0
+direction = "higher_is_better"
+transform = "min(max(raw, 0.0), 1.0)"
+raw = "(baseline_steps - submission_steps) / (baseline_steps - full_reward_at_steps)"
+baseline_source = "measured in the same graded attempt by the harness-owned naive warm start control, never an authored constant"
+written_by_verifier_to = "/logs/verifier/score.json"
+aggregation = "single turn, single reward, no multi-step aggregation"
+
+[metadata.scaled_operating_point]
+# The upstream nanogpt operating point costs 84 minutes per graded run, which is
+# 11.7 times the per-attempt budget, so a scaled operating point is mandatory rather
+# than a convenience. These are the scaled values this bundle is authored against.
+profile = "scaled"
+parameters = 755456
+vocab_size = 1024
+sequence_length = 256
+layers = 3
+model_width = 128
+batch_sequences = 32
+tokens_per_step = 8192
+checkpoint_step = 400
+step_ceiling_per_seed = 6000
+graded_seeds = 2
+harness_control_runs = 1
+probe_batches_max = 16
+wallclock_estimate_status = "UNMEASURED, pending the orchestrator reference run on an idle H100"
+
+[metadata.cohort]
+# Pinned by the client brief through requirements/bia-environment-spec.md line 281.
+named = ["gpt5.6-sol", "anthropic/claude-opus-5", "muse-spark-1.2"]
+valid_to = "2026-11-17"
+registry_digest_status = "unpinned, carried as the open decision cohorts-unpinned"
+
+[agent]
+# Equals the six hours max_timeout_hours declares and equals what instruction.md promises.
+timeout_sec = 21600.0
+# No network during scored work. Egress is setup-only, granted by [environment] below.
+network_mode = "none"
+allowed_hosts = []
+
+[verifier]
+timeout_sec = 1800.0
+env = { }
+
+[environment]
+# Pinned by digest rather than by tag. The digest is transcribed from the verified
+# track3 reference bundle's recorded base image and has not been re-resolved against
+# a registry from the authoring host, which is carried as the named gap
+# image-digest-unreresolved in solution/grounding.yaml.
+docker_image = "pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407"
+gpus = 1
+gpu_types = ["H100"]
+cpus = 8
+memory_mb = 65536
+storage_mb = 40960
+# Setup-only egress. This is the baseline for environment provisioning; [agent]
+# narrows to no network for the scored run. A precedence pair, not a contradiction.
+network_mode = "public"
+env = { S08_TELEMETRY_DIR = "/telemetry", S08_PROFILE = "scaled", S08_STATE_DIR = "/opt/bia/s08", S08_FIXTURE_DIR = "/opt/bia/s08/fixtures" }
+
+[evidence]
+reference_score = "unmeasured, pending orchestrator GPU run"
+reference_score_reason = "the host H100 is running a live evaluation campaign and this bundle was authored under a hard no-GPU constraint, so packet verification step 6 is deferred to the orchestrator"
+smoke_path = "solution/solve.sh with BIA_SMOKE=1 executes the identical code path CPU only at the smoke profile"
+difficulty = "unmeasured"
+defeat_mechanism_status = "design intent, UNMEASURED"

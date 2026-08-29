@@ -1,0 +1,9 @@
+{
+ "_comment": "GENERATED SECTION. DO NOT HAND-EDIT. Regenerate with solution/recompute.py --regen.",
+ "files": {
+  "engine.py": "b9d7c3184036924d3ca39d4dbe7ba5948c035292c3e0e5b42b343559e084cb11",
+  "frontier_worker.py": "41e69f75560512ed77f39f2236b18d3f729ee2332d3107f33aa3eb2bfec502c0",
+  "run_frontier.py": "66aef691ec2d60793983ebd95fdbe6648b8d68464e14cc1a1c1fd1cdc75d300c"
+ },
+ "purpose": "pins the executable harness bytes for the frozen_harness_bytes_unmodified checker"
+}

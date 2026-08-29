@@ -1,0 +1,147 @@
+{
+  "_banner": "GENERATED SECTION. DO NOT HAND-EDIT. Source: solution/grounding.yaml, derived by solution/recompute.py.",
+  "_fixture": "overspend",
+  "graded_readout_filter": "none",
+  "halt_after": null,
+  "scheme_version": 1,
+  "tensors": [
+    {
+      "groups": [
+        {
+          "bits": 8,
+          "clip": 1.0,
+          "codebook": "affine",
+          "size": 48
+        }
+      ],
+      "name": "t00"
+    },
+    {
+      "groups": [
+        {
+          "bits": 2,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 48
+        }
+      ],
+      "name": "t01"
+    },
+    {
+      "groups": [
+        {
+          "bits": 6,
+          "clip": 0.95,
+          "codebook": "symmetric",
+          "size": 48
+        }
+      ],
+      "name": "t02"
+    },
+    {
+      "groups": [
+        {
+          "bits": 3,
+          "clip": 0.95,
+          "codebook": "symmetric",
+          "size": 48
+        }
+      ],
+      "name": "t03"
+    },
+    {
+      "groups": [
+        {
+          "bits": 5,
+          "clip": 1.0,
+          "codebook": "affine",
+          "size": 48
+        }
+      ],
+      "name": "t04"
+    },
+    {
+      "groups": [
+        {
+          "bits": 2,
+          "clip": 0.95,
+          "codebook": "symmetric",
+          "size": 48
+        }
+      ],
+      "name": "t05"
+    },
+    {
+      "groups": [
+        {
+          "bits": 4,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 48
+        }
+      ],
+      "name": "t06"
+    },
+    {
+      "groups": [
+        {
+          "bits": 2,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 48
+        }
+      ],
+      "name": "t07"
+    },
+    {
+      "groups": [
+        {
+          "bits": 3,
+          "clip": 1.0,
+          "codebook": "affine",
+          "size": 24
+        },
+        {
+          "bits": 6,
+          "clip": 1.0,
+          "codebook": "affine",
+          "size": 24
+        }
+      ],
+      "name": "t08"
+    },
+    {
+      "groups": [
+        {
+          "bits": 3,
+          "clip": 0.95,
+          "codebook": "affine",
+          "size": 48
+        }
+      ],
+      "name": "t09"
+    },
+    {
+      "groups": [
+        {
+          "bits": 4,
+          "clip": 0.95,
+          "codebook": "symmetric",
+          "size": 48
+        }
+      ],
+      "name": "t10"
+    },
+    {
+      "groups": [
+        {
+          "bits": 3,
+          "clip": 1.0,
+          "codebook": "affine",
+          "size": 48
+        }
+      ],
+      "name": "t11"
+    }
+  ]
+}

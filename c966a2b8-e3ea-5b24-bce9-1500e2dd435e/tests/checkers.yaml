@@ -1,0 +1,193 @@
+schema: forge.checkers/v1
+schema_version: "1.0"
+slot: "S10-reproduction-under-ablation"
+
+# Every checker below reduces to exactly one of the six kinds VALUE, EFFECT,
+# ABSENCE, INVARIANT, ORDERING, DIVERGENCE, and names the live-state read it
+# traces to. A checker reducing to none of them, or to two, is invalid. Each
+# entry mirrors one function in tests/checkers.py and the mirroring is proven
+# by tests/controls.py, which runs both halves of every checker.
+#
+# Every checker is hard pass. A single failure gates the emitted score to
+# exactly zero and the emitted reason is that checker's own machine-readable
+# reason string.
+
+# Bound by seed/forge/verifier.py as the path Harbor mounts, never chosen here.
+# tests/test.sh writes it from an EXIT trap, so the preflight faults that exit 2
+# before grade.py runs still deliver a scored zero rather than an absent file.
+reward_path: /logs/verifier/reward.txt
+
+# Every checker is hard pass, which is `all_pass` in the closed set: not `threshold`
+# because this bundle binds no contract threshold, and not `weighted_mean` because
+# no checker carries an authored weight.
+aggregation:
+  mode: all_pass
+
+grading_policy:
+  hard_pass: true
+  gated_score: 0.0
+  reward_formula: "raw = (baseline_metric - agent_metric) / (baseline_metric - target_metric); score = min(max(raw, 0), 1)"
+  anchors_are_measured_not_authored: true
+
+checkers:
+
+  - id: ablation_absent_from_graded_run
+    kind: ABSENCE
+    reduction: ABSENCE
+    statement: "No activation normalization survived into either ablated arm of the graded run."
+    reached_by: tests/checkers.py
+    selector: check_ablation_absent_from_graded_run
+    zero_reason: ablation-not-absent-from-graded-run
+    asserts: "No activation normalization operation exists in the executed forward or backward pass of either ablated arm, and no normalization parameter exists in either ablated model."
+    live_state_read: "The NormProbe trace recorded during the run and written to /logs/verifier/run_record.jsonl as the arm_probe_trace record, plus the forbidden_norm_events and norm_parameter_names fields of the arm_complete record. The probe intercepts every torch.nn.functional normalization entry point in the live process and registers a forward pre-hook on every module of the live model, tagging each recorded operation with the phase that executed it."
+    passes_when: "forbidden_norm_events equals 0 and norm_parameter_names is empty for arms anchor_baseline and agent, and norm_mode equals none for both."
+    fails_with:
+      - probe_inert_no_witness
+      - ablated_arm_missing
+      - ablated_arm_built_with_normalization
+      - normalization_executed_in_ablated_arm
+      - normalization_parameters_present_in_ablated_arm
+    liveness_guard: "The checker refuses to certify absence unless the un-ablated anchor_target arm recorded a strictly positive count of the same events. A probe that saw nothing in the arm that is full of normalization cannot see anything, and an absence it reports would be vacuous. The guard is a fail-closed condition on the single ABSENCE assertion, not a second assertion."
+    implementation: "tests/checkers.py::check_ablation_absent_from_graded_run"
+
+  - id: substrate_bytes_unmodified
+    kind: INVARIANT
+    reduction: INVARIANT
+    statement: "The frozen substrate source bytes were identical to the pinned manifest at verifier start and again at verifier end."
+    reached_by: tests/checkers.py
+    selector: check_substrate_bytes_unmodified
+    zero_reason: substrate-bytes-modified
+    asserts: "The frozen substrate source bytes were identical to the pinned manifest at verifier start and were still identical at verifier end, so the property held across the whole run."
+    live_state_read: "SHA-256 recomputed by the verifier over every .py file in the substrate directory at two instants, at verifier start before any arm ran and again after the last arm completed, compared against environment/substrate/SUBSTRATE_MANIFEST.json which is baked into the image."
+    passes_when: "start manifest equals pinned manifest and end manifest equals start manifest."
+    fails_with:
+      - substrate_manifest_unavailable
+      - substrate_hash_mismatch_at_start
+      - substrate_hash_drift_during_run
+    implementation: "tests/checkers.py::check_substrate_bytes_unmodified"
+
+  - id: ablation_gap_positive
+    kind: INVARIANT
+    reduction: INVARIANT
+    statement: "The ablated component was load bearing across the whole graded run, by at least the bound margin."
+    reached_by: tests/checkers.py
+    selector: check_ablation_gap_positive
+    zero_reason: ablation-gap-not-positive
+    asserts: "The ablated component was load bearing for the whole graded run: the naive port of the published recipe onto the ablated substrate is worse than the same recipe on the un-ablated substrate by at least the bound margin."
+    live_state_read: "The streaming_val_loss field of the anchor_baseline and anchor_target arm records in /logs/verifier/run_record.jsonl, both produced by the harness owned reference recipe on the same device, the same corpus digest and the same frozen data order digest."
+    passes_when: "baseline_metric minus target_metric is at least MIN_ANCHOR_GAP nats."
+    fails_with:
+      - anchor_metric_nonfinite
+      - anchor_inversion
+      - anchor_gap_below_margin
+    implementation: "tests/checkers.py::check_ablation_gap_positive"
+
+  - id: anchors_measured_before_agent_arm
+    kind: ORDERING
+    reduction: ORDERING
+    statement: "The reward denominator existed before the agent number did: both anchors, then the agent arm, then scoring."
+    reached_by: tests/checkers.py
+    selector: check_anchors_measured_before_agent_arm
+    zero_reason: anchors-not-measured-before-agent-arm
+    asserts: "The reward denominator existed before the agent number did: both anchors were ready, the agent arm then started and completed, and only then did scoring begin."
+    live_state_read: "The monotonic seq field of the anchor_target_ready, anchor_baseline_ready, agent_arm_start, agent_arm_complete and scoring_begin records in /logs/verifier/run_record.jsonl, which the substrate appends as the run happens."
+    passes_when: "the five sequence numbers are present, distinct, and strictly increasing in that order."
+    fails_with:
+      - ordering_events_missing
+      - anchor_measured_after_agent_arm
+    implementation: "tests/checkers.py::check_anchors_measured_before_agent_arm"
+
+  - id: submitted_rule_moved_the_weights
+    kind: EFFECT
+    reduction: EFFECT
+    statement: "Calling the submitted rule's step changed the live parameter tensors at every sampled step."
+    reached_by: tests/checkers.py
+    selector: check_submitted_rule_moved_the_weights
+    zero_reason: submitted-rule-did-not-move-weights
+    asserts: "Calling the submitted rule's step changed the live parameter tensors, by a strictly positive and finite L2 delta, at every sampled step, under one forward-backward pass per step, and the rule that ran came from the submission file."
+    live_state_read: "The update_applied records in /logs/verifier/run_record.jsonl for arm agent. Each carries delta_l2, the L2 norm of the difference between a full snapshot of every parameter taken immediately before the rule's step and the live parameters immediately after it, together with the resolved __file__ of the module the rule class came from and the forward_backward_per_step the loop actually ran."
+    passes_when: "an update_applied record exists at each sampled step, every delta_l2 is finite and strictly positive, every forward_backward_per_step is 1, and every rule_file equals the submission path."
+    fails_with:
+      - update_records_absent
+      - update_records_incomplete
+      - parameter_delta_nonfinite_at_step
+      - submitted_rule_had_no_effect_at_step
+      - forward_backward_per_step_violated_at_step
+      - update_not_driven_by_submission_file
+    implementation: "tests/checkers.py::check_submitted_rule_moved_the_weights"
+
+  - id: reward_is_clamped_unit_float
+    kind: VALUE
+    reduction: VALUE
+    statement: "The produced reward is a single float in the closed unit interval and equals the clamp of raw recomputed from the three measured losses."
+    reached_by: tests/checkers.py
+    selector: check_reward_is_clamped_unit_float
+    zero_reason: reward-not-clamped-unit-float
+    asserts: "The produced reward is a single float bounded to the closed interval zero to one and equals min(max(raw,0),1) recomputed from the three measured losses."
+    live_state_read: "The score and raw fields the verifier assembled from the streaming_val_loss values of the three arm records, checked against the score field written to /logs/verifier/score.json."
+    passes_when: "score is finite, lies in [0,1], equals the clamp of raw, and raw reproduces from baseline_metric, agent_metric and target_metric."
+    fails_with:
+      - score_nonfinite
+      - raw_nonfinite
+      - score_outside_unit_interval
+      - score_not_clamped_raw
+      - raw_not_reproducible_from_anchors
+    implementation: "tests/checkers.py::check_reward_is_clamped_unit_float"
+
+  - id: validation_loss_recompute_agrees
+    kind: DIVERGENCE
+    reduction: DIVERGENCE
+    statement: "Two independently derived validation losses for the agent arm agree within the bound tolerance."
+    reached_by: tests/checkers.py
+    selector: check_validation_loss_recompute_agrees
+    zero_reason: validation-loss-recompute-diverged
+    asserts: "Two independently derived validation losses for the agent arm agree within the bound tolerance."
+    live_state_read: "First derivation, the streaming_val_loss accumulated inside the training process at the end of the agent arm and written into its arm_complete record. Second derivation, independent_eval_from_checkpoint, which reloads the saved checkpoint into a fresh model object in the verifier process and re-measures on the same frozen validation windows. The two share no state."
+    passes_when: "both values are finite and their absolute difference is at most DIVERGENCE_TOL nats."
+    fails_with:
+      - streaming_validation_loss_nonfinite
+      - independent_validation_loss_nonfinite
+      - validation_loss_recompute_diverged
+    implementation: "tests/checkers.py::check_validation_loss_recompute_agrees"
+
+  - id: agent_arm_ran_outside_the_verifier
+    kind: INVARIANT
+    reduction: INVARIANT
+    statement: "The agent arm executed in an interpreter the verifier does not share with the submission, and the verifier measured the resulting parameter displacement itself."
+    reached_by: tests/checkers.py
+    selector: check_agent_arm_ran_outside_the_verifier
+    zero_reason: agent-arm-ran-inside-the-verifier
+    asserts: "A property held across the whole graded run: no submitted byte executed inside the process that reads the anchor cache and calls this registry."
+    live_state_read: "agent_arm_isolation on the evidence bundle, carrying the mode, the worker file name, the verifier pid and the worker pid the verifier observed when it spawned tests/arm_worker.py, together with agent_weight_displacement_l2, the L2 distance the verifier itself computed between the returned checkpoint and the frozen initialization."
+    passes_when: "the mode is subprocess with worker arm_worker.py, the worker pid is a positive integer distinct from the verifier pid, and the verifier's own displacement measurement is finite."
+    fails_with:
+      - agent_arm_not_hosted_out_of_process
+      - agent_arm_worker_pid_not_distinct
+      - agent_weight_displacement_not_measured
+    implementation: "tests/checkers.py::check_agent_arm_ran_outside_the_verifier"
+
+  - id: anchor_cache_entry_authentic
+    kind: VALUE
+    reduction: VALUE
+    statement: "The anchors were measured in this run, or replayed from a cache entry carrying a tag the verifier can verify with a key no attempt can read."
+    reached_by: tests/checkers.py
+    selector: check_anchor_cache_entry_authentic
+    zero_reason: anchor-cache-entry-not-authentic
+    asserts: "The produced value, the authentication state of the anchor entry the score's origin and denominator came from, equals one of the two states a harness-authored anchor can be in."
+    live_state_read: "anchor_cache_state and anchor_source on the evidence bundle, written by the verifier after it compared the HMAC on the cache entry against one it recomputed with the key at tests/checkers_anchor_key.bin, which Harbor mounts only for the post-agent verifier."
+    passes_when: "the entry was absent and the anchors were measured, or the entry was present and its tag verified against the recomputed key and the cache key of this configuration."
+    fails_with:
+      - anchor_cache_entry_failed_authentication
+      - anchor_cache_state_unrecognised
+      - anchor_source_unrecognised
+      - anchor_source_disagrees_with_cache_state
+    implementation: "tests/checkers.py::check_anchor_cache_entry_authentic"
+
+kind_census:
+  VALUE: 2
+  EFFECT: 1
+  ABSENCE: 1
+  INVARIANT: 3
+  ORDERING: 1
+  DIVERGENCE: 1
+  total: 9

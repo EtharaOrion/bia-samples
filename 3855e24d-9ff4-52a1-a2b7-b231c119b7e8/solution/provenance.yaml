@@ -1,0 +1,131 @@
+{
+  "_note": "Per unit provenance carrier for bia slot S06. This document is JSON, which is a strict subset of YAML, so it parses with json.load and with any YAML parser. It is excluded from canonical_content_hash by the recipe recorded below, which is what makes the binding acyclic: the hash is computed over every other file, and this file then records the hash. Every field here is a producer claim, never evidence. A reader recomputes each one from the committed bytes and contradicts it if it does not hold.",
+
+  "slot": "S06",
+  "slot_title": "gradient-estimator-under-noise",
+  "namespace": "c53e8f3b-526f-52c0-a04e-89e2269b237d",
+
+  "hash_recipe": {
+    "statement": "canonical_content_hash = sha256 over the sorted per file digest manifest of every included regular file under the bundle root, and the directory name is uuid5(FORGE_TASK_NAMESPACE, canonical_content_hash).",
+    "steps": [
+      "walk the bundle root recursively, visiting every regular file",
+      "compute the POSIX relative path of each file against the bundle root, using forward slashes",
+      "EXCLUDE any file whose first path component is trajectories",
+      "EXCLUDE the single path solution/provenance.yaml, which is this file",
+      "EXCLUDE any directory named __pycache__ and any file it contains",
+      "for each remaining file emit one manifest line: the relative path, then exactly two ASCII spaces, then the lowercase hex sha256 of the file bytes, then a single newline",
+      "sort the manifest lines ascending by their raw bytes",
+      "canonical_content_hash = sha256 of the utf-8 encoding of the concatenated sorted lines, as lowercase hex",
+      "uuid = uuid5(UUID('c53e8f3b-526f-52c0-a04e-89e2269b237d'), canonical_content_hash)"
+    ],
+    "reference_implementation": "solution/recompute.py, function canonical_content_hash",
+    "reproduce_command": "python3 solution/recompute.py --hash --root <bundle root>",
+    "hash_algorithm": "sha256",
+    "line_separator": "newline",
+    "path_separator": "forward slash",
+    "sort": "byte order over the emitted lines"
+  },
+
+  "binding": {
+    "canonical_content_hash": "7fb4e7000ab4a39a750cc05158d33d877c560cc9e9c3c898dbd2491d768a7244",
+    "uuid": "94be444d-9fa9-5e56-a5f9-8effee87cf4a",
+    "directory_name_equals_uuid": true,
+    "computed_at_authoring": true,
+    "signature": "absent, no external signature trust root is pinned for this project"
+  },
+
+  "upstream_provenance": {
+    "origin": "original",
+    "provenance_date": "2026-08-21",
+    "source_kind": "synthetic",
+    "generator_identity": "bia FORGE authoring lane S06, one authoring session against AUTHORING-PACKET.md and requirements/bia-environment-spec.md",
+    "generation_inputs": [
+      "requirements/bia-environment-spec.md, the sole consolidated authority, lines 99 and 122 to 143 for the scaled operating point",
+      "AUTHORING-PACKET.md slot block S06",
+      "trinity/FORGE.md optimization lane and bundle obligations",
+      "the verified reference bundle shape at oer/track3-pipeline/ship-task/_session_fixed_source"
+    ],
+    "upstream_benchmark_identity": "none, this task is not lifted from a public benchmark instance",
+    "asserts_no_upstream_lift": true,
+    "license": "task bytes original; the corpus fixture carries the license recorded under corpus below"
+  },
+
+  "corpus": {
+    "path": "environment/fixtures/corpus.bin",
+    "sha256": "23abc203c5716cea52623e903f24b41a94081e863fa3be44c10151568d199a73",
+    "bytes": 2097152,
+    "kind": "real text corpus, byte level, not a synthetic stand in",
+    "source": "Python 3.13.5 standard library source",
+    "license": "PSF License Agreement version 2",
+    "recipe": {
+      "root": "/usr/lib/python3.13",
+      "members": "every file ending in .py at depth one or two below the root, excluding any path component named test, tests, idlelib, turtledemo, lib2to3, __pycache__ or site-packages",
+      "order": "sorted by POSIX relative path in byte order",
+      "join": "each member preceded by the ASCII line '# file: <relpath>' and a newline, then the member decoded utf-8 with errors=replace and re-encoded utf-8",
+      "truncate_bytes": 2097152,
+      "members_consumed": 125
+    }
+  },
+
+  "frozen_noise_fixture": {
+    "path": "environment/fixtures/noise_process.py",
+    "sha256": "78477bbfa8b6a818dee25338484fb4a078735c1a11faa74f9175b5f8707e5c88",
+    "seed": 20260821,
+    "ships_in": "environment/",
+    "why": "an unfrozen noise process makes the reward unmeasurable, because two graders would measure two different problems and steps to target would carry no meaning across attempts or across graders",
+    "verifier_binding": "tests/checkers.yaml binds this digest, and the verifier additionally recomputes the noise realization independently under the checker noise_realization_reproduces"
+  },
+
+  "operating_point": {
+    "name": "scaled-h100-7m2",
+    "budget_hours": 0.12,
+    "max_timeout_hours": 6.0,
+    "max_attempts": 50,
+    "derivation": "6 hours per session divided by 50 attempts per session gives 7.2 minutes of single H100 time per graded attempt, which is budget_hours 0.12",
+    "role_note": "the 6 named in requirements/bia-environment-spec.md bounds one fifty attempt session, which is max_timeout's role, not budget_hours' role",
+    "why_not_upstream": "F1 at the upstream nanogpt operating point costs 84 minutes per graded run, which is 11.7 times the per attempt budget"
+  },
+
+  "measurement_state": {
+    "reference_score_scaled_point": 0.397321,
+    "reference_score_scaled_point_evidence": "one graded run of solution/solve.sh on one H100, scored by tests/grade.py from the run record its own harness wrote. Per seed, as recorded: seed 0 target_loss 1.661235, baseline_steps 950, agent_steps 825, target_steps 600; seed 1 target_loss 1.655111, baseline_steps 1000, agent_steps 825, target_steps 600",
+    "reference_score_scaled_point_caveat": "measured on an accelerator shared with concurrent unrelated work, so the wall clock of that run is not a clean reading of the per attempt budget, and the run to run spread of the score itself is not characterized",
+    "reference_score_smoke_point": 0.625,
+    "smoke_point_definition": "smoke-cpu, two layers, d_model 64, block 64, batch 8, 60 steps, one seed, CPU only, empty CUDA device list",
+    "smoke_measured_at": "2026-08-21",
+    "known_wrong_control_smoke_score": 0.0,
+    "known_wrong_control": "environment/starter/estimator.py, the exponential moving average with a norm gate",
+    "measured_ceiling_scaled_point": "an arm handed the uncorrupted gradient reached the seed 0 target at step 800, so 800 bounds every estimator from below and the reference at 825 sits between that ceiling and the baseline at 950",
+    "difficulty_tier": "unclaimed",
+    "pass_probability": "not authored",
+    "disposition": "HOLD:PILOT_REQUIRED"
+  },
+
+  "local_evidence": {
+    "checker_both_halves_proven": true,
+    "both_halves_driver": "solution/controls.py",
+    "checkers_total": 8,
+    "negative_controls_total": 9,
+    "generated_artifact_regeneration": "solution/recompute.py --check reports no drift for solution/TRUTH.md, solution/rubrics.json and tests/test_output.py",
+    "compiled_rubric_tests": 12,
+    "compiled_weight_share": 0.84,
+    "compilation_floor": 0.75
+  },
+
+  "coverage_gaps": [
+    {"id": "reference-score-single-run", "reason": "the reference score at the scaled operating point is measured, but from one graded run on an accelerator shared with concurrent unrelated work, so neither its run to run spread nor a clean wall clock reading of the per attempt budget is established", "cap": "HOLD:PILOT_REQUIRED"},
+    {"id": "image-digest-unbound-until-build", "reason": "the built bundle image digest is resolved by the operator at build time and is not present in these bytes; the base image is pinned by digest", "cap": "HOLD:PILOT_REQUIRED"},
+    {"id": "cohorts-unpinned", "reason": "the three named cohorts carry no frozen solver registry digest, which requirements/bia-environment-spec.md carries as the open decision cohorts-unpinned", "cap": "HOLD:PILOT_REQUIRED"},
+    {"id": "trajectories-absent", "reason": "no per model rollout, inspection page or reward plot is recorded, because recording them requires running the pinned cohort on an H100", "cap": "HOLD:PILOT_REQUIRED"},
+    {"id": "screening-unverified", "reason": "no ENGRAM owned exclusion list, freeze date table or near duplicate index root is pinned for this project, so the contamination screening atoms cannot resolve a root", "cap": "HOLD:PILOT_REQUIRED"},
+    {"id": "attestation-unavailable", "reason": "no source attestation trust root is pinned, so ancestry and event attestations cannot be resolved", "cap": "HOLD:PILOT_REQUIRED"}
+  ],
+
+  "claims_not_made": [
+    "no reference score at the scaled operating point",
+    "no pass rate",
+    "no difficulty tier",
+    "no self solve claim",
+    "no assertion that this instance is uncontaminated"
+  ]
+}

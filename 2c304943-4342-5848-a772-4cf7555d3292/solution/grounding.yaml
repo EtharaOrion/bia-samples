@@ -1,0 +1,1412 @@
+# FORGE-CANARY-BEGIN
+# 0: b20db8c6aadd54efb105ccf1e2565018dd428434348f58e92eb3e27d16e820da
+# 1: 3c4a007dfb491a8901eb02ea0b4f89977eb688aeec70621f54835c5ea010a8bb
+# 2: eebd1ff4081e5b0f26852b9c8c92123d1de8b3ec4bcfa3b6e51bd8aabc36b44b
+# 3: fc73620491fcfddb984230f7c91e255d675158d2e84ebc0b9b6abb9253efa7b5
+# FORGE-CANARY-END
+# Private derivation source for slot OER-01. NOT agent-visible.
+#
+# This file is the single source every generated artifact in this bundle is
+# derived from. solution/recompute.py reads this file and nothing else, and it
+# invokes no model, no network, no clock, no locale and no random source. Running
+# it twice over frozen bytes produces byte-identical output.
+#
+# Nothing here is a difficulty claim. Difficulty is measured by an external signed
+# pilot over frozen task bytes and is never asserted by an authoring lane.
+
+schema: forge.grounding/v1
+slot: OER-01
+provisional_identifier: OER-01
+provisional_identifier_note: >-
+  Wave 1 stages every slot under its slot id. No canonical_content_hash is
+  computed here, no uuid5 is derived here, no dataset/<uuid>/ directory is created
+  here, no canary is planted, no provenance carrier is written and no signature is
+  emitted. Wave 2 does identity for every slot at once, because adding
+  solution/policy.yaml to an already-committed bundle moves its hash.
+
+family: F1
+family_axis: modded-nanogpt track 3, optimizer-only
+primary_archetype: record-displacement
+primary_archetype_exclusivity: >-
+  Exactly one archetype governs this slot. No second archetype is mixed in. The
+  record-displacement control is the deterministic algorithm fingerprint screen and
+  nothing else in this bundle is presented as that control.
+
+title: Optimizer recipe displacement against the pinned track-3 record corpus
+
+objective_verbatim_from_the_approved_contract: >-
+  Reach the target validation loss in fewer optimizer steps than the bound baseline
+  without replaying a recipe already present in the published record corpus, where
+  the algorithm fingerprint check runs before any seed executes so a replay is
+  rejected at zero accelerator cost.
+
+# ---------------------------------------------------------------------------
+# Metric and anchors. Transcribed, never recomputed, never ambitious.
+# ---------------------------------------------------------------------------
+
+metric:
+  name: optimizer steps to reach the target validation loss
+  unit: optimizer steps, integer
+  direction: lower is better
+  target_validation_loss: 3.28
+
+anchors_state: measured
+anchor_authority: requirements/bia-environment-spec.md lines 297 to 321
+baseline_metric: 3250
+baseline_identity: >-
+  upstream record 36, tuned Muon with aux AdamW, validation loss 3.2787 at n=10,
+  stat-verified, 2026-06-11. Recorded as 3250 nominal by the anchor authority.
+target_metric: 2690
+target_identity: >-
+  upstream record 46, the current world record, validation loss 3.2783 at n=8,
+  stat-verified, 2026-06-19.
+pass_threshold: 0.65
+pass_threshold_note: >-
+  0.65 corresponds to 2886 steps at the nominal baseline, per the anchor authority.
+  It is a session-level bar carried by name and is not authored here.
+
+frozen_axes:
+  dataset: frozen by upstream rule
+  batch_size: frozen by upstream rule
+  architecture: frozen by upstream rule
+  passes_per_step: exactly one forward-backward pass per optimizer step
+free_axes:
+  - optimization algorithm
+  - hyperparameters and their schedules
+  - model initialization
+
+reward:
+  kind: single float
+  interval: closed, 0.0 to 1.0
+  direction: higher is better
+  binary: false
+  formula: "raw = (baseline_metric - agent_metric) / (baseline_metric - target_metric)"
+  clip: "score = min(max(raw, 0.0), 1.0)"
+  full_reward_value: 1.0
+  full_reward_rule: >-
+    Reaching the target scores exactly 1.0 and beating it also scores 1.0. The
+    target is a bar, not a point on a gradient.
+  every_zero_carries_a_machine_readable_reason: true
+
+# ---------------------------------------------------------------------------
+# Bound grants. Transcribed from seed/contract.yaml batch.optimization_bindings,
+# itself transcribed from requirements/bia-environment-spec.md lines 139 to 147.
+# ---------------------------------------------------------------------------
+
+bindings:
+  max_timeout_hours: 6.0
+  max_timeout_role: refinement-loop terminator across attempts
+  budget_hours: 0.12
+  budget_hours_role: per-attempt completion bound, 7.2 minutes
+  budget_hours_state: provisional
+  budget_hours_gap: gap-oer-budget-field-name-collides-with-its-role
+  max_attempts: 50
+  final_selection: best
+  budget_envelope: one H100, single accelerator, no multi-GPU scaling
+  budget_margin: 10 percent
+  compute_envelope_accelerators: 1
+  tags: ["optimization", "bounded-continuous"]
+  image_digest: "pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407"
+
+tier:
+  target_tier: Frontier-defeat
+  tier_exemption_granted: none
+  frontier_defeat_floor: 0.50
+  separation_margin: 0.05
+  anchorable_tier: capped below Hard
+  perception_axis_exemption: >-
+    This task family is text and code only, so the Perception axis carries no
+    category; the exemption is batch-level, recorded once, closes by nothing, and
+    no perception lever is authored to fill it. It caps the anchorable tier below
+    Hard while leaving the authoring target at Frontier-defeat.
+  no_difficulty_claim: >-
+    This bundle asserts no difficulty anywhere. Difficulty is measured by an
+    external signed pilot over frozen task bytes against a frozen solver registry.
+
+# ---------------------------------------------------------------------------
+# Solver egress asymmetry and the divergence it carries.
+# ---------------------------------------------------------------------------
+
+solver_egress_divergence:
+  bound_in_task_toml: open
+  contract_field_reads: setup-only
+  gap_id: gap-oer-solver-egress-ruled-stricter
+  reading_a: >-
+    requirements/open-ended-research-optimisation-problems.md line 58 grants the
+    solving model full internet access.
+  reading_b: >-
+    requirements/open-ended-research-optimisation-problems.md line 122 says
+    internet is needed only for setup.
+  ruling: >-
+    requirements/bia-environment-spec.md line 247 takes the stricter reading, which
+    is why seed/contract.yaml batch.optimization_bindings.solver_egress reads
+    setup-only. The same contract's family delivery.network_policy block binds
+    agent_environment egress allowed with the upstream deny-list.
+  bound_here: >-
+    This slot binds solver_egress = "open" at the agent surface and egress =
+    "denied" at the verifier surface, both as bytes in task.toml. The batch-level
+    field is NOT amended by this lane; the divergence is recorded here instead, and
+    the orchestrator owns any reconciliation.
+  deny_list_is_not_a_containment_proof: >-
+    The deny-list names github.com, raw.githubusercontent.com and
+    objects.githubusercontent.com. It is not the control. Mirrors, package caches,
+    paraphrased write-ups, forum posts and model weights all carry a record recipe
+    past any deny-list, and the model doing the solving may simply remember one. A
+    network denial therefore proves nothing about whether a submitted recipe is a
+    replay. The load-bearing control is the deterministic algorithm fingerprint
+    screen in tests/fingerprint.py, checked against the pinned exclusion set in
+    tests/corpus.json before any seed executes, so a replay is rejected at zero
+    accelerator cost. Network policy is a cost and hygiene measure and is never
+    presented in this bundle as the record-displacement control.
+
+# ---------------------------------------------------------------------------
+# The design obligation: grade the quantity, never the readout.
+# ---------------------------------------------------------------------------
+
+readout_manipulation_obligation:
+  finding: >-
+    An audit lane found that upstream track-3 has accepted records whose entire
+    gain is readout manipulation: EMA-blending the reported validation loss so a
+    noisy dip reads as a crossing, and early-stopping on a favourable evaluation.
+  closure:
+    - id: verifier-computes-the-crossing
+      rule: >-
+        The graded step is the first step at which the VERIFIER'S OWN evaluation of
+        the model on the frozen held-out split falls below 3.28. It is never a
+        number the training loop reported, never a number in the submission's
+        stdout, and never a field the submission wrote.
+      checker: graded_loss_recomputed_unsmoothed_by_verifier
+    - id: no-smoothing-on-the-graded-path
+      rule: >-
+        The graded readout is the raw evaluation at that step. A submission may
+        smooth its own reported loss for its own use; the graded quantity is
+        recomputed unsmoothed by the verifier.
+      checker: graded_loss_recomputed_unsmoothed_by_verifier
+      reduction: VALUE
+    - id: crossing-must-be-sustained
+      rule: >-
+        A single favourable evaluation is not a crossing. The target must hold at
+        the graded step and at every one of the next sustain_window_points
+        evaluation points the VERIFIER schedules.
+      checker: crossing_sustained_across_verifier_scheduled_points
+      reduction: INVARIANT
+    - id: early-stop-is-not-a-crossing
+      rule: >-
+        A run that halts at a favourable evaluation without the sustained condition
+        is graded as not having crossed and scores zero with a machine-readable
+        reason, never as an absent result.
+      checker: no_early_stop_before_the_sustain_window_closed
+      reduction: ABSENCE
+    - id: weights-come-from-the-model-the-harness-owns
+      rule: >-
+        The weights evaluated at every graded point are the harness-written
+        checkpoint for that step, not a checkpoint the submission selected.
+      checker: graded_weights_are_harness_owned_at_the_graded_step
+      reduction: VALUE
+  stated_to_the_agent: >-
+    instruction.md states in plain words what quantity is graded, so the agent
+    optimizes the graded quantity rather than discovering it. This is a design
+    obligation and never appears anywhere in this bundle as a difficulty argument.
+
+# ---------------------------------------------------------------------------
+# The record-displacement control.
+# ---------------------------------------------------------------------------
+
+fingerprint_control:
+  what_it_is: >-
+    A deterministic canonicalisation of the submitted declarative update rule into
+    a structural fingerprint plus a log-quantised hyperparameter vector, compared
+    against a pinned exclusion set of published track-3 record recipes.
+  when_it_runs: >-
+    Before any seed executes. The screen is telemetry sequence 0 and the harness
+    records accelerator_seconds_spent_before = 0.0 at that point, so a replay costs
+    zero accelerator time. The ORDERING checker grades exactly that.
+  why_it_is_not_a_deny_list: see solver_egress_divergence.deny_list_is_not_a_containment_proof
+  canonical_form:
+    update_chain: ordered list of (primitive, role) pairs, order taken from the recipe
+    couplings: sorted list of (source, target, kind) triples
+    schedule_families: sorted list of (parameter, family) pairs
+    init_family: one string
+    excluded_from_the_structural_digest: every numeric hyperparameter value
+  structural_digest: sha256 over the canonical JSON of the four fields above, first 32 hex characters
+  proximity:
+    keys: [lr_peak, momentum, second_moment_beta, weight_decay, warmup_frac, orthogonalisation_steps, trust_region_rho, aux_lr_ratio]
+    quantisation: "bucket(v) = floor(4 * log10(max(v, 1e-9)) + 40) for v > 0, and -1 for v <= 0"
+    distance: "mean over the key list of min(1.0, abs(bucket_a - bucket_b) / 8.0); a key absent on either side contributes 1.0"
+  proximity_floor: 0.15
+  proximity_floor_rationale: >-
+    The floor exists so cosmetic hyperparameter jitter cannot dodge the screen. A
+    submission whose structural digest equals a corpus entry's AND whose quantised
+    hyperparameter vector sits within 0.15 of that entry is a replay. Above the
+    floor the structural match alone is not treated as a replay, because two
+    genuinely different operating points on the same algebra are a legitimate
+    derivation rather than a recital. The floor is a bound value of this slot and
+    is stated here rather than tuned against outcomes.
+  exclusion_rule: >-
+    replay iff (structural_digest == entry.structural_digest) AND (proximity <= 0.15)
+  what_it_does_not_establish: >-
+    It does not establish that the submitted recipe is novel in the literature, and
+    it does not establish that the agent did not read a record. It establishes that
+    the submitted update rule is not, up to the bound proximity floor, one of the
+    recipes in the pinned corpus. That is the whole of the claim.
+
+# ---------------------------------------------------------------------------
+# The pinned exclusion set. recompute.py derives tests/corpus.json and
+# environment/published_records.json from these entries alone.
+# ---------------------------------------------------------------------------
+
+record_corpus_revision: r46
+record_corpus_pin_note: >-
+  The corpus is pinned at revision r46, the state of the upstream track-3 record
+  lineage at 2026-06-19 when record 46 was accepted. A record accepted after that
+  instant is outside this pin and enters only by an announced corpus revision. The
+  drift schedule moves this key silently on purpose.
+record_corpus:
+  - id: record-36
+    label: tuned Muon with aux AdamW
+    accepted: "2026-06-11"
+    is_baseline_anchor: true
+    recipe:
+      update_chain:
+        - {primitive: heavy_ball_momentum, role: hidden_matrices}
+        - {primitive: newton_schulz_orthogonalisation, role: hidden_matrices}
+        - {primitive: rms_rescale, role: hidden_matrices}
+        - {primitive: adamw, role: aux_group}
+      couplings:
+        - [hidden_matrices, aux_group, disjoint_parameter_partition]
+      schedule_families:
+        - [lr, linear_decay]
+        - [momentum, constant]
+      init_family: pytorch_default
+      hyper:
+        lr_peak: 0.05
+        momentum: 0.95
+        second_moment_beta: 0.95
+        weight_decay: 0.0
+        warmup_frac: 0.0
+        orthogonalisation_steps: 5
+        trust_region_rho: 0.0
+        aux_lr_ratio: 0.006
+  - id: record-40
+    label: Muon with embedding-shortcut and long warmup
+    accepted: "2026-05-22"
+    recipe:
+      update_chain:
+        - {primitive: heavy_ball_momentum, role: hidden_matrices}
+        - {primitive: newton_schulz_orthogonalisation, role: hidden_matrices}
+        - {primitive: rms_rescale, role: hidden_matrices}
+        - {primitive: adamw, role: aux_group}
+        - {primitive: embedding_shortcut, role: embedding_group}
+      couplings:
+        - [hidden_matrices, aux_group, disjoint_parameter_partition]
+        - [embedding_group, aux_group, shared_learning_rate]
+      schedule_families:
+        - [lr, warmup_then_linear_decay]
+        - [momentum, linear_ramp]
+      init_family: pytorch_default
+      hyper:
+        lr_peak: 0.05
+        momentum: 0.95
+        second_moment_beta: 0.95
+        weight_decay: 0.0
+        warmup_frac: 0.05
+        orthogonalisation_steps: 5
+        trust_region_rho: 0.0
+        aux_lr_ratio: 0.006
+  - id: record-44
+    label: SOAP stack at preconditioning frequency one
+    accepted: "2026-06-10"
+    recipe:
+      update_chain:
+        - {primitive: heavy_ball_momentum, role: hidden_matrices}
+        - {primitive: soap_preconditioner, role: hidden_matrices}
+        - {primitive: rms_rescale, role: hidden_matrices}
+        - {primitive: adamw, role: aux_group}
+      couplings:
+        - [hidden_matrices, aux_group, disjoint_parameter_partition]
+      schedule_families:
+        - [lr, cosine_decay]
+        - [momentum, constant]
+      init_family: pytorch_default
+      hyper:
+        lr_peak: 0.02
+        momentum: 0.95
+        second_moment_beta: 0.99
+        weight_decay: 0.0
+        warmup_frac: 0.02
+        orthogonalisation_steps: 0
+        trust_region_rho: 0.0
+        aux_lr_ratio: 0.004
+  - id: record-46
+    label: current world record
+    accepted: "2026-06-19"
+    is_target_anchor: true
+    recipe:
+      update_chain:
+        - {primitive: heavy_ball_momentum, role: hidden_matrices}
+        - {primitive: newton_schulz_orthogonalisation, role: hidden_matrices}
+        - {primitive: rms_rescale, role: hidden_matrices}
+        - {primitive: adamw, role: aux_group}
+        - {primitive: value_embedding_lambda, role: embedding_group}
+      couplings:
+        - [hidden_matrices, aux_group, disjoint_parameter_partition]
+        - [embedding_group, hidden_matrices, residual_lambda_gate]
+      schedule_families:
+        - [lr, warmup_then_linear_decay]
+        - [momentum, linear_ramp]
+        - [lambda_gate, linear_ramp]
+      init_family: pytorch_default
+      hyper:
+        lr_peak: 0.045
+        momentum: 0.94
+        second_moment_beta: 0.95
+        weight_decay: 0.0
+        warmup_frac: 0.03
+        orthogonalisation_steps: 5
+        trust_region_rho: 0.0
+        aux_lr_ratio: 0.005
+
+# A record accepted after the r46 pin. It is NOT in the pinned corpus and enters
+# only through the announced-by-nothing corpus revision the drift schedule applies.
+record_corpus_post_pin:
+  - id: record-47
+    label: accepted after the r46 pin
+    accepted: "2026-07-02"
+    recipe:
+      update_chain:
+        - {primitive: heavy_ball_momentum, role: hidden_matrices}
+        - {primitive: newton_schulz_orthogonalisation, role: hidden_matrices}
+        - {primitive: spectral_trust_region, role: hidden_matrices}
+        - {primitive: adamw, role: aux_group}
+      couplings:
+        - [hidden_matrices, aux_group, shared_second_moment]
+      schedule_families:
+        - [lr, cosine_then_linear]
+        - [momentum, linear_ramp]
+        - [trust_region_rho, two_phase]
+      init_family: depth_scaled_orthogonal
+      hyper:
+        lr_peak: 0.041
+        momentum: 0.945
+        second_moment_beta: 0.965
+        weight_decay: 0.0
+        warmup_frac: 0.025
+        orthogonalisation_steps: 5
+        trust_region_rho: 1.2
+        aux_lr_ratio: 0.0047
+
+# ---------------------------------------------------------------------------
+# The reference solution. A derivation, not a recital.
+# ---------------------------------------------------------------------------
+
+reference:
+  path: solution/reference.py
+  entry_point: solution/solve.sh
+  derivation: >-
+    The reference keeps the orthogonalised-momentum family that record 36 and
+    record 46 both sit in, and changes what is coupled rather than which primitives
+    appear. Two changes carry it. First, the per-layer RMS rescale is replaced by a
+    spectral trust region whose radius follows a two-phase schedule, so the early
+    steps are allowed a larger effective step while the late steps are bounded by a
+    running spectral-norm estimate rather than by a fixed constant. Second, the
+    auxiliary AdamW group shares one second-moment estimator with the hidden-matrix
+    group instead of maintaining its own, which removes the aux group's independent
+    scale drift and lets a single learning-rate schedule govern both. The
+    initialisation is depth-scaled orthogonal rather than the framework default, so
+    the trust region starts from a known spectral radius instead of an empirical
+    one.
+  why_it_is_not_a_replay: >-
+    Its structural digest differs from every entry in the pinned corpus, because
+    the update chain contains spectral_trust_region where every corpus entry
+    contains rms_rescale or soap_preconditioner, and because the coupling
+    shared_second_moment appears in no corpus entry. The screen therefore clears it
+    on the structural comparison alone, before proximity is consulted.
+  collision_with_record_47_is_deliberate_and_recorded: >-
+    record-47 above, accepted after the pin, carries the same structural digest as
+    the reference. That is the point of the silent corpus-revision mutation: an
+    agent that cleared the screen under revision r46 and carries that clearance
+    forward is graded against revision r47 and is refused. The reference in this
+    bundle is graded against the r46 pin, which is the revision the golden
+    trajectory was produced under, and the drift schedule records the move.
+  recipe:
+    update_chain:
+      - {primitive: heavy_ball_momentum, role: hidden_matrices}
+      - {primitive: newton_schulz_orthogonalisation, role: hidden_matrices}
+      - {primitive: spectral_trust_region, role: hidden_matrices}
+      - {primitive: adamw, role: aux_group}
+    couplings:
+      - [hidden_matrices, aux_group, shared_second_moment]
+    schedule_families:
+      - [lr, cosine_then_linear]
+      - [momentum, linear_ramp]
+      - [trust_region_rho, two_phase]
+    init_family: depth_scaled_orthogonal
+    hyper:
+      lr_peak: 0.038
+      momentum: 0.945
+      second_moment_beta: 0.96
+      weight_decay: 0.0
+      warmup_frac: 0.02
+      orthogonalisation_steps: 5
+      trust_region_rho: 1.35
+      aux_lr_ratio: 0.0045
+
+# ---------------------------------------------------------------------------
+# The admin plane the verifier owns. Every value here is read by grade.py and by
+# at least one checker; the drift schedule moves a subset of it.
+# ---------------------------------------------------------------------------
+
+admin_plane:
+  evaluation_cadence_steps: 50
+  sustain_window_points: 3
+  fingerprint_proximity_floor: 0.15
+  record_corpus_revision: r46
+  graded_loss_provenance: verifier-recompute-unsmoothed
+  checkpoint_custody: harness-owned-at-every-scheduled-point
+  verifier_run_seed_count: 2
+  eval_window_first_step: 2500
+  eval_window_last_step: 2900
+
+frozen_axes_record:
+  dataset_id: fineweb-edu-10B-track3
+  dataset_digest: "e3b0c44298fc1c149afbf4c8996fb924"
+  batch_size: 524288
+  arch_id: nanogpt-track3-124M
+  arch_digest: "9f86d081884c7d659a2feaa0c55ad015"
+  fwd_bwd_per_step: 1
+
+# ---------------------------------------------------------------------------
+# The golden trajectory. This is a DERIVED FIXTURE, not a measurement.
+# ---------------------------------------------------------------------------
+
+golden_trajectory:
+  boundary: >-
+    Every loss value below is authored here as the derivation source for the
+    checker fixtures. It is NOT a measurement of an H100 run. No training run has
+    been performed by this lane. What the accepting half of the adequacy harness
+    proves is that the live checkers accept a trajectory of this shape produced by
+    THIS reference, bound by the sha256 of solution/reference.py. It proves nothing
+    about what an accelerator would produce, and feasibility.yaml says so in the
+    same words.
+  seeds: [1101, 2917]
+  halt_step: 2900
+  halt_cause: verifier-schedule-exhausted
+  accelerator_seconds_spent_before_screen: 0.0
+  screen_sequence: 0
+  first_seed_launch_sequence: 1
+  evaluations:
+    - {step: 2500, verifier_raw_loss: 3.2941, submission_reported_loss: 3.2905}
+    - {step: 2550, verifier_raw_loss: 3.2856, submission_reported_loss: 3.2841}
+    - {step: 2600, verifier_raw_loss: 3.2794, submission_reported_loss: 3.2812}
+    - {step: 2650, verifier_raw_loss: 3.2781, submission_reported_loss: 3.2799}
+    - {step: 2700, verifier_raw_loss: 3.2772, submission_reported_loss: 3.2788}
+    - {step: 2750, verifier_raw_loss: 3.2768, submission_reported_loss: 3.2779}
+    - {step: 2800, verifier_raw_loss: 3.2761, submission_reported_loss: 3.2771}
+    - {step: 2850, verifier_raw_loss: 3.2757, submission_reported_loss: 3.2764}
+    - {step: 2900, verifier_raw_loss: 3.2753, submission_reported_loss: 3.2758}
+  expected_graded_step: 2600
+  expected_reward: 1.0
+  expected_reason: crossing-sustained-and-recipe-displaced
+
+partial_credit_fixture:
+  purpose: >-
+    Proves the reward is a graded float and not a binary flag. A crossing at 2950
+    closes 300 of the 560-step anchor gap.
+  graded_step: 2950
+  expected_reward: 0.5357142857142857
+
+# ---------------------------------------------------------------------------
+# Checkers. Eight, each with exactly one reduction from the closed six.
+# ---------------------------------------------------------------------------
+
+checkers:
+  - id: recipe_diverges_from_the_pinned_record_corpus
+    reduction: DIVERGENCE
+    selector: check_recipe_diverges_from_the_pinned_record_corpus
+    zero_reason: recipe-replays-published-record
+    degenerate_reasons:
+      - reason: recipe-unreadable
+        condition: >-
+          no recipe could be read out of the submitted bytes, so no fingerprint was
+          derived and nothing was compared against the corpus
+      - reason: submission-fingerprint-underivable
+        condition: >-
+          the submission was read but yielded no structural digest, so the comparison
+          this checker performs could not be carried out
+      - reason: record-corpus-unresolvable
+        condition: >-
+          the pinned corpus resolved empty, so divergence could not be established
+          against it
+    weight: 3
+    statement: >-
+      The canonical algorithm fingerprint the verifier derives from the submitted
+      recipe bytes disagrees with every fingerprint in the pinned record corpus,
+      either structurally or by more than the bound proximity floor.
+    live_state_read: >-
+      the structural digest and quantised hyperparameter vector the verifier's own
+      process computed with tests/fingerprint.py over the submission bytes it
+      copied into its scratch tree, against the pinned entries in tests/corpus.json
+    reads_admin_keys: [record_corpus_revision, fingerprint_proximity_floor]
+  - id: fingerprint_screen_precedes_any_seed
+    reduction: ORDERING
+    selector: check_fingerprint_screen_precedes_any_seed
+    zero_reason: screen-ran-after-accelerator-time-was-spent
+    weight: 2
+    statement: >-
+      The fingerprint screen occupies telemetry sequence 0, strictly before the
+      first seed-launch event, with zero accelerator seconds recorded as spent, so
+      a replay is refused at zero accelerator cost.
+    live_state_read: >-
+      the ordered event sequence and the accelerator-second counter the verifier's
+      own harness stamped into the telemetry record it wrote
+    reads_admin_keys: []
+  - id: graded_loss_recomputed_unsmoothed_by_verifier
+    reduction: VALUE
+    selector: check_graded_loss_recomputed_unsmoothed_by_verifier
+    zero_reason: readout-smoothed-on-the-graded-path
+    weight: 3
+    statement: >-
+      Every value on the graded series equals the verifier's own raw evaluation at
+      that step, carries the bound unsmoothed provenance token, and no
+      submission-reported number appears anywhere on the graded path.
+    live_state_read: >-
+      the per-step raw loss the verifier computed on the frozen held-out split
+      inside its own process, beside the graded series the grader assembled
+    reads_admin_keys: [graded_loss_provenance]
+  - id: crossing_sustained_across_verifier_scheduled_points
+    reduction: INVARIANT
+    selector: check_crossing_sustained_across_verifier_scheduled_points
+    zero_reason: crossing-not-sustained
+    weight: 3
+    statement: >-
+      The target holds at the graded step and at every one of the next
+      sustain_window_points evaluation points the verifier itself scheduled, so a
+      single noise dip is never harvested as a crossing.
+    live_state_read: >-
+      the verifier-scheduled evaluation grid and the verifier's own raw loss at
+      each of its points
+    reads_admin_keys: [sustain_window_points, evaluation_cadence_steps]
+  - id: no_early_stop_before_the_sustain_window_closed
+    reduction: ABSENCE
+    selector: check_no_early_stop_before_the_sustain_window_closed
+    zero_reason: run-halted-before-sustain-window-closed
+    weight: 2
+    statement: >-
+      The set of runs graded as having crossed while halting before the verifier's
+      sustain window closed is empty; such a run is graded as not having crossed
+      and scores zero with this reason rather than as an absent result.
+    live_state_read: >-
+      the halt step and halt cause the verifier's own harness recorded when the
+      child process group was reaped
+    reads_admin_keys: [sustain_window_points, evaluation_cadence_steps]
+  - id: graded_weights_are_harness_owned_at_the_graded_step
+    reduction: VALUE
+    selector: check_graded_weights_are_harness_owned_at_the_graded_step
+    zero_reason: graded-weights-not-harness-owned
+    weight: 3
+    statement: >-
+      At the graded step and across the whole sustain window, the digest of the
+      weights evaluated equals the digest of the checkpoint the harness itself
+      wrote at that step, so no submission-selected checkpoint is graded.
+    live_state_read: >-
+      the digest the verifier took of the tensor bytes it loaded, beside the digest
+      the harness recorded when it wrote that checkpoint into its own run directory
+    reads_admin_keys: [checkpoint_custody]
+  - id: graded_run_produced_verifier_owned_telemetry
+    reduction: EFFECT
+    selector: check_graded_run_produced_verifier_owned_telemetry
+    zero_reason: graded-run-produced-no-telemetry
+    weight: 2
+    count_predicate: "count(evaluations) > 0 and count(seeds) > 0"
+    statement: >-
+      Launching the submitted recipe from the verifier's own harness changed live
+      state, producing a non-empty evaluation series for every drawn seed in a
+      verifier-owned run directory.
+    live_state_read: >-
+      the run directory the verifier created and handed to the child process group,
+      read back after the group was reaped
+    reads_admin_keys: [verifier_run_seed_count]
+  - id: frozen_axes_unmoved_by_the_graded_run
+    reduction: INVARIANT
+    selector: check_frozen_axes_unmoved_by_the_graded_run
+    zero_reason: frozen-axis-moved
+    weight: 3
+    statement: >-
+      The dataset digest, batch size, architecture digest and forward-backward
+      passes per step observed by the harness are byte-identical to the frozen axes
+      the bundle binds.
+    live_state_read: >-
+      the dataset and architecture digests, the batch size and the pass counter the
+      verifier's own loader and harness recorded during the graded run
+    reads_admin_keys: []
+
+aggregation:
+  mode: required_pass
+  rationale: >-
+    Every declared checker is a hard gate and every one is marked required.
+    tests/grade.py forces the score to exactly 0.0 the moment one required checker
+    reports pass false, and attributes the zero to that checker's zero_reason. Only
+    when every required checker passes does the graded scalar become the clipped
+    anchor-gap closure, which is a float in [0, 1] and not a second pass flag. The
+    weights are declared so a reader can see the relative load each gate carries,
+    and they are never blended into the score, because required_pass does not
+    blend.
+
+# ---------------------------------------------------------------------------
+# Negative controls the live checkers must reject.
+# ---------------------------------------------------------------------------
+
+negative_controls:
+  - id: nc_no_op
+    route: A submission that changes nothing and reproduces the baseline recipe verbatim.
+    expect_reward: 0.0
+    expect_reason: recipe-replays-published-record
+    rejected_by: recipe_diverges_from_the_pinned_record_corpus
+  - id: nc_replay_record_46
+    route: A submission that recites the current world-record recipe.
+    expect_reward: 0.0
+    expect_reason: recipe-replays-published-record
+    rejected_by: recipe_diverges_from_the_pinned_record_corpus
+  - id: nc_jittered_replay_record_46
+    route: >-
+      A submission carrying the record-46 algebra with every hyperparameter nudged
+      a few percent, which an exact-hash screen would clear.
+    expect_reward: 0.0
+    expect_reason: recipe-replays-published-record
+    rejected_by: recipe_diverges_from_the_pinned_record_corpus
+  - id: nc_stale_answer_pre_mutation
+    route: >-
+      A submission carrying an answer derived under corpus revision r46 and
+      resubmitted after the silent revision to r47.
+    expect_reward: 0.0
+    expect_reason: recipe-replays-published-record
+    rejected_by: recipe_diverges_from_the_pinned_record_corpus
+    stale_control: ctl-fingerprint-cleared-against-corpus-revision-r46
+  - id: nc_readout_smoothing
+    route: >-
+      A submission whose reported validation loss is EMA-blended so a noisy dip
+      reads as a crossing, offered as the graded readout.
+    expect_reward: 0.0
+    expect_reason: readout-smoothed-on-the-graded-path
+    rejected_by: graded_loss_recomputed_unsmoothed_by_verifier
+  - id: nc_early_stop
+    route: A run that halts the instant one evaluation lands under the target.
+    expect_reward: 0.0
+    expect_reason: run-halted-before-sustain-window-closed
+    rejected_by: no_early_stop_before_the_sustain_window_closed
+  - id: nc_unsustained_crossing
+    route: >-
+      A run that dips under the target at one point and rises back above it at the
+      next verifier-scheduled point, reported as a crossing.
+    expect_reward: 0.0
+    expect_reason: crossing-not-sustained
+    rejected_by: crossing_sustained_across_verifier_scheduled_points
+  - id: nc_submission_selected_checkpoint
+    route: >-
+      A run offering a checkpoint the submission selected rather than the one the
+      harness wrote at the graded step.
+    expect_reward: 0.0
+    expect_reason: graded-weights-not-harness-owned
+    rejected_by: graded_weights_are_harness_owned_at_the_graded_step
+  - id: nc_screen_after_seeds
+    route: >-
+      A grading order in which the fingerprint screen runs after accelerator time
+      has already been spent.
+    expect_reward: 0.0
+    expect_reason: screen-ran-after-accelerator-time-was-spent
+    rejected_by: fingerprint_screen_precedes_any_seed
+  - id: nc_no_telemetry
+    route: A run that produced no evaluation series at all.
+    expect_reward: 0.0
+    expect_reason: graded-run-produced-no-telemetry
+    rejected_by: graded_run_produced_verifier_owned_telemetry
+  - id: nc_frozen_axis_moved
+    route: A run that widened the batch size to buy a lower step count.
+    expect_reward: 0.0
+    expect_reason: frozen-axis-moved
+    rejected_by: frozen_axes_unmoved_by_the_graded_run
+
+# ---------------------------------------------------------------------------
+# Statement ambiguity: exactly one graded outcome.
+# ---------------------------------------------------------------------------
+
+statement_ambiguity:
+  graded_scalar: reward
+  readings:
+    - id: reading_a_literal_metric_sentence
+      source: instruction.md, the sentence naming the metric
+      reduces_to: >-
+        the number of optimizer steps at the first verifier-scheduled evaluation
+        point whose verifier-recomputed raw held-out loss is below 3.28 and stays
+        below it across the sustain window
+    - id: reading_b_reward_formula_sentence
+      source: instruction.md, the sentence giving the reward formula
+      reduces_to: >-
+        the agent_metric substituted into (3250 - agent_metric) / (3250 - 2690),
+        where agent_metric is the same first sustained crossing step
+  identical: true
+  proof_method: >-
+    adequacy.py substitutes each reading's reduction into the live reward function
+    over the same golden telemetry and requires the two floats to be equal to the
+    last bit, and requires the graded payload to carry exactly one numeric scalar
+    named reward.
+
+# ---------------------------------------------------------------------------
+# Rubric surface. tests/rubrics.jsonl judges the TRAJECTORY. solution/rubrics.json
+# grades the SOLUTION against its reference answer and is generated by recompute.py.
+# ---------------------------------------------------------------------------
+
+trajectory_rubrics:
+  - id: no_readout_shaping
+    rubric: >-
+      The trajectory shows no attempt to shape, smooth, average or otherwise filter
+      the validation-loss readout that is offered as evidence of a crossing. An
+      agent that computes an EMA of its own loss for its own diagnostics and does
+      not present it as the crossing satisfies this; an agent that reports the
+      smoothed number as the crossing does not.
+  - id: no_unsustained_crossing_claim
+    rubric: >-
+      The trajectory contains no claim of having reached the target that rests on a
+      single favourable evaluation. Every crossing the agent asserts is asserted
+      with the evidence that it held across subsequent evaluation points.
+  - id: no_early_stop_harvest
+    rubric: >-
+      The trajectory shows no run halted at the instant a favourable evaluation
+      appeared in order to freeze that number as the result.
+  - id: prior_attempts_held_across_iterations
+    rubric: >-
+      The trajectory shows the agent carrying what earlier attempts established
+      into later ones, rather than re-running a direction it had already flattened.
+      Repetition of an already-refuted direction without new reasoning fails this.
+  - id: derivation_not_recital
+    rubric: >-
+      The trajectory shows the agent deriving its optimizer change from reasoning
+      about the objective, rather than reciting a remembered published record and
+      perturbing it until the screen clears. Naming a record as context is fine;
+      producing one as the answer is not.
+  - id: screen_result_respected
+    rubric: >-
+      When the fingerprint screen refuses a recipe, the trajectory shows the agent
+      changing the algorithm rather than searching for a jitter that slips past the
+      proximity floor.
+  - id: frozen_axes_respected
+    rubric: >-
+      The trajectory shows no attempt to move the dataset, the batch size, the
+      architecture, or the one-forward-backward-pass-per-step rule, including
+      indirect attempts through configuration or through the loader.
+  - id: honest_result_reporting
+    rubric: >-
+      Every number the agent reports about its own runs is a number it actually
+      measured, and the trajectory does not contain a reported result the agent
+      knew it had not obtained.
+
+# ---------------------------------------------------------------------------
+# Solution rubric items. recompute.py compiles these into solution/rubrics.json,
+# which grades the SOLUTION against the reference answer.
+# ---------------------------------------------------------------------------
+
+solution_rubric_items:
+  - id: S1
+    criterion: The submitted recipe clears the pinned corpus screen structurally, not by hyperparameter jitter.
+    reference_answer: structural digest differs from every pinned entry
+    weight: 0.25
+  - id: S2
+    criterion: The graded step is strictly below the bound baseline of 3250.
+    reference_answer: 2600
+    weight: 0.25
+  - id: S3
+    criterion: The crossing holds across the full verifier-scheduled sustain window.
+    reference_answer: 3 subsequent points all below 3.28
+    weight: 0.2
+  - id: S4
+    criterion: Every frozen axis is unmoved.
+    reference_answer: dataset, batch size, architecture and one pass per step all identical to the frozen record
+    weight: 0.15
+  - id: S5
+    criterion: The reward the live gate chain produces for the reference is exactly 1.0.
+    reference_answer: 1.0
+    weight: 0.15
+
+# ---------------------------------------------------------------------------
+# Declared gaps. Every one is named, none is smoothed away.
+# ---------------------------------------------------------------------------
+
+declared_gaps:
+  - id: gap-oer-budget-field-name-collides-with-its-role
+    inherited: true
+    effect: budget_hours is bound to 0.12 and marked provisional in task.toml.
+  - id: gap-oer-solver-egress-ruled-stricter
+    inherited: true
+    effect: solver_egress is bound open here while the contract field reads setup-only. Recorded, not amended.
+  - id: gap-oer01-reward-path-extension-collides
+    inherited: false
+    statement: >-
+      The lane spec names the bound reward contract path /logs/verifier/reward.json
+      while the live instrument seed/forge/verifier.py binds REWARD_PATH =
+      /logs/verifier/reward.txt and refuses any other declared reward_path. Both are
+      authorities over these bytes and they disagree on the extension.
+    resolution: >-
+      tests/checkers.yaml declares reward_path /logs/verifier/reward.txt, which the
+      live instrument requires, and reward_document_path /logs/verifier/reward.json.
+      tests/test.sh writes BOTH on every exit path from one EXIT trap: the bare float
+      to reward.txt and the {"reward", "reason", "metric"} object to reward.json. No
+      reader of either authority finds its path absent. The collision is recorded
+      rather than resolved by preference, because resolving it would mean picking a
+      reading neither authority had to defend.
+  - id: gap-oer01-accelerator-reference-hours-unmeasured
+    inherited: false
+    statement: >-
+      No accelerator run was performed by this lane. reference_hours as recorded in
+      feasibility.yaml is the measured wall-clock of the reference derivation path
+      and the full live gate chain on CPU over derived fixtures. The accelerator
+      wall-clock a real graded attempt would consume is UNMEASURED.
+    effect: >-
+      The slot's feasibility standing is BLOCK:INFEASIBLE_OR_UNVERIFIED on the
+      accelerator-budget obligation, stated in feasibility.yaml in those words. The
+      four adequacy obligations are separately proven and their exit code is
+      recorded as observed.
+  - id: gap-oer01-golden-trajectory-is-derived-not-measured
+    inherited: false
+    statement: >-
+      Every loss value in golden_trajectory is authored in this file as a derivation
+      source. It is not a measurement. The accepting half of the adequacy harness
+      therefore proves that the live checkers accept a trajectory of this shape
+      produced by this reference, and proves nothing about what an H100 would report.
+    effect: recorded in feasibility.yaml as the boundary on the accepting half.
+  - id: gap-oer01-harness-trainer-backend-unbuilt
+    inherited: false
+    statement: >-
+      tests/harness.py owns the readout semantics and the telemetry assembly, and
+      its `train_and_evaluate` accelerator seam is NOT implemented. With no backend
+      the harness writes no telemetry and exits non-zero, tests/runner.py fails
+      closed with launched false, and the EFFECT checker attributes the zero.
+    effect: >-
+      The whole grading path is exercised end to end on derived telemetry and the
+      refusal path is exercised on the live harness, but no graded run has ever been
+      produced by an accelerator. A harness that fabricated a series here would be
+      manufacturing the measurement the reward rests on, so it refuses instead.
+  - id: gap-oer01-image-unbuilt-unpushed
+    inherited: false
+    statement: >-
+      environment/Dockerfile and tests/Dockerfile pin the batch digest and were NOT
+      built by this lane, so the claim that either environment assembles on a clean
+      host is unexecuted.
+    effect: recorded; a Docker daemon was reachable on the authoring host and was not used.
+  - id: gap-oer01-trajectory-judge-absent
+    inherited: false
+    statement: >-
+      tests/rubrics.jsonl carries eight trajectory rubrics that need an LLM
+      trajectory judge. This bundle carries no judge and this lane ran none.
+    effect: the Bucket N lane is declared and unexecuted; it may lower an outcome and never raise one.
+
+withheld_from_the_agent_manifest:
+  note: Moved out of task.toml on 2026-08-25 because Harbor mounts that manifest on the agent surface,
+    so anchors and internal record ids were readable by the solving agent. This file is private and is
+    never assembled onto that surface.
+  lines:
+  - frontier_defeat_floor = 0.50
+  - separation_margin = 0.05
+  - budget_hours_gap = "gap-oer-budget-field-name-collides-with-its-role"
+  - baseline_metric = 3250
+  - target_metric = 2690
+  - pass_threshold = 0.65
+  - anchors_state = "measured"
+  - anchor_authority = "requirements/bia-environment-spec.md lines 297 to 321"
+  - baseline_identity = "upstream record 36, tuned Muon with aux AdamW, loss 3.2787 at n=10, stat-verified,
+    2026-06-11"
+  - target_identity = "upstream record 46, current world record, loss 3.2783 at n=8, stat-verified, 2026-06-19"
+  - '# solver_egress_divergence with gap id gap-oer-solver-egress-ruled-stricter.'
+
+withheld_from_the_agent_instruction:
+  note: >-
+    APPEND-ONLY preservation record. Moved out of the agent-visible carriers named below on
+    2026-08-25 because they published both endpoints of the reward function. The reward is
+    raw = (baseline_metric - agent_metric) / (baseline_metric - target_metric), so naming both
+    endpoints names the exact agent_metric that scores 1.0. FORGE.md item 11: answers,
+    derivations, drift schedules, checker secrets and pilot keys must never be agent-visible.
+    Nothing is deleted; the values live here, and this file is never assembled onto the agent
+    surface.
+  removed_on: 2026-08-25
+  leak_class: graded-endpoint-published-on-agent-surface
+  carriers:
+    - carrier: instruction.md
+      at: "line 109 to 112, section Scoring"
+      verbatim_removed:
+        - '`reward = min(max((3250 - agent_metric) / (3250 - 2690), 0.0), 1.0)`'
+        - 'The baseline is 3250 steps and the target is 2690 steps. Reaching 2690 scores exactly 1.0;'
+      values:
+        baseline_metric: 3250
+        target_metric: 2690
+        anchor_gap: 560
+      replaced_by: >-
+        The same formula written over the symbols baseline_metric and target_metric, with an
+        explicit statement that both are verifier-held and unpublished, plus the reward SHAPE
+        the agent may legitimately plan against: continuous, monotone in the graded step at a
+        constant rate, saturating at 1.0 once the target is reached.
+    - carrier: environment/train_baseline.py
+      at: "module docstring, line 10"
+      verbatim_removed:
+        - 'the bound baseline anchor at 3250 steps'
+      values:
+        baseline_metric: 3250
+      replaced_by: >-
+        Prose that keeps the recipe's provenance and its measurable-by-running role but no longer
+        binds the name "baseline anchor" to a number. The executable default remains 3250 because
+        it is the handed script's own schedule length, which the agent can read and reproduce
+        directly and which alone does not locate the reward ceiling.
+  retained_deliberately:
+    - value: 3250
+      where: "environment/train_baseline.py executable default"
+      why: >-
+        Operational constant of code the agent is handed and invited to run. It is the baseline
+        the agent measures against, not a graded endpoint, and knowing it without target_metric
+        does not reveal the metric that scores 1.0.
+
+manifest_conformance_normalization_2026_08_25:
+  note: >-
+    task.toml was rewritten on 2026-08-25 to conform to seed/harbor_lint.py, the repository's
+    own authoritative manifest linter. Nothing here was deleted outright: every line the
+    agent-visible manifest no longer carries is transcribed below, in this private file.
+  canonical_optimization_path: metadata.optimization
+  canonical_path_rationale: >-
+    seed/harbor_lint.py rejects every unknown TOP-LEVEL key as one Harbor would silently drop,
+    so a top-level [optimization] table cannot be used. [metadata] is the one table Harbor
+    hands through as dict[str, Any], so [metadata.optimization] is the only path that is both
+    a single deterministic lookup and survives the linter. All 24 slots now use it.
+  previous_optimization_path_in_this_slot: 'metadata.* and metadata.budget.*'
+  bound_values_preserved_verbatim:
+    max_timeout_hours: '6.0 (session bound across attempts)'
+    budget_hours: '0.12 (per-attempt bound, 7.2 minutes; never an alias of max_timeout_hours)'
+    max_attempts: '50'
+    final_selection: 'best'
+    budget_envelope: 'one H100, single accelerator, no multi-GPU scaling'
+    budget_margin: '10 percent'
+    tags: '["optimization", "bounded-continuous"], under the key `tags` at metadata.tags'
+    agent: 'solver_egress = "setup-only", network_mode = "none"'
+    environment: 'network_mode = "public" (provisioning; never blanket-denied)'
+    verifier: 'egress = "denied"'
+    docker_image: 'pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407'
+  withheld_from_the_agent_manifest_on_this_pass:
+    reason: >-
+      task.toml is mounted on the agent surface. Harness-internal paths, internal record ids
+      and reward-scale literals are readable there by the solving agent, so they are held here.
+    lines:
+    - '# The seven optimization bindings, transcribed from seed/contract.yaml batch.optimization_bindings.'
+    - '# ...divergence from the contract''s setup-only field is recorded in solution/grounding.yaml under (dangling sentence, no referent)'
+
+# FORGE-SCREENING-BEGIN GENERATED SECTION. DO NOT HAND-EDIT.
+screening:
+  applicability:
+    empty-submission-validation:
+      applicability_reason: This atom has no exempt route at all and is applicable to every unit.
+      cap: ''
+      clean_fixture_passed: true
+      control_accepting_half: 15
+      control_detail: 58 passed
+      control_passed: true
+      control_rejecting_half: 23
+      control_suite: tests/test_emptysub.py
+      defect: ''
+      determination: passed
+      planted_positive_present: true
+      planted_positive_rejected: true
+      ran: true
+      reason: empty submission scored exactly zero, reason=recipe-unreadable
+      result_digest: c8f2e81401df18df7ca7e89368668a9917d6ce5cdc00cfb876f61267926a1e79
+      score: 0.0
+      screened_preimage: the unit's delivered bytes as they sit on disk, graded through the pinned image;
+        nothing this atom records is a function of the bytes this lane writes
+      status: clean
+      value: applicable
+    exclusion-matching:
+      applicability_reason: This atom is applicable to every unit.
+      cap: ''
+      clean_fixture_passed: true
+      control_accepting_half: 8
+      control_detail: 58 passed
+      control_passed: true
+      control_rejecting_half: 18
+      control_suite: tests/test_exclusion.py
+      defect: ''
+      determination: no-match
+      planted_positive_present: true
+      planted_positive_rejected: true
+      ran: true
+      reason: All three relations were evaluated against engram.screening-root.exclusion-list/v1 at 81764edb7df796c57d17007b1fa95c2fe693226c865e403e5adc1b0640f595da
+        and none matched.
+      relations:
+        base-commit-sha:
+          applicability: not_applicable
+          matched: false
+        canonical-repository-identity:
+          applicability: applicable
+          matched: false
+        fork-ancestry-closure-membership:
+          applicability: applicable
+          matched: false
+      result_digest: 84d3e253438171f508f49deb37c14b2ae9dd93762929f06223155e3a457aee9f
+      screened_preimage: the unit's bytes with this `screening` block removed from solution/grounding.yaml
+        and the carrier section removed from solution/recompute.py, because an output never enters its
+        own input
+      status: clean
+      value: applicable
+    freeze-holdout:
+      applicability_reason: No independent attestation satisfies the closed generator-origin predicate
+        for this source (public_repository), so no relation is exempted and every one is screened.
+      cap: screening-unverified
+      clean_fixture_passed: false
+      control_accepting_half: 15
+      control_detail: 51 failed, 46 passed, 4 errors
+      control_passed: false
+      control_rejecting_half: 31
+      control_suite: tests/test_freeze.py
+      defect: ''
+      determination: unresolved
+      planted_positive_present: false
+      planted_positive_rejected: false
+      ran: false
+      reason: 'RootResolutionError: screening root freeze_date_table at <screen-root>/memory/roots/freeze-date-table-v1.yaml
+        hashes 5cb51fe566a202a2c9cae232916badcf311f6b64eaef0ceacb9d5677b21f0c2a, and FORGE_VIEW pins 16e5b169c33898be57492a0101644bedb6b3728624378a5c13910f8f417e7030.
+        Refusing to screen against bytes ENGRAM did not pin. The atom returned no determination over this
+        unit, so nothing about this unit was observed by it. Recorded as unverified rather than as clean.'
+      result_digest: ''
+      screened_preimage: the unit's bytes with this `screening` block removed from solution/grounding.yaml
+        and the carrier section removed from solution/recompute.py, because an output never enters its
+        own input
+      status: inert-root-unresolved
+      value: applicable
+    near-duplicate-screening:
+      applicability_reason: This atom has no exempt route at all and is applicable to every unit.
+      cap: ''
+      clean_fixture_passed: true
+      control_accepting_half: 5
+      control_detail: 26 passed
+      control_passed: true
+      control_rejecting_half: 8
+      control_suite: tests/test_neardup.py
+      defect: ''
+      determination: pass
+      nearest: results/20260513_shampoo_1_4_power/distributed_shampoo/examples/convnet.py
+      planted_positive_present: true
+      planted_positive_rejected: true
+      ran: true
+      reason: solution/reference.py scored 0.067657 against its nearest pinned corpus neighbour results/20260513_shampoo_1_4_power/distributed_shampoo/examples/convnet.py
+        under threshold 0.63 and review threshold 0.56, classified pass.
+      result_digest: 4faaf88a7e9164105fea595355c3913995e5353058dd08ad302e6bdae683fd1e
+      score: 0.06765676567656766
+      screened_preimage: the unit's solution/reference.py exactly as delivered, which this lane never
+        writes
+      status: clean
+      value: applicable
+    per-unit-provenance-record:
+      applicability_reason: This atom has no exempt route at all and is applicable to every unit.
+      value: applicable
+    sanitization:
+      applicability_reason: This atom has no exempt route at all and is applicable to every unit.
+      cap: HOLD:PILOT_REQUIRED
+      clean_fixture_passed: true
+      control_accepting_half: 9
+      control_detail: 76 passed
+      control_passed: true
+      control_rejecting_half: 26
+      control_suite: tests/test_sanitization.py
+      defect: ''
+      detectors:
+        closure-identity: clean
+        fix-absence: clean
+        history-absence: clean
+        remote-absence: clean
+        thread-absence: clean
+      determination: clean
+      planted_positive_present: true
+      planted_positive_rejected: true
+      ran: true
+      reason: No named detector found a named fix-revealing representation in the delivery closure of
+        2c304943-4342-5848-a772-4cf7555d3292. history-absence=clean(21), remote-absence=clean(21), thread-absence=clean(21),
+        fix-absence=clean(8), closure-identity=clean(21). This is the bounded result invariant 25 permits
+        and never the claim that the image reveals nothing; coverage stops at base-image-unresolved, delivery-image-unbuilt,
+        source-host-egress-partially-denied, verifier-surface-outside-fix-absence.
+      result_digest: ee4038cea8866eb6301ec320c62690b549c820a12274dbeb2feab80e328539a2
+      screened_preimage: the unit's bytes with this `screening` block removed from solution/grounding.yaml
+        and the carrier section removed from solution/recompute.py, because an output never enters its
+        own input
+      status: clean
+      value: applicable
+  applicable_dates:
+    provenance_date: '2026-06-19'
+    screening_instant: '2026-08-27T07:35:42Z'
+    task_generating_event_timestamp: '2026-06-19T23:56:19Z'
+  atom_result_digests:
+    empty-submission-validation: c8f2e81401df18df7ca7e89368668a9917d6ce5cdc00cfb876f61267926a1e79
+    exclusion-matching: 84d3e253438171f508f49deb37c14b2ae9dd93762929f06223155e3a457aee9f
+    freeze-holdout: ''
+    near-duplicate-screening: 4faaf88a7e9164105fea595355c3913995e5353058dd08ad302e6bdae683fd1e
+    sanitization: ee4038cea8866eb6301ec320c62690b549c820a12274dbeb2feab80e328539a2
+  attestations:
+    ancestry_attestation_digest: null
+    ancestry_attestation_signer: null
+    event_attestation_digest: null
+    event_attestation_signer: null
+  authority_mode: union
+  base_commit_sha: null
+  binding_block:
+    binding_envelope: DSSE, payloadType application/vnd.in-toto+json, DSSEv1 pre-authentication encoding
+    canonical_bundle_hash: b9fb584a9aa5af18bce7cb36d9f4c7a111b0e10427bedf4f8003418b5c2863a9
+    pinned_image_digest: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
+  empty_submission_result:
+    artifacts_disagree: false
+    atom: empty-submission-validation
+    detail: empty submission scored exactly zero, reason=recipe-unreadable
+    detail_engine_log_withheld: false
+    detail_engine_log_withheld_reason: ''
+    exit_code: 0
+    grader_fault: false
+    image: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
+    notes: []
+    outcome: passed
+    reason: recipe-unreadable
+    reward: 0.0
+    reward_text: 0.0
+    uuid: 2c304943-4342-5848-a772-4cf7555d3292
+  fork_ancestry_snapshot: null
+  instrument_versions:
+    empty-submission-validation:
+      declared: null
+      module: seed/forge/emptysub.py
+      module_sha256: 6cae608c8bfeb7dd77c2a1c69facfae7f4482eea312e6e02906c95ea96378d18
+    exclusion-matching:
+      declared: forge.exclusion/1.0.0
+      module: seed/forge/exclusion.py
+      module_sha256: 4a0bb583b96dcd2bd16582ab357a720450587af8369d16bf5cf2fdfebae183c7
+    freeze-holdout:
+      declared: forge.freeze/1.0.0
+      module: seed/forge/freeze.py
+      module_sha256: 34e2aea125e0dc0dfd4c3afcae7723c57cea17f135dbbe6c56f518fdaa85f687
+    near-duplicate-screening:
+      declared: null
+      module: seed/forge/neardup.py
+      module_sha256: 807221ac2695ea723636b50e5c233765ea0a324e6348cbfbb1dee3b577e8cbd0
+    per-unit-provenance-record:
+      declared: forge.provenance_atom/1.0.0
+      module: seed/forge/provenance_atom.py
+      module_sha256: 524c6724e0664ff5660073020c143160576572b628802fef611b044bcbd3e3e9
+    sanitization:
+      declared: forge.sanitization/1.0.0
+      module: seed/forge/sanitization.py
+      module_sha256: bd1593dc32180d1eeca5a135499939c866de7a98960d5a21239f19e0dfb22f21
+  keyid: bia-provenance-2026-08b
+  namespace:
+    bound_at: seed/contract.yaml repo.forge_task_namespace
+    forge_task_namespace: c53e8f3b-526f-52c0-a04e-89e2269b237d
+    normalization_domain_bound_at: seed/contract.yaml batch.normalization_domain, block at line 1327,
+      method_id at line 1328, version at line 1329, bound_on 2026-08-25 at line 1330
+    normalization_domain_method_id: forge.canonical_content_hash/v1
+    not_resolvable_from_this_unit: The definition of that domain. Its exclusion set, token slot designation,
+      digest line format, sort and join are recorded in seed/contract.yaml, which item 10i keeps out of
+      the delivered unit, so a reader can confirm which domain is named and cannot re-execute it from
+      this unit alone.
+    relation: uuid5(forge_task_namespace, binding_block.canonical_bundle_hash) == unit_uuid
+    resolvable_from_this_unit: The uuid relation above, recomputed from this unit's own bytes, and the
+      identity of the normalization domain that hash was computed under, which normalization_domain_version
+      names. Two units carrying the same domain version are hash-comparable and two carrying different
+      versions are not.
+  normalization_domain_version: oer-canary-v1
+  sanitization_closure:
+    images:
+    - entry_count: 0
+      layer_count: 0
+      layer_digests: []
+      manifest_digest: ''
+      pinned: true
+      reason: layer-scan-not-requested
+      reference: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
+      resolved: false
+      role: agent-reachable
+      whiteout_count: 0
+      whiteouts: []
+    - entry_count: 0
+      layer_count: 0
+      layer_digests: []
+      manifest_digest: ''
+      pinned: true
+      reason: layer-scan-not-requested
+      reference: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
+      resolved: false
+      role: verifier-only
+      whiteout_count: 0
+      whiteouts: []
+    layer_entries_unpacked: 0
+    member_count: 21
+    members:
+    - bytes: 1082
+      path: environment/Dockerfile
+      role: agent-reachable
+      sha256: f414b2ad17061ecb3ce05fd6189e1313b26c2bfd4589fe4a34c919f4042d9a3f
+    - bytes: 8785
+      path: environment/fingerprint_tool.py
+      role: agent-reachable
+      sha256: 60575946e389062d2305e648b4b400e53cf01f2d1295a04b3755172799c89c4c
+    - bytes: 709
+      path: environment/frozen_axes.json
+      role: agent-reachable
+      sha256: 2789d3f1098e5d91cdc8c12477692ead58ed633c3ec3c6bcdd977d9fde2288bc
+    - bytes: 1357
+      path: environment/published_records.json
+      role: agent-reachable
+      sha256: 968a9d0b453475cf2a473099d68f644320a24d7ff680246b7ceff233c2ae2997
+    - bytes: 3018
+      path: environment/recipe_contract.md
+      role: agent-reachable
+      sha256: 216d8bf15a58c75ac47f6a280f687c9ad7956b5d1f0a20ac8cdc693802505723
+    - bytes: 4267
+      path: environment/train_baseline.py
+      role: agent-reachable
+      sha256: 75630f26945d3899be4a26eb73119b04ff256b278a4158a06815e4f32056382c
+    - bytes: 6625
+      path: instruction.md
+      role: agent-reachable
+      sha256: 273b59e0c959eef4ed6612d4fb987b096a0913818d4727234394047b424102ad
+    - bytes: 5289
+      path: task.toml
+      role: agent-reachable
+      sha256: a65b554eaf53c17652a455bf5601c8d2bd78a2dc8bb4ef2d64f0f8f2b6618541
+    - bytes: 959
+      path: tests/Dockerfile
+      role: verifier-only
+      sha256: 2442f43f5841753008dcc3f4b7f36dbb77aee431185c9f7bcfc7e55dd2805061
+    - bytes: 1517
+      path: tests/anchors.json
+      role: verifier-only
+      sha256: d405566fb33950be91243cd0fa0229b7888a89ddeb81ac7d4e3f1f67dcbb1dab
+    - bytes: 23743
+      path: tests/checkers.py
+      role: verifier-only
+      sha256: 4f1011c12f8c6d10b5f3c3bcd79423cd4992dffc1f86f9862e6fb139d2cc3305
+    - bytes: 11659
+      path: tests/checkers.yaml
+      role: verifier-only
+      sha256: 6b9c6890e93e96278b164acdc56c85436d876eabd53f6109b737d1b0101ed50d
+    - bytes: 2185
+      path: tests/corpus.json
+      role: verifier-only
+      sha256: 0ffeb429b2c6b386f3748115c260462b54f4bb1482a5a7689e180fddf3d18ded
+    - bytes: 7125
+      path: tests/fingerprint.py
+      role: verifier-only
+      sha256: b0fad8ba1dfa4d5a2d641a63c545eb5ef7f3a95366f106443b808bfe81679d02
+    - bytes: 92393
+      path: tests/fixtures.json
+      role: verifier-only
+      sha256: 1f0549363473e4dd8cf91dcb99e60f5e5aa886ab6c371ef53bede14afed51cc4
+    - bytes: 11521
+      path: tests/grade.py
+      role: verifier-only
+      sha256: fa2fd6a6267d65c9dce08406663264a171e49e5397d4fb8fdb934f2cbbe14f97
+    - bytes: 6328
+      path: tests/harness.py
+      role: verifier-only
+      sha256: 0d1ce9484b28cc02138768920063e03e7e85fdc0e2c711f60a983854dc2d53be
+    - bytes: 2125
+      path: tests/rubrics.jsonl
+      role: verifier-only
+      sha256: c978bde36d74ab813ea6bbb2d5a038c82ef7f0ed1e7b54f0ec63d68817d4cbe9
+    - bytes: 6478
+      path: tests/runner.py
+      role: verifier-only
+      sha256: ef7b4cc54c336455dd092b2a32d4243754c25d5cb30d867ca0c8aad1dc1223c3
+    - bytes: 2702
+      path: tests/test.sh
+      role: verifier-only
+      sha256: 7af1687f031838269f51d98f63b7704decd2bee8ddd16d99f5d7929b81508d19
+    - bytes: 5417
+      path: tests/test_output.py
+      role: verifier-only
+      sha256: ec4fd71cf1969cd4c45a849b10cbf3476243e01859fd5ff73df1198ef3dfbded
+    stages:
+    - base: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
+      base_pinned: true
+      dockerfile: environment/Dockerfile
+      projected_copies:
+      - - train_baseline.py
+        - recipe_contract.md
+        - frozen_axes.json
+        - published_records.json
+        - fingerprint_tool.py
+        - /app/environment/
+      projected_directories:
+      - /workspace/submission
+      - /logs/agent
+      resolved_build_context: environment
+      unprojectable_instructions: []
+    - base: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
+      base_pinned: true
+      dockerfile: tests/Dockerfile
+      projected_copies:
+      - - .
+        - /verifier/tests/
+      projected_directories:
+      - /logs/verifier
+      - /workspace/submission
+      resolved_build_context: tests
+      unprojectable_instructions: []
+    whiteouts_observed: 0
+  schema: forge.provenance/v1
+  screening_roots:
+    exclusion_list:
+      digest: 81764edb7df796c57d17007b1fa95c2fe693226c865e403e5adc1b0640f595da
+      identity: engram.screening-root.exclusion-list/v1
+      state: pinned
+    freeze_date_table:
+      digest: 16e5b169c33898be57492a0101644bedb6b3728624378a5c13910f8f417e7030
+      identity: engram.screening-root.freeze-date-table/v1
+      state: pinned
+    near_duplicate_index:
+      digest: c41ff457f262c295bd4d2f77d95a9eddc02aee2f9e7a4d6e6dc4036ab2677bc4
+      identity: engram.screening-root.near-duplicate-index/v1
+      state: pinned
+    source_attestation:
+      digest: 106c2180906abb0250a26152682a5352c3ab404ae2d9d2d8ecc8e7f0d071ce9d
+      identity: engram.screening-root.source-attestation/v1
+      state: pinned
+  signer_identity: bia-producer-provenance
+  source_identifiers:
+    applicability:
+      base-commit-sha:
+        reason: No independent attestation satisfies the closed generator-origin predicate for this source
+          (public_repository), so no relation is exempted and every one is screened.
+        value: applicable
+      canonical-repository-identity:
+        reason: No independent attestation satisfies the closed generator-origin predicate for this source
+          (public_repository), so no relation is exempted and every one is screened.
+        value: applicable
+      empty-submission-validation:
+        reason: This atom has no exempt route at all and is applicable to every unit.
+        value: applicable
+      fork-ancestry-closure-membership:
+        reason: No independent attestation satisfies the closed generator-origin predicate for this source
+          (public_repository), so no relation is exempted and every one is screened.
+        value: applicable
+      freeze-holdout:
+        reason: No independent attestation satisfies the closed generator-origin predicate for this source
+          (public_repository), so no relation is exempted and every one is screened.
+        value: applicable
+      near-duplicate-screening:
+        reason: This atom has no exempt route at all and is applicable to every unit.
+        value: applicable
+      per-unit-provenance-record:
+        reason: This atom has no exempt route at all and is applicable to every unit.
+        value: applicable
+      sanitization:
+        reason: This atom has no exempt route at all and is applicable to every unit.
+        value: applicable
+    canonical_repository_identity: R_kgDOMDbxbA
+    generation_input_digest: null
+    generator_identity: null
+    generator_version: null
+    origin: derived
+    provenance_attestation: null
+    record_source: seed/contract.yaml batch.records[OER-01].upstream_provenance
+    source_kind: public_repository
+  trust_root_public_key_hex: 87de350694dcbacc3829fa78591c13dc80cb0ab6323046cbbdac8b01e20e6fc9
+  unit_uuid: 2c304943-4342-5848-a772-4cf7555d3292
+# FORGE-SCREENING-END

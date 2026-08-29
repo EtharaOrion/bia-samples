@@ -1,0 +1,137 @@
+{
+  "_note": "Private derivation source for bia slot S06. This document is JSON, which is a strict subset of YAML, so it parses with json.load and with any YAML parser and needs no external dependency. solution/recompute.py derives solution/TRUTH.md, solution/rubrics.json and tests/test_output.py from this file alone. It reads no clock, no locale, no network, no random source and invokes no model. Every criterion string below is a frozen literal.",
+
+  "slot": "S06",
+  "slot_title": "gradient-estimator-under-noise",
+  "namespace": "c53e8f3b-526f-52c0-a04e-89e2269b237d",
+
+  "frozen_surface": [
+    "the byte level decoder only transformer defined in environment/harness/model.py, including its weight initialization",
+    "the real text corpus at environment/fixtures/corpus.bin, its split, and the frozen batch order in environment/harness/data.py",
+    "the injected gradient noise process at environment/fixtures/noise_process.py, with frozen seed 20260821",
+    "the AdamW update rule, its hyperparameters and its cosine schedule in environment/harness/train.py",
+    "the rule of exactly one forward and one backward pass per optimizer step",
+    "the verifier tree under tests/"
+  ],
+
+    "free_surface": [
+    "the gradient estimator submitted at submission/estimator.py, meaning the map from the sequence of corrupted observations to the update direction",
+    "any variance reduction, filtering, buffering or reconstruction the estimator carries out, and any state the estimator keeps across steps"
+  ],
+
+  "corpus_provenance": {
+    "kind": "real text corpus, byte level",
+    "source": "Python 3.13 standard library source, PSF License 2.0",
+    "root": "/usr/lib/python3.13",
+    "member_rule": "every file ending in .py at depth one or two under the root, excluding any path component named test, tests, idlelib, turtledemo, lib2to3, __pycache__ or site-packages",
+    "order": "sorted by POSIX relative path in byte order",
+    "join": "each member preceded by the ASCII line '# file: <relpath>' and a newline, decoded as utf-8 with errors=replace and re-encoded utf-8",
+    "truncate_bytes": 2097152,
+    "sha256": "23abc203c5716cea52623e903f24b41a94081e863fa3be44c10151568d199a73"
+  },
+
+  "noise_fixture": {
+    "path": "environment/fixtures/noise_process.py",
+    "sha256": "78477bbfa8b6a818dee25338484fb4a078735c1a11faa74f9175b5f8707e5c88",
+    "seed": 20260821,
+    "components": [
+      "anisotropic amplification along one frozen unit direction per tensor, with BETA equal to 3.0, which is neither zero mean nor independent of the gradient",
+      "block cyclic erasure of four of sixteen frozen coordinate blocks held for four consecutive steps, rescaled by one over the keep probability",
+      "additive drift along a slowly rotating frozen direction with correlation time 64 steps, scaled by the true gradient norm",
+      "a heavy spike on a frozen sparse schedule of period 23 and phase 7, with multiplier 12"
+    ],
+    "why_it_is_frozen": "an unfrozen noise process makes the reward unmeasurable, because two graders would measure two different problems and steps to target would carry no meaning across attempts"
+  },
+
+  "operating_point": {
+    "name": "scaled-h100-7m2",
+    "why_scaled": "the consolidated spec fixes six hours per session and fifty attempts per session, so one graded attempt gets 7.2 minutes of single H100 time, and the upstream nanogpt operating point costs 84 minutes per graded run which is 11.7 times over that budget",
+    "budget_hours": 0.12,
+    "max_timeout_hours": 6.0,
+    "max_attempts": 50,
+    "graded_arms_per_attempt": 4,
+    "shape": "two frozen seeds, and for each seed one baseline arm and one agent arm of 1500 steps at 8192 tokens per step on a 10.7 million parameter model",
+    "scaled_measurement_state": "MEASURED at 0.397321 on one H100, from the per seed block the graded run itself recorded: seed 0 crossed at agent step 825 against baseline step 950, seed 1 crossed at agent step 825 against baseline step 1000, and target steps was 600 for both"
+  },
+
+  "reward": {
+    "raw": "mean over seeds of (baseline_steps - agent_steps) / (baseline_steps - target_steps)",
+    "clamp": "min(max(raw, 0), 1)",
+    "target_loss": "the validation loss the baseline arm reaches at the frozen reference step, measured inside the same graded run rather than asserted by the author",
+    "baseline_steps": "the first evaluation step at which the baseline arm reaches that target loss and stays at or below it",
+    "target_steps": "ceil(reference_step * 0.60)",
+    "no_unmeasured_anchor": "the baseline and the target are both produced by the run itself, so this bundle declares no baseline number it cannot show a grader how to reproduce"
+  },
+
+  "checkers": [
+    {"id": "substrate_digest_constant", "kind": "INVARIANT"},
+    {"id": "frozen_fixture_bytes_match_bound", "kind": "VALUE"},
+    {"id": "one_backward_per_step", "kind": "VALUE"},
+    {"id": "no_true_gradient_access", "kind": "ABSENCE"},
+    {"id": "noise_realization_reproduces", "kind": "DIVERGENCE"},
+    {"id": "arm_order_and_sustained_crossing", "kind": "ORDERING"},
+    {"id": "submission_bound_to_run", "kind": "EFFECT"},
+    {"id": "score_matches_telemetry", "kind": "VALUE"}
+  ],
+
+  "truth_steps": [
+    {"action": "Read instruction.md and the frozen fixture at environment/fixtures/noise_process.py, and establish that the corruption is deterministic in the frozen seed, the tensor identity and the step index rather than freshly random.", "state": "the four injected components and their public schedules are known to the solver", "survives": "the silent assumption that a noisy gradient is an independent zero mean sample", "checker": "noise_realization_reproduces"},
+    {"action": "Copy environment/starter/estimator.py to submission/estimator.py and run the harness once, establishing that the reflex answer of an exponential moving average with a norm gate produces a running submission and a measurable reward.", "state": "a submission exists at submission/estimator.py and the harness stamps its digest on every agent arm record", "survives": "an attempt that never produces a gradeable artifact", "checker": "submission_bound_to_run"},
+    {"action": "Notice that the erasure and the two additive components interact, because on an erased coordinate the true gradient contributes nothing at all, so whatever is read there is the drift term plus, on a spike step, the spike term, and nothing else.", "state": "the erased support is identified as a two column regression problem in the drift direction and the spike direction, both of which the fixture publishes for every step", "survives": "the circularity of appearing to need the gradient magnitude in order to recover the gradient, which the erased support removes because it carries the additive components without the gradient", "checker": "score_matches_telemetry"},
+    {"action": "Solve that regression for the drift coefficient and the spike coefficient and subtract both fitted components from the whole observation, rather than clipping them away or averaging over them.", "state": "the two additive components are removed to the accuracy of a fit made where they are the only thing present, so the reconstruction does not degrade as those components grow", "survives": "a scheduled spike of twelve times the gradient norm dominating a single observation", "checker": "one_backward_per_step"},
+    {"action": "Undo the erasure rescale on the coordinates the mask kept, and write an honest zero on the coordinates it erased instead of restoring them from a staleness buffer.", "state": "no per coordinate buffer is carried, and an erased coordinate is left for the frozen optimizer's own momentum to carry", "survives": "the reflex that a rescaled zero must be replaced by something, which is measurably wrong here: on seed 0 at the scaled point, filling erased coordinates from a buffer of the last kept observation reached the target loss at step 950, exactly where the identity baseline reached it, while writing zero reached it at step 850, against a ceiling of 800 for an arm handed the uncorrupted gradient", "checker": "substrate_digest_constant"},
+    {"action": "Invert the rank one amplification exactly, using the frozen direction and the frozen coefficient the fixture publishes.", "state": "the component that averaging can never remove is removed algebraically instead", "survives": "a deterministic function of the gradient itself masquerading as noise", "checker": "frozen_fixture_bytes_match_bound"},
+    {"action": "Return the reconstructed direction for every tensor the harness asked about, with the same shapes, and never reach for the uncorrupted gradient surface the harness exposes as a tripwire.", "state": "the frozen optimizer applies the reconstructed direction and the sentinel counter stays at zero", "survives": "the temptation to read the gradient the task exists to hide", "checker": "no_true_gradient_access"},
+    {"action": "Let the verifier run both arms itself, in the order it fixes, and read the reward off the run record it wrote.", "state": "for every seed the baseline arm completed and fixed the target loss before the agent arm started, and the agent crossing was never given back", "survives": "a transient dip below the target followed by divergence", "checker": "arm_order_and_sustained_crossing"}
+  ],
+
+  "rejected_routes": [
+    {"route": "Submit the starter exponential moving average unchanged.", "control": "control_starter_ema", "why": "the amplification component is a deterministic function of the gradient, so an average of observations averages the amplification in rather than out, and the drift component is positively autocorrelated over tens of steps so a short window average tracks it instead of cancelling it"},
+    {"route": "Clip the observation to a running norm and pass it through.", "control": "control_norm_clip_only", "why": "clipping suppresses the scheduled spike and also suppresses the informative part of every step on which the spike does not fire, and it leaves the erasure and the amplification untouched"},
+    {"route": "Edit or monkeypatch the noise fixture so the corruption is milder.", "control": "control_edited_fixture", "why": "the verifier compares the fixture bytes against a bound digest and independently recomputes the noise realization, so an edited fixture closes the frozen_fixture_bytes_match_bound and noise_realization_reproduces checkers and the reward is exactly zero"},
+    {"route": "Reach through the harness for the uncorrupted gradients.", "control": "control_sentinel_touch", "why": "the harness exposes a tripwire object where uncorrupted gradients would sit, any read increments a counter written into the run record, and the no_true_gradient_access checker closes on a non zero counter"},
+    {"route": "Hand write the run record so it reports a favourable steps to target.", "control": "control_forged_telemetry", "why": "the verifier runs the harness itself and reads only the record that run produced, so a record written by a submission is never an input to the reward"}
+  ],
+
+  "rubric_items": [
+    {"id": "checker_roster_reconciles", "dimension": "gradability", "weight": 8, "evaluation_target": "bundle_bytes", "criterion": "The checker identifiers declared in tests/checkers.yaml equal, as a set in both directions, the checker identifiers the verifier executes in tests/grade.py.", "judgment": "set equality between the identifiers parsed from tests/checkers.yaml and the CHECKER_IDS list in tests/grade.py", "evidence": ["tests/checkers.yaml", "tests/grade.py"], "mode": "compiled"},
+    {"id": "checker_kinds_are_singleton", "dimension": "gradability", "weight": 8, "evaluation_target": "bundle_bytes", "criterion": "Every checker in tests/checkers.yaml declares exactly one reduction kind drawn from VALUE, EFFECT, ABSENCE, INVARIANT, ORDERING and DIVERGENCE.", "judgment": "each checker entry carries exactly one reduction field whose value is a member of the closed six element set", "evidence": ["tests/checkers.yaml"], "mode": "compiled"},
+    {"id": "checker_kinds_cover_six", "dimension": "gradability", "weight": 6, "evaluation_target": "bundle_bytes", "criterion": "All six checker kinds appear at least once across the roster in tests/checkers.yaml.", "judgment": "the set of declared kinds equals the closed six element set", "evidence": ["tests/checkers.yaml"], "mode": "compiled"},
+    {"id": "each_checker_names_live_state_read", "dimension": "gradability", "weight": 8, "evaluation_target": "bundle_bytes", "criterion": "Every checker in tests/checkers.yaml names a non empty live state read that the verifier actually consults.", "judgment": "each checker entry carries a non empty live_state_read field", "evidence": ["tests/checkers.yaml"], "mode": "compiled"},
+    {"id": "reward_clamped_to_unit_interval", "dimension": "reward_shape", "weight": 8, "evaluation_target": "bundle_bytes", "criterion": "The reward is one float clamped to the closed interval from zero to one by min of max of raw with zero and one, in both the declared contract and the executing verifier.", "judgment": "tests/checkers.yaml declares the clamp and tests/grade.py contains the clamping expression on the path that emits the score", "evidence": ["tests/checkers.yaml", "tests/grade.py"], "mode": "compiled"},
+    {"id": "rubrics_jsonl_shape", "dimension": "delivery", "weight": 6, "evaluation_target": "bundle_bytes", "criterion": "Every line of tests/rubrics.jsonl is one JSON object carrying exactly the two keys id and rubric.", "judgment": "each non empty line parses as a JSON object whose key set equals the two element set id and rubric", "evidence": ["tests/rubrics.jsonl"], "mode": "compiled"},
+    {"id": "optimization_bindings_present", "dimension": "delivery", "weight": 10, "evaluation_target": "bundle_bytes", "criterion": "task.toml carries all seven optimization bindings, with max_timeout at 6.0 hours, budget_hours at 0.12 hours per attempt, max_attempts at 50, final_selection best, solver egress setup only, the one H100 compute envelope, and a reward declared as a single float on the closed interval from zero to one.", "judgment": "task.toml parses and the seven named fields hold the named values, with budget_hours strictly less than max_timeout", "evidence": ["task.toml"], "mode": "compiled"},
+    {"id": "frozen_fixture_digests_bound", "dimension": "reproducibility", "weight": 8, "evaluation_target": "bundle_bytes", "criterion": "The noise fixture digest and corpus digest bound in tests/checkers.yaml equal the sha256 of the shipped fixture bytes.", "judgment": "sha256 of environment/fixtures/noise_process.py and of environment/fixtures/corpus.bin equal the bound values", "evidence": ["tests/checkers.yaml", "environment/fixtures/noise_process.py", "environment/fixtures/corpus.bin"], "mode": "compiled"},
+    {"id": "zero_score_has_machine_reason", "dimension": "gradability", "weight": 6, "evaluation_target": "bundle_bytes", "criterion": "Every zero score path in the verifier writes a non empty machine readable reason into the score record.", "judgment": "every emit call in tests/grade.py passes a non empty reason literal or a reason variable, and tests/test.sh writes a reason on each of its own zero paths", "evidence": ["tests/grade.py", "tests/test.sh"], "mode": "compiled"},
+    {"id": "smoke_path_is_cpu_only", "dimension": "reproducibility", "weight": 6, "evaluation_target": "bundle_bytes", "criterion": "Under BIA_SMOKE the reference path forces an empty CUDA device list and selects the CPU operating point, so the smoke run allocates no accelerator memory.", "judgment": "solution/solve.sh and tests/grade.py both set CUDA_VISIBLE_DEVICES to empty under BIA_SMOKE and environment/harness/train.py selects the SMOKE config and the cpu device", "evidence": ["solution/solve.sh", "tests/grade.py", "environment/harness/train.py"], "mode": "compiled"},
+    {"id": "no_em_dash_in_markdown", "dimension": "delivery", "weight": 6, "evaluation_target": "bundle_bytes", "criterion": "No emitted Markdown file in the bundle contains an em dash character.", "judgment": "no file ending in .md under the bundle root contains the em dash code point", "evidence": ["instruction.md", "solution/TRUTH.md"], "mode": "compiled"},
+    {"id": "estimator_contract_documented", "dimension": "delivery", "weight": 4, "evaluation_target": "bundle_bytes", "criterion": "instruction.md names the exact submission entry point and the exact method the harness calls on it.", "judgment": "instruction.md contains the literals build_estimator and estimate and names submission/estimator.py", "evidence": ["instruction.md"], "mode": "compiled"},
+    {"id": "estimator_is_derived_not_recalled", "dimension": "authenticity", "weight": 8, "evaluation_target": "agent_trajectory", "criterion": "The submitted estimator was designed from the agent's own inspection and probing of the injected process rather than recalled as a named published variance reduction recipe and applied unexamined.", "judgment": "whether the design was derived or recalled", "evidence": ["agent_trajectory"], "mode": "judged", "residue": "Whether a design was derived or recalled is a property of the reasoning that produced it and not of the bytes it produced. Two agents can submit byte identical estimators, one having derived it and one having recalled it, so no deterministic relation over committed artifacts separates them."},
+    {"id": "defeat_mechanism_engaged", "dimension": "authenticity", "weight": 8, "evaluation_target": "agent_trajectory", "criterion": "The agent recognized that the injected process violates the independence and zero mean assumptions that standard variance reduction rests on, and said so, rather than reporting a reward without accounting for why the reflex answer fell short.", "judgment": "whether the trajectory shows the assumption being identified and tested", "evidence": ["agent_trajectory"], "mode": "judged", "residue": "Recognition is a semantic property of trajectory prose. A deterministic test can confirm that an estimator subtracts the drift term and cannot confirm that the agent understood why the term had to be subtracted rather than smoothed."}
+  ],
+
+  "design_intent": [
+    "The intended defeat mechanism is that standard variance reduction assumes noise structure this injected process deliberately violates.",
+    "The amplification component is a deterministic function of the gradient, so it survives averaging rather than cancelling under it.",
+    "The drift component is positively autocorrelated over tens of steps, so a short window average tracks it instead of removing it.",
+    "The erasure is held across consecutive steps, so a rescaled zero is a stale reading rather than an unbiased sample of that coordinate.",
+    "The spike schedule is sparse enough that clipping trades a rare large error for a constant small one on every other step.",
+    "Those four statements are design intent and they are UNMEASURED as explanations of why a solver fails.",
+    "What was measured, on seed 0 at the scaled operating point, is the step cost of each treatment of the observation against the target loss the baseline arm fixes at the reference step. The identity baseline reached it at step 950. An arm handed the uncorrupted gradient reached it at step 800, which is the ceiling any estimator is bounded by, because the erasure is lossy and one observation per step does not determine a coordinate nobody read. The reference estimator reached it at step 850.",
+    "One measured finding is worth stating because it contradicts the reflex. Restoring erased coordinates from a staleness buffer of the last kept observation reached the target at step 950, which is exactly the baseline and no gain at all, while writing zero there reached it at step 850. The frozen optimizer already carries a momentum estimate for every coordinate, so an unwritten coordinate coasts on it, whereas a buffered value overwrites that estimate with a stale minibatch reading held for the whole erasure window.",
+    "A second measured finding bounds the design. Cosine similarity between the applied direction and the true gradient does not order these arms: the buffered variant held a cosine near 0.90 against the baseline's 0.45 and still bought nothing, so an estimator tuned to maximize agreement with the true gradient is tuned against the wrong quantity.",
+    "No pass probability, no self solve claim and no difficulty tier is asserted anywhere in this bundle, and the bundle ships at HOLD:PILOT_REQUIRED, which is the correct terminal state."
+  ],
+
+  "compilation_floor": 0.75,
+
+  "hash_recipe": {
+    "algorithm": "sha256",
+    "include": "every regular file under the bundle root",
+    "exclude": ["any path whose first component is trajectories", "solution/provenance.yaml"],
+    "line_format": "<posix_relpath> two spaces <sha256_hex_of_file_bytes> newline",
+    "order": "lines sorted by posix relpath in byte order",
+    "canonical_content_hash": "sha256 over the concatenation of those lines, hex digest",
+    "uuid": "uuid5(FORGE_TASK_NAMESPACE, canonical_content_hash)"
+  }
+}

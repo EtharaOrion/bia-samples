@@ -1,0 +1,13 @@
+{
+  "bytes": 262144,
+  "fixture": "smoke_corpus.bin",
+  "license": "enwik8 is a byte prefix of a 2006 English Wikipedia XML dump, CC-BY-SA 3.0",
+  "note": "Real corpus bytes carved from the pinned enwik8 archive. Used only by the BIA_SMOKE code path so the identical pipeline can run CPU-only without the full 100 MB corpus.",
+  "sha256": "227de9e70a09e3832b069769a3c3dae66339453ba30e055253a6e7ea6a357100",
+  "slice_length_bytes": 262144,
+  "slice_start_byte": 10000000,
+  "source_corpus": "enwik8",
+  "source_raw_sha256": "2b49720ec4d78c3c9fabaee6e4179a5e997302b3a70029f30f2d582218c024a8",
+  "source_url": "http://mattmahoney.net/dc/enwik8.zip",
+  "source_zip_sha256": "547994d9980ebed1288380d652999f38a14fe291a6247c157c3d33d4932534bc"
+}

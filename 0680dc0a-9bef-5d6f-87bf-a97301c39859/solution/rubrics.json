@@ -1,0 +1,45 @@
+{
+  "_banner": "GENERATED SECTION. DO NOT HAND-EDIT.",
+  "_source": "solution/grounding.yaml",
+  "judged": "the solution against its reference answer",
+  "not_a_substitute_for": "tests/rubrics.jsonl, which is judged against the trajectory and grades agent behaviour",
+  "rubrics": [
+    {
+      "criterion": "The submitted vocabulary loads under the frozen ceiling, carries all 256 single bytes and no duplicate.",
+      "id": "sr-vocabulary-valid",
+      "measured_reference_answer": "a vocabulary of 353 entries, none longer than 16 bytes, containing every single byte, under a ceiling of 8192.",
+      "reference_answer": "a byte-pair-encoded vocabulary of at most 8192 entries, none longer than 16 bytes, containing every single byte."
+    },
+    {
+      "criterion": "The graded figure in the score document is the verifier's own measurement and not a number the submission supplied.",
+      "id": "sr-figure-is-measured-not-asserted",
+      "measured_reference_answer": "score.json metric.graded_bits_per_byte is 1.2532905300907615, the harness reading; metric.claimed_bits_per_byte sits beside it as input only.",
+      "reference_answer": "score.json metric.graded_bits_per_byte equals the harness reading, and metric.claimed_bits_per_byte is recorded beside it as input only."
+    },
+    {
+      "criterion": "Any claimed figure sits within the bound tolerance of the measurement, or no claim is made and the absence is recorded.",
+      "id": "sr-claim-truthful-or-absent",
+      "measured_reference_answer": "the reference claims 1.2532905300907615 and the harness measures 1.2532905300907615, a divergence of 0.0 against a tolerance of 0.01.",
+      "reference_answer": "the reference claims the figure it computed by replicating the frozen recipe, and the divergence is zero."
+    },
+    {
+      "criterion": "The denominator is the frozen evaluation corpus byte count as the verifier measured it.",
+      "id": "sr-denominator-frozen",
+      "measured_reference_answer": "6144 bytes, measured by the harness, equal to the bound frozen denominator.",
+      "reference_answer": "6144 bytes, measured by the harness, equal to the bound frozen denominator."
+    },
+    {
+      "criterion": "The optimizer updates counted on the harness counter do not exceed the frozen budget.",
+      "id": "sr-budget-respected",
+      "measured_reference_answer": "18000 updates spent against a bound 18000.",
+      "reference_answer": "18000 updates spent against a bound 18000."
+    },
+    {
+      "criterion": "Every evaluation point the verifier scheduled was completed and the reading is corroborated at each.",
+      "id": "sr-schedule-completed",
+      "measured_reference_answer": "3 of 3 points completed, all within the bound sustain band of 0.03 around the graded reading.",
+      "reference_answer": "3 of 3 points completed, all within the bound sustain band of the graded reading."
+    }
+  ],
+  "slot": "OER-16"
+}

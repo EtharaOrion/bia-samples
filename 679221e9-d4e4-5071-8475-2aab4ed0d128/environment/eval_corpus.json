@@ -1,0 +1,15 @@
+{
+  "schema": "oer20.eval_corpus/v1",
+  "corpus_id": "frozen-held-out-5shard",
+  "frozen": true,
+  "note": "The FROZEN evaluation corpus. Five held-out shards. shard_gain is the measured per-shard amplification of quantization error and readout_jitter is the measured per-shard calibration-set sensitivity of a NON-UNIFORM allocation, which is why one shard is not a measurement: the same allocation reads differently on each shard, and the spread across shards is the measurement noise band. A uniform allocation needs no calibration set and carries no jitter; the more an allocation departs from uniform, the wider the band its own reading carries, which is the whole reason a small perplexity delta here can be indistinguishable from nothing. No submission selects, reweights, reorders or subsets these shards; the verifier schedules them.",
+  "evaluation_repeat_floor": 5,
+  "readout_jitter_scale": 0.004,
+  "shards": [
+    {"shard_id": "s0", "tokens": 131072, "shard_gain": 0.9631, "readout_jitter": -1.0},
+    {"shard_id": "s1", "tokens": 131072, "shard_gain": 1.0184, "readout_jitter": 0.6},
+    {"shard_id": "s2", "tokens": 131072, "shard_gain": 0.9877, "readout_jitter": -0.3},
+    {"shard_id": "s3", "tokens": 131072, "shard_gain": 1.0462, "readout_jitter": 1.0},
+    {"shard_id": "s4", "tokens": 131072, "shard_gain": 1.0053, "readout_jitter": -0.4}
+  ]
+}

@@ -1,0 +1,87 @@
+schema_version = "1.4"
+
+# Snapshotted out of the environment before teardown. A graded deliverable absent
+# from this list is a coverage gap under Phase 1 item 7, because it would have to
+# be reconstructed after the fact rather than captured.
+#
+# This MUST sit above the first table header. TOML scopes every key to the most
+# recent header, so placing it after [metadata] silently makes it metadata.artifacts
+# and leaves the real top-level artifacts list empty. Harbor would accept that
+# without complaint and snapshot nothing.
+artifacts = [
+  "/app/submission.py",
+  "/logs/agent/trajectory.jsonl",
+  "/logs/verifier/reward.txt",
+  "/logs/verifier/record.json",
+  "/logs/verifier/rubric_verdicts.json",
+]
+
+[task]
+name = "bia/tokens-to-target"
+version = "1.0.0"
+description = "Reach a target validation loss on fewer training tokens, with batch size free."
+authors = ["Bia"]
+keywords = ["optimization", "language-model", "training-efficiency"]
+
+[metadata]
+tags = ["optimization", "bounded-continuous"]
+difficulty = ""
+category = "optimization"
+# n, the sequential iteration count, ratified 2026-08-11 as the lower of the client
+# brief's unresolved "50 or 100". Not a Harbor schema field: the decoded client
+# figure establishes n as task-defined and K as client-supplied at request time,
+# and [metadata] is typed dict[str, Any] so it carries without being validated.
+attempt_cap = 50
+attempt_cap_symbol = "n"
+
+# The seven optimization bindings, transcribed from seed/forge/oer.py BINDINGS.
+# max_timeout and budget_hours are distinct fields with distinct roles and neither is an alias of the other.
+# The 6 that requirements/bia-environment-spec.md names bounds one session of fifty attempts, which is max_timeout's role.
+# budget_hours is the per-attempt completion bound, being 6 hours divided by 50 attempts, which is 0.12 hours or 7.2 minutes.
+# Writing that 6 into budget_hours would encode a 300 hour session, which every well-formedness check would pass as valid.
+max_timeout = 6.0
+max_timeout_hours = 6.0
+budget_hours = 0.12
+max_attempts = 50
+max_attempts_ceiling = 100
+final_selection = "best"
+solver_egress = "setup-only"
+compute_envelope = "one H100, single accelerator, no multi-GPU scaling"
+reward_schema = "single float on the closed interval 0.0 to 1.0, higher is better, never binary"
+reward_kind = "float"
+reward_range = [0.0, 1.0]
+reward_full = 1.0
+reward_clip = "min(max(raw, 0.0), 1.0)"
+reward_path = "/logs/verifier/reward.txt"
+
+[metadata.budget]
+budget_hours = 0.12
+budget_envelope = "One H100, single accelerator, no multi-GPU scaling"
+budget_margin = "10 percent"
+role_note = "budget_hours bounds one graded attempt; max_timeout bounds one fifty attempt session."
+
+[agent]
+# Setup-only egress: [environment] below is the provisioning baseline and this narrows the scored run to no network.
+network_mode = "none"
+allowed_hosts = []
+# Projection-derived, NOT measured. The per-run projection is 99 s; an agent
+# iterating on its own experiments needs many such runs plus authoring time, so
+# four hours is a working window with headroom rather than a measured bound. It
+# must be re-set from the measurement, and it is deliberately finite because an
+# unbounded agent timeout makes the attempt cap unenforceable.
+timeout_sec = 14400.0
+
+[verifier]
+# 8 grading seeds at a 900 s per-run ceiling is 7200 s, plus checkpoint evaluation
+# across the token grid. Three hours carries that with margin. Also
+# projection-derived.
+timeout_sec = 10800.0
+
+[environment]
+build_timeout_sec = 1800.0
+# Pinned by digest, never by a floating tag. This is the manifest digest of the image built from this bundle's own
+# environment/Dockerfile on the x86_64 host that executes the task, so the scanned and executed images cannot differ.
+docker_image = "bia/tokens-to-target-16bedc61@sha256:067e9eefa81b44752b276e5f66e4b11608964b9a2dd272d518b2a0a22c4d29a1"
+gpus = 1
+gpu_types = ["H100"]
+network_mode = "public"
