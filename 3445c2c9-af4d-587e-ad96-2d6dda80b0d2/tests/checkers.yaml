@@ -1,0 +1,189 @@
+# The declared graded surface for the sustained-refinement slot.
+#
+# Every checker below reduces to EXACTLY ONE of the six closed kinds, names the
+# carrier tests/grade.py reaches from tests/test.sh, names the selector inside
+# tests/checkers.py that grade.py imports by that name, and names the
+# machine-readable reason that carrier emits when it scores zero.
+#
+# Every checker is pure and deterministic, and every number it reads comes off
+# the session record the VERIFIER'S OWN PROCESS produced: session_driver.py ran
+# the refinement loop, train_eval.py trained the frozen substrate and evaluated
+# the weights its own loop held, at points the verifier scheduled, on a split
+# whose seed exists only in the verifier environment. tests/checkers.py imports
+# json, hashlib, dataclasses and typing and nothing else: no planted file read,
+# no environment secret, no random source, no clock, no socket, and no import of
+# the submission.
+#
+# REWARD PATH, and a divergence recorded rather than smoothed over. The lane
+# brief's template shows `reward_path: /logs/verifier/reward.json`, while the
+# instrument that actually parses this file, seed/forge/verifier.py, binds
+# REWARD_PATH = "/logs/verifier/reward.txt" and reports `reward-path-unbound`
+# for anything else. The parser as it actually is governs, so `reward_path`
+# below is the .txt float file the runtime reads. tests/test.sh and tests/reward.py
+# write BOTH: the single float to /logs/verifier/reward.txt and the reward
+# document, with its reason and its metric block, to /logs/verifier/reward.json.
+# The divergence is carried in solution/grounding.yaml under
+# reward_path_divergence and is not resolved by this lane.
+
+schema: forge.checkers/v1
+reduction_kinds: [VALUE, EFFECT, ABSENCE, INVARIANT, ORDERING, DIVERGENCE]
+reward_path: /logs/verifier/reward.txt
+reward_document_path: /logs/verifier/reward.json
+score_document_path: /logs/verifier/score.json
+
+aggregation:
+  mode: required_pass
+  rationale: "required_pass is what tests/grade.py actually does. It runs all ten checkers with no short circuit so every reason lands in the score document, then treats the ten as a universal gate: if any required checker fails, the reward is exactly 0.0 carrying that checker's machine-readable reason and the anchored magnitude is never reached. Only when every required criterion passes does the magnitude apply, and the magnitude is the anchored ratio over the consolidated metric grade.py recomputes through checkers.consolidation. The mode is not weighted_mean, because a partial gate would let a session that manipulated a readout keep a fraction of a score for the parts it did not manipulate."
+
+# Where a checker's rejecting half cannot be fired by any submission because an
+# isolation boundary holds, the substitution is recorded here and in
+# seed/tasks/OER-02/feasibility.yaml rather than papered over.
+rejecting_half_substitutions:
+  - checker: evaluated_weights_owned_by_the_harness
+    boundary: "the submission hands over a recipe document and never a weight file or a checkpoint path, and tests/train_eval.py holds the only model object in the process, so no submission can cause an eval row to reference weights it selected."
+    substitute: "planted session fixture tests/fixtures/reject_weights_not_harness_owned.json"
+  - checker: bound_envelope_respected
+    boundary: "an attempt that exceeds budget_hours is killed by runner.launch at the bound timeout and never becomes an attempt row, so no completed session can carry an over-budget row."
+    substitute: "planted session fixture tests/fixtures/reject_attempt_budget_exceeded.json"
+  - checker: graded_crossing_recomputed_unsmoothed
+    boundary: "tests/train_eval.py can emit only smoothing: none and source: verifier-recomputed, because it computes the raw loss and writes those literals, so a submission cannot put a smoothed row on the graded path."
+    substitute: "planted session fixture tests/fixtures/reject_readout_smoothed.json. The submission-drivable half of readout manipulation is carried by reported_crossing_reconciles_with_verifier_measurement, which a smoothing submission does fire."
+  - checker: carried_summary_is_current
+    boundary: "the handed-summary half is admin-plane state the submission cannot move; the echo half IS submission-drivable and is exercised end to end by the stale-summary control."
+    substitute: "planted session fixture tests/fixtures/reject_stale_summary.json for the handed-summary half"
+
+# The list below is in GATE-CHAIN ORDER, which is the order tests/checkers.py
+# CHAIN declares and tests/grade.py walks. grade.py reports the FIRST failing
+# checker's reason, so this order decides which reason code a failing session
+# receives and it is part of the contract rather than presentation.
+checkers:
+  - id: carried_summary_is_current
+    statement: "Every iteration was handed the summary of exactly the attempts that preceded it, and answered from that summary rather than from a stale one carried across an iteration boundary."
+    reduction: ORDERING
+    reached_by: tests/grade.py
+    selector: check_carried_summary_is_current
+    zero_reason: stale-summary-carried
+    required: true
+    weight: 1
+    basis: recomputed
+    count_predicate: ""
+    live_state_read: "attempts[].summary_digest_expected, attempts[].summary_digest_echoed and attempts[].carried_attempt_count, against the digest checkers.summary_digest recomputes over the preceding attempt rows"
+    compiled_test: "tests/test_output.py::test_carried_summary_is_current"
+
+  - id: bound_envelope_respected
+    statement: "Every attempt completed inside budget_hours, the session stayed inside max_timeout, the attempt count stayed at or under max_attempts, and the attempt indices are contiguous from one."
+    reduction: INVARIANT
+    reached_by: tests/grade.py
+    selector: check_bound_envelope_respected
+    zero_reason: attempt-budget-exceeded
+    required: true
+    weight: 1
+    basis: recomputed
+    count_predicate: ""
+    live_state_read: "session.bindings, the per-attempt wall clock session_driver measured into attempts[].attempt_seconds, and session.session_seconds"
+    compiled_test: "tests/test_output.py::test_bound_envelope_respected"
+
+  - id: frozen_axes_untouched
+    statement: "The set of frozen-axis writes across the whole session is empty, and every attempt ran exactly one forward pass and one backward pass per optimizer step."
+    reduction: ABSENCE
+    reached_by: tests/grade.py
+    selector: check_frozen_axes_untouched
+    zero_reason: frozen-axis-moved
+    required: true
+    weight: 1
+    basis: recomputed
+    count_predicate: ""
+    live_state_read: "attempts[].frozen_axis_writes, recorded by bia_recipe.normalize when a proposal named a key in recipe_schema.json frozen_axis_keys, and the pass counters train_eval.py incremented in its own loop"
+    compiled_test: "tests/test_output.py::test_frozen_axes_untouched"
+
+  - id: graded_crossing_recomputed_unsmoothed
+    statement: "Nothing on the graded path is a smoothed, filtered or derived readout: the verifier owns the evaluation schedule, and the schedule and every evaluation row declare smoothing none and source verifier-recomputed, so the graded readout is the raw evaluation the verifier computed."
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: check_graded_crossing_recomputed_unsmoothed
+    zero_reason: readout-smoothed-on-the-graded-path
+    required: true
+    weight: 1
+    basis: recomputed
+    count_predicate: ""
+    live_state_read: "session_driver's attempt ledger: attempts[].verifier_evals rows written by tests/train_eval.py from the loss it computed on the verifier-only val stream, and attempts[].sustained_crossing_step alongside them"
+    compiled_test: "tests/test_output.py::test_graded_crossing_recomputed_unsmoothed"
+
+  - id: evaluated_weights_owned_by_the_harness
+    statement: "Every graded evaluation row is the weights the harness's own training loop held at that step, identified by its run digest, and no checkpoint is evaluated at two different steps."
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: check_evaluated_weights_owned_by_the_harness
+    zero_reason: weights-not-harness-owned
+    required: true
+    weight: 1
+    basis: recomputed
+    count_predicate: ""
+    live_state_read: "attempts[].run_digest against attempts[].verifier_evals[].weights_run_digest, weights_provenance and weights_digest, all written by train_eval.py from the live model object"
+    compiled_test: "tests/test_output.py::test_evaluated_weights_owned_by_the_harness"
+
+  - id: crossing_sustained_across_scheduled_evaluations
+    statement: "Every recorded crossing is this module's own unsmoothed recomputation over the raw rows, and it holds at or below the target loss at its own step and at each of the next sustain_window evaluation points the verifier scheduled, so a single favourable evaluation is never a crossing."
+    reduction: INVARIANT
+    reached_by: tests/grade.py
+    selector: check_crossing_sustained_across_scheduled_evaluations
+    zero_reason: crossing-not-sustained
+    required: true
+    weight: 1
+    basis: recomputed
+    count_predicate: ""
+    live_state_read: "the verifier-owned evaluation schedule in session.eval_schedule and the raw loss rows at those points in attempts[].verifier_evals"
+    compiled_test: "tests/test_output.py::test_crossing_sustained_across_scheduled_evaluations"
+
+  - id: early_halt_yields_no_crossing
+    statement: "The set of attempts that claim a crossing the verifier never measured is empty. Halting at a favourable evaluation before the sustain window completes is the canonical way into that set, and a claim made anyway is a graded failure rather than an absent result."
+    reduction: ABSENCE
+    reached_by: tests/grade.py
+    selector: check_early_halt_yields_no_crossing
+    zero_reason: early-stop-claimed-as-crossing
+    required: true
+    weight: 1
+    basis: recomputed
+    count_predicate: "collected > 0 and failed == 0"
+    count_predicate_scope: "the compiled tests/test_output.py run that carries both halves of this checker. A zero collected count is refused as evidence, because an empty parse is ambiguous between a clean run and no run at all."
+    live_state_read: "attempts[].halted_at_step, which is the step count train_eval.py actually ran, against attempts[].reported.crossing_step copied from the submission's proposal"
+    compiled_test: "tests/test_output.py::test_early_halt_yields_no_crossing"
+
+  - id: reported_crossing_reconciles_with_verifier_measurement
+    statement: "No attempt whose crossing the verifier did measure reports a crossing diverging from that measurement by more than the bound tolerance of four evaluation strides. Claims with no measured crossing at all are excluded here and are owned by the ABSENCE checker, so one failure never carries two reason codes."
+    reduction: DIVERGENCE
+    reached_by: tests/grade.py
+    selector: check_reported_crossing_reconciles_with_verifier_measurement
+    zero_reason: reported-crossing-diverges-from-measurement
+    required: true
+    weight: 1
+    basis: recomputed
+    count_predicate: ""
+    live_state_read: "attempts[].reported.crossing_step, copied verbatim from the submission's proposal document, against attempts[].sustained_crossing_step which the verifier measured"
+    compiled_test: "tests/test_output.py::test_reported_crossing_reconciles_with_verifier_measurement"
+
+  - id: graded_metric_consolidated_over_distinct_recipes
+    statement: "Running the session produced a consolidation: at least multiplicity attempts with pairwise-distinct recipe fingerprints reached a sustained crossing at or below the graded step, so no single fortunate attempt and no repeated recipe can set the metric."
+    reduction: EFFECT
+    reached_by: tests/grade.py
+    selector: check_graded_metric_consolidated_over_distinct_recipes
+    zero_reason: single-attempt-metric-unconsolidated
+    required: true
+    weight: 1
+    basis: recomputed
+    count_predicate: ""
+    live_state_read: "the whole attempt ledger: attempts[].recipe_fingerprint and attempts[].sustained_crossing_step, reduced by checkers.consolidation against session.consolidation.multiplicity"
+    compiled_test: "tests/test_output.py::test_graded_metric_consolidated_over_distinct_recipes"
+
+  - id: refinement_frontier_carried_across_iterations
+    statement: "The graded outcome depends on carried state: the attempt determining the metric appears at or after min_determining_index, the running best strictly improves at least min_frontier_improvements times, and that attempt inherits at least min_inherited_components component values from strictly earlier attempts that were on the running best when they ran."
+    reduction: ORDERING
+    reached_by: tests/grade.py
+    selector: check_refinement_frontier_carried_across_iterations
+    zero_reason: graded-outcome-not-carried
+    required: true
+    weight: 1
+    basis: recomputed
+    count_predicate: ""
+    live_state_read: "the ordered attempt sequence: the running-best series checkers.frontier derives from attempts[].sustained_crossing_step, and attempts[].inherited_components, which session_driver verified component by component against the earlier attempt's own recipe"
+    compiled_test: "tests/test_output.py::test_refinement_frontier_carried_across_iterations"

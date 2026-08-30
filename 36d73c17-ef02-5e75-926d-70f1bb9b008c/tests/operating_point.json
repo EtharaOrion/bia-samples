@@ -1,0 +1,136 @@
+{
+  "schema": "forge.operating_point/v1",
+  "banner": "The operating point is BYTES, never an assumption. tests/runner.py reads the selected point from this file and grades nothing it cannot establish.",
+  "selected": "demonstration",
+  "selection_env": "OER04_OPERATING_POINT",
+  "selection_note": "The default selection is a bound byte, not a silent fallback. The bound point stays reachable with OER04_OPERATING_POINT=bound, and refuses with reason verifier-substrate-absent on a host that does not carry the mounted shard rather than degrading into a solver-blaming zero.",
+  "points": {
+    "bound": {
+      "id": "bound",
+      "title": "the H100 and FineWeb-10B point the batch binds",
+      "is_accelerator_measurement": true,
+      "gap": "gap-oer-04-verifier-reexecution-unmeasured",
+      "note": "Carried verbatim. Every value here is the delivered tests/runner.py BOUND literal and the delivered FROZEN_AXES_LOCKED literal, unchanged. Nothing in this bundle has ever executed this point: solution/grounding.yaml declares that under gap-oer-04-verifier-reexecution-unmeasured and this repair does not close it, it only stops the verifier from misreporting it.",
+      "substrate": {
+        "kind": "mounted-frozen-shard",
+        "data_dir": "/data/fineweb10B",
+        "validation_shard": "/data/fineweb10B/val.bin",
+        "validation_tokens": 10485760,
+        "provided_by": "a read-only harness mount declared as VOLUME in tests/Dockerfile. Nothing in the bundle materialises it."
+      },
+      "shape_handle": false,
+      "grid_anchor": "claimed_step",
+      "frozen_axes": {
+        "dataset": "fineweb10B",
+        "sequence_length": 1024,
+        "batch_size": 512,
+        "n_layer": 12,
+        "n_head": 12,
+        "n_embd": 768,
+        "vocab_size": 50257,
+        "passes_per_step": 1
+      },
+      "bound_parameters": {
+        "target_loss": 3.28,
+        "baseline_metric": 3250,
+        "target_metric": 2690,
+        "separation_margin": 0.05,
+        "evaluation_period_steps": 25,
+        "sustain_points_required": 2,
+        "graded_seed_floor": 20,
+        "seed_ceiling": 20,
+        "n_screen": 1,
+        "n_confirm": 8,
+        "n_escalate": 20,
+        "significance_margin": 0.004,
+        "claim_tolerance_steps": 0,
+        "grid_points_before_claim": 8,
+        "grid_points_after_claim": 8,
+        "verifier_run_timeout_sec": 5400,
+        "checkpoint_ledger_owner": "harness",
+        "readout_smoothing_admitted": false
+      }
+    },
+    "demonstration": {
+      "id": "demonstration",
+      "title": "the point at which this bundle's oracle and controls are actually measured",
+      "is_accelerator_measurement": false,
+      "gap": "gap-oer-04-demonstration-point-is-not-the-bound-point",
+      "note": "The same graded quantity, the same nine checkers, the same reward formula and the same ladder widths, on a substrate small enough to execute. It establishes that the instruments discriminate; it establishes nothing about accelerator behaviour at the bound point, and no claim is made that it does. Telemetry written under this point carries is_accelerator_measurement false.",
+      "substrate": {
+        "kind": "generated-synthetic",
+        "root_name": "demonstration_corpus",
+        "validation_tokens": 32768,
+        "generated_not_fetched": "tests/train_reference_arch.py::materialize_demonstration_corpus builds both shards from two integer tables and three bound seeds. No network, no clock, no host entropy. Two runs over frozen bytes produce byte-identical shards.",
+        "corpus": {
+          "vocab_size": 64,
+          "lag": 3,
+          "noise": 0.05,
+          "table_seed": 20260820,
+          "train_tokens": 1048576,
+          "train_stream_seed": 20260821,
+          "val_tokens": 32768,
+          "val_stream_seed": 20260822
+        },
+        "seed_derivation": "table_seed is the batch identifier task.toml carries at metadata.batch, OER-2026-08-20, read as 20260820. The two stream seeds are that value plus one and plus two, so the whole substrate traces to one bundle-held identifier rather than to three arbitrary numbers."
+      },
+      "shape_handle": true,
+      "grid_anchor": "target_metric",
+      "grid_anchor_note": "The bound point centres the verifier grid on the submission's claimed_step. This point centres it on the verifier's own target_metric instead, which is a constant the submission cannot reach at all, so the grid is strictly less submission-influenced here than at the bound point.",
+      "frozen_axes": {
+        "dataset": "oer04-demonstration-synthetic",
+        "sequence_length": 64,
+        "batch_size": 16,
+        "n_layer": 2,
+        "n_head": 4,
+        "n_embd": 128,
+        "vocab_size": 64,
+        "passes_per_step": 1
+      },
+      "bound_parameters": {
+        "target_loss": 2.0,
+        "baseline_metric": 675,
+        "target_metric": 550,
+        "separation_margin": 0.05,
+        "evaluation_period_steps": 25,
+        "sustain_points_required": 2,
+        "graded_seed_floor": 20,
+        "seed_ceiling": 20,
+        "n_screen": 1,
+        "n_confirm": 8,
+        "n_escalate": 20,
+        "significance_margin": 0.004,
+        "claim_tolerance_steps": 0,
+        "grid_points_before_claim": 8,
+        "grid_points_after_claim": 8,
+        "verifier_run_timeout_sec": 5400,
+        "checkpoint_ledger_owner": "harness",
+        "readout_smoothing_admitted": false
+      },
+      "anchor_derivation": {
+        "unchanged_from_the_bound_point": [
+          "separation_margin",
+          "evaluation_period_steps",
+          "sustain_points_required",
+          "graded_seed_floor",
+          "seed_ceiling",
+          "n_screen",
+          "n_confirm",
+          "n_escalate",
+          "significance_margin",
+          "claim_tolerance_steps",
+          "grid_points_before_claim",
+          "grid_points_after_claim",
+          "verifier_run_timeout_sec",
+          "checkpoint_ledger_owner",
+          "readout_smoothing_admitted"
+        ],
+        "frozen_axes": "AUTHORED. The substrate sizes are the only quantities chosen freely, and they are chosen so that twenty re-executed seeds fit the bound per-seed timeout on one accelerator. They are dictated to the submission through the --shape harness handle and echoed back into the run manifest, so frozen_axes_survive_reexecution stays a live read rather than a comparison of two literals.",
+        "target_loss": "AUTHORED, then MEASURED. 2.0 is the loss level at which the two recipes this bundle already carries separate on this substrate: solution/reference.py reaches it on 20 of 20 bound seeds and environment/train.py reaches it on 0 of 20 inside the graded window. It sits far above the reference's own last-grid-point loss, so the target is a bar the reference clears rather than an asymptote it approaches.",
+        "target_metric": "DERIVED BY MEASUREMENT, by the rule solution/grounding.yaml already applies to the bound point, where target_metric 2690 is the reference's own crossing. The reference's worst sustained crossing over the twenty bound seeds measured 500. target_metric is that worst crossing plus two evaluation periods of headroom, 500 + 2 * 25 = 550, so the bar is set beyond the measured reference rather than exactly on it and a one-grid-point drift cannot move the reward.",
+        "baseline_metric": "DERIVED FROM THE BOUND ANCHORS. The bound point carries baseline_metric 3250 and target_metric 2690, a ratio of 3250 / 2690. Applying that same ratio to this point's target_metric gives 550 * 3250 / 2690 = 664.3, rounded to the bound evaluation period of 25 as 675. The reward's normalisation window therefore covers the same fraction of the metric here as it does at the bound point. Corroborated rather than assumed: environment/train.py, which is the baseline recipe baseline_metric names, does not reach target_loss anywhere inside the graded window on any of its twenty bound seeds, which is strictly worse than 675 and therefore consistent with it.",
+        "not_calibrated_to_the_oracle": "The reward reaching exactly 1.0 for the reference is the bundle's own stated design, not an artefact of this point. solution/grounding.yaml records it verbatim: every reference crossing is at or below the target, so each per-seed score clips to 1.0, the spread is zero, sep is 1.0 and the reward is exactly 1.0. Reaching the target is a bar, not a point on a gradient."
+      }
+    }
+  }
+}

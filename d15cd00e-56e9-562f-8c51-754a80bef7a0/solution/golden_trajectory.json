@@ -1,0 +1,261 @@
+{
+  "_banner": "GENERATED SECTION. DO NOT HAND-EDIT. Source: solution/grounding.yaml.",
+  "boundary": "Every loss value below is authored here as the derivation source for the checker fixtures. It is NOT a measurement of an H100 run. No training run has been performed by this lane. What the accepting half of the adequacy harness proves is that the live checkers accept a trajectory of this shape produced by THIS reference, bound by the sha256 of solution/reference.py. It proves nothing about what an accelerator would produce, and feasibility.yaml says so in the same words.",
+  "expected_graded_step": 2600,
+  "expected_reason": "crossing-sustained-and-recipe-displaced",
+  "expected_reward": 1.0,
+  "reference_fingerprint": {
+    "hyper_vector": [
+      34,
+      39,
+      39,
+      -1,
+      33,
+      42,
+      40,
+      30
+    ],
+    "structural_digest": "8ae1e92312bdd102b17b988f0741914e"
+  },
+  "reference_recipe": {
+    "couplings": [
+      [
+        "hidden_matrices",
+        "aux_group",
+        "shared_second_moment"
+      ]
+    ],
+    "hyper": {
+      "aux_lr_ratio": 0.0045,
+      "lr_peak": 0.038,
+      "momentum": 0.945,
+      "orthogonalisation_steps": 5,
+      "second_moment_beta": 0.96,
+      "trust_region_rho": 1.35,
+      "warmup_frac": 0.02,
+      "weight_decay": 0.0
+    },
+    "init_family": "depth_scaled_orthogonal",
+    "schedule_families": [
+      [
+        "lr",
+        "cosine_then_linear"
+      ],
+      [
+        "momentum",
+        "linear_ramp"
+      ],
+      [
+        "trust_region_rho",
+        "two_phase"
+      ]
+    ],
+    "update_chain": [
+      {
+        "primitive": "heavy_ball_momentum",
+        "role": "hidden_matrices"
+      },
+      {
+        "primitive": "newton_schulz_orthogonalisation",
+        "role": "hidden_matrices"
+      },
+      {
+        "primitive": "spectral_trust_region",
+        "role": "hidden_matrices"
+      },
+      {
+        "primitive": "adamw",
+        "role": "aux_group"
+      }
+    ]
+  },
+  "schema": "bia.oer01.golden_trajectory/v1",
+  "telemetry": {
+    "checkpoint_custody": "harness-owned-at-every-scheduled-point",
+    "evaluations": [
+      {
+        "harness_checkpoint_digest": "bbbab160875fac3210493e0ecfd6ffd7ad80242f21fb81651f11d7328cc047db",
+        "seeds_contributing": 2,
+        "seq": 10,
+        "step": 2500,
+        "submission_reported_loss": 3.2905,
+        "verifier_raw_loss": 3.2941,
+        "weights_digest": "bbbab160875fac3210493e0ecfd6ffd7ad80242f21fb81651f11d7328cc047db",
+        "weights_origin": "harness-checkpoint"
+      },
+      {
+        "harness_checkpoint_digest": "24077dc28d628071a23221d12e451c5b2bc1244082eab73c94ce7f622ef5be73",
+        "seeds_contributing": 2,
+        "seq": 11,
+        "step": 2550,
+        "submission_reported_loss": 3.2841,
+        "verifier_raw_loss": 3.2856,
+        "weights_digest": "24077dc28d628071a23221d12e451c5b2bc1244082eab73c94ce7f622ef5be73",
+        "weights_origin": "harness-checkpoint"
+      },
+      {
+        "harness_checkpoint_digest": "59ce02691be1f610f77e94d66a9b1cc7150b656e7530edb35e2d04e4c778e695",
+        "seeds_contributing": 2,
+        "seq": 12,
+        "step": 2600,
+        "submission_reported_loss": 3.2812,
+        "verifier_raw_loss": 3.2794,
+        "weights_digest": "59ce02691be1f610f77e94d66a9b1cc7150b656e7530edb35e2d04e4c778e695",
+        "weights_origin": "harness-checkpoint"
+      },
+      {
+        "harness_checkpoint_digest": "5d42a7a50526b8a937b262b4f72425d738126f0e5487ee8e0a3432cd7468b716",
+        "seeds_contributing": 2,
+        "seq": 13,
+        "step": 2650,
+        "submission_reported_loss": 3.2799,
+        "verifier_raw_loss": 3.2781,
+        "weights_digest": "5d42a7a50526b8a937b262b4f72425d738126f0e5487ee8e0a3432cd7468b716",
+        "weights_origin": "harness-checkpoint"
+      },
+      {
+        "harness_checkpoint_digest": "398a6c2ae8bb3c3b335df35f060420627978aef389046d82fba6b7d3ada4fe91",
+        "seeds_contributing": 2,
+        "seq": 14,
+        "step": 2700,
+        "submission_reported_loss": 3.2788,
+        "verifier_raw_loss": 3.2772,
+        "weights_digest": "398a6c2ae8bb3c3b335df35f060420627978aef389046d82fba6b7d3ada4fe91",
+        "weights_origin": "harness-checkpoint"
+      },
+      {
+        "harness_checkpoint_digest": "3c018c1566c0410cb7627ae67184db3503bf6b9853d04dfe87d057fd20dd8da2",
+        "seeds_contributing": 2,
+        "seq": 15,
+        "step": 2750,
+        "submission_reported_loss": 3.2779,
+        "verifier_raw_loss": 3.2768,
+        "weights_digest": "3c018c1566c0410cb7627ae67184db3503bf6b9853d04dfe87d057fd20dd8da2",
+        "weights_origin": "harness-checkpoint"
+      },
+      {
+        "harness_checkpoint_digest": "c56ede1e2fa0afebca58858f50ecf88554f25755cd8cc4e911afde24c7950d9f",
+        "seeds_contributing": 2,
+        "seq": 16,
+        "step": 2800,
+        "submission_reported_loss": 3.2771,
+        "verifier_raw_loss": 3.2761,
+        "weights_digest": "c56ede1e2fa0afebca58858f50ecf88554f25755cd8cc4e911afde24c7950d9f",
+        "weights_origin": "harness-checkpoint"
+      },
+      {
+        "harness_checkpoint_digest": "755e60cfecb3c5fecd59e70c5f60a704c69dd56af5fceb2e6569db0fb2a132be",
+        "seeds_contributing": 2,
+        "seq": 17,
+        "step": 2850,
+        "submission_reported_loss": 3.2764,
+        "verifier_raw_loss": 3.2757,
+        "weights_digest": "755e60cfecb3c5fecd59e70c5f60a704c69dd56af5fceb2e6569db0fb2a132be",
+        "weights_origin": "harness-checkpoint"
+      },
+      {
+        "harness_checkpoint_digest": "ac604912f85a42ca93a276eb2a9ee0f12b2e61be8fb3a5ba07caf71ec977097b",
+        "seeds_contributing": 2,
+        "seq": 18,
+        "step": 2900,
+        "submission_reported_loss": 3.2758,
+        "verifier_raw_loss": 3.2753,
+        "weights_digest": "ac604912f85a42ca93a276eb2a9ee0f12b2e61be8fb3a5ba07caf71ec977097b",
+        "weights_origin": "harness-checkpoint"
+      }
+    ],
+    "evaluations_per_seed": {
+      "1101": 9,
+      "2917": 9
+    },
+    "events": [
+      {
+        "accelerator_seconds_spent_before": 0.0,
+        "corpus_revision": "r46",
+        "kind": "fingerprint-screen",
+        "seq": 0
+      },
+      {
+        "kind": "seed-launch",
+        "seed": 1101,
+        "seq": 1
+      },
+      {
+        "kind": "seed-launch",
+        "seed": 2917,
+        "seq": 2
+      }
+    ],
+    "frozen_axes": {
+      "arch_digest": "9f86d081884c7d659a2feaa0c55ad015",
+      "arch_id": "nanogpt-track3-124M",
+      "batch_size": 524288,
+      "dataset_digest": "e3b0c44298fc1c149afbf4c8996fb924",
+      "dataset_id": "fineweb-edu-10B-track3",
+      "fwd_bwd_per_step": 1
+    },
+    "graded_loss_provenance": "verifier-recompute-unsmoothed",
+    "graded_series": [
+      [
+        2500,
+        3.2941
+      ],
+      [
+        2550,
+        3.2856
+      ],
+      [
+        2600,
+        3.2794
+      ],
+      [
+        2650,
+        3.2781
+      ],
+      [
+        2700,
+        3.2772
+      ],
+      [
+        2750,
+        3.2768
+      ],
+      [
+        2800,
+        3.2761
+      ],
+      [
+        2850,
+        3.2757
+      ],
+      [
+        2900,
+        3.2753
+      ]
+    ],
+    "origin": "derived-fixture",
+    "origin_boundary": "Authored in solution/grounding.yaml as a derivation source. NOT a measurement. No accelerator run produced these numbers and no claim about an accelerator rests on them.",
+    "run": {
+      "halt_cause": "verifier-schedule-exhausted",
+      "halt_step": 2900,
+      "launched": true,
+      "run_directory_owner": "verifier",
+      "scheduled_grid": [
+        2500,
+        2550,
+        2600,
+        2650,
+        2700,
+        2750,
+        2800,
+        2850,
+        2900
+      ],
+      "seeds": [
+        1101,
+        2917
+      ]
+    },
+    "schema": "bia.oer01.telemetry/v1"
+  }
+}

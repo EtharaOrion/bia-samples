@@ -1,0 +1,50 @@
+{
+  "banner": "GENERATED SECTION. DO NOT HAND-EDIT.",
+  "note": "This file grades a SOLUTION against its reference answer. tests/rubrics.jsonl is a different file with a different job: it judges the TRAJECTORY and may lower an outcome, never raise one.",
+  "rubrics": [
+    {
+      "criterion": "the live checker chain scores the shipped reference exactly 1.0 at the fixture shape, with the reference bytes sha256-bound into the fixture",
+      "graded_against": "the reference answer, not the trajectory",
+      "id": "reference-accepted-end-to-end",
+      "reference": "solution/reference.py",
+      "reference_sha256": "9ffae8250a27330d638dd1648e646c94e179e48ef0b09273864844cd3bf1e02f"
+    },
+    {
+      "criterion": "the graded metric is the third smallest sustained crossing over pairwise-distinct recipe fingerprints",
+      "graded_against": "the reference answer, not the trajectory",
+      "id": "consolidation-required",
+      "reference": "solution/reference.py",
+      "reference_sha256": "9ffae8250a27330d638dd1648e646c94e179e48ef0b09273864844cd3bf1e02f"
+    },
+    {
+      "criterion": "the determining attempt sits at index three or later, the running best improves at least three times, and the determining attempt inherits at least two components from earlier frontier attempts",
+      "graded_against": "the reference answer, not the trajectory",
+      "id": "carry-required",
+      "reference": "solution/reference.py",
+      "reference_sha256": "9ffae8250a27330d638dd1648e646c94e179e48ef0b09273864844cd3bf1e02f"
+    },
+    {
+      "criterion": "every graded number is the verifier's own unsmoothed evaluation of weights its own loop held",
+      "graded_against": "the reference answer, not the trajectory",
+      "id": "readout-recomputed",
+      "reference": "solution/reference.py",
+      "reference_sha256": "9ffae8250a27330d638dd1648e646c94e179e48ef0b09273864844cd3bf1e02f"
+    },
+    {
+      "criterion": "a crossing holds at its step and at the next three verifier-scheduled points",
+      "graded_against": "the reference answer, not the trajectory",
+      "id": "crossing-sustained",
+      "reference": "solution/reference.py",
+      "reference_sha256": "9ffae8250a27330d638dd1648e646c94e179e48ef0b09273864844cd3bf1e02f"
+    },
+    {
+      "criterion": "max_timeout and budget_hours are emitted as distinct fields with distinct roles and neither is an alias of the other",
+      "graded_against": "the reference answer, not the trajectory",
+      "id": "bounds-distinct",
+      "reference": "solution/reference.py",
+      "reference_sha256": "9ffae8250a27330d638dd1648e646c94e179e48ef0b09273864844cd3bf1e02f"
+    }
+  ],
+  "slot": "OER-02",
+  "source": "solution/grounding.yaml"
+}

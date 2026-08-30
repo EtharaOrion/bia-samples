@@ -1,0 +1,141 @@
+schema_version = "1.4"
+
+# OER-04, provisional identifier. Slot id is the identifier for wave 1; no uuid,
+# no canonical content hash and no provenance carrier is derived here. Wave 2 does
+# identity for the whole batch at once, because adding solution/policy.yaml to an
+# already-committed bundle moves its hash.
+#
+# Harbor's TaskConfig sets no model_config, so pydantic's extra="ignore" default
+# silently discards an unknown or misspelled top-level key. Every field below is
+# either a Harbor field or lives inside a table Harbor hands through untouched, and
+# seed/harbor_lint.py re-validates this file against a mirror model that forbids
+# extras rather than trusting Harbor's silence.
+
+artifacts = [
+  "/app/submission.py",
+  "/logs/agent/trajectory.jsonl",
+  "/logs/verifier/reward.txt",
+  "/logs/verifier/reward.json",
+  "/logs/verifier/score.json",
+  "/logs/verifier/verifier_telemetry.json",
+]
+
+[task]
+name = "bia/oer-04-significance-unproven-at-the-seed-ceiling"
+version = "1.0.0"
+description = "Reach the target validation loss in fewer optimizer steps and establish that the improvement clears the bound separation margin at the bound seed ceiling. A submission that reaches the target but cannot be separated from it at the ceiling resolves to a recorded unproven state, which is neither a pass nor a failure."
+authors = [{ name = "Bia" }]
+keywords = ["optimization", "bounded-continuous"]
+
+[metadata]
+category = "optimization"
+tags = ["optimization", "bounded-continuous"]
+family = "F1"
+family_title = "nanogpt optimizer speedrun"
+slot = "OER-04"
+provisional_identifier = "OER-04"
+batch = "OER-2026-08-20"
+
+# --- graded quantity
+metric = "optimizer steps to reach target validation loss"
+metric_direction = "lower"
+reward_schema = "single float on the closed interval 0.0 to 1.0, higher is better, never binary, full reward exactly 1.0"
+# FORGE.md Phase 1 item 2b binds the reward schema, every reward metric, its range, the
+# exact full-reward value and the multi-turn aggregation rule. Harbor defines no reward
+# default, so an unbound schema leaves full reward and the Phase 2 item 7 oracle
+# measurement undefined, and a prose sentence naming the value binds no machine-readable
+# byte. Every field below is that binding as a value rather than as a sentence,
+# transcribed from seed/contract.yaml families.entries.F1.scope.delivery.reward.
+reward_metric = "reward"
+reward_range = [0.0, 1.0]
+reward_full = 1.0
+reward_full_attainable = true
+reward_full_attained_at = "the target anchor, and at any lower step count. Reaching the target is a bar, not a point on a gradient."
+reward_binary = false
+reward_higher_is_better = true
+reward_aggregation_rule = "not applicable, single-turn unit with one metric"
+reward_range_is_trinity_local = "The zero-to-one range is Trinity-local policy. Harbor does not validate, clamp or otherwise enforce it."
+reward_formula = "raw = (baseline_metric - agent_metric) / (baseline_metric - target_metric); score = min(max(raw, 0.0), 1.0) * significance_factor"
+
+# --- frozen and free axes, upstream rule
+frozen_axes = "dataset, batch size, architecture, one forward-backward pass per step"
+free_axes = "optimization algorithm, hyperparameters and their schedules, model initialization"
+
+# --- tier
+target_tier = "Frontier-defeat"
+tier_exemption_granted = "none"
+anchorable_tier = "capped below Hard"
+anchorable_tier_note = "This task family is text and code only, so the Perception axis carries no category. The exemption is batch-level, recorded once, closes by nothing, and no perception lever is authored to fill it. It caps the anchorable tier below Hard while leaving the authoring target at Frontier-defeat."
+primary_archetype = "AR7"
+primary_archetype_title = "Ambiguous Intermediate States"
+archetype_exclusivity = "exactly one primary archetype, fixed at scope time. No buffet within the slot."
+
+# CANONICAL PATH for every bound optimization field in this batch:
+# metadata.optimization.<field>. One table, one deterministic lookup. Nothing
+# optimization-bound lives anywhere else in this manifest.
+#
+# max_timeout_hours and budget_hours are explicitly distinct and are never
+# aliases. max_timeout_hours bounds the refinement loop ACROSS attempts;
+# budget_hours bounds ONE attempt to completion, being six hours over fifty
+# attempts, which is 0.12 hours or 7.2 minutes.
+[metadata.optimization]
+max_timeout_hours = 6.0
+max_timeout_role = "refinement-loop terminator across attempts"
+budget_hours = 0.12
+budget_hours_minutes = 7.2
+budget_hours_role = "per-attempt completion bound"
+budget_hours_state = "provisional"
+max_attempts = 50
+final_selection = "best"
+budget_envelope = "one H100, single accelerator, no multi-GPU scaling"
+budget_margin = "10 percent"
+compute_envelope_accelerators = 1
+
+[agent]
+timeout_sec = 21600.0
+# Solver egress is OPEN inside the sandbox so the agent can fetch its own packages,
+# datasets and models. This is an asymmetry with the verifier and it is deliberate.
+solver_egress = "setup-only"
+solver_egress_deny = ["github.com", "raw.githubusercontent.com", "objects.githubusercontent.com"]
+solver_egress_deny_is_not_containment = "Mirrors, caches, paraphrased write-ups and model weights all carry a recipe past any deny-list. The deterministic re-execution checker is the load-bearing control, not the network policy."
+network_mode = "none"
+
+[verifier]
+timeout_sec = 43200.0
+# The verifier keeps the bound network policy. Egress denied, full stop.
+egress = "denied"
+network_mode = "none"
+environment_mode = "isolated"
+image_definition_path = "tests/"
+verifier_run_timeout_sec = 5400.0
+verifier_run_timeout_scope = "per re-executed seed, applied identically at every ladder stage"
+verifier_timeout_reason_code = "verifier-timeout-exceeded"
+verifier_timeout_classification = "failed, not unproven. A submission the verifier could not finish inside the bound envelope did not establish anything, and this is distinct from significance-unestablished-at-ceiling, where the run completed and the seed budget was the limit."
+reward_path = "/logs/verifier/reward.txt"
+reward_document_path = "/logs/verifier/reward.json"
+score_document_path = "/logs/verifier/score.json"
+
+[verifier.ladder]
+# Predeclared and frozen before any rollout.
+n_screen = 1
+n_confirm = 8
+n_escalate = 20
+n_ceiling = 20
+permitted_escalations = 1
+seed_selection = "after submission, by the bound derivation. The agent never knows the subset while it can still tune against it."
+unproven_reason_code = "significance-unestablished-at-ceiling"
+unproven_classification = "unproven, distinct from failed"
+failed_reason_codes = ["screen-target-not-reached", "crossing-not-sustained", "early-stop-not-a-crossing", "verifier-timeout-exceeded"]
+
+[environment]
+docker_image = "pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407"
+gpus = 1
+gpu_types = ["H100"]
+cpus = 8
+memory_mb = 131072
+storage_mb = 262144
+workdir = "/app"
+# Provisioning egress at the agent surface. Harbor's environment schema carries an
+# allowlist and no deny-list, so the bound deny-list is carried by name in [agent]
+# and is not expressible here. That is recorded rather than silently dropped.
+network_mode = "public"
