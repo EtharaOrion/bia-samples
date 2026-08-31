@@ -27,7 +27,7 @@ The runner, the frozen training script and the 21 FineWeb10B shards live in the 
 | score per iteration | 0.0 / 0.375 / 0.5 / 0.5 / 0.375 | 0.417 / 0.375 / 0.458 / 0.417 / 0.458 | 0.25 / 0.083 / 0.25 / 0.292 / 0.292 |
 | graded_step per iteration | not graded / 3275 / 3200 / 3200 / 3275 | 3250 / 3275 / 3225 / 3250 / 3225 | 3350 / 3450 / 3350 / 3325 / 3325 |
 | seeds per graded run | 2 | 2 | 2 |
-| rubrics passed | 9 of 9 in every graded run | 9 of 9 in iteration 1; judge not run on 2 to 5 | judge not run for this cohort |
+| rubrics passed | 9 of 9 in every graded run | 9 of 9 in every iteration | 9 of 9 in every iteration |
 | task_checksum across the series | moves (see `task.toml`) | moves: `86154084` / `d1ed186d` / `b3927820` / `b3927820` / `f977a180` | `f977a180` in all 5 |
 | wall clock per iteration | 1.62 / 7.13 / 5.99 / 6.93 / 7.44 h (cap 8 h) | 7.86 / 7.53 / 7.08 / 8.02 / 6.44 h (cap 8 h) | 3.39 / 3.31 / 2.97 / 2.81 / 6.17 h (cap 8 h) |
 | session wall clock | 2026-08-12 18:57:00Z → 2026-08-15 13:09:01Z | 2026-08-19 19:55:19Z → 2026-08-23 05:32:59Z | 2026-08-25 12:34:08Z → 2026-08-26 19:06:43Z |
@@ -78,10 +78,8 @@ trajectories/<cohort>/iteration-N/     cohorts: claude-opus-5, gpt-5.6-sol, muse
   config.json               the trial as configured (agent, model, endpoints)
   result.json               the trial as it ended: task_checksum, tokens, timestamps
   rubric_verdicts.json      the rubric review: overall pass, per-rubric verdicts.
-                            present for every claude-opus-5 iteration and for
-                            gpt-5.6-sol iteration 1; the judge was not run over the
-                            rest of the gpt-5.6-sol cohort or over muse-spark-1.2,
-                            so those iterations omit this file
+                            present for every iteration of all three cohorts, the
+                            same 9 rubrics judged veto-only by claude-opus-5
   agent/
     history.md              the record of prior iterations this one was handed
     trajectory.json         the structured agent trajectory
