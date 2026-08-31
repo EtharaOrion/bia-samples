@@ -1,6 +1,6 @@
 # `89fd44af-aec1-5bfd-857d-8ee6d9e3bd84` - `track3_novel_optimizer`
 
-One model cohort (`claude-opus-5`, run by the `claude-code` agent), one sequential attempt series, 5 recorded rollouts packaged.
+Three model cohorts - `claude-opus-5` run by the `claude-code` agent, `gpt-5.6-sol` run by the `codex` agent, and `muse-spark-1.2` run by the `muse` agent - one sequential attempt series each, 5 recorded rollouts packaged per cohort.
 
 The task is to derive an optimizer that reaches validation loss 3.28 on the frozen track3 benchmark in the fewest optimizer steps, on one H100. Only the optimizer, its schedule, its internal state and its hyperparameters may change: the dataset, batch size, architecture and weight initialisation are frozen and harness owned. The Muon reference reaches the target at step 3500 and scores 0.0, full score requires step 2900 or earlier, and every step ahead of 3500 is worth 1/600 of the score. The objective is bounded continuous, so it rewards every step gained rather than a target to hit and stop at.
 
@@ -18,19 +18,20 @@ The runner, the frozen training script and the 21 FineWeb10B shards live in the 
 
 ## Session result
 
-| | `claude-opus-5` |
-|---|---|
-| rollouts packaged | **5** (declared cap 12) |
-| rollouts graded | 4 |
-| best score | **0.5** (iterations 3 and 4) |
-| best graded_step | **3200** (reference 3500, full score at or below 2900) |
-| score per iteration | 0.0 / 0.375 / 0.5 / 0.5 / 0.375 |
-| graded_step per iteration | not graded / 3275 / 3200 / 3200 / 3275 |
-| seeds per graded run | 2 |
-| rubrics passed | 9 of 9 in every graded run |
-| wall clock per iteration | 1.62 / 7.13 / 5.99 / 6.93 / 7.44 h (cap 8 h) |
-| session wall clock | 2026-08-12 18:57:00Z → 2026-08-15 13:09:01Z |
-| total tokens / cost | 45,710,421 in / 596,041 out / $135.97 |
+| | `claude-opus-5` | `gpt-5.6-sol` | `muse-spark-1.2` |
+|---|---|---|---|
+| rollouts packaged | **5** (declared cap 12) | **5** (declared cap 12) | **5** (declared cap 12) |
+| rollouts graded | 4 | 5 | 5 |
+| best score | **0.5** (iterations 3 and 4) | **0.458** (iterations 3 and 5) | **0.292** (iterations 4 and 5) |
+| best graded_step | **3200** (reference 3500, full score at or below 2900) | **3225** | **3325** |
+| score per iteration | 0.0 / 0.375 / 0.5 / 0.5 / 0.375 | 0.417 / 0.375 / 0.458 / 0.417 / 0.458 | 0.25 / 0.083 / 0.25 / 0.292 / 0.292 |
+| graded_step per iteration | not graded / 3275 / 3200 / 3200 / 3275 | 3250 / 3275 / 3225 / 3250 / 3225 | 3350 / 3450 / 3350 / 3325 / 3325 |
+| seeds per graded run | 2 | 2 | 2 |
+| rubrics passed | 9 of 9 in every graded run | 9 of 9 in iteration 1; judge not run on 2 to 5 | judge not run for this cohort |
+| task_checksum across the series | moves (see `task.toml`) | moves: `86154084` / `d1ed186d` / `b3927820` / `b3927820` / `f977a180` | `f977a180` in all 5 |
+| wall clock per iteration | 1.62 / 7.13 / 5.99 / 6.93 / 7.44 h (cap 8 h) | 7.86 / 7.53 / 7.08 / 8.02 / 6.44 h (cap 8 h) | 3.39 / 3.31 / 2.97 / 2.81 / 6.17 h (cap 8 h) |
+| session wall clock | 2026-08-12 18:57:00Z → 2026-08-15 13:09:01Z | 2026-08-19 19:55:19Z → 2026-08-23 05:32:59Z | 2026-08-25 12:34:08Z → 2026-08-26 19:06:43Z |
+| total tokens / cost | 45,710,421 in / 596,041 out / $135.97 | 288,213,855 in / 308,983 out / $164.21 (input counts cache reads) | 66,233,848 in / 1,251,646 out / $58.31 |
 
 Iteration 3 produced the first submission to reach 0.5, and iteration 4 matched it from a different rule. It is Muon with two behavioural changes over the reference: the orthogonalised update is rescaled per output neuron in the style of NorMuon, a running second moment per output row renormalised back to the Frobenius norm, so the direction of the update changes and its size does not; and the submission declares `owns_schedule` and lands its cooldown early, holding, then decaying linearly to a floor at 80% of the horizon before trailing to zero, which places the benefit where the crossing lives rather than at step 3500. Both effects were measured on a 1750 step miniature of the harness before the graded run was committed. Iteration 1 was abandoned before producing a graded result; iterations 2 and 5 crossed at 3275.
 
@@ -42,6 +43,8 @@ Iteration 3 produced the first submission to reach 0.5, and iteration 4 matched 
 
 **Telemetry is producer attested.** Grading verifies an HMAC chain over the training telemetry, which establishes that records were not altered after the run rather than that they were recorded honestly. No chain key ships with this package; mint one per campaign and pass it to the runner on a file descriptor with `runner/run_track3.py --chain-key-fd <fd>`, which keeps it out of the agent's environment.
 
+**Two `gpt-5.6-sol` iterations carry a verifier re-grade, and that cohort's chain attestation is weaker than the other two.** In iterations 2 and 4 the original grading measured a harness fault rather than the submission - a chain key the agent had minted itself in iteration 2, a rendezvous port collision in iteration 4 - so `result.json` keeps the original campaign verdict of 0.0 while `score.json` and `score.md` carry the re-graded value that the campaign ledger records; each of those iterations ships a `verifier/PROVENANCE.md` written at the time, stating what was re-run and what was not. Separately, the instruction in force during that cohort let the solver invoke the runner, so the telemetry chains of iterations 1 and 2 are signed with keys the agent minted rather than the campaign key; iterations 3 and 5 verify under the campaign key, and iteration 4's graded chain was deleted with the re-grade scratch, leaving a 12 record single seed probe fragment in its place, so that iteration is not independently replayable and omits `reported_losses.json`. The `claude-opus-5` and `muse-spark-1.2` chains all verify under their campaign keys.
+
 **The oracle ships in this bundle.** `solution/TRUTH.md` sets out the golden solve path step by step, along with the measured attack controls. Anyone holding this directory can reproduce a top ranked result directly, so the task cannot be used to evaluate a model that has had access to it.
 
 **Iteration 1 has no history block by construction,** and the audit record for this package, covering contamination screening, declared deviations and the signed provenance carrier, is held separately and available on request.
@@ -51,8 +54,10 @@ Iteration 3 produced the first submission to reach 0.5, and iteration 4 matched 
 ```
 README.md                   this file
 inspector.html              browsable view: task contract, per-iteration verdicts, the
-                            agent-visible files, and every iteration's account opened up
-plots/                      score per iteration and score per cumulative tokens, as SVG
+                            agent-visible files, and every iteration's account opened up.
+                            Built over the claude-opus-5 cohort
+plots/                      score per iteration and score per cumulative tokens, as SVG,
+                            for the claude-opus-5 cohort
 instruction.md              the objective handed to the agent
 task.toml                   manifest: budget, image digest, GPU, network mode
 environment/
@@ -69,10 +74,14 @@ tests/                      the grading contract
   checkers/, test_output.py, emit_verifier_artifacts.py
 solution/
   TRUTH.md                  PRIVATE - the golden solve path (see caveats)
-trajectories/claude-opus-5/iteration-N/
+trajectories/<cohort>/iteration-N/     cohorts: claude-opus-5, gpt-5.6-sol, muse-spark-1.2
   config.json               the trial as configured (agent, model, endpoints)
   result.json               the trial as it ended: task_checksum, tokens, timestamps
-  rubric_verdicts.json      the rubric review: overall pass, per-rubric verdicts
+  rubric_verdicts.json      the rubric review: overall pass, per-rubric verdicts.
+                            present for every claude-opus-5 iteration and for
+                            gpt-5.6-sol iteration 1; the judge was not run over the
+                            rest of the gpt-5.6-sol cohort or over muse-spark-1.2,
+                            so those iterations omit this file
   agent/
     history.md              the record of prior iterations this one was handed
     trajectory.json         the structured agent trajectory
@@ -84,4 +93,6 @@ trajectories/claude-opus-5/iteration-N/
   verifier/
     score.json              the deterministic verifier's measurement, the authority
     score.md, grade-stdout.md, test-stdout.md, outcomes.json
+    PROVENANCE.md           gpt-5.6-sol iterations 2 and 4 only: what was re-graded
+                            after a harness fault, and what was left as first recorded
 ```

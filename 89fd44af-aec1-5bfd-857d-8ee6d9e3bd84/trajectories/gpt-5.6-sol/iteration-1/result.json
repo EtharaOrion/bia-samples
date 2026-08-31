@@ -1,0 +1,121 @@
+{
+ "agent_execution": {
+  "finished_at": "2026-08-20T10:39:36.759465Z",
+  "started_at": "2026-08-20T10:39:34.260132Z"
+ },
+ "agent_info": {
+  "model_info": null,
+  "name": "oracle",
+  "version": "1.0.0"
+ },
+ "agent_result": {
+  "cost_usd": null,
+  "metadata": null,
+  "n_cache_tokens": null,
+  "n_input_tokens": null,
+  "n_output_tokens": null,
+  "rollout_details": null
+ },
+ "agent_setup": {
+  "finished_at": "2026-08-20T10:39:34.260050Z",
+  "started_at": "2026-08-20T10:39:34.259984Z"
+ },
+ "config": {
+  "agent": {
+   "concurrency_group": null,
+   "extra_allowed_hosts": [],
+   "import_path": null,
+   "kwargs": {},
+   "load_trajectory": null,
+   "max_timeout_sec": null,
+   "mcp_servers": [],
+   "model_name": null,
+   "n_concurrent": null,
+   "name": "oracle",
+   "override_setup_timeout_sec": null,
+   "override_timeout_sec": null,
+   "resume_trajectory": false,
+   "skills": []
+  },
+  "agent_setup_timeout_multiplier": 5.0,
+  "agent_timeout_multiplier": null,
+  "artifacts": [],
+  "environment": {
+   "cpu_enforcement_policy": "auto",
+   "delete": true,
+   "extra_allowed_hosts": [],
+   "extra_docker_compose": [],
+   "force_build": false,
+   "import_path": null,
+   "kwargs": {},
+   "memory_enforcement_policy": "auto",
+   "mounts": null,
+   "override_cpus": null,
+   "override_gpus": null,
+   "override_memory_mb": null,
+   "override_storage_mb": null,
+   "override_tpu": null,
+   "type": "docker"
+  },
+  "environment_build_timeout_multiplier": null,
+  "extra_instruction_paths": [],
+  "install_only": false,
+  "job_id": "7b18033c-2004-4eb9-aced-db8ce85d7b65",
+  "source_trial": null,
+  "task": {
+   "download_dir": null,
+   "git_commit_id": null,
+   "git_url": null,
+   "name": null,
+   "overwrite": false,
+   "path": "track3-pipeline/ship-task/campaign-task-retest",
+   "ref": null,
+   "source": null
+  },
+  "timeout_multiplier": 1.0,
+  "trial_name": "campaign-task-retest__gqn8mAf",
+  "trials_dir": "track3-pipeline/ship-task/runs-gpt/agentic-gpt_iter01-retest",
+  "verifier": {
+   "disable": false,
+   "max_timeout_sec": null,
+   "override_timeout_sec": null
+  },
+  "verifier_timeout_multiplier": null
+ },
+ "environment_setup": {
+  "finished_at": "2026-08-20T10:39:34.259933Z",
+  "started_at": "2026-08-20T10:39:31.431059Z"
+ },
+ "exception_info": null,
+ "finished_at": "2026-08-20T10:39:50.123357Z",
+ "id": "2e8c07a9-97fa-424d-8ea9-f1659add66a9",
+ "source": null,
+ "started_at": "2026-08-20T10:39:31.410236Z",
+ "step_results": null,
+ "task_checksum": "861540843c7aeff4dfdf19ba4db51d67dbefeba5d8f02ebc7cb389e7fa4b11a7",
+ "task_id": {
+  "path": "track3-pipeline/ship-task/campaign-task-retest"
+ },
+ "task_name": "bia/track3nov",
+ "trial_name": "campaign-task-retest__gqn8mAf",
+ "trial_uri": "track3-pipeline/ship-task/runs-gpt/agentic-gpt_iter01-retest/campaign-task-retest__gqn8mAf",
+ "verifier": {
+  "finished_at": "2026-08-20T10:39:38.997555Z",
+  "started_at": "2026-08-20T10:39:37.722680Z"
+ },
+ "verifier_environment_mode": "shared",
+ "verifier_result": {
+  "scores": {
+   "composite": 0.416667,
+   "graded_score": 0.4166666666666667,
+   "graded_step": 3250,
+   "pytests_executed": 0,
+   "pytests_failed": 0,
+   "pytests_passed": 0,
+   "pytests_skipped": 0,
+   "reason_code": 0,
+   "rubric_gate": -1,
+   "score": 0.4166666666666667
+  }
+ }
+}
