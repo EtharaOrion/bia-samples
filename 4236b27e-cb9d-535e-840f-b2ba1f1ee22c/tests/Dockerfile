@@ -14,7 +14,7 @@ ENV PYTHONUNBUFFERED=1 \
 
 # pytest carries tests/test_output.py, which is generated from
 # solution/grounding.yaml by solution/recompute.py and never hand-edited.
-RUN python3 -m pip install --no-cache-dir --disable-pip-version-check "pytest==8.3.3"
+RUN python3 -m pip install --no-cache-dir --disable-pip-version-check --break-system-packages "pytest==8.3.3"
 
 WORKDIR /verifier
 COPY tests/ /verifier/tests/

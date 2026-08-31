@@ -11,7 +11,7 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     LC_ALL=C \
     LANG=C
 
-RUN python3 -m pip install --no-cache-dir "pyyaml==6.0.2"
+RUN python3 -m pip install --no-cache-dir --break-system-packages "pyyaml==6.0.2"
 
 WORKDIR /verifier
 COPY . /verifier/tests

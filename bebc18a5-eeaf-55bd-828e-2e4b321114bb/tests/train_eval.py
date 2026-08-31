@@ -13,7 +13,10 @@ Two facts about this module are the whole anti-readout-manipulation design.
    because nothing here can produce anything else.
 
 One forward pass and one backward pass per optimizer step, counted and recorded
-rather than asserted.
+rather than asserted. That pass is TILED over MICRO_SEQUENCES so its activations
+fit one card: the step still sees every one of its batch_tokens_per_step tokens
+exactly once and the optimizer still consumes one gradient, so the count of one
+is the true count of passes over the step's batch, not a relabelling of several.
 """
 from __future__ import annotations
 
@@ -41,6 +44,21 @@ VAL_DRAW = int(os.environ.get("BIA_VAL_DRAW", "33"))
 # lower-variance estimate of the same quantity; it is not smoothing, because
 # nothing here is a function of any OTHER evaluation point.
 EVAL_WINDOWS = 32
+
+# Activation-residency bound, NOT a frozen axis. batch_tokens_per_step stays
+# 524288, the step still consumes all 524288 // seq_len = 512 sequences, and the
+# gradient is still the mean over all 512; equal tiles make the weighted sum of
+# per-tile token means exactly the whole-batch token mean. Only the residency of
+# the ONE backward changes: a tile's graph is released before the next is built.
+#
+# The arithmetic that forces it, from environment/shape.json. A (batch, seq_len,
+# model_dim) fp32 tensor at 512 sequences is 512*1024*768*4 = 1.500 GiB, and qkv
+# materialises (batch, seq_len, 3*model_dim) = 4.500 GiB, which is the observed
+# failed allocation. A Block retains ~22 such units for backward, so 12 layers
+# need 12*22*1.500 = 396 GiB, plus ~24 GiB of logits and cross-entropy. 420 GiB
+# is live memory, not fragmentation, so no allocator setting reaches it. At 32
+# sequences per tile the same count gives 12*22*0.09375 + 1.5 = ~26 GiB.
+MICRO_SEQUENCES = int(os.environ.get("BIA_MICRO_SEQUENCES", "32"))
 
 
 def device_name() -> str:
@@ -123,15 +141,19 @@ def train_and_evaluate(substrate: Substrate, recipe: dict, seed: int, index: int
     forwards = 0
     backwards = 0
     cursor = 0
+    tile = max(1, min(int(MICRO_SEQUENCES), per_step))
     for step in range(1, total + 1):
         take = offsets[cursor:cursor + per_step]
         cursor += per_step
-        idx = torch.stack([substrate.train[int(o):int(o) + seq] for o in take]).to(device)
-        tgt = torch.stack([substrate.train[int(o) + 1:int(o) + seq + 1] for o in take]).to(device)
-        loss = model(idx, tgt)
-        forwards += 1
         model.zero_grad(set_to_none=True)
-        loss.backward()
+        for begin in range(0, per_step, tile):
+            window = take[begin:begin + tile]
+            share = len(window) / float(per_step)
+            idx = torch.stack([substrate.train[int(o):int(o) + seq] for o in window]).to(device)
+            tgt = torch.stack([substrate.train[int(o) + 1:int(o) + seq + 1] for o in window]).to(device)
+            (model(idx, tgt) * share).backward()
+            del idx, tgt
+        forwards += 1
         backwards += 1
         optimizer.clip_()
         optimizer.step(bia_optim.lr_at(recipe, step - 1, total))

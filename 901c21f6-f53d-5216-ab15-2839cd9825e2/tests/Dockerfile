@@ -28,7 +28,7 @@ WORKDIR /verifier
 
 COPY test.sh checkers.py checkers.yaml grade.py runner.py rubrics.jsonl test_output.py golden.json /verifier/
 
-RUN pip install --no-cache-dir pytest==8.3.4 PyYAML==6.0.2
+RUN pip install --no-cache-dir --break-system-packages pytest==8.3.4 PyYAML==6.0.2
 
 # The reward directory Harbor mounts. Created here so an aborted verifier can
 # still write its attributed zero rather than fail on a missing directory, which
