@@ -56,8 +56,8 @@ README.md                   this file
 inspector.html              browsable view: task contract, per-iteration verdicts, the
                             agent-visible files, and every iteration's account opened up.
                             Built over the claude-opus-5 cohort
-plots/                      score per iteration and score per cumulative tokens, as SVG,
-                            for the claude-opus-5 cohort
+plots/                      score per iteration, score per cumulative tokens, and cost per
+                            iteration, as SVG, over all three cohorts
 instruction.md              the objective handed to the agent
 task.toml                   manifest: budget, image digest, GPU, network mode
 environment/
