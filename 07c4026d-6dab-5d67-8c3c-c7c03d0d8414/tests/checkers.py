@@ -249,6 +249,59 @@ def check_evaluation_point_is_bound_not_selected(h: Harness) -> Outcome:
 
 
 # --------------------------------------------------------------------------
+# VALUE. The reward span rests on the reference anchor the environment
+# establishes, and on no other number.
+#
+# The reference loss is nowhere on the agent-visible surface and is not
+# derivable from it: it exists only once the chain has been run in the live
+# environment, where the harness measures it as the `floor` anchor through the
+# identical frozen protocol. Grading the live measurement against the bound
+# value keeps the denominator of (baseline - agent) / (baseline - floor) tied to
+# state the run actually established.
+# --------------------------------------------------------------------------
+def check_floor_anchor_matches_bound_reference(h: Harness) -> Outcome:
+    row = h.telemetry.get("floor") or {}
+    if "loss_per_byte" not in row:
+        return no(
+            "floor-anchor-not-the-bound-reference",
+            "the harness recorded no in-run measurement of the reference composition",
+        )
+    measured = float(row["loss_per_byte"])
+    if not (measured == measured) or measured in (float("inf"), float("-inf")):
+        return no(
+            "floor-anchor-not-the-bound-reference",
+            "the in-run reference measurement is not a finite number",
+        )
+    try:
+        expected = float(h.bound["reference_loss_per_byte"])
+        tolerance = float(h.bound["reference_loss_tolerance"])
+        anchor_budget = int(h.bound["reference_anchor_budget_tokens"])
+    except (KeyError, TypeError, ValueError):
+        return no(
+            "floor-anchor-not-the-bound-reference",
+            "the bound reference anchor is unresolvable from the admin plane",
+            measured,
+        )
+    budget = int(h.bound.get("token_budget_tokens", -1))
+    if budget != anchor_budget:
+        return no(
+            "floor-anchor-not-the-bound-reference",
+            "the bound reference anchor was established under a budget of " + str(anchor_budget)
+            + " tokens and the budget in force is " + str(budget),
+            measured,
+        )
+    if abs(measured - expected) > tolerance:
+        return no(
+            "floor-anchor-not-the-bound-reference",
+            "the in-run reference composition measures " + repr(round(measured, 9))
+            + " against the bound reference anchor " + repr(round(expected, 9))
+            + ", outside the bound tolerance " + repr(tolerance),
+            measured,
+        )
+    return ok("the in-run reference anchor reproduces the bound reference loss", measured)
+
+
+# --------------------------------------------------------------------------
 # INVARIANT. The improvement holds across the evaluation points the verifier
 # schedules, so a single favourable fold cannot be harvested.
 # --------------------------------------------------------------------------

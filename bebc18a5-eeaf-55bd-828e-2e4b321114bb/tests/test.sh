@@ -26,7 +26,14 @@ emit_floor() {
     # whole rather than per file: patching only the absent file would leave a
     # stale float beside a floor score document, which is the same disagreement
     # in the other direction.
-    local status=$?
+    #
+    # The status arrives as an ARGUMENT rather than being read from $? here.
+    # When a signal interrupts bash while it waits on a child, $? at handler
+    # entry is the status of the last COMPLETED command, which is routinely 0.
+    # Reading it here would report a killed verifier as a clean exit 0 carrying
+    # "aborted", so the signal traps pass 128+signum explicitly and the exit
+    # status stays truthful for the runtime that reads it.
+    local status="$1"
     set +e
     trap - EXIT HUP INT TERM
     if [ -f "${REWARD_DIR}/reward.txt" ] && [ -f "${REWARD_DIR}/reward.json" ] \
@@ -45,7 +52,10 @@ emit_floor() {
     printf '0.000000\n' > "${REWARD_DIR}/reward.txt"
     exit "${status}"
 }
-trap emit_floor EXIT HUP INT TERM
+trap 'emit_floor "$?"' EXIT
+trap 'emit_floor 129' HUP
+trap 'emit_floor 130' INT
+trap 'emit_floor 143' TERM
 
 # Static surface first. It never scores; it reports.
 python3 -m pytest test_static.py -q --no-header || true

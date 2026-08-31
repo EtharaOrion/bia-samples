@@ -163,6 +163,9 @@ observed:
     them and never invokes the model.
   baseline_loss_per_byte: 1.512280061
   reference_loss_per_byte: 1.054387882
+  # The libm-ulp band, not a slack allowance: the floor measurement is a pure
+  # deterministic recomputation and reproduces to nine decimal places.
+  reference_loss_tolerance: 0.000001
   reward_at_reference: 1.0
   reward_reason_at_reference: graded-on-recomputed-validation-loss
   token_budget_tokens_in_force: 3072
@@ -343,6 +346,29 @@ checkers:
       more than the bound tolerance, or the bound readout policy is not raw-only
     fixture: report-an-ema-blended-loss
     substitution: none
+  - id: floor_anchor_matches_bound_reference
+    reduction: VALUE
+    zero_reason: floor-anchor-not-the-bound-reference
+    selector: check_floor_anchor_matches_bound_reference
+    fires_when: >-
+      the reference composition the harness measures in-run does not reproduce the
+      bound reference loss within the bound tolerance, the harness recorded no
+      in-run reference measurement, or the budget in force is not the budget that
+      anchor was established at
+    fixture: feed-the-anchor-a-reference-loss-the-environment-does-not-establish
+    substitution:
+      half: rejecting
+      carried_on: planted fixture
+      why: >-
+        The floor anchor is measured by the harness over a reference composition
+        materialized from solution/reference.py into a verifier-owned workspace,
+        so no submission has a handle on it and no submission can move it. The
+        rejecting half is therefore carried on a planted fixture in
+        tests/test_output.py, which drives the live selector over a reference loss
+        the environment does not establish and requires the bound zero reason. The
+        accepting half is carried on the same fixture pair at the established
+        value AND on the live reference run, whose in-run floor reproduces
+        reference_loss_per_byte exactly.
   - id: loss_sustained_across_bound_evals
     reduction: INVARIANT
     zero_reason: improvement-not-sustained
@@ -439,6 +465,12 @@ negative_controls:
   - id: neg-substituted-weights
     what: a weight file at the bound point whose digest is not what the harness recorded
     expected_reason: graded-loss-not-from-harness-weights
+  - id: neg-unestablished-floor-anchor
+    what: >-
+      an in-run floor measurement that does not reproduce the bound reference
+      loss, which is the anchor the reward span rests on and a value no
+      agent-visible byte carries
+    expected_reason: floor-anchor-not-the-bound-reference
 
 statement_ambiguity:
   claim: exactly one graded outcome

@@ -17,6 +17,7 @@ Generates:
     solution/rubrics.json
     solution/golden_trajectory.json
     solution/fixtures.json
+    tests/expected_pool.py
     tests/test_output.py
 """
 from __future__ import annotations
@@ -251,6 +252,39 @@ def gen_truth(source: dict) -> str:
     return "\n".join(lines) + "\n"
 
 
+def gen_expected_pool(source: dict) -> str:
+    pool = source["pool"]
+    rows = [
+        ("REFERENCE_SOURCE_DOCUMENTS", repr(int(pool["source_documents"]))),
+        ("REFERENCE_SOURCE_TOKENS", repr(int(pool["source_tokens"]))),
+        ("REFERENCE_SOURCE_DIGEST", repr(str(pool["source_digest"]))),
+        ("REFERENCE_CURATED_DOCUMENTS", repr(int(pool["curated_documents"]))),
+        ("REFERENCE_CURATED_TOKENS", repr(int(pool["curated_tokens"]))),
+        ("REFERENCE_CURATED_DIGEST", repr(str(pool["curated_digest"]))),
+        ("REFERENCE_STAGE_COUNTS", repr([int(n) for n in pool["stage_counts"]])),
+    ]
+    graded_by = {
+        str(row["name"]): str(row["graded_by"]) for row in source["discovery_values"]
+    }
+    lines = [
+        "#!/usr/bin/env python3",
+        '"""' + BANNER + " Source: " + SOURCE,
+        "",
+        "The bound reference curation, derived from the `pool` block of the derivation source.",
+        "These numbers are obtainable only by interacting with the live environment and appear",
+        "on no agent-visible byte, so they are carried here, inside the verifier-only tree, and",
+        "never as a literal in a hand-authored checker.",
+        "",
+        "Graded by:",
+    ]
+    lines.extend(
+        "    " + name + " -> " + graded_by[name] for name in sorted(graded_by)
+    )
+    lines.extend(['"""', "from __future__ import annotations", ""])
+    lines.extend(name + " = " + value for name, value in rows)
+    return "\n".join(lines) + "\n"
+
+
 def gen_test_output(source: dict) -> str:
     controls = source["negative_controls"]
     by_checker: dict = {}
@@ -259,12 +293,14 @@ def gen_test_output(source: dict) -> str:
 
     order = [
         "filter_claim_matches_observed_pool",
+        "curated_token_accounting_matches_observation",
         "curated_pool_consumed_by_trainer",
         "curation_precedes_first_feed",
         "token_budget_respected_as_fed",
         "eval_split_never_trained_on",
         "graded_weights_harness_owned",
         "graded_loss_unsmoothed",
+        "reference_arm_curation_is_bound",
         "improvement_sustained_across_points",
         "early_stop_does_not_establish_loss",
     ]
@@ -376,6 +412,7 @@ def main() -> int:
         BUNDLE / "solution" / "rubrics.json": gen_rubrics(source),
         BUNDLE / "solution" / "solve.sh": gen_solve(source),
         BUNDLE / "solution" / "TRUTH.md": gen_truth(source),
+        BUNDLE / "tests" / "expected_pool.py": gen_expected_pool(source),
         BUNDLE / "tests" / "test_output.py": gen_test_output(source),
     }
     for path, text in artifacts.items():

@@ -14,6 +14,7 @@ Generated here, and nowhere else:
     solution/TRUTH.md
     solution/rubrics.json
     tests/test_output.py
+    tests/budget_spec.json
 
 This module invokes no model, no network, no clock, no locale and no random
 source. It reads one YAML file and writes text. Running it twice over frozen
@@ -123,6 +124,11 @@ def override_files(ground: dict) -> dict:
             "handle": "eval",
             "set_record_batch_index": 999,
             "note": "an evaluation recorded at a batch the feed never reached",
+        },
+        "feed_budget": {
+            "handle": "feed",
+            "set": {"budget": 2 * int(ground["substrate"]["budget_tokens"])},
+            "note": "a feed ledger graded against a token budget this bundle never froze",
         },
     }
     return {"pool": pool, "readout": readout, "telemetry": telemetry}

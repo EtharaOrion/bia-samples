@@ -251,6 +251,12 @@ defect_fixtures:
     statement: "A frozen axis is observed to hold a value other than the one it was declared with."
     ops:
       - {op: observed_axis, key: batch_size, value: 262144}
+  - id: fx-schedule-points-moved
+    fires: evaluation_schedule_as_scheduled
+    expect_reason: evaluation-schedule-not-as-scheduled
+    statement: "The run evaluated on a point series that is not the one the verifier scheduled, so the sustain window a crossing had to survive was not the bound one."
+    ops:
+      - {op: schedule_points, points: [750, 800, 850, 900, 950, 1000]}
 
 negative_controls:
   - id: nc-no-op
@@ -298,6 +304,7 @@ compiled_tests:
   - {id: summary_agrees_with_durable_ledger, selector: check_summary_agrees_with_durable_ledger, zero_reason: post-compaction-claim-contradicts-ledger}
   - {id: compaction_dropped_entries_reconstructed, selector: check_compaction_dropped_entries_reconstructed, zero_reason: compaction-dropped-entry-not-reconstructed}
   - {id: frozen_axes_unmoved, selector: check_frozen_axes_unmoved, zero_reason: frozen-axis-moved}
+  - {id: evaluation_schedule_as_scheduled, selector: check_evaluation_schedule_as_scheduled, zero_reason: evaluation-schedule-not-as-scheduled}
 
 statement_ambiguity:
   method: >

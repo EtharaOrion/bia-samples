@@ -215,3 +215,41 @@ checkers:
     live_state_read: >-
       tests/runner.py telemetry corpus.fed_doc_ids intersected against corpus.held_out_doc_ids,
       with corpus.bound_held_out_split_id proving the split identity did not move
+
+  - id: control_arm_displaced
+    statement: >-
+      The loss level the run actually reached displaced the control arm the harness measured
+      inside that same run: the ladder's two ends are ordered so its span is positive, the
+      verifier-computed loss at the bound evaluation point is strictly below control_arm_loss,
+      and so is every verifier-recompute sample at a scheduled sustain point.
+    reduction: EFFECT
+    reached_by: tests/grade.py
+    selector: check_control_arm_displaced
+    compiled_test: "tests/test_output.py::test_control_arm_displaced"
+    zero_reason: control-arm-not-displaced
+    required: true
+    weight: 4
+    live_state_read: >-
+      tests/runner.py telemetry ladder.control_arm_loss and ladder.reference_floor_loss, the two
+      run-local ends the harness itself trained and measured, against the verifier-recompute
+      losses in evaluation.samples[] at evaluation.bound_eval_step and evaluation.sustain_points
+    why_this_checker_exists: >-
+      It is the checker whose outcome is a function of the loss LEVELS the run reached, so those
+      levels are load-bearing on the graded path rather than decorative. They appear on no
+      agent-visible byte: instruction.md names the evaluation points, the frozen axes and the
+      scoring formula and never a loss level, and the levels are established only by training and
+      reading the harness's own evaluation series back. A solver that never interacted with the
+      environment carries no sample series and no measured ladder ends, so this checker fails for
+      it with a named reason instead of passing vacuously.
+    gate_not_a_second_graded_quantity: >-
+      It can only zero a score and can never raise one. Where the graded loss fails to displace
+      the control arm the ladder clip already returns 0.0, so this gate moves no run's number;
+      what it moves is the ATTRIBUTION of that zero, which stops reading as an established
+      result and becomes control-arm-not-displaced. Exactly one graded quantity remains.
+    both_halves_on_frozen_fixtures: >-
+      The accepting half runs on the golden trajectory, whose sample series is
+      solution/grounding.yaml golden_trajectory.evaluation.samples. The rejecting half runs on
+      the planted fixture nc-control-arm-not-displaced, whose graded sample carries
+      solution/grounding.yaml undisplaced_demonstration.graded_loss, a level the environment
+      never established. Both literals are derived from grounding.yaml by solution/recompute.py
+      and neither is hand-written into a fixture.

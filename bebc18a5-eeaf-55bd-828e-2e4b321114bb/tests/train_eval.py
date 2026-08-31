@@ -53,11 +53,16 @@ EVAL_WINDOWS = 32
 #
 # The arithmetic that forces it, from environment/shape.json. A (batch, seq_len,
 # model_dim) fp32 tensor at 512 sequences is 512*1024*768*4 = 1.500 GiB, and qkv
-# materialises (batch, seq_len, 3*model_dim) = 4.500 GiB, which is the observed
-# failed allocation. A Block retains ~22 such units for backward, so 12 layers
-# need 12*22*1.500 = 396 GiB, plus ~24 GiB of logits and cross-entropy. 420 GiB
-# is live memory, not fragmentation, so no allocator setting reaches it. At 32
-# sequences per tile the same count gives 12*22*0.09375 + 1.5 = ~26 GiB.
+# materialises (batch, seq_len, 3*model_dim) = 4.500 GiB, which is exactly the
+# allocation the untiled loop died requesting at frozen_gpt.py line 35. That
+# memory is LIVE autograd graph, not fragmentation: the failing run reported only
+# 83.80 MiB reserved-but-unallocated, so no allocator flag reaches it.
+#
+# Measured on an H100 80GB at the true shape, not estimated: tile=32 peaks at
+# 21.15 GiB for the whole train step and 2.53 GiB for the graded evaluation.
+# Resident weights, grads and two AdamW moments account for 92.1M*4*4 = 1.37 GiB
+# of that, so the tile's graph is ~19.8 GiB and the untiled 512-sequence graph
+# would be 16x that, ~317 GiB, which is why one card could never hold it.
 MICRO_SEQUENCES = int(os.environ.get("BIA_MICRO_SEQUENCES", "32"))
 
 

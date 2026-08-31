@@ -147,6 +147,27 @@ ladder:
     Both ends are harness-owned telemetry from the same run, never numbers a submission
     reported and never a published anchor. No cross-run or cross-slot comparability is
     claimed. The family anchors stay absent.
+  displacement_gate:
+    checker: control_arm_displaced
+    reduction: EFFECT
+    reason: control-arm-not-displaced
+    rule: >-
+      The graded loss the verifier computed at the bound evaluation point, and every
+      verifier-recompute sample at a scheduled sustain point, must sit strictly below
+      control_arm_loss, the control arm the harness measured inside this same run, and the
+      ladder's two ends must be ordered so the span is positive.
+    why_it_is_a_gate_and_not_a_second_graded_quantity: >-
+      It can only zero a score and can never raise one. Where raw is already at or below
+      zero the clip returns 0.0 anyway, so this gate moves no run's number; what it moves is
+      the ATTRIBUTION of that zero, from the reason of an established result to
+      control-arm-not-displaced. Exactly one graded quantity remains.
+    why_it_is_load_bearing_for_the_discovery_values: >-
+      Its outcome is a function of the loss numbers the run actually reached, which exist
+      nowhere on the agent-visible surface: instruction.md names the evaluation points and
+      the frozen axes and never a loss level, and the levels themselves are established only
+      by training and reading back the harness's own evaluation series. A solver that never
+      interacted with the environment carries no sample series and no ladder ends, so this
+      checker fails for it with a named reason rather than passing vacuously.
 
 # ---------------------------------------------------------------------------
 # Frozen substrate, derived deterministically by recompute.py
@@ -334,6 +355,16 @@ partial_credit_demonstration:
     fixture with a graded loss of 3.25 lands strictly between 0 and 1. recompute.py
     computes the exact value and writes it into TRUTH.md.
 
+undisplaced_demonstration:
+  graded_loss: 3.4600
+  note: >-
+    The rejecting half of control_arm_displaced. A graded loss of 3.46 sits ABOVE the
+    control arm of 3.4120 the harness measured in the same run, so it displaced nothing. It
+    is a value the environment did not establish, and it is recorded here rather than
+    written as a literal into a fixture, so both halves of the checker are driven from this
+    file. The accepting half is driven by golden_trajectory.evaluation.samples, the loss
+    series the run actually reached.
+
 # ---------------------------------------------------------------------------
 # Negative controls the feasibility bundle must reject
 # ---------------------------------------------------------------------------
@@ -374,6 +405,11 @@ negative_controls:
   - id: nc-submission-selected-checkpoint
     mutates: the graded sample's weights digest stops matching the harness checkpoint
     expect_reason: weights-not-harness-owned
+  - id: nc-control-arm-not-displaced
+    mutates: >-
+      the graded sample comes back at undisplaced_demonstration.graded_loss, above the
+      run-local control arm the harness measured in the same run
+    expect_reason: control-arm-not-displaced
 
 # ---------------------------------------------------------------------------
 # Statement ambiguity

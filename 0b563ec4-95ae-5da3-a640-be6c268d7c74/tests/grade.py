@@ -52,6 +52,7 @@ SELECTORS = (
     "check_evaluated_weights_harness_owned",
     "check_token_budget_respected_as_fed",
     "check_eval_split_not_trained_on",
+    "check_control_arm_displaced",
 )
 
 

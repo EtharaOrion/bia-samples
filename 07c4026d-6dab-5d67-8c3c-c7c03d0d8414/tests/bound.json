@@ -8,5 +8,8 @@
   "session_ledger_contract": "ledger-v2",
   "readout_smoothing_policy": "raw-only-verifier-recomputed",
   "sustain_points": 3,
-  "reported_loss_tolerance": 0.005
+  "reported_loss_tolerance": 0.005,
+  "reference_loss_per_byte": 1.054387882,
+  "reference_loss_tolerance": 1e-06,
+  "reference_anchor_budget_tokens": 3072
 }

@@ -1,4 +1,4 @@
-"""The nine graded checkers for slot OER-10. Pure, deterministic, live state only.
+"""The ten graded checkers for slot OER-10. Pure, deterministic, live state only.
 
 Every checker here is a pure function of one `HarnessView`, which wraps the telemetry
 document the VERIFIER'S OWN PROCESS produced: tests/runner.py executes the submission in
@@ -34,7 +34,7 @@ HARNESS_OWNER = "harness"
 # good, which is exactly what must not be read as having established a loss.
 HARVEST_HALTS = ("favourable-eval", "early-stop", "target-reached", "loss-crossed")
 
-# The nine machine-readable zero reasons, one per checker.
+# The ten machine-readable zero reasons, one per checker.
 REASON_REPLAY = "recipe-matches-published-mixture"
 REASON_SCREEN_ORDER = "screen-ran-after-training"
 REASON_NOT_VERIFIER = "graded-loss-not-verifier-computed"
@@ -44,6 +44,7 @@ REASON_EARLY_STOP = "early-stop-not-a-result"
 REASON_WEIGHTS = "weights-not-harness-owned"
 REASON_BUDGET = "token-budget-overspent"
 REASON_LEAK = "eval-split-leaked"
+REASON_UNDISPLACED = "control-arm-not-displaced"
 
 
 @dataclass(frozen=True)
@@ -563,6 +564,82 @@ def check_token_budget_respected_as_fed(view: HarnessView) -> Outcome:
 
 
 # ---------------------------------------------------------------------------
+# 10. EFFECT. What the loss the run actually reached did to the control arm.
+# ---------------------------------------------------------------------------
+
+
+def check_control_arm_displaced(view: HarnessView) -> Outcome:
+    """The graded loss displaced the control arm the harness measured in this same run.
+
+    Both ends of the run-local ladder and the graded loss are harness-owned telemetry from
+    one run, and this is the checker whose outcome is a function of the loss LEVELS that run
+    reached. Those levels appear on no agent-visible surface: the statement names the
+    evaluation points and the frozen axes and never a loss, so the only way to carry a
+    passing series here is to have trained and read the harness's own evaluation back.
+
+    It is a gate and never a second graded quantity. Where the graded loss fails to displace
+    the control arm the ladder already clips to zero, so no run's number moves; what moves is
+    the attribution of that zero, which stops reading as an established result.
+    """
+    ident = "control_arm_displaced"
+    if not view.present:
+        return _fail(ident, REASON_UNDISPLACED, "no telemetry, so nothing displaced the control arm")
+    ladder = view.block("ladder")
+    control = _as_float(ladder.get("control_arm_loss"))
+    floor = _as_float(ladder.get("reference_floor_loss"))
+    if control is None or floor is None:
+        return _fail(
+            ident,
+            REASON_UNDISPLACED,
+            "the run-local ladder does not carry two measured ends to displace anything against",
+        )
+    if control <= floor:
+        return _fail(
+            ident,
+            REASON_UNDISPLACED,
+            "the control arm " + repr(control) + " does not sit above the reference floor "
+            + repr(floor) + ", so the ladder span is not positive",
+        )
+    graded = view.graded_loss()
+    if graded is None:
+        return _fail(ident, REASON_UNDISPLACED, "no unique graded loss to set against the control arm")
+    if graded >= control:
+        return _fail(
+            ident,
+            REASON_UNDISPLACED,
+            "the graded loss " + repr(graded) + " is at or above the control arm "
+            + repr(control) + ", so the frozen default mixture was not displaced",
+        )
+    evaluation = view.block("evaluation")
+    points = {value for value in (_as_int(item) for item in evaluation.get("sustain_points") or []) if value is not None}
+    for row in view.samples():
+        if str(row.get("source", "")) != VERIFIER_SOURCE:
+            continue
+        step = _as_int(row.get("step"))
+        if step is None or step not in points:
+            continue
+        value = _as_float(row.get("loss"))
+        if value is None:
+            return _fail(
+                ident,
+                REASON_UNDISPLACED,
+                "the sample at scheduled point " + str(step) + " carries no finite loss",
+            )
+        if value >= control:
+            return _fail(
+                ident,
+                REASON_UNDISPLACED,
+                "the sample at scheduled point " + str(step) + " is " + repr(value)
+                + ", at or above the control arm " + repr(control),
+            )
+    return _pass(
+        ident,
+        "graded loss " + repr(graded) + " sits below the control arm " + repr(control)
+        + " the harness measured in the same run, against a reference floor of " + repr(floor),
+    )
+
+
+# ---------------------------------------------------------------------------
 # The graded set, in manifest order.
 # ---------------------------------------------------------------------------
 
@@ -576,6 +653,7 @@ CHECKERS = (
     check_evaluated_weights_harness_owned,
     check_token_budget_respected_as_fed,
     check_eval_split_not_trained_on,
+    check_control_arm_displaced,
 )
 
 

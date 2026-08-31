@@ -184,6 +184,33 @@ def corpus_ledger(text: str, schema_version: int) -> dict:
     }
 
 
+def recipe_ledger(recipe: dict) -> dict:
+    """The harness's own transcription of the FROZEN evaluation schedule.
+
+    The verifier's process reads environment/frozen_recipe.json at run open and writes
+    what it found here, stamped with the harness writer. The evaluation point and the
+    sustain schedule are established in the environment and nowhere else: they are not
+    stated in instruction.md, and a checker that compares the run against this document
+    is comparing it against live environment state rather than against a literal.
+    """
+    evaluation = ((recipe or {}).get("frozen_axes") or {}).get("evaluation") or {}
+    bound_step = evaluation.get("bound_eval_step")
+    points = [int(step) for step in evaluation.get("sustain_points") or []]
+    band = evaluation.get("sustain_band")
+    return {
+        "writer": HARNESS_WRITER,
+        "source": "environment/frozen_recipe.json",
+        "recipe_digest": digest_text(json.dumps(recipe, sort_keys=True)),
+        "bound_eval_step": int(bound_step) if isinstance(bound_step, int) else bound_step,
+        "sustain_points": points,
+        "sustain_band": float(band) if isinstance(band, (int, float)) else band,
+        "smoothing_on_graded_path": evaluation.get("smoothing_on_graded_path"),
+        "schedule_digest": digest_text(
+            "|".join([str(bound_step)] + [str(step) for step in points])
+        ),
+    }
+
+
 def admitted_ordinals(rows: list, policy: str, eval_ordinals: list) -> list:
     """Which records reach the training feed under a declared policy."""
     admits_partial = POLICY_ADMITS.get(policy, False)

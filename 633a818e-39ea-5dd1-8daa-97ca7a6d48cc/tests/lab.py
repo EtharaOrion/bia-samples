@@ -85,6 +85,19 @@ ZERO_STATE = {"a": 0, "b": 0, "c": 0}
 # division of those thirty-nine attempts between b and c reaches it.
 REFERENCE_STATE = {"a": 500, "b": 1950, "c": 0}
 
+# The coordinates the reference session is actually carrying when its fiftieth
+# attempt closes: ten attempts taking a to its plateau, one confirming probe past
+# it, and the remaining thirty-nine spread over directions that still pay. It is
+# not the same triple as REFERENCE_STATE above, which is the canonical
+# split-invariant spelling of the same operating point, and that is exactly what
+# reference_operating_point_matches_final_state grades.
+#
+# This is NOT a second derivation source. solution/recompute.py asserts it equals
+# reference_policy.expected_final_state in solution/grounding.yaml on every run,
+# alongside every other constant in this file, so a drift between the two is a
+# hard failure of the generator rather than a silent disagreement.
+REFERENCE_FINAL_STATE = {"a": 550, "b": 250, "c": 1700}
+
 
 def zero_state():
     return dict(ZERO_STATE)

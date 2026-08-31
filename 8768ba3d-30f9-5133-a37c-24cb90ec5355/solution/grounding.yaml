@@ -316,6 +316,37 @@ fixtures:
     expected_reward: 0.0
     expected_reason: evaluation-precedes-its-feed
     fires: feed_precedes_every_graded_evaluation
+  - id: budget_not_frozen
+    kind: planted-telemetry
+    substitution: true
+    role: "A feed ledger graded against a token budget this bundle never froze. tests/runner.py writes that field from the corpus it actually fed and the submission never touches it, so the isolation boundary holds and the rejecting half is planted on the handle."
+    telemetry_override: feed_budget
+    expected_reward: 0.0
+    expected_reason: frozen-token-budget-not-the-graded-budget
+    fires: frozen_token_budget_is_the_graded_budget
+
+graded_budget_binding:
+  value: substrate.budget_tokens
+  established_by: >-
+    environment/corpus_spec.json carries budget.budget_tokens and budget.total_tokens, and
+    environment/harness.py refuses to run when the pair disagrees. A solver learns the number by
+    reading the built environment or by feeding the harness, never from instruction.md, which
+    names corpus_spec.json as the carrier and states no figure.
+  read_back_from: >-
+    /logs/harness/feed.json budget and tokens_fed, written by tests/runner.py inside the
+    verifier's own process from the corpus it fed.
+  graded_by: frozen_token_budget_is_the_graded_budget
+  frozen_side_carrier: tests/budget_spec.json
+  why_it_is_load_bearing: >-
+    Before this row the graded path only ever compared tokens_fed against whatever budget the
+    pool bytes happened to declare, so the value was self-referential and the environment was not
+    load-bearing for it. tests/budget_spec.json is generated here from substrate.budget_tokens
+    and is verifier-side, so the gate now depends on the number itself: a feed ledger graded
+    against any other budget scores zero, and the bound evaluation point is budget exhaustion
+    measured against the frozen figure rather than against a drifting one.
+  absent_from_the_agent_surface: >-
+    The figure is nowhere in instruction.md and nowhere in tests/ except this frozen carrier and
+    the checker that reads it, both of which are verifier-only by construction.
 
 plan_groups:
   reference:

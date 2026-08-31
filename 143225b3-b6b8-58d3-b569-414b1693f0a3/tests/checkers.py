@@ -68,6 +68,8 @@ ZERO_POLICY_DECLARED_AFTER_CLASSIFICATION = "ambiguity-policy-declared-after-cla
 ZERO_TOKEN_BUDGET_OVERSPENT = "token-budget-overspent"
 ZERO_EVALUATION_SPLIT_LEAKED = "evaluation-split-leaked-into-training"
 ZERO_FROZEN_AXIS_MUTATED = "frozen-axis-mutated"
+ZERO_GRADED_READOUT_OFF_BOUND_EVAL_STEP = "graded-readout-off-the-bound-evaluation-step"
+ZERO_SUSTAIN_SCHEDULE_NOT_FROZEN = "sustain-schedule-not-the-frozen-schedule"
 
 EPSILON = 1e-9
 
@@ -513,6 +515,105 @@ def check_frozen_axes_unmoved_across_run(handles: Handles) -> Verdict:
         return Verdict(False, ZERO_FROZEN_AXIS_MUTATED,
                        "these frozen axes moved across the run: " + ", ".join(moved))
     return _passed("all " + str(len(FROZEN_AXES)) + " frozen axes are byte-identical across the run")
+
+
+# --------------------------------------------------------------------------------
+# The evaluation schedule, read back from the environment the harness has in force.
+#
+# The bound evaluation point and the sustain schedule are established in
+# environment/frozen_recipe.json under frozen_axes.evaluation, and they are stated
+# NOWHERE on the agent-visible statement surface: instruction.md names the path and
+# never the numbers. The harness transcribes what it read there into its own
+# recipe_ledger document at run open, and the two checkers below grade the run against
+# that transcription. Neither one carries a literal: every number they compare came out
+# of live environment state through a harness-written document.
+# --------------------------------------------------------------------------------
+
+
+def check_graded_readout_at_frozen_bound_eval_step(handles: Handles) -> Verdict:
+    """VALUE. The graded readout is taken at the frozen bound evaluation point.
+
+    tests/grade.py reads the graded loss out of the eval ledger row whose step is the
+    run's bound evaluation step, so a run that moved that step reads a different number
+    off a different point in training and calls it the result. The step in force is the
+    one the harness read out of the frozen recipe, and nothing else is accepted.
+    """
+    recipe = harness_document(handles, "recipe_ledger")
+    run = harness_document(handles, "run")
+    ledger = harness_document(handles, "eval_ledger")
+    if recipe is None or run is None or ledger is None:
+        return Verdict(False, ZERO_GRADED_READOUT_OFF_BOUND_EVAL_STEP,
+                       "the harness recipe ledger, run record and eval ledger are all required")
+    frozen_step = recipe.get("bound_eval_step")
+    if not isinstance(frozen_step, int):
+        return Verdict(False, ZERO_GRADED_READOUT_OFF_BOUND_EVAL_STEP,
+                       "the frozen recipe binds no integer bound evaluation step, it binds "
+                       + repr(frozen_step))
+    if run.get("bound_eval_step") != frozen_step:
+        return Verdict(False, ZERO_GRADED_READOUT_OFF_BOUND_EVAL_STEP,
+                       "the graded readout was taken at step " + repr(run.get("bound_eval_step"))
+                       + " while the frozen recipe binds the bound evaluation step at "
+                       + repr(frozen_step))
+    graded = _eval_record(ledger, frozen_step)
+    if graded is None:
+        return Verdict(False, ZERO_GRADED_READOUT_OFF_BOUND_EVAL_STEP,
+                       "no evaluation record exists at the frozen bound evaluation step "
+                       + str(frozen_step))
+    if not isinstance(graded.get("loss"), (int, float)):
+        return Verdict(False, ZERO_GRADED_READOUT_OFF_BOUND_EVAL_STEP,
+                       "the record at the frozen bound evaluation step carries no numeric loss")
+    return _passed("the graded readout was taken at the frozen bound evaluation step "
+                   + str(frozen_step))
+
+
+def check_sustain_schedule_matches_frozen_recipe(handles: Handles) -> Verdict:
+    """ORDERING. The sustain schedule is the frozen one, in the frozen order.
+
+    A level is established by holding it at the points the environment schedules, in
+    the order it schedules them and after the point the loss was read at. A run that
+    drops a point, reorders one, or substitutes a schedule of its own has been sustained
+    over something other than the frozen schedule, and no level it reports is comparable
+    with one that was.
+    """
+    recipe = harness_document(handles, "recipe_ledger")
+    run = harness_document(handles, "run")
+    ledger = harness_document(handles, "eval_ledger")
+    if recipe is None or run is None or ledger is None:
+        return Verdict(False, ZERO_SUSTAIN_SCHEDULE_NOT_FROZEN,
+                       "the harness recipe ledger, run record and eval ledger are all required")
+    frozen_points = recipe.get("sustain_points")
+    if not isinstance(frozen_points, list) or not frozen_points:
+        return Verdict(False, ZERO_SUSTAIN_SCHEDULE_NOT_FROZEN,
+                       "the frozen recipe schedules no sustain points, so no level can be held")
+    if not all(isinstance(step, int) for step in frozen_points):
+        return Verdict(False, ZERO_SUSTAIN_SCHEDULE_NOT_FROZEN,
+                       "the frozen sustain schedule is not a list of integer steps")
+    run_points = run.get("sustain_points")
+    if run_points != frozen_points:
+        return Verdict(False, ZERO_SUSTAIN_SCHEDULE_NOT_FROZEN,
+                       "the run was sustained over " + repr(run_points)
+                       + " while the frozen recipe schedules " + repr(frozen_points))
+    previous = recipe.get("bound_eval_step")
+    if not isinstance(previous, int):
+        return Verdict(False, ZERO_SUSTAIN_SCHEDULE_NOT_FROZEN,
+                       "the frozen recipe binds no integer bound evaluation step to order against")
+    for step in frozen_points:
+        if step <= previous:
+            return Verdict(False, ZERO_SUSTAIN_SCHEDULE_NOT_FROZEN,
+                           "sustain point " + str(step) + " does not follow " + str(previous)
+                           + ", so the schedule is not strictly after the graded readout")
+        if _eval_record(ledger, step) is None:
+            return Verdict(False, ZERO_SUSTAIN_SCHEDULE_NOT_FROZEN,
+                           "no evaluation record at frozen sustain point " + str(step))
+        previous = step
+    halted = run.get("halted_at_step")
+    if not isinstance(halted, int) or halted < previous:
+        return Verdict(False, ZERO_SUSTAIN_SCHEDULE_NOT_FROZEN,
+                       "the run halted at " + repr(halted)
+                       + ", before the last frozen sustain point " + str(previous))
+    return _passed("the run was sustained over the frozen schedule "
+                   + repr(frozen_points) + " in order, after the bound evaluation step "
+                   + str(recipe.get("bound_eval_step")))
 
 
 @dataclass(frozen=True)

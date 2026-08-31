@@ -21,6 +21,13 @@ The handles, named concretely, are:
   loop/summaries/iter-<n>.json          the exact bytes handed to the agent
   loop/ledger.jsonl                     the captured durable agent-written ledger
   frozen_axes.json                      declared against instrumented-observed axes
+
+One expectation is carried on this side of the boundary rather than read out of
+the run: tests/schedule_expected.json, the verifier's frozen copy of the
+evaluation frame it schedules, generated from solution/grounding.yaml by
+solution/recompute.py. It is verifier-only bytes and appears nowhere on the agent
+surface, so the schedule it names can be met only by a run that actually
+evaluated on it.
 """
 
 import hashlib
@@ -37,6 +44,12 @@ CLAIMS = ("tried", "refuted", "untried", "constraint-absent")
 # The entry id the loop writes when it folds older entries away. It names an
 # aggregate rather than an approach, so it is never counted as a surviving entry.
 FOLD_ID = "digest"
+
+# The verifier's frozen copy of the evaluation frame it schedules. Generated from
+# solution/grounding.yaml by solution/recompute.py and never hand-authored here.
+# Resolved beside this module so a grade driven over a fixture root reads the same
+# expectation the runtime does.
+SCHEDULE_EXPECTATION = Path(__file__).resolve().parent / "schedule_expected.json"
 
 
 @dataclass(frozen=True)
@@ -80,6 +93,19 @@ def _seed_dirs(root: Path) -> List[Path]:
     if not base.is_dir():
         return []
     return sorted(item for item in base.glob("seed-*") if item.is_dir())
+
+
+def _int_series(raw: Any) -> List[int]:
+    """A series of step numbers as ints, order preserved, unreadable entries dropped."""
+    if not isinstance(raw, list):
+        return []
+    rows = []
+    for item in raw:
+        try:
+            rows.append(int(item))
+        except (TypeError, ValueError):
+            continue
+    return rows
 
 
 def _points(record: Dict[str, Any]) -> List[Tuple[int, float, str]]:
@@ -593,6 +619,73 @@ def check_frozen_axes_unmoved(root: Path) -> Result:
     return _passed("every declared frozen axis is observed to hold its declared value")
 
 
+def check_evaluation_schedule_as_scheduled(root: Path) -> Result:
+    """VALUE. The run evaluated on the point series the verifier itself scheduled.
+
+    Every other checker here reads its frame out of the run's own
+    eval/schedule.json: the target loss, the sustain window, the minimum seed
+    count and the evaluation points. Taking that file on trust makes the frame
+    whatever the run says it is, and a shortened point series shrinks the window
+    a crossing has to survive, which is the cheapest way to buy a step count
+    without earning it. So the frame is compared against the verifier's own
+    frozen copy rather than believed.
+
+    That copy is verifier-only and is on no agent-visible surface, so a run that
+    never evaluated on the harness's schedule cannot produce a schedule matching
+    it. The detail line reports digests rather than the series, because the score
+    document travels further than this module does.
+    """
+    reason = "evaluation-schedule-not-as-scheduled"
+    expected = _read_json(SCHEDULE_EXPECTATION)
+    if not isinstance(expected, dict):
+        return _failed(reason, "the verifier carries no frozen evaluation schedule to grade against")
+    wanted = _int_series(expected.get("points"))
+    if not wanted:
+        return _failed(reason, "the frozen evaluation schedule names no point")
+    schedule = _schedule(root)
+    if schedule is None:
+        return _failed(reason, "the run produced no evaluation schedule")
+    observed = _int_series(schedule.get("points"))
+    if observed != wanted:
+        return _failed(
+            reason,
+            "the run evaluated at " + str(len(observed)) + " point(s) digesting to "
+            + _digest(observed) + " and the verifier scheduled " + str(len(wanted))
+            + " point(s) digesting to " + _digest(wanted),
+        )
+    if str(schedule.get("scheduled_by")) != str(expected.get("scheduled_by")):
+        return _failed(
+            reason,
+            "the evaluation schedule was scheduled by " + repr(schedule.get("scheduled_by"))
+            + "; only the verifier's own schedule is evidence",
+        )
+    for key in ("sustain_points_required", "min_seeds"):
+        try:
+            live = int(schedule.get(key))
+        except (TypeError, ValueError):
+            return _failed(reason, "the evaluation schedule binds no readable " + key)
+        if live != int(expected.get(key)):
+            return _failed(
+                reason,
+                "the evaluation schedule binds " + key + " " + str(live)
+                + " and the verifier bound a different one",
+            )
+    try:
+        live_target = float(schedule.get("target_loss"))
+    except (TypeError, ValueError):
+        return _failed(reason, "the evaluation schedule binds no readable target loss")
+    if live_target != float(expected.get("target_loss")):
+        return _failed(
+            reason,
+            "the evaluation schedule binds target loss " + repr(live_target)
+            + " and the verifier bound a different one",
+        )
+    return _passed(
+        "the run evaluated on the verifier's own scheduled series of " + str(len(wanted))
+        + " point(s) under the bound target loss, sustain window and seed minimum"
+    )
+
+
 # The declared order. tests/grade.py walks this and tests/checkers.yaml declares
 # the same identities, reductions and zero reasons over it.
 SELECTORS = (
@@ -605,6 +698,7 @@ SELECTORS = (
     ("summary_agrees_with_durable_ledger", check_summary_agrees_with_durable_ledger),
     ("compaction_dropped_entries_reconstructed", check_compaction_dropped_entries_reconstructed),
     ("frozen_axes_unmoved", check_frozen_axes_unmoved),
+    ("evaluation_schedule_as_scheduled", check_evaluation_schedule_as_scheduled),
 )
 
 

@@ -25,6 +25,7 @@ generated_artifacts:
   - solution/rubrics.json
   - solution/golden_trajectory.json
   - solution/fixtures.json
+  - tests/expected_pool.py
   - tests/test_output.py
 
 banner: "GENERATED SECTION. DO NOT HAND-EDIT."
@@ -109,6 +110,7 @@ pool:
     A predicate naming the documented field resolves nothing and matches nothing, and the
     runner's inapplicable-stage guard restores the pool while leaving the claim in place.
   source_documents: 4096
+  source_tokens: 1700736
   source_digest: "sha256:e6906c89673963d9bc1dfa408364782e482e9e8ab5cb3d8a9c5e765c0f1bdf4e"
   curated_documents: 1959
   curated_digest: "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9"
@@ -116,6 +118,33 @@ pool:
   holdout_documents: 455
   stage_counts: [4096, 3072, 2939, 2613, 1959]
   match_count: 2137
+
+# The discovery values. Each one is obtainable ONLY by interacting with the live environment:
+# running environment/curate.py over environment/pool/source_register.jsonl with a chain that
+# names the field the register actually carries, then reading the harness's own observation.
+# Neither number appears anywhere on the agent-visible surface. Each row below names the
+# GRADED checker whose outcome depends on the value, so a decorative discovery value is
+# visible here as an empty `graded_by`.
+discovery_values:
+  - name: curated_documents
+    value_from: pool.curated_documents
+    established_by: >-
+      environment/curate.py applied to environment/pool/source_register.jsonl under
+      reference_chain reduces 4096 documents through 3072, 2939, 2613 to 1959. The harness
+      records its own count of the reference arm at /logs/harness/reference_arm.json.
+    read_back_from: "/logs/harness/reference_arm.json curated_documents, stage_counts, curated_digest"
+    graded_by: reference_arm_curation_is_bound
+    rejecting_controls: [nc-reference-arm-document-count-wrong, nc-reference-arm-digest-drift, nc-reference-arm-loss-not-the-arm]
+  - name: curated_tokens
+    value_from: pool.curated_tokens
+    established_by: >-
+      environment/curate.py sums the register's own `tokens` field over the surviving rows.
+      The reference chain's 1959 surviving documents carry 815884 tokens against the source
+      pool's 1700736. curate.py writes the submission's own count into
+      work/curation_report.json, which the harness captures verbatim as the claim.
+    read_back_from: "/logs/harness/reference_arm.json curated_tokens, against /logs/harness/pool_observed.json and /logs/harness/curation_claim.json"
+    graded_by: curated_token_accounting_matches_observation
+    rejecting_controls: [nc-reference-token-total-wrong, nc-claimed-token-accounting-diverges, nc-token-total-not-reduced]
 
 reference_chain:
   - {name: drop-junk-and-low, field: "quality.bucket", op: drop_in, values: [junk, low]}
@@ -130,17 +159,28 @@ fixture_base:
     observed_at_seq: 3
   pool:
     source_documents: 4096
+    source_tokens: 1700736
     source_digest: "sha256:e6906c89673963d9bc1dfa408364782e482e9e8ab5cb3d8a9c5e765c0f1bdf4e"
     curated_documents: 1959
+    curated_tokens: 815884
     curated_digest: "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9"
     observed_at_seq: 4
+  reference:
+    arm: "harness"
+    curated_documents: 1959
+    curated_tokens: 815884
+    curated_digest: "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9"
+    stage_counts: [4096, 3072, 2939, 2613, 1959]
+    loss: 3.05
   claim:
     status: "ok"
     exit_status: 0
     pool_state: "curated"
     source_documents: 4096
+    source_tokens: 1700736
     source_digest: "sha256:e6906c89673963d9bc1dfa408364782e482e9e8ab5cb3d8a9c5e765c0f1bdf4e"
     curated_documents: 1959
+    curated_tokens: 815884
     curated_digest: "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9"
     match_count: 2137
     stages: 4
@@ -226,6 +266,43 @@ negative_controls:
     expected_reason: silent-filter-no-op
     patch:
       - {path: "curation.verdict", value: "unverified"}
+  - id: nc-reference-arm-document-count-wrong
+    description: "the harness reference arm reports a document count that is not the bound curation's 1959"
+    checker: reference_arm_curation_is_bound
+    expected_reason: reference-arm-not-the-bound-curation
+    patch:
+      - {path: "reference.curated_documents", value: 2613}
+  - id: nc-reference-arm-digest-drift
+    description: "the reference arm's pool digest is the source pool, so the arm never curated at all"
+    checker: reference_arm_curation_is_bound
+    expected_reason: reference-arm-not-the-bound-curation
+    patch:
+      - {path: "reference.curated_digest", value: "sha256:e6906c89673963d9bc1dfa408364782e482e9e8ab5cb3d8a9c5e765c0f1bdf4e"}
+  - id: nc-reference-arm-loss-not-the-arm
+    description: "the normalisation denominator is not the loss the reference arm actually reached"
+    checker: reference_arm_curation_is_bound
+    expected_reason: reference-arm-not-the-bound-curation
+    patch:
+      - {path: "reference.loss", value: 3.42}
+  - id: nc-reference-token-total-wrong
+    description: "the reference arm's token total is off by one from the bound 815884, so the denominator was measured over a different corpus"
+    checker: curated_token_accounting_matches_observation
+    expected_reason: curated-token-accounting-diverges
+    patch:
+      - {path: "reference.curated_tokens", value: 815885}
+  - id: nc-claimed-token-accounting-diverges
+    description: "the report claims the source pool's token total while the harness observed a reduced one"
+    checker: curated_token_accounting_matches_observation
+    expected_reason: curated-token-accounting-diverges
+    patch:
+      - {path: "claim.curated_tokens", value: 1700736}
+  - id: nc-token-total-not-reduced
+    description: "the harness observed a curated pool carrying every token the source pool carried"
+    checker: curated_token_accounting_matches_observation
+    expected_reason: curated-token-accounting-diverges
+    patch:
+      - {path: "pool.curated_tokens", value: 1700736}
+      - {path: "claim.curated_tokens", value: 1700736}
   - id: nc-pool-not-consumed
     description: "a curated pool was produced and the trainer consumed the source pool anyway"
     checker: curated_pool_consumed_by_trainer

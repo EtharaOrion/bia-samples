@@ -14,6 +14,7 @@ Generates:
     solution/TRUTH.md
     solution/rubrics.json
     tests/test_output.py               the compiled tests checkers.yaml names
+    tests/schedule_expected.json       the verifier's frozen copy of its own schedule
 
 No model, no network, no clock, no locale, no random source. The only bytes read
 are solution/grounding.yaml and the one file grounding.yaml names under
@@ -275,6 +276,8 @@ def apply_op(ground, files, op):
             if '"reconstructed_from_ledger":true' not in row.replace(" ", "")
         ]
         files["loop/ledger.jsonl"] = "".join(row + "\n" for row in kept)
+    elif kind == "schedule_points":
+        files["eval/schedule.json"]["points"] = [int(item) for item in op["points"]]
     elif kind == "observed_axis":
         files["frozen_axes.json"]["observed"][str(op["key"])] = op["value"]
     else:
@@ -477,6 +480,33 @@ def truth_md(ground):
     return "\n".join(lines)
 
 
+def schedule_expectation(ground):
+    """The verifier's own frozen copy of the evaluation frame it schedules.
+
+    Every checker on the graded path reads its frame — the target loss, the
+    sustain window, the minimum seed count and the point series — out of the
+    run's own eval/schedule.json. Trusting that file makes the frame whatever the
+    run says it is, and a shortened point series shrinks the window a crossing
+    has to survive. So the frame is graded against this copy, which is derived
+    from grounding.yaml `schedule` and from nothing else.
+
+    It lands in tests/ because tests/ is verifier-only: it is not on the agent
+    surface, is not in instruction.md, and is not in environment/. The point
+    series is therefore obtainable only by reading the live schedule the harness
+    wrote, which is exactly what makes it a discovery value.
+    """
+    schedule = ground["schedule"]
+    return {
+        "generated": BANNER + " Source: " + SOURCE,
+        "read_by": "tests/checkers.py::check_evaluation_schedule_as_scheduled",
+        "points": [int(item) for item in schedule["points"]],
+        "target_loss": float(schedule["target_loss"]),
+        "sustain_points_required": int(schedule["sustain_points_required"]),
+        "min_seeds": int(schedule["min_seeds"]),
+        "scheduled_by": str(schedule["scheduled_by"]),
+    }
+
+
 def test_output_py(ground):
     header = [
         "# " + BANNER,
@@ -523,6 +553,10 @@ def artifacts(ground):
         "solution/solve.sh": solve_sh(ground),
         "solution/TRUTH.md": truth_md(ground),
         "tests/test_output.py": test_output_py(ground),
+        "tests/schedule_expected.json": json.dumps(
+            schedule_expectation(ground), sort_keys=True, indent=1
+        )
+        + "\n",
         "solution/fixtures/fx-accepting.json": json.dumps(
             accepting_fixture(ground), sort_keys=True, indent=1
         )
