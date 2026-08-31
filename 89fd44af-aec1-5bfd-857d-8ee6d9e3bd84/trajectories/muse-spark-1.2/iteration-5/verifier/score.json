@@ -1,0 +1,16 @@
+{
+ "composite": 0.291667,
+ "graded_score": 0.2916666666666667,
+ "graded_step": 3325,
+ "loss_at_graded_step": 3.276235,
+ "loss_per_seed_seed0": 3.27541,
+ "loss_per_seed_seed1": 3.27706,
+ "loss_steps": 3325,
+ "pytests_executed": 0,
+ "pytests_failed": 0,
+ "pytests_passed": 0,
+ "pytests_skipped": 0,
+ "reason_code": 0,
+ "rubric_gate": -1,
+ "score": 0.2916666666666667
+}

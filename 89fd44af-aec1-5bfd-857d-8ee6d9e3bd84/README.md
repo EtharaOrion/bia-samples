@@ -1,6 +1,6 @@
 # `89fd44af-aec1-5bfd-857d-8ee6d9e3bd84` - `track3_novel_optimizer`
 
-One model cohort (`claude-opus-5`, run by the `claude-code` agent), one sequential attempt series, 5 recorded rollouts packaged.
+Two model cohorts - `claude-opus-5` run by the `claude-code` agent, and `muse-spark-1.2` run by the `muse` agent - one sequential attempt series each, 5 recorded rollouts packaged per cohort.
 
 The task is to derive an optimizer that reaches validation loss 3.28 on the frozen track3 benchmark in the fewest optimizer steps, on one H100. Only the optimizer, its schedule, its internal state and its hyperparameters may change: the dataset, batch size, architecture and weight initialisation are frozen and harness owned. The Muon reference reaches the target at step 3500 and scores 0.0, full score requires step 2900 or earlier, and every step ahead of 3500 is worth 1/600 of the score. The objective is bounded continuous, so it rewards every step gained rather than a target to hit and stop at.
 
@@ -18,19 +18,20 @@ The runner, the frozen training script and the 21 FineWeb10B shards live in the 
 
 ## Session result
 
-| | `claude-opus-5` |
-|---|---|
-| rollouts packaged | **5** (declared cap 12) |
-| rollouts graded | 4 |
-| best score | **0.5** (iterations 3 and 4) |
-| best graded_step | **3200** (reference 3500, full score at or below 2900) |
-| score per iteration | 0.0 / 0.375 / 0.5 / 0.5 / 0.375 |
-| graded_step per iteration | not graded / 3275 / 3200 / 3200 / 3275 |
-| seeds per graded run | 2 |
-| rubrics passed | 9 of 9 in every graded run |
-| wall clock per iteration | 1.62 / 7.13 / 5.99 / 6.93 / 7.44 h (cap 8 h) |
-| session wall clock | 2026-08-12 18:57:00Z → 2026-08-15 13:09:01Z |
-| total tokens / cost | 45,710,421 in / 596,041 out / $135.97 |
+| | `claude-opus-5` | `muse-spark-1.2` |
+|---|---|---|
+| rollouts packaged | **5** (declared cap 12) | **5** (declared cap 12) |
+| rollouts graded | 4 | 5 |
+| best score | **0.5** (iterations 3 and 4) | **0.292** (iterations 4 and 5) |
+| best graded_step | **3200** (reference 3500, full score at or below 2900) | **3325** |
+| score per iteration | 0.0 / 0.375 / 0.5 / 0.5 / 0.375 | 0.25 / 0.083 / 0.25 / 0.292 / 0.292 |
+| graded_step per iteration | not graded / 3275 / 3200 / 3200 / 3275 | 3350 / 3450 / 3350 / 3325 / 3325 |
+| seeds per graded run | 2 | 2 |
+| rubrics passed | 9 of 9 in every graded run | judge not run for this cohort |
+| task_checksum across the series | moves (see `task.toml`) | `f977a180` in all 5 |
+| wall clock per iteration | 1.62 / 7.13 / 5.99 / 6.93 / 7.44 h (cap 8 h) | 3.39 / 3.31 / 2.97 / 2.81 / 6.17 h (cap 8 h) |
+| session wall clock | 2026-08-12 18:57:00Z → 2026-08-15 13:09:01Z | 2026-08-25 12:34:08Z → 2026-08-26 19:06:43Z |
+| total tokens / cost | 45,710,421 in / 596,041 out / $135.97 | 66,233,848 in / 1,251,646 out / $58.31 |
 
 Iteration 3 produced the first submission to reach 0.5, and iteration 4 matched it from a different rule. It is Muon with two behavioural changes over the reference: the orthogonalised update is rescaled per output neuron in the style of NorMuon, a running second moment per output row renormalised back to the Frobenius norm, so the direction of the update changes and its size does not; and the submission declares `owns_schedule` and lands its cooldown early, holding, then decaying linearly to a floor at 80% of the horizon before trailing to zero, which places the benefit where the crossing lives rather than at step 3500. Both effects were measured on a 1750 step miniature of the harness before the graded run was committed. Iteration 1 was abandoned before producing a graded result; iterations 2 and 5 crossed at 3275.
 
@@ -51,8 +52,10 @@ Iteration 3 produced the first submission to reach 0.5, and iteration 4 matched 
 ```
 README.md                   this file
 inspector.html              browsable view: task contract, per-iteration verdicts, the
-                            agent-visible files, and every iteration's account opened up
-plots/                      score per iteration and score per cumulative tokens, as SVG
+                            agent-visible files, and every iteration's account opened up.
+                            Built over the claude-opus-5 cohort
+plots/                      score per iteration and score per cumulative tokens, as SVG,
+                            for the claude-opus-5 cohort
 instruction.md              the objective handed to the agent
 task.toml                   manifest: budget, image digest, GPU, network mode
 environment/
@@ -69,10 +72,12 @@ tests/                      the grading contract
   checkers/, test_output.py, emit_verifier_artifacts.py
 solution/
   TRUTH.md                  PRIVATE - the golden solve path (see caveats)
-trajectories/claude-opus-5/iteration-N/
+trajectories/<cohort>/iteration-N/     cohorts: claude-opus-5, muse-spark-1.2
   config.json               the trial as configured (agent, model, endpoints)
   result.json               the trial as it ended: task_checksum, tokens, timestamps
-  rubric_verdicts.json      the rubric review: overall pass, per-rubric verdicts
+  rubric_verdicts.json      the rubric review: overall pass, per-rubric verdicts.
+                            claude-opus-5 only; the judge was not run over the
+                            muse-spark-1.2 cohort, so that cohort omits this file
   agent/
     history.md              the record of prior iterations this one was handed
     trajectory.json         the structured agent trajectory
