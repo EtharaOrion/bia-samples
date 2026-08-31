@@ -1,0 +1,48 @@
+{
+  "schema": "oer08.heldout/v1",
+  "note": "The frozen evaluation split. Verifier side only. It is never copied onto the agent surface: Harbor assembles that surface from task.toml, instruction.md and environment/ alone, so tests/ is absent from it by construction rather than by a filter.",
+  "vocab_size": 12,
+  "doc_tokens": 100,
+  "profiles": {
+    "A": [30, 25, 20, 15, 2, 2, 1, 1, 1, 1, 1, 1],
+    "B": [2, 2, 1, 1, 30, 25, 20, 15, 1, 1, 1, 1],
+    "C": [1, 1, 1, 1, 2, 2, 1, 1, 30, 25, 20, 15]
+  },
+  "docs": [
+    {"id": "heldout:0", "profile": "A"},
+    {"id": "heldout:1", "profile": "A"},
+    {"id": "heldout:2", "profile": "A"},
+    {"id": "heldout:3", "profile": "A"},
+    {"id": "heldout:4", "profile": "A"},
+    {"id": "heldout:5", "profile": "A"},
+    {"id": "heldout:6", "profile": "A"},
+    {"id": "heldout:7", "profile": "A"},
+    {"id": "heldout:8", "profile": "A"},
+    {"id": "heldout:9", "profile": "A"},
+    {"id": "heldout:10", "profile": "B"},
+    {"id": "heldout:11", "profile": "B"},
+    {"id": "heldout:12", "profile": "B"},
+    {"id": "heldout:13", "profile": "B"},
+    {"id": "heldout:14", "profile": "B"},
+    {"id": "heldout:15", "profile": "B"},
+    {"id": "heldout:16", "profile": "B"},
+    {"id": "heldout:17", "profile": "B"},
+    {"id": "heldout:18", "profile": "B"},
+    {"id": "heldout:19", "profile": "B"},
+    {"id": "heldout:20", "profile": "C"},
+    {"id": "heldout:21", "profile": "C"},
+    {"id": "heldout:22", "profile": "C"},
+    {"id": "heldout:23", "profile": "C"},
+    {"id": "heldout:24", "profile": "C"},
+    {"id": "heldout:25", "profile": "C"},
+    {"id": "heldout:26", "profile": "C"},
+    {"id": "heldout:27", "profile": "C"},
+    {"id": "heldout:28", "profile": "C"},
+    {"id": "heldout:29", "profile": "C"}
+  ],
+  "folds": {
+    "fold_a": ["heldout:0", "heldout:1", "heldout:2", "heldout:3", "heldout:4", "heldout:5", "heldout:6", "heldout:7", "heldout:10", "heldout:11", "heldout:12", "heldout:13", "heldout:20", "heldout:21", "heldout:22"],
+    "fold_b": ["heldout:8", "heldout:9", "heldout:14", "heldout:15", "heldout:16", "heldout:17", "heldout:18", "heldout:19", "heldout:23", "heldout:24", "heldout:25", "heldout:26", "heldout:27", "heldout:28", "heldout:29"]
+  },
+  "folds_note": "The two folds partition the split and are deliberately unbalanced against each other, so a mixture tuned to one fold's composition is measurably worse on the other. The graded loss on the whole split is the token-weighted mean of the two fold losses, so max(fold) is always at least the whole-split loss and the sustained condition is strictly stronger than the whole-split condition."
+}

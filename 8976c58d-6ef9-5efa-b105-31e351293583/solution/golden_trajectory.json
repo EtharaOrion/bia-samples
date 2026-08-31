@@ -1,0 +1,154 @@
+{
+ "compaction_at": 4,
+ "final_reward": 1.0,
+ "generated": "GENERATED SECTION. DO NOT HAND-EDIT. Source: solution/grounding.yaml",
+ "ledger": [
+  {
+   "approach_id": "a1",
+   "established": [
+    "momentum-0.95-refuted"
+   ],
+   "iteration": 1,
+   "reward": 0.1,
+   "status": "refuted"
+  },
+  {
+   "approach_id": "a2",
+   "established": [
+    "lr-ceiling-0.008"
+   ],
+   "iteration": 2,
+   "reward": 0.21,
+   "status": "refuted"
+  },
+  {
+   "approach_id": "a3",
+   "established": [
+    "warmup-256-helps"
+   ],
+   "iteration": 3,
+   "reward": 0.44,
+   "status": "tried"
+  },
+  {
+   "approach_id": "recon-4",
+   "established": [],
+   "iteration": 4,
+   "reconstructed_from_ledger": true,
+   "recovers": [
+    "a1"
+   ],
+   "status": "tried"
+  },
+  {
+   "approach_id": "a4",
+   "established": [
+    "ns-iters-5-stable"
+   ],
+   "iteration": 4,
+   "reward": 0.71,
+   "status": "tried"
+  },
+  {
+   "approach_id": "recon-5",
+   "established": [],
+   "iteration": 5,
+   "reconstructed_from_ledger": true,
+   "recovers": [
+    "a1",
+    "a2"
+   ],
+   "status": "tried"
+  },
+  {
+   "approach_id": "a5",
+   "established": [
+    "a3-and-a4-compose"
+   ],
+   "iteration": 5,
+   "reward": 1.0,
+   "status": "tried"
+  }
+ ],
+ "reference_sha256": "af3cfe0a6277d1e2d853a34e5d61e41b28d33bce8662e76eb27be624b07c1744",
+ "slot": "OER-07",
+ "steps": [
+  {
+   "established": [
+    "momentum-0.95-refuted"
+   ],
+   "iteration": 1,
+   "ledger_len_after": 1,
+   "proposed": "a1",
+   "recovered_from_ledger": [],
+   "reward": 0.1,
+   "summary_compacted": false,
+   "summary_visible_ids": []
+  },
+  {
+   "established": [
+    "lr-ceiling-0.008"
+   ],
+   "iteration": 2,
+   "ledger_len_after": 2,
+   "proposed": "a2",
+   "recovered_from_ledger": [],
+   "reward": 0.21,
+   "summary_compacted": false,
+   "summary_visible_ids": [
+    "a1"
+   ]
+  },
+  {
+   "established": [
+    "warmup-256-helps"
+   ],
+   "iteration": 3,
+   "ledger_len_after": 3,
+   "proposed": "a3",
+   "recovered_from_ledger": [],
+   "reward": 0.44,
+   "summary_compacted": false,
+   "summary_visible_ids": [
+    "a1",
+    "a2"
+   ]
+  },
+  {
+   "established": [
+    "ns-iters-5-stable"
+   ],
+   "iteration": 4,
+   "ledger_len_after": 5,
+   "proposed": "a4",
+   "recovered_from_ledger": [
+    "a1"
+   ],
+   "reward": 0.71,
+   "summary_compacted": true,
+   "summary_visible_ids": [
+    "a2",
+    "a3"
+   ]
+  },
+  {
+   "established": [
+    "a3-and-a4-compose"
+   ],
+   "iteration": 5,
+   "ledger_len_after": 7,
+   "proposed": "a5",
+   "recovered_from_ledger": [
+    "a1",
+    "a2"
+   ],
+   "reward": 1.0,
+   "summary_compacted": true,
+   "summary_visible_ids": [
+    "a3",
+    "a4"
+   ]
+  }
+ ],
+ "summary_window": 2
+}

@@ -1,0 +1,13 @@
+{
+  "_generated": "GENERATED SECTION. DO NOT HAND-EDIT. Source: solution/grounding.yaml",
+  "bound_eval_step": 400,
+  "halt_kind": "bound-schedule-complete",
+  "halted_at_step": 550,
+  "slot": "OER-12",
+  "sustain_band": 0.05,
+  "sustain_points": [
+    450,
+    500
+  ],
+  "writer": "verifier-harness"
+}

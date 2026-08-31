@@ -1,0 +1,46 @@
+{
+  "banner": "GENERATED SECTION. DO NOT HAND-EDIT.",
+  "criteria": [
+    {
+      "id": "matches-reference-configuration",
+      "reference": {
+        "admission_policy": "defer_when_full",
+        "chunked_prefill": true,
+        "max_batch_size": 8,
+        "max_queue_depth": 16,
+        "scheduler": "fcfs",
+        "stop_after_requests": null
+      },
+      "statement": "The selected serving configuration equals the reference answer on every free axis."
+    },
+    {
+      "id": "reaches-the-target-endpoint",
+      "reference_selected_attempt": 10,
+      "statement": "The graded throughput equals the best objective-feasible point of the frozen lattice."
+    },
+    {
+      "id": "respects-the-objective",
+      "objective_p99_tpot_centiticks": 1800,
+      "statement": "The graded p99 per-output-token latency is at or below the frozen objective."
+    },
+    {
+      "id": "accounts-for-every-request",
+      "statement": "Every request of the frozen trace carries a terminal telemetry record and none is shed.",
+      "trace_size": 200
+    },
+    {
+      "flatten_window": 3,
+      "id": "reallocated-off-the-flattened-axis",
+      "statement": "The session abandons a direction that stopped paying and spends the remainder elsewhere."
+    },
+    {
+      "id": "carried-its-own-best",
+      "reference_attempts": 16,
+      "statement": "The answer returned is the best feasible attempt the session established, not its last."
+    }
+  ],
+  "judged": "the solution against its reference answer",
+  "not_the_same_file_as": "tests/rubrics.jsonl, which is judged against the trajectory",
+  "schema": "oer23.solution_rubric/v1",
+  "source": "solution/grounding.yaml"
+}

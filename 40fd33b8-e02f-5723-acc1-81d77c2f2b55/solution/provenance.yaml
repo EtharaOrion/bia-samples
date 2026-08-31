@@ -1,0 +1,17 @@
+schema: forge.provenance/v1
+normalization_domain_version: oer-canary-v1
+canonical_hash_method: forge.canonical_content_hash/v1
+unit_slot: OER-27
+primary_archetype: near-duplicate-adjudication
+target_tier: T3
+family: F4
+tier_exemption: none
+binding_block:
+  canonical_bundle_hash: 167ba380c320975fa7d114fe69a15527722edeae883065fd83200dd78c13a714
+  unit_uuid: 40fd33b8-e02f-5723-acc1-81d77c2f2b55
+  derivation: uuid5(FORGE_TASK_NAMESPACE, canonical_content_hash)
+authored_at_contract_digest: 3f59ca6f97a05ffe90e0ba1f6f408ee4abd3640ae162eff926be668888aa3a9b
+authored_at: '2026-08-31'
+oracle_state: executed. The oracle was run inside this bundle's own pinned verifier image and earned full reward before the bundle was frozen.
+signature_state: absent. FORGE never signs, and no detached signature exists for this node.
+predecessor: null

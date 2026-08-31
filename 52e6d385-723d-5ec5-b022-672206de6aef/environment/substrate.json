@@ -1,0 +1,85 @@
+{
+  "_generated": "GENERATED SECTION. DO NOT HAND-EDIT. source: solution/grounding.yaml",
+  "bit_choices": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "budget_accounting": "allocated_bits = sum_i numel_i * alloc_i + sum_i groups_i * scale_bits, where groups_i = numel_i // group_size.",
+  "budget_accounting_includes_scale_tensors": true,
+  "budget_bits": 447744,
+  "degradation_constant_K": 100.0,
+  "degradation_form": "degradation(alloc, s) = K * sum_i s_i * numel_i * 2 ** (-2 * alloc_i) / sum_i numel_i",
+  "group_size": 128,
+  "kind": "deterministic-surrogate",
+  "scale_bits": 16,
+  "schema": "oer22.substrate/v1",
+  "surrogate_disclosure": "There is no live forward pass in this bundle. Perplexity degradation is a closed-form deterministic function of the per-tensor bit allocation and a frozen per-tensor sensitivity vector, evaluated in double precision with pure Python arithmetic. Declared as gap-oer-22-substrate-is-a-deterministic-surrogate.",
+  "tensors": [
+    {
+      "groups": 96,
+      "id": "blk00.attn.qkv",
+      "numel": 12288
+    },
+    {
+      "groups": 32,
+      "id": "blk00.attn.out",
+      "numel": 4096
+    },
+    {
+      "groups": 128,
+      "id": "blk00.mlp.up",
+      "numel": 16384
+    },
+    {
+      "groups": 32,
+      "id": "blk00.mlp.down",
+      "numel": 4096
+    },
+    {
+      "groups": 64,
+      "id": "blk01.attn.qkv",
+      "numel": 8192
+    },
+    {
+      "groups": 48,
+      "id": "blk01.attn.out",
+      "numel": 6144
+    },
+    {
+      "groups": 80,
+      "id": "blk01.mlp.up",
+      "numel": 10240
+    },
+    {
+      "groups": 96,
+      "id": "blk01.mlp.down",
+      "numel": 12288
+    },
+    {
+      "groups": 32,
+      "id": "blk02.attn.qkv",
+      "numel": 4096
+    },
+    {
+      "groups": 128,
+      "id": "blk02.attn.out",
+      "numel": 16384
+    },
+    {
+      "groups": 64,
+      "id": "blk02.mlp.up",
+      "numel": 8192
+    },
+    {
+      "groups": 48,
+      "id": "blk02.mlp.down",
+      "numel": 6144
+    }
+  ],
+  "uniform_reference_bits": 4
+}

@@ -1,0 +1,239 @@
+# GENERATED SECTION. DO NOT HAND-EDIT. Source: solution/grounding.yaml.
+#
+# The declared graded surface for slot OER-01. Every row carries exactly one
+# reduction from the closed six, names the carrier tests/test.sh reaches, names
+# the selector inside it, and names the machine-readable reason that carrier
+# emits when the checker scores zero.
+#
+# reward_path is bound to the path the live instrument seed/forge/verifier.py
+# binds, /logs/verifier/reward.txt, which carries the bare float. The lane brief
+# names /logs/verifier/reward.json for the reward document, which carries the
+# {reward, reason, metric} object. Both authorities are honoured: tests/test.sh
+# writes BOTH from one EXIT trap, and neither reader finds its path absent. The
+# collision is declared as gap-oer01-reward-path-extension-collides rather than
+# resolved by preference.
+
+schema: forge.checkers/v1
+reduction_kinds: [VALUE, EFFECT, ABSENCE, INVARIANT, ORDERING, DIVERGENCE]
+reward_path: /logs/verifier/reward.txt
+reward_document_path: /logs/verifier/reward.json
+score_document_path: /logs/verifier/score.json
+reward_writer: tests/test.sh
+
+isolation:
+  boundary: tests/runner.py
+  statement: >-
+    The submitted recipe executes only as a separate operating system process, in a
+    fresh temporary directory holding a single copy of itself, under python3 -I -S,
+    with a five key environment allowlist, in its own session, and the whole process
+    group is killed in a finally block. tests/grade.py imports the checkers and the
+    fingerprint canonicaliser and never imports the submission.
+
+aggregation:
+  mode: required_pass
+  rationale: >-
+    Every declared checker is a hard gate and every one is marked required. tests/grade.py
+    forces the score to exactly 0.0 the moment one required checker reports pass false, and
+    attributes the zero to that checker's zero_reason. Only when every required checker
+    passes does the graded scalar become the clipped anchor-gap closure, which is a float in
+    [0, 1] and not a second pass flag. The weights are declared so a reader can see the
+    relative load each gate carries, and they are never blended into the score, because
+    required_pass does not blend.
+
+checkers:
+  - id: recipe_diverges_from_the_pinned_record_corpus
+    statement: >-
+      The canonical algorithm fingerprint the verifier derives from the submitted recipe
+      bytes disagrees with every fingerprint in the pinned record corpus, either
+      structurally or by more than the bound proximity floor.
+    reduction: DIVERGENCE
+    reached_by: tests/grade.py
+    selector: check_recipe_diverges_from_the_pinned_record_corpus
+    zero_reason: recipe-replays-published-record
+    degenerate_reasons:
+      - reason: recipe-unreadable
+        condition: >-
+          no recipe could be read out of the submitted bytes, so no fingerprint was
+          derived and nothing was compared against the corpus
+      - reason: submission-fingerprint-underivable
+        condition: >-
+          the submission was read but yielded no structural digest, so the comparison
+          this checker performs could not be carried out
+      - reason: record-corpus-unresolvable
+        condition: >-
+          the pinned corpus resolved empty, so divergence could not be established
+          against it
+    required: true
+    weight: 3
+    basis: measured
+    count_predicate: ""
+    live_state_read: >-
+      the structural digest and quantised hyperparameter vector the verifier's own process
+      computed with tests/fingerprint.py over the submission bytes it copied into its
+      scratch tree, against the pinned entries in tests/corpus.json
+    reads_admin_keys: ["record_corpus_revision", "fingerprint_proximity_floor"]
+    compiled_test: tests/test_output.py::test_recipe_diverges_from_the_pinned_record_corpus
+    both_halves:
+      accepts: golden_reference_accepted in tests/fixtures.json
+      rejects: nc_jittered_replay_record_46, nc_no_op, nc_replay_record_46, nc_stale_answer_pre_mutation in tests/fixtures.json
+      substitution: none; both halves fire on the live checker over a fixture telemetry record
+
+  - id: fingerprint_screen_precedes_any_seed
+    statement: >-
+      The fingerprint screen occupies telemetry sequence 0, strictly before the first
+      seed-launch event, with zero accelerator seconds recorded as spent, so a replay is
+      refused at zero accelerator cost.
+    reduction: ORDERING
+    reached_by: tests/grade.py
+    selector: check_fingerprint_screen_precedes_any_seed
+    zero_reason: screen-ran-after-accelerator-time-was-spent
+    required: true
+    weight: 2
+    basis: measured
+    count_predicate: ""
+    live_state_read: >-
+      the ordered event sequence and the accelerator-second counter the verifier's own
+      harness stamped into the telemetry record it wrote
+    reads_admin_keys: []
+    compiled_test: tests/test_output.py::test_fingerprint_screen_precedes_any_seed
+    both_halves:
+      accepts: golden_reference_accepted in tests/fixtures.json
+      rejects: nc_screen_after_seeds in tests/fixtures.json
+      substitution: none; both halves fire on the live checker over a fixture telemetry record
+
+  - id: graded_loss_recomputed_unsmoothed_by_verifier
+    statement: >-
+      Every value on the graded series equals the verifier's own raw evaluation at that
+      step, carries the bound unsmoothed provenance token, and no submission-reported
+      number appears anywhere on the graded path.
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: check_graded_loss_recomputed_unsmoothed_by_verifier
+    zero_reason: readout-smoothed-on-the-graded-path
+    required: true
+    weight: 3
+    basis: measured
+    count_predicate: ""
+    live_state_read: >-
+      the per-step raw loss the verifier computed on the frozen held-out split inside its
+      own process, beside the graded series the grader assembled
+    reads_admin_keys: ["graded_loss_provenance"]
+    compiled_test: tests/test_output.py::test_graded_loss_recomputed_unsmoothed_by_verifier
+    both_halves:
+      accepts: golden_reference_accepted in tests/fixtures.json
+      rejects: nc_readout_smoothing in tests/fixtures.json
+      substitution: none; both halves fire on the live checker over a fixture telemetry record
+
+  - id: crossing_sustained_across_verifier_scheduled_points
+    statement: >-
+      The target holds at the graded step and at every one of the next
+      sustain_window_points evaluation points the verifier itself scheduled, so a single
+      noise dip is never harvested as a crossing.
+    reduction: INVARIANT
+    reached_by: tests/grade.py
+    selector: check_crossing_sustained_across_verifier_scheduled_points
+    zero_reason: crossing-not-sustained
+    required: true
+    weight: 3
+    basis: measured
+    count_predicate: ""
+    live_state_read: >-
+      the verifier-scheduled evaluation grid and the verifier's own raw loss at each of
+      its points
+    reads_admin_keys: ["sustain_window_points", "evaluation_cadence_steps"]
+    compiled_test: tests/test_output.py::test_crossing_sustained_across_verifier_scheduled_points
+    both_halves:
+      accepts: golden_reference_accepted in tests/fixtures.json
+      rejects: nc_unsustained_crossing in tests/fixtures.json
+      substitution: none; both halves fire on the live checker over a fixture telemetry record
+
+  - id: no_early_stop_before_the_sustain_window_closed
+    statement: >-
+      The set of runs graded as having crossed while halting before the verifier's sustain
+      window closed is empty; such a run is graded as not having crossed and scores zero
+      with this reason rather than as an absent result.
+    reduction: ABSENCE
+    reached_by: tests/grade.py
+    selector: check_no_early_stop_before_the_sustain_window_closed
+    zero_reason: run-halted-before-sustain-window-closed
+    required: true
+    weight: 2
+    basis: measured
+    count_predicate: ""
+    live_state_read: >-
+      the halt step and halt cause the verifier's own harness recorded when the child
+      process group was reaped
+    reads_admin_keys: ["sustain_window_points", "evaluation_cadence_steps"]
+    compiled_test: tests/test_output.py::test_no_early_stop_before_the_sustain_window_closed
+    both_halves:
+      accepts: golden_reference_accepted in tests/fixtures.json
+      rejects: nc_early_stop in tests/fixtures.json
+      substitution: none; both halves fire on the live checker over a fixture telemetry record
+
+  - id: graded_weights_are_harness_owned_at_the_graded_step
+    statement: >-
+      At the graded step and across the whole sustain window, the digest of the weights
+      evaluated equals the digest of the checkpoint the harness itself wrote at that step,
+      so no submission-selected checkpoint is graded.
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: check_graded_weights_are_harness_owned_at_the_graded_step
+    zero_reason: graded-weights-not-harness-owned
+    required: true
+    weight: 3
+    basis: measured
+    count_predicate: ""
+    live_state_read: >-
+      the digest the verifier took of the tensor bytes it loaded, beside the digest the
+      harness recorded when it wrote that checkpoint into its own run directory
+    reads_admin_keys: ["checkpoint_custody"]
+    compiled_test: tests/test_output.py::test_graded_weights_are_harness_owned_at_the_graded_step
+    both_halves:
+      accepts: golden_reference_accepted in tests/fixtures.json
+      rejects: nc_submission_selected_checkpoint in tests/fixtures.json
+      substitution: none; both halves fire on the live checker over a fixture telemetry record
+
+  - id: graded_run_produced_verifier_owned_telemetry
+    statement: >-
+      Launching the submitted recipe from the verifier's own harness changed live state,
+      producing a non-empty evaluation series for every drawn seed in a verifier-owned run
+      directory.
+    reduction: EFFECT
+    reached_by: tests/grade.py
+    selector: check_graded_run_produced_verifier_owned_telemetry
+    zero_reason: graded-run-produced-no-telemetry
+    required: true
+    weight: 2
+    basis: measured
+    count_predicate: "count(evaluations) > 0 and count(seeds) > 0"
+    live_state_read: >-
+      the run directory the verifier created and handed to the child process group, read
+      back after the group was reaped
+    reads_admin_keys: ["verifier_run_seed_count"]
+    compiled_test: tests/test_output.py::test_graded_run_produced_verifier_owned_telemetry
+    both_halves:
+      accepts: golden_reference_accepted in tests/fixtures.json
+      rejects: nc_no_telemetry in tests/fixtures.json
+      substitution: none; both halves fire on the live checker over a fixture telemetry record
+
+  - id: frozen_axes_unmoved_by_the_graded_run
+    statement: >-
+      The dataset digest, batch size, architecture digest and forward-backward passes per
+      step observed by the harness are byte-identical to the frozen axes the bundle binds.
+    reduction: INVARIANT
+    reached_by: tests/grade.py
+    selector: check_frozen_axes_unmoved_by_the_graded_run
+    zero_reason: frozen-axis-moved
+    required: true
+    weight: 3
+    basis: measured
+    count_predicate: ""
+    live_state_read: >-
+      the dataset and architecture digests, the batch size and the pass counter the
+      verifier's own loader and harness recorded during the graded run
+    reads_admin_keys: []
+    compiled_test: tests/test_output.py::test_frozen_axes_unmoved_by_the_graded_run
+    both_halves:
+      accepts: golden_reference_accepted in tests/fixtures.json
+      rejects: nc_frozen_axis_moved in tests/fixtures.json
+      substitution: none; both halves fire on the live checker over a fixture telemetry record

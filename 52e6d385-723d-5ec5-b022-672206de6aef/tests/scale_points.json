@@ -1,0 +1,33 @@
+{
+  "_generated": "GENERATED SECTION. DO NOT HAND-EDIT. source: solution/grounding.yaml",
+  "baseline_scale_point": 0.292809367,
+  "budget_accounting_includes_scale_tensors": true,
+  "budget_bits": 447744,
+  "calibration_digests": {
+    "1": "496ee180f108ba799e52415138c238ef713f167c08711e4a8ff8c48e0a384685",
+    "2": "a9423c6abebd3d9c269e80b51a514058f7ed31db6c27dfaeaac55303a06dffd5"
+  },
+  "calibration_ledger": [
+    1,
+    2
+  ],
+  "calibration_version_in_force": 2,
+  "per_point_bar": {
+    "shard-a": 0.277196344,
+    "shard-b": 0.282694575,
+    "shard-c": 0.298621757,
+    "shard-d": 0.312724794
+  },
+  "permitted_readout_filters": [
+    "none"
+  ],
+  "scheduled_points": [
+    "shard-a",
+    "shard-b",
+    "shard-c",
+    "shard-d"
+  ],
+  "schema": "oer22.scale_points/v1",
+  "statement": "Substrate-internal scale points, recomputed from frozen bytes. These are NOT family anchors and they do not close gap-oer-per-family-anchors-unmeasured.",
+  "target_scale_point": 0.269349757
+}

@@ -1,0 +1,100 @@
+{
+  "banner": "GENERATED SECTION. DO NOT HAND-EDIT.",
+  "fixtures": [
+    {
+      "expects": "quarantine-row-misidentified",
+      "failed_checker": "quarantine_row_identified",
+      "id": "guessed_neighbouring_row",
+      "moved_keys": [
+        "excluded_node_id"
+      ],
+      "near_miss": true
+    },
+    {
+      "expects": "closure-incomplete",
+      "failed_checker": "closure_set_complete",
+      "id": "closure_stopped_at_first_hop",
+      "moved_keys": [
+        "admitted_row_count",
+        "closure_cardinality",
+        "closure_layers",
+        "closure_nodes",
+        "reported_plan_cost"
+      ],
+      "near_miss": false
+    },
+    {
+      "expects": "closure-cardinality-unattested",
+      "failed_checker": "closure_cardinality_attested",
+      "id": "cardinality_minus_one",
+      "moved_keys": [
+        "closure_cardinality"
+      ],
+      "near_miss": true
+    },
+    {
+      "expects": "closure-cardinality-unattested",
+      "failed_checker": "closure_cardinality_attested",
+      "id": "cardinality_plus_one",
+      "moved_keys": [
+        "closure_cardinality"
+      ],
+      "near_miss": true
+    },
+    {
+      "expects": "traversal-order-unwitnessed",
+      "failed_checker": "closure_layers_witnessed",
+      "id": "layers_flattened",
+      "moved_keys": [
+        "closure_layers"
+      ],
+      "near_miss": false
+    },
+    {
+      "expects": "excluded-row-admitted",
+      "failed_checker": "excluded_rows_absent",
+      "id": "plan_admits_every_reading",
+      "moved_keys": [
+        "admitted_row_count",
+        "reported_plan_cost"
+      ],
+      "near_miss": false
+    },
+    {
+      "expects": "result-set-divergence",
+      "failed_checker": "result_set_equality",
+      "id": "plan_drops_one_admitted_row",
+      "moved_keys": [
+        "admitted_row_count",
+        "reported_plan_cost"
+      ],
+      "near_miss": false
+    },
+    {
+      "expects": "cost-readout-mismatch",
+      "failed_checker": "plan_cost_readout_exact",
+      "id": "cost_readout_mismatch",
+      "moved_keys": [
+        "reported_plan_cost"
+      ],
+      "near_miss": true
+    },
+    {
+      "expects": "plan-not-faster-than-baseline",
+      "failed_checker": "plan_faster_than_baseline",
+      "id": "baseline_plan_resubmitted",
+      "moved_keys": [
+        "reported_plan_cost"
+      ],
+      "near_miss": false
+    },
+    {
+      "expects": "plan-not-read-only-single-statement",
+      "failed_checker": "plan_is_single_read_only_select",
+      "id": "plan_writes_to_the_warehouse",
+      "moved_keys": [],
+      "near_miss": false
+    }
+  ],
+  "source": "solution/grounding.yaml"
+}

@@ -1,0 +1,26 @@
+{
+  "_generated": "GENERATED SECTION. DO NOT HAND-EDIT. Source: solution/grounding.yaml",
+  "axes": [
+    {
+      "axis": "model",
+      "close_digest": "ae06817ea5e55373f3d5698062047ad7d924dcf973bdcd81153e01d7bc24ba58",
+      "open_digest": "ae06817ea5e55373f3d5698062047ad7d924dcf973bdcd81153e01d7bc24ba58"
+    },
+    {
+      "axis": "optimizer",
+      "close_digest": "568334118fa4656cb8f18512770ca1c3a875a2b18e210b21eaf5d5137da99af5",
+      "open_digest": "568334118fa4656cb8f18512770ca1c3a875a2b18e210b21eaf5d5137da99af5"
+    },
+    {
+      "axis": "token_budget",
+      "close_digest": "e728b4b3de5dd208b58902f3d141ad599b0d603f8a8028b6a47bc8977ca5e08e",
+      "open_digest": "f8bff21171e4bbb9b4c8a273a8991492bd801557d865e1ac208b134995da7dd4"
+    },
+    {
+      "axis": "eval_split",
+      "close_digest": "a15f5b273098041ddb105166a8ec987463432fdf7fdda4e3e0040b9b6e3ac8e5",
+      "open_digest": "a15f5b273098041ddb105166a8ec987463432fdf7fdda4e3e0040b9b6e3ac8e5"
+    }
+  ],
+  "writer": "verifier-harness"
+}

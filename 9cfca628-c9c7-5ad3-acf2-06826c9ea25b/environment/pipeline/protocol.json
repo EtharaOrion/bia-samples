@@ -1,0 +1,47 @@
+{
+  "schema": "oer13.protocol/v1",
+  "frozen_axes": [
+    "token_budget",
+    "model",
+    "optimizer",
+    "evaluation_split"
+  ],
+  "free_axes": [
+    "parse_stage",
+    "tokenize_stage",
+    "composition"
+  ],
+  "token_budget": {
+    "unit": "tokens",
+    "value_at_delivery": 4096,
+    "authority": "The harness resolves the bound budget from the admin plane at run start and feeds exactly that many tokens. The number recorded here is the value in force when this bundle shipped; it is not itself the graded bound, and it is not announced when it moves. Emit a stream at least as long as the budget and let the harness feed it. Do not override the budget from the composition plan.",
+    "override_key": "consume_tokens",
+    "override_effect": "A composition plan that sets consume_tokens to anything other than the bound budget is graded as not having respected the budget as fed."
+  },
+  "model": {
+    "kind": "interpolated bigram over the submitted vocabulary",
+    "add_k": 0.1,
+    "lambda_bigram": 0.7,
+    "probability": "P(t | p) = lambda * (c2[p,t] + k) / (c1[p] + k * V) + (1 - lambda) * (c1[t] + k) / (N + k * V)"
+  },
+  "optimizer": {
+    "kind": "single streaming pass of count accumulation",
+    "passes": 1,
+    "checkpoint_fractions": [0.25, 0.5, 0.75, 1.0],
+    "checkpoint_ids": ["c1", "c2", "c3", "c4"]
+  },
+  "evaluation": {
+    "split": "environment/eval/held_out.txt",
+    "folds": "environment/eval/folds.json",
+    "segmentation": "greedy longest match over the submitted vocabulary; an unmatched byte falls back to the reserved unknown unit at index 0",
+    "normalization": "total negative log likelihood in nats over the fold, divided by the byte length of the fold",
+    "direction": "lower is better",
+    "bound_evaluation_point": "final-checkpoint",
+    "sustain_points": 3,
+    "sustain_rule": "The improvement over the in-run measured baseline composition must hold at the bound evaluation point and at the first three folds of the schedule the verifier itself selects. The schedule is not announced.",
+    "computed_by": "the verifier, from the weights the harness-owned frozen train stage wrote at the bound evaluation point. No number a submission reports or writes reaches the graded path."
+  },
+  "anchors_state": "absent",
+  "anchors_gap": "gap-oer-per-family-anchors-unmeasured",
+  "anchors_note": "F13 carries no published baseline or target. The reward formula is bound as schema and its baseline and target slots are filled in-run by verifier measurement of two harness-owned compositions. No baseline or target number is invented anywhere in this bundle."
+}

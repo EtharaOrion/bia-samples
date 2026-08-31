@@ -1,0 +1,44 @@
+{
+  "banner": "GENERATED SECTION. DO NOT HAND-EDIT.",
+  "criteria": [
+    {
+      "comparison": "integer equality against the harness halt row and the verifier's own re-derivation",
+      "id": "splice-point-established-by-the-agent-phase",
+      "reference_value": 10078,
+      "statement": "The handoff splices at the offset the agent-phase driver halted at, which the verifier re-derives for itself from the frozen stream."
+    },
+    {
+      "comparison": "string equality across four independent readings",
+      "id": "carried-state-digest-recomputes",
+      "reference_value": "dcba165d0dbcaaca71d595cc422798dec85e8d553e846c45b71d90d218b6abcd",
+      "statement": "The carried-state digest equals the digest recomputed over the state the handoff actually carries and the digest the frozen operator produces at the splice."
+    },
+    {
+      "comparison": "string equality, no tolerance, exact integer arithmetic",
+      "id": "output-exact-across-both-phases",
+      "reference_value": "b447f6a62cde27345833fe8289d67baaab5fea762175f187e67f0a5f7c5b9d76",
+      "statement": "The composed output rollup over the agent phase and the verifier's own resume equals the frozen reference rollup."
+    },
+    {
+      "comparison": "verifier-counted resume charge is <= reference_value",
+      "id": "resume-charge-reaches-the-target",
+      "reference_value": 19164,
+      "statement": "The kernel charges no more reads on the resume segment than the fused reference does."
+    },
+    {
+      "comparison": "verifier-computed speedup is >= reference_value",
+      "id": "speedup-reaches-the-instance-target",
+      "reference_value": 12.012523,
+      "statement": "The verifier-computed speedup reaches the instance target."
+    },
+    {
+      "comparison": "sha256 equality between the journal open row and the graded file",
+      "id": "kernel-identity-stable",
+      "reference_value": "sha256 of solution/reference.py FUSED_KERNEL as installed",
+      "statement": "The kernel the agent phase ran is the kernel the verifier grades."
+    }
+  ],
+  "judged": "the solution against its reference answer",
+  "schema": "forge.solution_rubrics/v1",
+  "source": "solution/grounding.yaml"
+}

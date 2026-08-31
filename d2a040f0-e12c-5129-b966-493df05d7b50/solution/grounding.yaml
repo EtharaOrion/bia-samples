@@ -1,0 +1,271 @@
+schema: forge.grounding/v1
+slot: OER-26
+provisional_identifier: OER-26
+note: >-
+  This file is the single private derivation source for the slot. `solution/recompute.py`
+  derives every generated artifact from these bytes and the deterministic build generator alone:
+  `tests/bound.json`, `tests/test_output.py`, `solution/solve.sh`, `solution/TRUTH.md`,
+  `solution/rubrics.json`, the reference run fixture and every rejecting fixture. Nothing here is
+  a model output, a network fetch, a clock reading, a locale-dependent rendering or a draw from a
+  random source. Running `recompute.py` twice over frozen bytes produces byte-identical output,
+  and `recompute.py --check` reports drift without writing.
+
+identity:
+  family: F3
+  family_title: producer and consumer boundary enforcement
+  primary_archetype: producer-fence
+  primary_archetype_title: Producer Fence
+  archetype_count: 1
+  archetype_rule: >-
+    Exactly one primary archetype. producer-fence is the whole pressure of this slot and no
+    second archetype is claimed, borrowed or composed in.
+  title: Enforcing a producer fence over a linked crossing stream
+  tags: [enforcement, bounded-continuous]
+  target_tier: T2
+  tier_exemption_granted: none
+
+contract_binding:
+  slot: OER-26
+  primary_archetype: producer-fence
+  target_tier: T2
+  family: F3
+  tier_exemption: none
+  discovery_block: >-
+    one fence-crossing count and one admitted-kind set, both established in built environment
+    state, both absent from the statement
+  statement_closure: >-
+    the statement fixes the fence semantics and the refusal reasons and names neither the count
+    nor the admitted set
+
+discovery:
+  value_one:
+    name: fence-crossing count
+    what: >-
+      The number of crossing records the producer chain presents at the fence, counted along the
+      links from the head segment to the segment whose link is null.
+    established_by: >-
+      environment/build_fence.py, run at image build time by both environment/Dockerfile and
+      tests/Dockerfile. The pool of segments, the width of each segment and the length and order
+      of the chain are all drawn from the integer recurrence, so the count is not the product of
+      any two constants in the generator and is recovered only by traversing the built state.
+    readable_through: fencelib.open_fence().crossings(), whose length is the count
+    absent_from_statement: true
+    naive_reading_that_fails: >-
+      Concatenating every segment file present under the state root. The state root carries
+      segments nothing links to, so the union is strictly larger than the crossing stream.
+  value_two:
+    name: admitted-kind set
+    what: >-
+      The set of kinds this fence admits: the registry declarations whose status reads `admitted`
+      AND whose seal recomputes over its own declared bytes.
+    established_by: >-
+      environment/build_fence.py, which assigns each declaration a status and a seal from the
+      recurrence and deliberately breaks a subset of the seals, so a declaration can read
+      `admitted` while being retired.
+    readable_through: fencelib.open_fence().admitted_kinds()
+    absent_from_statement: true
+    naive_reading_that_fails: >-
+      Reading the status column alone, which carries the retired declarations across the fence.
+
+statement_closure:
+  fixed_by_instruction:
+    - the chain semantics, that a segment nothing links to emitted no crossing
+    - the seal rule that decides whether a declaration is admitted
+    - the attestation preimage that decides whether a crossing record is attested
+    - the well-formedness rule, being the closed field set with its types and a positive size
+    - the four refusal reasons and the strict precedence between them
+    - that quota is spent in chain order
+    - the submission schema and the reward formula
+  named_by_instruction: []
+  never_named_by_instruction:
+    - the fence-crossing count
+    - the admitted-kind set
+
+metric:
+  name: verdict agreement over every crossing the chain presents
+  direction: higher
+  computed_by: >-
+    the verifier, from a traversal the harness performed in an isolated subprocess over the
+    fence state the verifier image was built with
+  semantics: >-
+    A verdict agrees only when both its decision and its refusal reason match the verdict the
+    fence semantics produce for that crossing at that position. Agreement is the count of
+    agreeing verdicts over the crossing count.
+
+clock_ownership:
+  owner: harness
+  statement: >-
+    THE HARNESS OWNS THE CLOCK, and on this slot it owns the traversal too. No checker reads a
+    clock, and no checker walks the fence itself inside the grading interpreter:
+    environment/fence_probe.py performs the traversal in an isolated subprocess and emits a
+    record stream, and every checker is a pure function of that stream and the bound constants.
+  absolute_clock_ban: >-
+    recompute.py reads no clock either. Every generated artifact is derived by arithmetic from
+    the frozen generator, never from a live measurement.
+
+substrate:
+  kind: deterministic build artifact
+  module: environment/build_fence.py
+  declared_gap: gap-oer-26-substrate-is-a-build-artifact-not-a-live-stream
+  why_right_choice: >-
+    A build artifact makes grading reproducible: the same generator and the same seed produce
+    byte-identical state in the task image and in the verifier image, so a checker's verdict is
+    recomputable by an outside reader. It is never allowed to pass as an observation of a running
+    production system.
+
+fence:
+  seed: 20260826
+  seal_domain: oer26.registry-seal/v1
+  record_fields: [seq, kind, size, origin, epoch, sig]
+  refusal_precedence:
+    - malformed-crossing
+    - unattested-origin
+    - kind-not-admitted
+    - quota-exhausted
+  quota_order: chain order
+
+anchors:
+  anchors_state: absent
+  gap_id: gap-oer-per-family-anchors-unmeasured
+  family_baseline_metric: null
+  family_target_metric: null
+  statement: >-
+    F3 anchors are unmeasured, so the reward SCHEMA is bound in full and no family baseline or
+    target number is invented. The single normalisation number recompute.py measures is
+    instance-local, is declared under gap-oer-26-instance-local-anchors-not-family-anchors, and
+    is NOT a family anchor.
+  instance_local_anchors:
+    declared_gap: gap-oer-26-instance-local-anchors-not-family-anchors
+    baseline_policy:
+      name: decisions-right-reasons-flattened
+      description: >-
+        A policy that reaches the correct decision on every crossing and labels every refusal
+        `kind-not-admitted`. It is the strongest policy that reads the fence as a membership test
+        rather than as an ordered precedence, so it is the right zero.
+      derivation: measured by recompute.py over the built fence state
+    target_policy:
+      name: the fence enforced exactly
+      value: 1.0
+
+reward:
+  carrier_path: /logs/verifier/reward.txt
+  carrier_form: one bare float
+  score_document_path: /logs/verifier/score.json
+  interval: [0.0, 1.0]
+  direction: higher is better
+  never_binary: true
+  full_reward_exactly: 1.0
+  formula: raw = (agreement - baseline_agreement) / (1.0 - baseline_agreement)
+  clip: score = min(max(raw, 0.0), 1.0)
+  aggregation: required_pass over the eight required checkers, then the continuous term
+
+commitment:
+  domain: oer26.discovery-commitment/v1
+  salt: fence-commitment-salt-20260826
+  note: >-
+    tests/bound.json carries a commitment over each discovery value and never the value itself,
+    so no agent-visible byte of this bundle contains either. The checkers recompute both values
+    from harness-owned telemetry on every run and compare the recomputed commitment, which makes
+    the commitment an integrity cross-check on the built state rather than the source of truth.
+
+checkers:
+  - id: fence_state_unmodified
+    reduction: VALUE
+    zero_reason: fence-state-modified
+    required: true
+    depends_on_discovery: []
+  - id: crossing_count_accounted
+    reduction: VALUE
+    zero_reason: crossing-count-unaccounted
+    required: true
+    depends_on_discovery: [fence-crossing count]
+  - id: admitted_kind_set_exact
+    reduction: VALUE
+    zero_reason: admitted-set-wrong
+    required: true
+    depends_on_discovery: [admitted-kind set]
+  - id: verdict_sequence_ordered
+    reduction: ORDERING
+    zero_reason: verdict-sequence-disordered
+    required: true
+    depends_on_discovery: [fence-crossing count]
+  - id: verdict_records_match_traversal
+    reduction: DIVERGENCE
+    zero_reason: verdict-record-divergence
+    required: true
+    depends_on_discovery: [fence-crossing count]
+  - id: no_unadmitted_kind_admitted
+    reduction: ABSENCE
+    zero_reason: fence-breached
+    required: true
+    depends_on_discovery: [admitted-kind set]
+  - id: quota_ledger_respected
+    reduction: EFFECT
+    zero_reason: quota-ledger-exceeded
+    required: true
+    depends_on_discovery: [admitted-kind set]
+  - id: admission_not_blanket
+    reduction: INVARIANT
+    zero_reason: blanket-refusal
+    required: true
+    depends_on_discovery: [admitted-kind set]
+
+rejecting_fixtures:
+  - name: crossing_count_minus_one
+    moves: the fence-crossing count only, by minus one
+    expect_reason: crossing-count-unaccounted
+  - name: crossing_count_plus_one
+    moves: the fence-crossing count only, by plus one
+    expect_reason: crossing-count-unaccounted
+  - name: admitted_set_minus_one_kind
+    moves: the admitted-kind set only, by dropping one kind
+    expect_reason: admitted-set-wrong
+  - name: admitted_set_plus_one_kind
+    moves: the admitted-kind set only, by adding one refused kind
+    expect_reason: admitted-set-wrong
+  - name: admitted_set_status_only
+    moves: the admitted-kind set only, to the set a status-column reading produces
+    expect_reason: admitted-set-wrong
+  - name: verdicts_from_disk_order
+    moves: the verdict stream to the union of the segment files on disk
+    expect_reason: crossing-count-unaccounted
+  - name: verdicts_from_wrong_chain_order
+    moves: the verdict stream to the chain segments taken in sorted identifier order
+    expect_reason: verdict-sequence-disordered
+    expect_reason_note: >-
+      Authored expecting verdict-record-divergence and observed verdict-sequence-disordered. A
+      verdict stream reordered by whole segments moves the seq column as well as the echoed kind,
+      and the ORDERING checker is reached first, so the ORDERING reason is the honest one. The
+      DIVERGENCE checker is exercised instead by verdict_kinds_relabelled, which moves only the
+      echoed record identity. Recorded here rather than papered over.
+  - name: verdict_kinds_relabelled
+    moves: the echoed record identity only, rotated by one crossing
+    expect_reason: verdict-record-divergence
+  - name: admit_everything
+    moves: every decision to admit
+    expect_reason: fence-breached
+  - name: quota_ignored
+    moves: the quota-exhausted refusals to admissions
+    expect_reason: quota-ledger-exceeded
+  - name: refuse_everything
+    moves: every decision to refuse
+    expect_reason: blanket-refusal
+  - name: reasons_flattened
+    moves: every refusal reason to kind-not-admitted, decisions untouched
+    expect_reason: graded
+    expect_reward: 0.0
+  - name: reasons_precedence_inverted
+    moves: the malformed and unattested refusals to kind-not-admitted
+    expect_reason: graded
+    expect_reward: strictly between 0.0 and 1.0
+
+build:
+  environment_dockerfile: environment/Dockerfile
+  verifier_dockerfile: tests/Dockerfile
+  verifier_build_context: the bundle root, because the verifier bakes the same generator
+  pin_kind: digest
+  base_image: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
+  base_image_note: >-
+    Debian 12 with Python 3.12, which enforces PEP 668. No pip install is performed on either
+    surface, so no --break-system-packages is needed. Every dependency is the standard library
+    and is present in the base image, and network egress is denied on the graded surface.

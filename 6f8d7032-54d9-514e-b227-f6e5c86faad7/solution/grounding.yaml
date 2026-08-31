@@ -1,0 +1,303 @@
+schema: forge.grounding/v1
+slot: OER-28
+provisional_identifier: OER-28
+note: >-
+  This file is the single private derivation source for the slot. `solution/recompute.py`
+  derives every generated artifact from these bytes alone: the frozen operator parameters,
+  the frozen input stream, the two discovery values, `tests/bound.json`,
+  `tests/test_output.py`, `solution/solve.sh`, `solution/TRUTH.md`, `solution/rubrics.json`,
+  the accepting reference-run fixture and every planted rejecting fixture. Nothing here is a
+  model output, a network fetch, a clock reading, a locale-dependent rendering or a draw from
+  a random source. Running `recompute.py` twice over frozen bytes produces byte-identical
+  output, and `recompute.py --check` reports drift without writing.
+
+identity:
+  family: F5
+  family_title: kernel optimization
+  primary_archetype: two-phase-splice
+  primary_archetype_title: Two-Phase Splice
+  archetype_count: 1
+  archetype_rule: >-
+    Exactly one primary archetype. The two-phase splice is the whole pressure of this slot and
+    no second archetype is claimed, borrowed or composed in.
+  title: Fused streaming kernel handed across a harness-established splice
+  tags: [optimization, bounded-continuous, kernel-optimization]
+  target_tier: T3
+  tier_exemption_granted: none
+
+perception_axis_exemption:
+  kind: standing batch-level exemption
+  statement: >-
+    This task family is text and code only, so the Perception axis carries no category. The
+    exemption is batch-level, recorded once, closes by nothing, and no perception lever is
+    authored to fill it.
+
+metric:
+  name: kernel speedup over the frozen reference on the verifier-owned resume segment, gated on exact output equality
+  direction: higher
+  gate_semantics: >-
+    Numerical correctness is a HARD GATE, never a term traded against speed. The operator is
+    exact integer arithmetic modulo a frozen prime, so correctness is byte equality of the
+    output rollup rather than a tolerance. A kernel whose composed rollup differs from the
+    frozen reference rollup scores exactly 0.0 with the machine-readable reason
+    `numerical-output-diverged`, however few reads it charged.
+  frozen_axes:
+    - the operator semantics, environment/params.json and the definition in environment/opstream.py
+    - the input stream, environment/stream.json
+    - the reference kernel and its per-output cost, environment/opstream.py reference_run_block
+    - the splice charge budget, params.splice_charge_budget
+  free_axes:
+    - the kernel implementation the agent installs at /workspace/submission/kernel.py
+  free_contract: the module must expose run_block(tape, params, carry, start, length)
+
+clock_ownership:
+  owner: harness
+  statement: >-
+    THE HARNESS OWNS THE COUNTER. The graded cost is not a wall-clock reading. The harness
+    hands every kernel a Tape, which is the ONLY route to an input sample, and the Tape charges
+    exactly one read per `at` call. The verifier re-runs the resume segment itself under its own
+    Tape and reads the charge off its own counter, so the graded number is one the verifier
+    counted rather than one the submission reported.
+  why: >-
+    A wall-clock speedup is not reproducible across hosts and cannot be recomputed by an outside
+    reader. An instrumented read counter is exact, portable and replayable, and it is the
+    quantity the algorithmic insight actually moves.
+  absolute_clock_ban: >-
+    No checker calls time, datetime, perf_counter or monotonic, directly or transitively.
+    recompute.py reads no clock either.
+
+substrate:
+  kind: deterministic integer stream operator with an instrumented read counter
+  module: environment/opstream.py
+  declared_gap: gap-oer-28-substrate-counts-reads-not-seconds
+  why_right_choice: >-
+    Counting instrumented reads makes the grading reproducible: the same stream, parameters and
+    kernel produce a byte-identical charge on any host. It is never allowed to pass as a wall
+    clock measurement, and reference_hours therefore covers counted-read cost only.
+
+phase_contract:
+  statement: >-
+    The unit runs in two phases over one shared workspace. The AGENT phase runs
+    environment/phase_a.py in the agent image. The driver feeds whole blocks of the frozen
+    stream to the agent's kernel in order, charges every read on its own Tape, appends one
+    chained journal row per block to the harness journal, and HALTS the moment the cumulative
+    harness work counter reaches the frozen splice charge budget. The absolute sample offset at
+    which it halts is the SPLICE POINT. The state the kernel holds at that offset is the CARRIED
+    STATE, and the harness digests it into the CARRIED-STATE DIGEST. The agent then writes
+    /workspace/handoff.json in the bound shape. The VERIFIER phase runs in a separate image, reads
+    the harness journal and the handoff through one harness handle, resumes the operator from the
+    handed-over carried state, and grades the remaining blocks under its own Tape.
+  harness_journal: /logs/harness/phase_a.jsonl
+  handoff: /workspace/handoff.json
+  kernel: /workspace/submission/kernel.py
+  journal_genesis: oer28.journal.genesis/v1
+  why_two_phases: >-
+    The verifier's own resume is SEEDED from the carried state the agent phase handed over. The
+    carried state is therefore load-bearing rather than decorative: a wrong accumulator produces
+    a wrong resume output and fails the correctness gate, and a splice point moved by one sample
+    resumes the operator over the wrong segment.
+
+discovery:
+  note: >-
+    Both values are established by the AGENT phase and read by the VERIFIER phase. Neither is
+    stated in instruction.md and neither appears in any agent-visible byte. Each is derived here
+    by recompute.py from the frozen stream and the frozen parameters, and each gates a REQUIRED
+    checker.
+  values:
+    - name: splice_offset
+      kind: splice point
+      established_by: >-
+        environment/phase_a.py, which halts the agent phase at the first block boundary at which
+        cumulative_outputs * window reaches splice_charge_budget, and records the absolute sample
+        offset of that boundary in the journal halt row.
+      read_by: >-
+        tests/checkers.py check_splice_point_harness_established, through Harness.halt_row and
+        Harness.handoff, and by tests/runner.py which resumes phase B at exactly that offset.
+      grounding_path: solution/grounding.yaml#derived (recomputed, never literal)
+      gates_required_checker: splice_point_harness_established
+      rejecting_fixture: solution/fixtures/planted/splice_offset_plus_one/
+    - name: carried_state_sha256
+      kind: carried-state digest
+      established_by: >-
+        environment/phase_a.py, which digests the canonical encoding of the kernel's carry at the
+        splice offset and records it in the journal halt row.
+      read_by: >-
+        tests/checkers.py check_carried_state_digest_matches, through Harness.halt_row and
+        Harness.handoff.
+      grounding_path: solution/grounding.yaml#derived (recomputed, never literal)
+      gates_required_checker: carried_state_digest_matches
+      rejecting_fixture: solution/fixtures/planted/carried_digest_one_nibble/
+
+stream:
+  schema: oer28.stream/v1
+  generator: >-
+    A fixed integer linear congruential recurrence x <- (1103515245 * x + 12345) mod 2**31,
+    seeded from the constant below. This is arithmetic, not a random source: the sequence is
+    fully determined by the seed recorded here and no module named `random` is imported. Block
+    lengths are drawn first, then samples, in one pass over the stream.
+  seed: 20260831
+  block_count: 40
+  block_length: {base: 380, modulus: 240}
+  sample: {base: 1000000, modulus: 1000000}
+  sample_width_rule: >-
+    Every sample is a seven digit integer by construction, and both discovery values are shorter
+    than seven digits, so no token of environment/stream.json can collide with a discovery value
+    under a word-boundary scan. That is why the sample base is a million rather than zero.
+
+params:
+  schema: oer28.params/v1
+  modulus: 2147483647
+  ratio: 1103
+  window: 24
+  splice_charge_budget: 241000
+  budget_rule: >-
+    The agent phase halts after the first whole block at which cumulative_outputs * window
+    reaches splice_charge_budget. The budget is frozen and agent-visible; the OFFSET it lands on
+    is not, because it depends on the drawn block lengths and is established only by running.
+
+operator:
+  definition: >-
+    For the concatenated stream x of length M, y[i] = ( sum over j in 0..window-1 of
+    (ratio ** j mod modulus) * x[i - j] ) mod modulus, with x[t] = 0 for t < 0.
+  reference_cost: >-
+    The reference kernel charges one Tape read per in-segment term, so an output at segment
+    offset u charges min(u + 1, window) reads.
+  fused_identity: >-
+    Because the weights are the geometric sequence ratio ** j, the finite impulse response
+    collapses to a first order recurrence: y[i] = ( ratio * y[i-1] + x[i] - (ratio ** window mod
+    modulus) * x[i - window] ) mod modulus. That charges one read for x[i] and, once the segment
+    is at least window samples deep, one more for x[i - window], so the fused kernel charges
+    length + max(0, length - window) reads on a segment of that length. The speedup is therefore
+    close to window / 2 and is measured rather than asserted.
+
+anchors:
+  anchors_state: absent
+  gap_id: gap-oer-per-family-anchors-unmeasured
+  family_baseline_metric: null
+  family_target_metric: null
+  statement: >-
+    F5 is registered and unscoped in requirements/bia-environment-spec.md and records no measured
+    baseline, target, pass threshold or instance count, so no family anchor number is invented
+    here. The two numbers tests/bound.json carries are instance-local, measured by
+    solution/recompute.py on this slot's own frozen substrate, and are declared under
+    gap-oer-28-instance-local-anchors-not-family-anchors as NOT family anchors.
+  instance_local_anchors:
+    gap_id: gap-oer-28-instance-local-anchors-not-family-anchors
+    baseline_kernel: the frozen reference kernel, which charges exactly the reference cost and therefore scores a speedup of one
+    target_kernel: the fused first order recurrence recorded under operator.fused_identity
+    measured_by: solution/recompute.py, over the frozen stream and parameters
+    both_are_instance_local: true
+
+reward:
+  carrier_path: /logs/verifier/reward.txt
+  carrier_form: one bare float
+  score_document_path: /logs/verifier/score.json
+  interval: [0.0, 1.0]
+  direction: higher is better
+  never_binary: true
+  full_reward_exactly: 1.0
+  formula: raw = (agent_metric - baseline_metric) / (target_metric - baseline_metric)
+  clip: score = min(max(raw, 0.0), 1.0)
+  bar_not_point: reaching the target scores exactly 1.0 and beating it also scores 1.0
+  gate: >-
+    Every required checker must pass before the continuous term is computed. The first failing
+    required checker owns the zero and its machine-readable reason.
+
+readout_manipulation_obligation:
+  speedup: >-
+    Computed BY THE VERIFIER from its own Tape counter over its own resume run. No number the
+    submission reported reaches the reward.
+  reported_field_role: >-
+    handoff.reported_resume_charge exists so a substitution is visible rather than ignorable. It
+    is compared and never used.
+  correctness: >-
+    Computed BY THE VERIFIER as the rollup over every block digest, the agent phase half read out
+    of the harness journal and the resume half computed live, against the frozen reference rollup.
+  no_partial_output: >-
+    Every block of the frozen stream must carry exactly one output digest across the two phases,
+    with no gap, no duplicate and no reordering.
+
+checker_fixture_substitution:
+  - checker: agent_phase_journal_present
+    substitution: planted workspace fixture
+    fixture: solution/fixtures/planted/agent_phase_skipped/
+    why: >-
+      The rejecting half is the case where no agent phase ran at all. That state cannot be
+      reached by any kernel a solver writes, because a solver that runs the driver gets a
+      journal and a solver that does not gets no run at all. It is carried on a planted
+      workspace whose harness journal is absent and whose handoff is otherwise complete, which
+      is exactly the shape of a synthesised handoff. Recorded here rather than papered over.
+  - checker: journal_chain_intact
+    substitution: planted workspace fixture
+    fixture: solution/fixtures/planted/journal_row_edited/
+    why: >-
+      An honest driver run always produces a chain that recomputes, so no kernel choice reaches
+      this checker's rejecting half. What reaches it is a hand-authored journal, and the fixture
+      is the reference journal with one block row's recorded output digest moved by one nibble
+      and every other byte held. Recorded here rather than papered over.
+  - checker: kernel_identity_stable_across_splice
+    substitution: planted workspace fixture
+    fixture: solution/fixtures/planted/kernel_swapped_after_splice/
+    why: >-
+      The rejecting half is a seam attack: run the agent phase under one kernel and present a
+      different one to the verifier. The fixture is the reference run with the installed kernel
+      replaced by the reference kernel after the journal was written, so the journal's recorded
+      kernel digest and the digest of the graded kernel disagree while nothing else moves.
+      Recorded here rather than papered over.
+
+gaps:
+  - id: gap-oer-per-family-anchors-unmeasured
+    reason: per-family-anchors
+    cap: HOLD:PILOT_REQUIRED
+    statement: F5 records no measured baseline or target, so the reward schema is bound while the two numbers it divides by are absent at family scope.
+    consequence: The slot carries instance-local anchors declared as not family anchors and caps at HOLD:PILOT_REQUIRED.
+  - id: gap-oer-28-instance-local-anchors-not-family-anchors
+    reason: anchors-are-instance-local
+    cap: HOLD:PILOT_REQUIRED
+    statement: The baseline and target in tests/bound.json are measured on this slot's own frozen substrate and are not family anchors.
+    consequence: Recorded beside the numbers rather than presented as a family measurement.
+  - id: gap-oer-28-substrate-counts-reads-not-seconds
+    reason: substrate-is-a-counter-not-a-clock
+    cap: HOLD:PILOT_REQUIRED
+    statement: The graded speedup is a ratio of instrumented read counts and not a ratio of wall clock durations.
+    consequence: Declared in instruction.md and in TRUTH.md, and never presented as a timing measurement.
+  - id: gap-oer-28-journal-forgeable-by-doing-the-work
+    reason: structural-binding-not-cryptographic
+    cap: HOLD:PILOT_REQUIRED
+    statement: >-
+      The harness journal is bound to the operator semantics, to the frozen stream and to the digest of
+      the graded kernel, but it carries no secret, so a solver who reimplements the driver exactly can
+      author a journal that recomputes. That solver has by construction executed the operator over the
+      whole agent-phase prefix under the graded kernel, which is the work the phase exists to require,
+      so the binding is structural rather than cryptographic and is recorded as such rather than
+      overstated.
+    consequence: TRUTH.md states the limit plainly and no checker claims unforgeability.
+  - id: gap-oer-28-accelerator-request-is-a-lint-floor
+    reason: manifest-field-and-role-disagree
+    cap: HOLD:PILOT_REQUIRED
+    statement: >-
+      task.toml binds [environment].gpus at 1 and gpu_types at H100 while this slot's substrate uses
+      no accelerator on any path, because seed/harbor_lint.py requires a positive gpus and a non-empty
+      gpu_types for every slot on this roster and refuses the manifest otherwise.
+    observed: >-
+      The graded path is exact integer arithmetic over an instrumented read counter and imports nothing
+      outside the standard library. The oracle's agent phase and the verifier's resume together complete
+      in well under a second on one CPU core, and both images are built from a slim Python base with no
+      accelerator runtime in them at all.
+    why_not_left_at_zero: >-
+      A slot whose manifest the roster lint refuses is BLOCK:INVALID_TASK, so leaving the field at zero
+      would fail the gate rather than record the truth. FORGE conforms to the gate and names the
+      divergence instead of encoding a compute claim it cannot support.
+    what_governs: >-
+      metadata.optimization.compute_envelope_accelerators is 0 and is declared authoritative in
+      task.toml under compute_envelope_note. A reader who needs the real envelope reads that field.
+    what_would_close_it: >-
+      One line in seed/harbor_lint.py admitting a zero-accelerator slot, or a requirements statement
+      that every slot on this roster must request an accelerator whether or not it uses one.
+    consequence: The slot caps at HOLD:PILOT_REQUIRED and the manifest never presents the request as a measurement.
+
+  - id: gap-oer-28-pilot-absent
+    reason: no-signed-pilot
+    cap: HOLD:PILOT_REQUIRED
+    statement: No signed pilot has run against this slot, so its tier is claimed by construction and not established.
+    consequence: target_tier is an authoring target and never a measured claim.

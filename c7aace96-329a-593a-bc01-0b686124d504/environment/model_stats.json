@@ -1,0 +1,22 @@
+{
+  "schema": "oer20.model_stats/v1",
+  "model_id": "frozen-decoder-3blk-surrogate",
+  "frozen": true,
+  "note": "Per-tensor quantization statistics of the FROZEN model. The model is frozen: neither its shapes nor its statistics are free. Only the per-tensor bit width and the quantization scheme are free. sensitivity is the measured second-order loss curvature scale of the tensor and outlier_factor is the measured heavy-tail multiplier of its weight distribution; both are inputs to the harness quantization-error model and neither may be edited by a submission.",
+  "bit_widths_allowed": [2, 3, 4, 5, 6, 8],
+  "schemes_allowed": ["rtn", "affine-per-channel", "error-feedback"],
+  "tensors": [
+    {"name": "emb.tok", "params": 6291456, "sensitivity": 0.35, "outlier_factor": 1.05},
+    {"name": "blk0.attn.qkv", "params": 2359296, "sensitivity": 1.8, "outlier_factor": 1.35},
+    {"name": "blk0.attn.proj", "params": 786432, "sensitivity": 1.2, "outlier_factor": 1.15},
+    {"name": "blk0.mlp.fc", "params": 3145728, "sensitivity": 0.9, "outlier_factor": 1.2},
+    {"name": "blk0.mlp.proj", "params": 3145728, "sensitivity": 0.75, "outlier_factor": 1.1},
+    {"name": "blk1.attn.qkv", "params": 2359296, "sensitivity": 2.4, "outlier_factor": 1.45},
+    {"name": "blk1.attn.proj", "params": 786432, "sensitivity": 1.35, "outlier_factor": 1.18},
+    {"name": "blk1.mlp.fc", "params": 3145728, "sensitivity": 1.05, "outlier_factor": 1.22},
+    {"name": "blk1.mlp.proj", "params": 3145728, "sensitivity": 0.85, "outlier_factor": 1.12},
+    {"name": "blk2.attn.qkv", "params": 2359296, "sensitivity": 2.9, "outlier_factor": 1.5},
+    {"name": "blk2.mlp.fc", "params": 3145728, "sensitivity": 1.15, "outlier_factor": 1.25},
+    {"name": "lm_head", "params": 6291456, "sensitivity": 0.55, "outlier_factor": 1.08}
+  ]
+}

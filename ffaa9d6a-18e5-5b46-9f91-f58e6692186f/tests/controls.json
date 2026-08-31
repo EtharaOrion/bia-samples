@@ -1,0 +1,52 @@
+{
+  "anchor_resolution": "run_local_harness_controls",
+  "anchors_gap": "gap-oer-per-family-anchors-unmeasured",
+  "anchors_state": "absent",
+  "banner": "GENERATED SECTION. DO NOT HAND-EDIT.",
+  "corpus_construction": {
+    "eval_start": 50000,
+    "fields": [
+      "id",
+      "seq",
+      "code",
+      "rank",
+      "slot",
+      "mass",
+      "span",
+      "unit"
+    ],
+    "offset": 13,
+    "stride": 7919
+  },
+  "drift_state_final": {
+    "compute_meter_source": "harness-counter",
+    "evaluation_points_scheduled": 3,
+    "graded_denominator_key": "frozen_eval_byte_count",
+    "graded_readout_filter": "none",
+    "paying_direction": "numeric_units"
+  },
+  "flatten_epsilon_bits": 0.005,
+  "flatten_run_required": 2,
+  "reference_allocation": {
+    "merge_depth": 448,
+    "numeric_units": 124,
+    "punct_units": 0,
+    "span_units": 500
+  },
+  "separation_margin": 0.05,
+  "single_direction_sweep": {
+    "merge_depth": {
+      "merge_depth": 1200
+    },
+    "numeric_units": {
+      "numeric_units": 1200
+    },
+    "punct_units": {
+      "punct_units": 1200
+    },
+    "span_units": {
+      "span_units": 1200
+    }
+  },
+  "source": "solution/grounding.yaml"
+}
