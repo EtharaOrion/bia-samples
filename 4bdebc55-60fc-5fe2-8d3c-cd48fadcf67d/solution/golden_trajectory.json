@@ -45,11 +45,13 @@
     "claim": {
       "curated_digest": "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9",
       "curated_documents": 1959,
+      "curated_tokens": 815884,
       "exit_status": 0,
       "match_count": 2137,
       "pool_state": "curated",
       "source_digest": "sha256:e6906c89673963d9bc1dfa408364782e482e9e8ab5cb3d8a9c5e765c0f1bdf4e",
       "source_documents": 4096,
+      "source_tokens": 1700736,
       "stages": 4,
       "status": "ok"
     },
@@ -103,9 +105,25 @@
     "pool": {
       "curated_digest": "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9",
       "curated_documents": 1959,
+      "curated_tokens": 815884,
       "observed_at_seq": 4,
       "source_digest": "sha256:e6906c89673963d9bc1dfa408364782e482e9e8ab5cb3d8a9c5e765c0f1bdf4e",
-      "source_documents": 4096
+      "source_documents": 4096,
+      "source_tokens": 1700736
+    },
+    "reference": {
+      "arm": "harness",
+      "curated_digest": "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9",
+      "curated_documents": 1959,
+      "curated_tokens": 815884,
+      "loss": 3.05,
+      "stage_counts": [
+        4096,
+        3072,
+        2939,
+        2613,
+        1959
+      ]
     },
     "register": {
       "observed_at_seq": 3,

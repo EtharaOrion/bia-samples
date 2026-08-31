@@ -33,6 +33,10 @@ import sys
 import tempfile
 from pathlib import Path
 
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+
+from calibration import CALIBRATION_ALLOCATION  # noqa: E402
+
 # The control allocation is the harness's own within-run comparator: every tensor
 # at the budget's mean bit width under round-to-nearest. It is measured on the
 # same frozen shards, in the same scheduled order, from the same reference, so
@@ -322,6 +326,45 @@ def measurement(points: list) -> dict:
     }
 
 
+def calibration_probe(model: dict, corpus: dict, reference: dict, order) -> dict:
+    """Measure the reference allocation against the frozen substrate, every run.
+
+    This is the harness's own fixed probe and it is a pure function of the built
+    environment: the submission supplies nothing to it and cannot move it. The
+    frozen-input digests prove the input BYTES did not move; they cannot prove the
+    measurement still reads those bytes the way this bundle recorded, because the
+    error model, the scheme multipliers, the parameter weighting and the jitter
+    coupling all live here rather than in the frozen files. The probe closes that,
+    and the checkers grade its reading against the value the environment
+    establishes.
+    """
+    allocation = normalise_allocation(model, CALIBRATION_ALLOCATION)
+    if not allocation["wellformed"]:
+        return {
+            "source": "harness-recompute",
+            "wellformed": False,
+            "defect": allocation["defect"],
+            "points_used": 0,
+            "separation_mean": None,
+            "noise_half_width": None,
+        }
+    points = evaluate(model, corpus, reference, allocation, order)
+    measure = measurement(points)
+    return {
+        "source": "harness-recompute",
+        "wellformed": True,
+        "defect": None,
+        "state_digest": state_digest(model, allocation),
+        "points_used": measure["points_used"],
+        "separation_mean": measure["separation_mean"],
+        "noise_half_width": measure["noise_half_width"],
+        "shard_separations": [
+            {"shard_id": row["shard_id"], "paired_separation": row["paired_separation"]}
+            for row in points
+        ],
+    }
+
+
 def _child_environment() -> dict:
     return {name: os.environ[name] for name in ENV_ALLOWLIST if name in os.environ}
 
@@ -434,6 +477,7 @@ def build_telemetry(environment: Path, allocation_raw, submission_meta: dict) ->
         "schedule": schedule,
         "points": points,
         "measurement": measurement(points),
+        "calibration": calibration_probe(model, corpus, reference, schedule["order"]),
     }
 
 

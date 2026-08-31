@@ -26,6 +26,7 @@ from checkers import check_early_stop_is_not_a_crossing  # noqa: E402
 from checkers import check_crossing_sustained  # noqa: E402
 from checkers import check_target_band_reached_by_session  # noqa: E402
 from checkers import check_multi_seed_separation_established  # noqa: E402
+from checkers import check_reference_operating_point_matches_final_state  # noqa: E402
 
 FIXTURES = TESTS / "fixtures"
 
@@ -93,6 +94,10 @@ def test_target_band_reached_by_session():
 def test_multi_seed_separation_established():
     _both(check_multi_seed_separation_established, "reject_multi_seed_separation_established.json", "separation-not-established")
 
+
+def test_reference_operating_point_matches_final_state():
+    _both(check_reference_operating_point_matches_final_state, "reject_reference_operating_point_matches_final_state.json", "reference-operating-point-unheld")
+
 CASES = (
     ("test_attempt_sequence_contiguous", test_attempt_sequence_contiguous),
     ("test_session_holds_attempt_budget", test_session_holds_attempt_budget),
@@ -104,6 +109,7 @@ CASES = (
     ("test_crossing_sustained", test_crossing_sustained),
     ("test_target_band_reached_by_session", test_target_band_reached_by_session),
     ("test_multi_seed_separation_established", test_multi_seed_separation_established),
+    ("test_reference_operating_point_matches_final_state", test_reference_operating_point_matches_final_state),
 )
 
 

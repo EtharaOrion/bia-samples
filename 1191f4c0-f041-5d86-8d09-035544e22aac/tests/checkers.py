@@ -69,6 +69,9 @@ class Handle:
     sustain_floor_den: int = 2
     flatten_window: int = 3
     trace_ids: tuple = ()
+    seed_derivation: dict = field(default_factory=dict)
+    observed_trace: tuple = ()
+    graded_trace: tuple = ()
     ledger: tuple = ()
     recomputed: tuple = ()
     selected_index: int = -1
@@ -88,6 +91,51 @@ def digest_text(text: str) -> str:
 
 def canonical(payload: Any) -> str:
     return json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
+
+
+def seeded_requests(spec: dict) -> list:
+    """Re-derive the frozen request stream from the bound starting state of the recurrence.
+
+    x <- (multiplier * x + increment) mod modulus, three draws per request: the arrival
+    gap, the prompt length and the output length. Integer arithmetic only, so this is not
+    a random source and reproduces forever. The starting state itself is never asserted;
+    what is asserted is the two hundred requests it produces.
+    """
+    state = int(spec["seed"])
+    multiplier = int(spec["multiplier"])
+    increment = int(spec["increment"])
+    modulus = int(spec["modulus"])
+    gap_span = 2 * int(spec["mean_gap_ticks"]) - 1
+    prompt_span = int(spec["prompt_span"])
+    output_span = int(spec["output_span"])
+    prompt_base = int(spec["prompt_base"])
+    output_base = int(spec["output_base"])
+    count = int(spec["count"])
+    if modulus <= 0 or gap_span <= 0 or prompt_span <= 0 or output_span <= 0 or count <= 0:
+        raise ValueError("degenerate recurrence")
+    rows = []
+    tick = 0
+    for index in range(count):
+        state = (multiplier * state + increment) % modulus
+        tick += 1 + (state % gap_span)
+        state = (multiplier * state + increment) % modulus
+        prompt = prompt_base + (state % prompt_span)
+        state = (multiplier * state + increment) % modulus
+        output = output_base + (state % output_span)
+        rows.append(("r{0:03d}".format(index), tick, prompt, output))
+    return rows
+
+
+def _request_tuples(rows) -> list:
+    return [
+        (
+            str(row["id"]),
+            int(row["arrival_tick"]),
+            int(row["prompt_tokens"]),
+            int(row["output_tokens"]),
+        )
+        for row in rows or ()
+    ]
 
 
 def _feasible(row: dict, slo: int) -> bool:
@@ -136,6 +184,34 @@ def check_environment_frozen(handle: Handle) -> tuple:
     for name in sorted(handle.bound_digests):
         if handle.observed_digests.get(name) != handle.bound_digests[name]:
             return False, "frozen-substrate-modified"
+    return True, ""
+
+
+def check_trace_is_seed_derived(handle: Handle) -> tuple:
+    """DIVERGENCE. The built request trace is the stream the bound starting state produces.
+
+    The starting state of the trace recurrence is held on the verifier side and appears on
+    no agent-visible byte. Its consequence is the whole environment: two hundred arrival
+    ticks, prompt lengths and output lengths, and through them every throughput and every
+    tail this slot grades. So this checker never compares the integer against itself. It
+    advances the recurrence from that state, in this process, and refuses unless the trace
+    standing in the built environment at grade time AND the trace the verifier actually
+    simulates over both reproduce the derived stream request for request. An environment
+    raised from any other starting state fails here, and the reward is zero with a reason.
+    """
+    spec = dict(handle.seed_derivation or {})
+    if not spec:
+        return False, "trace-not-seed-derived"
+    try:
+        expected = seeded_requests(spec)
+        observed = _request_tuples(handle.observed_trace)
+        graded = _request_tuples(handle.graded_trace)
+    except (KeyError, TypeError, ValueError, ZeroDivisionError):
+        return False, "trace-not-seed-derived"
+    if observed != expected or graded != expected:
+        return False, "trace-not-seed-derived"
+    if tuple(str(item) for item in handle.trace_ids) != tuple(row[0] for row in expected):
+        return False, "trace-not-seed-derived"
     return True, ""
 
 
@@ -326,6 +402,7 @@ def check_harness_owns_the_clock(handle: Handle) -> tuple:
 # primary attribution, alongside the complete failed set.
 GRADED = (
     ("environment_frozen", check_environment_frozen),
+    ("trace_is_seed_derived", check_trace_is_seed_derived),
     ("attempt_ledger_recomputed", check_attempt_ledger_recomputed),
     ("trace_fully_accounted", check_trace_fully_accounted),
     ("no_request_shed", check_no_request_shed),
@@ -361,6 +438,9 @@ def handle_from_payload(payload: dict) -> Handle:
         sustain_floor_den=int(payload.get("sustain_floor_den", 2)),
         flatten_window=int(payload.get("flatten_window", 3)),
         trace_ids=tuple(payload.get("trace_ids") or ()),
+        seed_derivation=dict(payload.get("seed_derivation") or {}),
+        observed_trace=tuple(payload.get("observed_trace") or ()),
+        graded_trace=tuple(payload.get("graded_trace") or ()),
         ledger=tuple(payload.get("ledger") or ()),
         recomputed=tuple(payload.get("recomputed") or ()),
         selected_index=int(payload.get("selected_index", -1)),

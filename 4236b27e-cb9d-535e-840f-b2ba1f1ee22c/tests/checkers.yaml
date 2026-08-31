@@ -20,7 +20,7 @@ anchors:
   note: "baseline_metric and target_metric are not authored anywhere in this bundle. The graded run resolves them from the harness record at /logs/verifier/anchors.json; an unresolved record scores 0.0 with reason anchors-unresolved."
 
 substitutions:
-  note: "No checker's rejecting half is carried by substitution. Every one of the nine is fired by a planted telemetry fixture in seed/tasks/OER-07/adequacy.py, and each planted defect fires exactly one checker. Nothing here is papered over, and there is nothing to record under this key."
+  note: "No checker's rejecting half is carried by substitution. Every one of the ten is fired by a planted telemetry fixture generated from solution/grounding.yaml into solution/fixtures/, and each planted defect fires exactly one checker. Nothing here is papered over, and there is nothing to record under this key."
   entries: []
 
 checkers:
@@ -132,3 +132,17 @@ checkers:
     basis: live
     live_state_read: "/logs/verifier/frozen_axes.json, whose observed side is instrumented from the live loader and the live model rather than copied from the declared side."
     compiled_test: "tests/test_output.py::test_frozen_axes_unmoved"
+
+  - id: evaluation_schedule_as_scheduled
+    statement: "The run evaluated on the point series the verifier itself scheduled, under the bound target loss, sustain window and minimum seed count."
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: check_evaluation_schedule_as_scheduled
+    zero_reason: evaluation-schedule-not-as-scheduled
+    required: true
+    weight: 3
+    basis: live
+    live_state_read: "/logs/verifier/eval/schedule.json, the schedule the harness wrote for this run, against tests/schedule_expected.json, the verifier's frozen copy of its own schedule."
+    expectation_is_verifier_only: "tests/schedule_expected.json is generated from solution/grounding.yaml `schedule` by solution/recompute.py. The point series is on no agent-visible surface: not instruction.md, not task.toml, not environment/. It is obtainable only by reading the live schedule the harness wrote, so this checker's outcome depends on a value a solver has to get from the environment."
+    why_the_frame_is_graded: "Every other checker reads its target loss, sustain window, seed minimum and point series out of the run's own schedule.json. Trusting that file makes the frame whatever the run says it is, and a shortened point series shrinks the window a crossing must survive. Grading the frame closes that."
+    compiled_test: "tests/test_output.py::test_evaluation_schedule_as_scheduled"

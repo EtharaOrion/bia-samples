@@ -99,6 +99,28 @@ def build_trace(ground):
     }
 
 
+def build_trace_with_inter_arrival(ground, base, modulus):
+    """The frozen trace rebuilt under a perturbed inter-arrival cadence.
+
+    Used only to derive the REJECTING fixtures for arrival_cadence_ordered. The delivered
+    trace is always built by build_trace from grounding's own inter_arrival_ms block; nothing
+    perturbed here ever reaches environment/.
+    """
+    perturbed = json.loads(json.dumps(ground))
+    perturbed["trace"]["inter_arrival_ms"] = {"base": int(base), "modulus": int(modulus)}
+    return build_trace(perturbed)
+
+
+def arrival_gap_sequence(trace):
+    """Inter-arrival gaps of a trace, the first measured from the generator origin of zero."""
+    gaps = []
+    previous = 0
+    for stamp in sorted(int(row["arrival_ms"]) for row in trace["requests"]):
+        gaps.append(stamp - previous)
+        previous = stamp
+    return gaps
+
+
 def build_envelope(ground):
     block = ground["envelope"]
     payload = {"banner": BANNER, "source": SOURCE}
@@ -255,11 +277,46 @@ def planted_unsustained_telemetry(trace, envelope, config):
     )
 
 
+ARRIVAL_CADENCE_NEAR_MISSES = (
+    ("base_minus_one", -1, 0),
+    ("base_plus_one", 1, 0),
+    ("modulus_minus_one", 0, -1),
+    ("modulus_plus_one", 0, 1),
+)
+
+
+def planted_arrival_cadence_telemetry(ground, envelope, config, base_delta, modulus_delta):
+    """Harness telemetry over a trace whose inter-arrival cadence is off by exactly one.
+
+    The rejecting half of arrival_cadence_ordered cannot be carried by a configuration: the
+    free surface is batching, scheduling and admission, and none of them moves the arrival
+    cadence of a frozen trace. It is carried on these fixtures instead, and each one differs
+    from the accepting fixture in the inter-arrival VALUE alone, so passing on the reference
+    telemetry and failing on these proves the checker turns on the cadence rather than on the
+    shape of an arrival stream.
+    """
+    block = ground["trace"]["inter_arrival_ms"]
+    trace = json.loads(
+        json_text(
+            build_trace_with_inter_arrival(
+                ground,
+                int(block["base"]) + base_delta,
+                int(block["modulus"]) + modulus_delta,
+            )
+        )
+    )
+    _resolved, telemetry = serving_sim.simulate(trace, envelope, config)
+    return "".join(
+        json.dumps(row, sort_keys=True, separators=(",", ":")) + "\n" for row in telemetry
+    )
+
+
 CHECKER_IDS = (
     "trace_and_envelope_unmodified",
     "iteration_sequence_ordered",
     "summary_matches_durable_record",
     "every_request_accounted",
+    "arrival_cadence_ordered",
     "no_early_stop_harvest",
     "unsmoothed_graded_readout",
     "slo_p99_respected",
@@ -293,6 +350,7 @@ def build_test_output():
         "import grade  # noqa: E402",
         "",
         "REFERENCE = BUNDLE / 'solution' / 'fixtures' / 'reference_run'",
+        "PLANTED = BUNDLE / 'solution' / 'fixtures' / 'planted'",
         "",
         "",
         "def _outcomes():",
@@ -301,8 +359,22 @@ def build_test_output():
         "    return {row.ident: row for row in grade.run_all(harness, bound)}",
         "",
         "",
+        "def _planted_telemetry(name):",
+        "    rows = []",
+        "    for line in (PLANTED / name).read_text(encoding='utf-8').splitlines():",
+        "        line = line.strip()",
+        "        if line:",
+        "            rows.append(json.loads(line))",
+        "    return rows",
+        "",
+        "",
+        "def _cadence_outcome_over(name):",
+        "    harness = checkers.Harness(telemetry=_planted_telemetry(name))",
+        "    return checkers.check_arrival_cadence_ordered(harness, grade.load_bound(BUNDLE))",
+        "",
+        "",
         "def test_every_checker_is_declared():",
-        "    declared = set(grade.CHECKER_ORDER)",
+        "    declared = {ident for ident, _selector in grade.CHECKER_ORDER}",
         "    assert declared == set(_outcomes())",
         "",
     ]
@@ -316,8 +388,26 @@ def build_test_output():
                 "",
             ]
         )
+    for name, _base_delta, _modulus_delta in ARRIVAL_CADENCE_NEAR_MISSES:
+        lines.extend(
+            [
+                "",
+                "def test_arrival_cadence_rejects_" + name + "():",
+                "    outcome = _cadence_outcome_over('arrival_cadence_" + name + ".jsonl')",
+                "    assert not outcome.passed, outcome.detail",
+                "    assert outcome.reason == checkers.REASON_ARRIVAL_CADENCE, outcome.reason",
+                "",
+            ]
+        )
     lines.extend(
         [
+            "",
+            "def test_arrival_cadence_accepts_the_reference_telemetry():",
+            "    harness = grade.build_harness(BUNDLE, REFERENCE)",
+            "    bound = grade.load_bound(BUNDLE)",
+            "    outcome = checkers.check_arrival_cadence_ordered(harness, bound)",
+            "    assert outcome.passed, outcome.detail",
+            "",
             "",
             "def test_reference_scores_full_reward():",
             "    harness = grade.build_harness(BUNDLE, REFERENCE)",
@@ -633,6 +723,15 @@ def derive():
     out["solution/fixtures/planted/unsustained_telemetry.jsonl"] = (
         planted_unsustained_telemetry(trace, envelope, submission["config"])
     )
+    for name, base_delta, modulus_delta in ARRIVAL_CADENCE_NEAR_MISSES:
+        out["solution/fixtures/planted/arrival_cadence_" + name + ".jsonl"] = (
+            planted_arrival_cadence_telemetry(
+                ground, envelope, submission["config"], base_delta, modulus_delta
+            )
+        )
+
+    inter_arrival = ground["trace"]["inter_arrival_ms"]
+    arrival_gaps = arrival_gap_sequence(trace)
 
     bound = {
         "banner": BANNER,
@@ -649,6 +748,10 @@ def derive():
         "retain": int(ground["refinement_loop"]["retain"]),
         "instance_baseline_tps": baseline_reading["tokens_per_second"],
         "instance_target_tps": target_reading["tokens_per_second"],
+        "arrival_gap_base_ms": int(inter_arrival["base"]),
+        "arrival_gap_modulus_ms": int(inter_arrival["modulus"]),
+        "arrival_gap_min_ms": min(arrival_gaps),
+        "arrival_gap_max_ms": max(arrival_gaps),
         "instance_baseline_config": serving_sim.resolve_config(baseline_config, envelope),
         "instance_target_config": serving_sim.resolve_config(target_config, envelope),
         "reference_submission_sha256": sha256_text(files["submission.json"]),

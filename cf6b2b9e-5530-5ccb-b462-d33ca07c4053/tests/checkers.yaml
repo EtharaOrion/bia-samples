@@ -32,6 +32,18 @@ adequacy:
   substitutions: none
   accepting_half: tests/fixtures.json case reference-accepted
   reference_bytes_bound: tests/fixtures.json reference_module_sha256 over solution/reference.py
+  surrogate_scale_sensitivity_probe: >-
+    surrogate_scale_witness_matches_live_substrate fires its rejecting half three ways,
+    because the constant it grades is a round number a run could plausibly guess without
+    ever reading the environment. ctl-surrogate-scale-witness-near-miss is the near miss:
+    every other field is byte-identical to the accepted submission and only the constant
+    is displaced by near_miss_constant_delta, which moves the probe value at the fourth
+    decimal place. ctl-surrogate-scale-constant-guessed-unit takes the constant as unity,
+    which is what the bare degradation form gives a run that never opened the substrate.
+    ctl-surrogate-scale-witness-absent omits the field entirely. All three are refused,
+    and tests/test_output.py::test_surrogate_scale_probe_is_sensitive_to_the_constant
+    asserts the three digests are pairwise distinct from the accepted one, so the checker
+    is proven sensitive to the constant rather than merely present.
 
 # NO CLOCK IS READ by any checker. Temporal ordering in this slot is carried entirely
 # by harness-owned calibration-version handles and their issued integer ticks.
@@ -93,6 +105,18 @@ checkers:
     weight: 1
     live_state_read: "calibration_version_in_force and the per-version sensitivity digests the verifier computed from its pristine environment/calibration_stats.json, against the submitted derived_against_calibration_version and calibration_fit_witness"
     compiled_test: "tests/test_output.py::test_allocation_matches_in_force_calibration"
+
+  - id: surrogate_scale_witness_matches_live_substrate
+    statement: "The surrogate scale the submission fitted under is the one live substrate state declares: the submitted surrogate_scale_witness equals the verifier's digest over the probe it replayed from its own pristine environment/substrate.json degradation constant against the in-force calibration sensitivity vector."
+    reduction: DIVERGENCE
+    reached_by: tests/grade.py
+    selector: check_surrogate_scale_witness_matches_live_substrate
+    zero_reason: surrogate-scale-constant-not-established
+    required: true
+    weight: 1
+    live_state_read: "degradation_constant_K and uniform_reference_bits in the verifier's pristine environment/substrate.json, and the in-force sensitivity vector in the verifier's pristine environment/calibration_stats.json, replayed through tests/grade.py _degradation and _surrogate_scale_witness in build_telemetry, against the submitted surrogate_scale_witness"
+    compiled_test: "tests/test_output.py::test_surrogate_scale_witness_matches_live_substrate"
+    discovery_value: "degradation_constant_K, established only in built environment state and absent from every agent-visible byte; the digest is reproducible only by a run that read it back from that state"
 
   - id: graded_degradation_is_verifier_recomputed
     statement: "The graded perplexity degradation is the verifier's own unsmoothed recomputation over the frozen evaluation corpus from harness-owned quantized state, and the declared readout filter is inside the registry in force, so a smoothed or blended readout is refused rather than accepted."

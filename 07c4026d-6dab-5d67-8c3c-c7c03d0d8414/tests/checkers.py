@@ -249,15 +249,9 @@ def check_evaluation_point_is_bound_not_selected(h: Harness) -> Outcome:
 
 
 # --------------------------------------------------------------------------
-# VALUE. The reward span rests on the reference anchor the environment
-# establishes, and on no other number.
-#
-# The reference loss is nowhere on the agent-visible surface and is not
-# derivable from it: it exists only once the chain has been run in the live
-# environment, where the harness measures it as the `floor` anchor through the
-# identical frozen protocol. Grading the live measurement against the bound
-# value keeps the denominator of (baseline - agent) / (baseline - floor) tied to
-# state the run actually established.
+# VALUE. The floor anchor the harness measures in-run is the bound reference
+# loss, so the denominator of (baseline - agent) / (baseline - floor) rests on a
+# number the live environment established and on no other.
 # --------------------------------------------------------------------------
 def check_floor_anchor_matches_bound_reference(h: Harness) -> Outcome:
     row = h.telemetry.get("floor") or {}
@@ -575,6 +569,7 @@ CHECKERS = (
     ("evaluation_point_is_bound_not_selected", check_evaluation_point_is_bound_not_selected),
     ("graded_loss_from_harness_weights", check_graded_loss_from_harness_weights),
     ("no_smoothing_on_graded_path", check_no_smoothing_on_graded_path),
+    ("floor_anchor_matches_bound_reference", check_floor_anchor_matches_bound_reference),
     ("end_to_end_gain_not_stage_local", check_end_to_end_gain_not_stage_local),
     ("loss_sustained_across_bound_evals", check_loss_sustained_across_bound_evals),
     ("session_state_carried_forward", check_session_state_carried_forward),

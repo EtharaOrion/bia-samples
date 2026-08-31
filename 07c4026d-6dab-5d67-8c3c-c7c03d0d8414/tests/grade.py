@@ -37,6 +37,7 @@ from checkers import (  # noqa: E402
     check_end_to_end_gain_not_stage_local,
     check_eval_split_not_trained_on,
     check_evaluation_point_is_bound_not_selected,
+    check_floor_anchor_matches_bound_reference,
     check_frozen_axes_unmodified,
     check_full_chain_completed_no_early_stop,
     check_graded_loss_from_harness_weights,
@@ -60,6 +61,11 @@ GRADED = (
     ("evaluation_point_is_bound_not_selected", check_evaluation_point_is_bound_not_selected, True, 1),
     ("graded_loss_from_harness_weights", check_graded_loss_from_harness_weights, True, 1),
     ("no_smoothing_on_graded_path", check_no_smoothing_on_graded_path, True, 1),
+    # The floor anchor is graded BEFORE the two checkers that compare against it,
+    # so a span resting on an anchor the environment did not establish surfaces
+    # under its own reason instead of being reported as a composition that failed
+    # to improve.
+    ("floor_anchor_matches_bound_reference", check_floor_anchor_matches_bound_reference, True, 1),
     # The end-to-end gain is graded BEFORE the sustain invariant. Both refuse a
     # composition that fails to improve overall, but only one of them names that
     # as what happened: a submission that never improved is a stage-local optimum,
@@ -105,6 +111,7 @@ ZERO_REASONS = {
     "evaluation_point_is_bound_not_selected": "evaluation-point-submission-selected",
     "graded_loss_from_harness_weights": "graded-loss-not-from-harness-weights",
     "no_smoothing_on_graded_path": "readout-smoothing-on-graded-path",
+    "floor_anchor_matches_bound_reference": "floor-anchor-not-the-bound-reference",
     "loss_sustained_across_bound_evals": "improvement-not-sustained",
     "session_state_carried_forward": "session-state-broken",
     "end_to_end_gain_not_stage_local": "stage-local-optimum-degrades-composition",

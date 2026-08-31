@@ -41,6 +41,7 @@ from checkers import (  # noqa: E402
     check_early_stop_does_not_establish_metric,
     check_frozen_corpus_and_reference_unmodified,
     check_graded_degradation_is_verifier_recomputed,
+    check_surrogate_scale_witness_matches_live_substrate,
 )
 
 try:
@@ -63,6 +64,7 @@ CHECKERS = (
     ("bit_budget_respected_as_allocated", check_bit_budget_respected_as_allocated),
     ("calibration_probe_ledger_ordered", check_calibration_probe_ledger_ordered),
     ("allocation_matches_in_force_calibration", check_allocation_matches_in_force_calibration),
+    ("surrogate_scale_witness_matches_live_substrate", check_surrogate_scale_witness_matches_live_substrate),
     ("graded_degradation_is_verifier_recomputed", check_graded_degradation_is_verifier_recomputed),
     ("early_stop_does_not_establish_metric", check_early_stop_does_not_establish_metric),
     ("degradation_sustained_across_scheduled_points", check_degradation_sustained_across_scheduled_points),
@@ -81,6 +83,10 @@ FROZEN_ARTIFACTS = (
 HELD_OUT_PAYLOAD = "tests/eval_corpus.json"
 
 ROUND = 9
+
+# The degradation constant is established only in harness-built environment state, at
+# environment/substrate.json degradation_constant_K, and sits on no agent-visible byte.
+SURROGATE_SCALE_PROBE_TAG = "oer22.surrogate-scale-probe/v1"
 
 
 def _sha256(path: Path):
@@ -108,6 +114,12 @@ def _degradation(tensors, allocation, sensitivity, constant) -> float:
     for index, row in enumerate(tensors):
         accumulated += float(sensitivity[index]) * int(row["numel"]) * (2.0 ** (-2 * int(allocation[row["id"]])))
     return round(float(constant) * accumulated / total, ROUND)
+
+
+def _surrogate_scale_witness(probe_value: float) -> str:
+    payload = [SURROGATE_SCALE_PROBE_TAG, probe_value]
+    canonical = json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
+    return hashlib.sha256(canonical.encode("utf-8")).hexdigest()
 
 
 def build_telemetry(bundle: Path, submission, workspace: Path | None = None) -> dict:
@@ -196,6 +208,13 @@ def build_telemetry(bundle: Path, submission, workspace: Path | None = None) -> 
     digests = {int(key): value for key, value in scale["calibration_digests"].items()}
     in_force = int(state["calibration_version_in_force"])
 
+    uniform_bits = int(substrate["uniform_reference_bits"])
+    uniform_allocation = {row["id"]: uniform_bits for row in tensors}
+    in_force_sensitivity = next(
+        row["sensitivity"] for row in stats["versions"] if int(row["version"]) == in_force
+    )
+    probe_value = _degradation(tensors, uniform_allocation, in_force_sensitivity, constant)
+
     return {
         "schema": "oer22.telemetry/v1",
         "submission_present": bool(payload),
@@ -227,6 +246,15 @@ def build_telemetry(bundle: Path, submission, workspace: Path | None = None) -> 
             "recorded_version_digests": {
                 str(row["version"]): row["sensitivity_digest"] for row in stats["versions"]
             },
+        },
+        "surrogate_scale": {
+            "constant_read_from": "environment/substrate.json degradation_constant_K, verifier pristine copy",
+            "probe_tag": SURROGATE_SCALE_PROBE_TAG,
+            "probe_allocation_bits": uniform_bits,
+            "probe_calibration_version": in_force,
+            "probe_value": probe_value,
+            "witness_from_live_substrate": _surrogate_scale_witness(probe_value),
+            "declared_witness": payload.get("surrogate_scale_witness"),
         },
         "protocol": {
             "scheduled_points": scheduled,

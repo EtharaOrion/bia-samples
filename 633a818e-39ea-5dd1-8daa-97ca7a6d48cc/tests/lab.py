@@ -260,6 +260,18 @@ def control_means():
     return baseline, target
 
 
+def reference_final_state_detail():
+    """The operating point REFERENCE_FINAL_STATE produces, measured on this surface.
+
+    Measured here, at grading time, in exactly the way every other control is
+    measured, so a checker can compare it against the reference-operating-point
+    control the reward formula divides by instead of taking split invariance on
+    trust. It is a measurement of the frozen surrogate surface and never an anchor.
+    """
+    mean, per_seed = mean_steps(dict(REFERENCE_FINAL_STATE))
+    return mean, per_seed, gain_milli(REFERENCE_FINAL_STATE)
+
+
 def raw_reward(baseline, target, agent):
     """The bound lower-is-better formula, clipped to the closed interval."""
     if baseline is None or target is None or agent is None:

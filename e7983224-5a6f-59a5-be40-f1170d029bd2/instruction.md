@@ -110,3 +110,5 @@ Every zero score carries a `reason` in `/logs/verifier/score.json` alongside the
 | `flattened-direction-not-reallocated` | a direction stopped paying and the allocation never moved off it |
 | `carried-state-collapsed` | the carried per-direction frontier was reset or truncated between attempts |
 | `single-direction-sweep-not-exceeded` | the result does not beat the harness's own single-direction sweep by the bound margin |
+| `frozen-corpus-phase-not-established` | the corpus in this environment does not carry the construction phase the verifier measures over |
+| `frozen-corpus-period-not-established` | the corpus in this environment does not carry the construction period the verifier measures over |

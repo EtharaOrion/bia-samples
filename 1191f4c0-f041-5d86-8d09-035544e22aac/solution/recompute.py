@@ -89,22 +89,47 @@ def digest_text(text: str) -> str:
     return hashlib.sha256(text.encode("utf-8")).hexdigest()
 
 
+def seed_derivation(block: dict) -> dict:
+    """The verifier-held derivation of the frozen trace: starting state and recurrence.
+
+    This block reaches tests/fixtures/substrate.json, which is verifier-only, and no
+    agent-visible byte. check_trace_is_seed_derived advances the recurrence from it at
+    grade time and refuses a built environment whose trace is not what it produces.
+    """
+    return {
+        key: int(block[key])
+        for key in (
+            "seed",
+            "count",
+            "mean_gap_ticks",
+            "multiplier",
+            "increment",
+            "modulus",
+            "prompt_base",
+            "prompt_span",
+            "output_base",
+            "output_span",
+        )
+    }
+
+
 def build_trace(block: dict) -> dict:
     """The frozen request trace, from the fixed integer recurrence in grounding.yaml."""
-    state = int(block["seed"])
-    gap = int(block["mean_gap_ticks"])
+    spec = seed_derivation(block)
+    state = spec["seed"]
+    gap = spec["mean_gap_ticks"]
     rows = []
     tick = 0
 
     def draw() -> int:
         nonlocal state
-        state = (1103515245 * state + 12345) % (2**31)
+        state = (spec["multiplier"] * state + spec["increment"]) % spec["modulus"]
         return state
 
-    for index in range(int(block["count"])):
+    for index in range(spec["count"]):
         tick += 1 + (draw() % (2 * gap - 1))
-        prompt = 96 + (draw() % 416)
-        output = 12 + (draw() % 52)
+        prompt = spec["prompt_base"] + (draw() % spec["prompt_span"])
+        output = spec["output_base"] + (draw() % spec["output_span"])
         rows.append(
             {
                 "id": "r{0:03d}".format(index),
@@ -165,7 +190,7 @@ def golden_session(trace: dict, hardware: dict, objective: dict) -> dict:
     return harness_sim.report(session, "raw")
 
 
-def handle_payload(session: dict, trace: dict, hardware: dict, objective: dict, digests: dict, windows: dict, flatten: int) -> dict:
+def handle_payload(session: dict, trace: dict, hardware: dict, objective: dict, digests: dict, windows: dict, flatten: int, spec: dict) -> dict:
     return {
         "session_present": True,
         "bound_digests": dict(digests),
@@ -176,6 +201,9 @@ def handle_payload(session: dict, trace: dict, hardware: dict, objective: dict, 
         "sustain_floor_den": int(windows["sustain_floor_den"]),
         "flatten_window": int(flatten),
         "trace_ids": [row["id"] for row in trace["requests"]],
+        "seed_derivation": dict(spec),
+        "observed_trace": copy.deepcopy(trace["requests"]),
+        "graded_trace": copy.deepcopy(trace["requests"]),
         "ledger": session["attempts"],
         "recomputed": [recompute_row(trace, hardware, row["config"]) for row in session["attempts"]],
         "selected_index": int(session["selected_attempt"]),
@@ -196,7 +224,7 @@ def _plant(payload: dict, index: int, patch: dict) -> dict:
     return row
 
 
-def build_planted(golden: dict, trace: dict, hardware: dict, objective: dict, greedy: dict) -> dict:
+def build_planted(golden: dict, trace: dict, hardware: dict, objective: dict, greedy: dict, reseeded: dict) -> dict:
     slo = int(objective["p99_tpot_centiticks"])
     selected = int(golden["selected_index"])
     rows = {}
@@ -204,6 +232,14 @@ def build_planted(golden: dict, trace: dict, hardware: dict, objective: dict, gr
     row = copy.deepcopy(golden)
     row["observed_digests"]["trace.json"] = "0" * 64
     rows["environment_frozen"] = row
+
+    # The rejecting half of trace_is_seed_derived: an environment raised from the control
+    # starting state of grounding.yaml control_schedules.reseeded_trace. The bound seed
+    # derivation is left untouched, so what the checker refuses is the built environment.
+    row = copy.deepcopy(golden)
+    row["observed_trace"] = copy.deepcopy(reseeded["requests"])
+    row["graded_trace"] = copy.deepcopy(reseeded["requests"])
+    rows["trace_is_seed_derived"] = row
 
     row = copy.deepcopy(golden)
     row["ledger"][0]["telemetry_digest"] = "0" * 64
@@ -254,7 +290,7 @@ def build_planted(golden: dict, trace: dict, hardware: dict, objective: dict, gr
     return rows
 
 
-def greedy_session(trace: dict, hardware: dict, objective: dict, digests: dict, windows: dict, flatten: int) -> dict:
+def greedy_session(trace: dict, hardware: dict, objective: dict, digests: dict, windows: dict, flatten: int, spec: dict) -> dict:
     """The single-axis sweep: the whole budget on max_batch_size, never reallocated."""
     configs = []
     for value in harness_sim.LATTICE["max_batch_size"]:
@@ -262,7 +298,7 @@ def greedy_session(trace: dict, hardware: dict, objective: dict, digests: dict, 
         config["max_batch_size"] = value
         configs.append(config)
     session = harness_sim.report(harness_sim.run_session(configs, trace, hardware, objective), "raw")
-    return handle_payload(session, trace, hardware, objective, digests, windows, flatten), session
+    return handle_payload(session, trace, hardware, objective, digests, windows, flatten, spec), session
 
 
 def build_test_output(order) -> str:
@@ -487,6 +523,7 @@ def artifacts() -> dict:
 
     windows = grounding["windows"]
     flatten = int(grounding["flattening"]["window"])
+    spec = seed_derivation(grounding["trace"])
     substrate = {
         "banner": BANNER,
         "source": SOURCE,
@@ -495,6 +532,7 @@ def artifacts() -> dict:
         "hardware": hardware,
         "objective": objective,
         "bound_digests": digests,
+        "seed_derivation": spec,
         "window_count": int(windows["count"]),
         "sustain_floor_num": int(windows["sustain_floor_num"]),
         "sustain_floor_den": int(windows["sustain_floor_den"]),
@@ -502,8 +540,8 @@ def artifacts() -> dict:
     }
 
     session = golden_session(trace, hardware, objective)
-    golden_handle = handle_payload(session, trace, hardware, objective, digests, windows, flatten)
-    greedy_handle, greedy_doc = greedy_session(trace, hardware, objective, digests, windows, flatten)
+    golden_handle = handle_payload(session, trace, hardware, objective, digests, windows, flatten, spec)
+    greedy_handle, greedy_doc = greedy_session(trace, hardware, objective, digests, windows, flatten, spec)
 
     recorded = [
         {"stage": stage["stage"], "config": harness_sim.normalise(stage["config"])}
@@ -562,7 +600,15 @@ def artifacts() -> dict:
         "target_config": best.config,
         "controls": {"greedy_single_axis_sweep": greedy_doc},
     }
-    planted = build_planted(golden_handle, trace, hardware, objective, greedy_handle)
+    reseeded = build_trace(
+        dict(grounding["trace"], seed=int(grounding["control_schedules"]["reseeded_trace"]["seed"]))
+    )
+    if reseeded["requests"] == trace["requests"]:
+        raise SystemExit(
+            "the reseeded control trace equals the frozen trace, so the rejecting half of "
+            "trace_is_seed_derived would prove nothing"
+        )
+    planted = build_planted(golden_handle, trace, hardware, objective, greedy_handle, reseeded)
 
     order = [(ident, checker_module.__dict__["check_" + ident](checker_module.handle_from_payload(planted[ident]))[1]) for ident, _ in checker_module.GRADED]
 

@@ -38,6 +38,8 @@ CONSUMED_KEYS = (
     "harness.anchors",
     "harness.attempts",
     "harness.graded.bpb",
+    "harness.corpus",
+    "harness.corpus_probe",
 )
 
 #: Fields of the submission document that a grading path must never consume. Mirrors
@@ -64,6 +66,57 @@ def corpora() -> tuple:
 
 def _key(payload: dict) -> str:
     return json.dumps(payload, sort_keys=True, separators=(",", ":"))
+
+
+def corpus_probe() -> dict:
+    """Measure the construction phase and period off the LIVE frozen evaluation corpus.
+
+    Every corpus line picks its parts by the fixed index arithmetic
+    `table[(index * stride + offset) % len(table)]`, so the built corpus bytes are the only
+    place the two construction parameters are observable. This reads them back through the
+    frozen substrate's own handle and isolates each one on its own:
+
+      phase  -- the table position of the OPENING field name of the first record line whose
+                absolute index is congruent to 0 modulo the table width. There the `index *
+                stride` term is congruent to 0, so the position is `offset % width` and the
+                stride cancels identically.
+      step   -- the cyclic distance between consecutive field names WITHIN that one record.
+                Consecutive slots differ by one in `index`, so the distance is
+                `stride % width` and the offset cancels identically.
+
+    Pure and deterministic: it reads frozen bytes off disk and does integer arithmetic. It
+    reads no clock, no random source, no network and no environment secret.
+    """
+    construction = controls()["corpus_construction"]
+    fields = [str(name) for name in construction["fields"]]
+    width = len(fields)
+    start = int(construction["eval_start"])
+    row = {
+        "table_width": width,
+        "line_index": None,
+        "field_names": [],
+        "phase": None,
+        "step": None,
+        "eval_sha256": substrate.frozen_eval_digest(),
+    }
+    if width <= 0:
+        return row
+    lines = substrate.load_frozen("eval.txt").decode("ascii").split("\n")[1:]
+    for ordinal, line in enumerate(lines):
+        index = start + ordinal
+        if index % width or not (line.startswith("{") and line.endswith("}")):
+            continue
+        names = [part.split("=", 1)[0].strip() for part in line[1:-1].split(";")]
+        if len(names) < 2 or any(name not in fields for name in names):
+            continue
+        positions = [fields.index(name) for name in names]
+        steps = {(positions[i + 1] - positions[i]) % width for i in range(len(positions) - 1)}
+        row["line_index"] = index
+        row["field_names"] = names
+        row["phase"] = positions[0]
+        row["step"] = steps.pop() if len(steps) == 1 else None
+        return row
+    return row
 
 
 def telemetry_for(payload: dict) -> dict:
@@ -185,6 +238,13 @@ def context_for(document) -> dict:
                 "floor, so it saturates at a finite depth and nothing announces it"
             ),
         },
+        "corpus": {
+            "stride": int(table["corpus_construction"]["stride"]),
+            "offset": int(table["corpus_construction"]["offset"]),
+            "fields": list(table["corpus_construction"]["fields"]),
+            "eval_start": int(table["corpus_construction"]["eval_start"]),
+        },
+        "corpus_probe": corpus_probe(),
         "consumed_keys": list(CONSUMED_KEYS),
         "forbidden_consumed": list(FORBIDDEN_CONSUMED),
     }

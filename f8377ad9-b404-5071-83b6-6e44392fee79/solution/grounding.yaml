@@ -24,6 +24,7 @@ derivation:
     - solution/solve.sh
     - solution/TRUTH.md
     - solution/rubrics.json
+    - tests/calibration.py
     - tests/test_output.py
   generated_banner: "GENERATED SECTION. DO NOT HAND-EDIT."
   check_mode: "python3 solution/recompute.py --check exits non-zero when any generated artifact drifts from what this source derives"
@@ -208,6 +209,120 @@ expected_result:
   reason: separation-margin-cleared
   reward: 1.0
 
+# The two numbers expected_result records above, separation_mean and
+# noise_half_width, are DISCOVERY values: they exist nowhere on the agent surface
+# and are obtainable only by measuring the built environment. Until this block
+# existed they were grounded and decorative, because no graded outcome read them.
+# This block binds them onto the graded path.
+calibration_probe:
+  id: reference-allocation-calibration-probe
+  centre_source: expected_result.separation_mean
+  width_source: expected_result.noise_half_width
+  half_width_tolerance: 1.0e-05
+  band_epsilon: 1.0e-12
+  what: >-
+    tests/runner.py measures ONE extra allocation on every run, alongside whatever
+    the submission supplied: the reference allocation, over the same frozen model
+    statistics, the same frozen corpus, the same verifier-derived shard order and
+    the same frozen unquantized reference. The probe is a pure function of the
+    built environment and is independent of the submission, so requiring it to
+    read back the two numbers recorded above constrains the measurement pipeline
+    and never the solver's search. An allocation that clears the margin still
+    scores 1.0 and one that does not still scores its ramp value.
+  why_two_reductions: >-
+    calibration_separation_within_band is a DIVERGENCE over the centre: the probe's
+    measured separation must sit inside centre plus or minus width. It is load
+    bearing for BOTH numbers, because the accepting fixture sits exactly on the
+    inner edge at centre plus width and the rejecting fixture sits one near-miss
+    offset outside it, so shrinking the recorded width breaks the accepting half
+    and widening it breaks the rejecting half. calibration_noise_band_width_held is
+    a VALUE over the width alone: the probe's measured half-width must equal the
+    recorded one inside half_width_tolerance, which pins the second number without
+    routing it through the first.
+  why_not_a_digest: >-
+    frozen_corpus_and_reference_intact proves the frozen input BYTES did not move.
+    It cannot prove that the measurement still reads those bytes the way this file
+    recorded, because the error model, the scheme multipliers, the parameter
+    weighting and the jitter coupling all live in the harness rather than in the
+    frozen files. A substituted or re-tuned measurement path passes every digest
+    and fails this probe.
+  tolerance_note: >-
+    half_width_tolerance is 1.0e-05 because expected_result carries the two numbers
+    rounded to six decimals while the harness measures them at full precision. The
+    largest rounding residual is 5.0e-07, so the tolerance admits the rounding and
+    still refuses a near miss at 1.0e-06 outside it. band_epsilon is 1.0e-12 and
+    exists only so that a fixture placed exactly on an edge is not decided by the
+    last bit of a binary float.
+
+# The frozen halves. Each row is one telemetry fixture, derived here and rendered
+# into tests/calibration.py as fully resolved float literals:
+#   separation_mean  = centre * 1 + mean_offset_in_widths * width + mean_offset
+#   noise_half_width = width * width_scale + width_offset
+calibration_band_fixtures:
+  - id: accept_calibration_band_at_the_grounded_centre
+    checker: calibration_separation_within_band
+    half: accepting
+    mean_offset_in_widths: 0.0
+    mean_offset: 0.0
+    width_scale: 1.0
+    width_offset: 0.0
+    expect_reason: ''
+    proves: "the reading the built environment produces is accepted"
+  - id: accept_calibration_band_on_the_inner_edge
+    checker: calibration_separation_within_band
+    half: accepting
+    mean_offset_in_widths: 1.0
+    mean_offset: 0.0
+    width_scale: 1.0
+    width_offset: 0.0
+    expect_reason: ''
+    proves: "a recorded width any smaller would reject this, so the width is load bearing for the accepting half"
+  - id: reject_calibration_band_near_miss_outside_the_edge
+    checker: calibration_separation_within_band
+    half: rejecting
+    mean_offset_in_widths: 1.0
+    mean_offset: 1.0e-06
+    width_scale: 1.0
+    width_offset: 0.0
+    expect_reason: calibration-separation-outside-band
+    proves: "one near-miss offset past the inner edge rejects, so the checker depends on the value and not on the shape"
+  - id: reject_calibration_band_far_from_the_centre
+    checker: calibration_separation_within_band
+    half: rejecting
+    mean_offset_in_widths: 40.0
+    mean_offset: 0.0
+    width_scale: 1.0
+    width_offset: 0.0
+    expect_reason: calibration-separation-outside-band
+    proves: "a separation that is the right shape and the wrong size rejects"
+  - id: accept_calibration_width_at_the_grounded_value
+    checker: calibration_noise_band_width_held
+    half: accepting
+    mean_offset_in_widths: 0.0
+    mean_offset: 0.0
+    width_scale: 1.0
+    width_offset: 0.0
+    expect_reason: ''
+    proves: "the recorded noise half width accepts"
+  - id: reject_calibration_width_near_miss_outside_tolerance
+    checker: calibration_noise_band_width_held
+    half: rejecting
+    mean_offset_in_widths: 0.0
+    mean_offset: 0.0
+    width_scale: 1.0
+    width_offset: 1.1e-05
+    expect_reason: calibration-noise-band-width-moved
+    proves: "a half width one near-miss offset past half_width_tolerance rejects"
+  - id: reject_calibration_width_doubled
+    checker: calibration_noise_band_width_held
+    half: rejecting
+    mean_offset_in_widths: 0.0
+    mean_offset: 0.0
+    width_scale: 2.0
+    width_offset: 0.0
+    expect_reason: calibration-noise-band-width-moved
+    proves: "a band twice as wide rejects, so a noisier measurement cannot be passed off as this one"
+
 checker_fixtures:
   - id: accepting
     label: reference-allocation-accepted-end-to-end
@@ -243,6 +358,12 @@ checker_fixtures:
   - id: reject_unproven_at_ceiling
     checker: separation_margin_cleared
     expect_reason: significance-unestablished-at-ceiling
+  - id: reject_calibration_separation_outside_band
+    checker: calibration_separation_within_band
+    expect_reason: calibration-separation-outside-band
+  - id: reject_calibration_noise_band_width_moved
+    checker: calibration_noise_band_width_held
+    expect_reason: calibration-noise-band-width-moved
 
 rubric_source:
   - id: rubric-claimed-significance-not-established

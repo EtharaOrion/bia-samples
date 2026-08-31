@@ -197,6 +197,31 @@ checkers:
     compiled_test: "tests/test_output.py::test_multi_seed_separation_established"
     drift_keys_read: [seed_ladder]
 
+  - id: reference_operating_point_matches_final_state
+    statement: "The reference-operating-point control the reward formula divides by is the operating point the reference session's own final carried state produces on the verifier's surface, and the session's recorded final state is the state its last attempt closed on, so the graded scale is a state a session actually holds and never a number authored beside it."
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: check_reference_operating_point_matches_final_state
+    zero_reason: reference-operating-point-unheld
+    required: true
+    weight: 1
+    live_state_read: "header.reference_final_state_control_mean and header.reference_final_state_control_per_seed against header.target_control_mean and header.target_control_per_seed, and footer.final_state against the last attempt's state_after, in /logs/verifier/session.jsonl; every one of them measured by tests/lab.py inside the verifier's process at grading time"
+    compiled_test: "tests/test_output.py::test_reference_operating_point_matches_final_state"
+    drift_keys_read: [reference_final_state, target_control_mean]
+    adequacy_substitution: planted-telemetry-fixture
+    adequacy_substitution_reason: >-
+      No submission can fire this checker, because both operating points are
+      measured by the verifier from tests/lab.py and the submission never writes
+      either. The isolation boundary holds, so the rejecting half is carried on a
+      planted telemetry fixture whose header names a different final state, and
+      the substitution is recorded here rather than papered over.
+    grades_discovery_value: >-
+      reference_policy.expected_final_state in solution/grounding.yaml, which
+      tests/lab.py carries as REFERENCE_FINAL_STATE and solution/recompute.py
+      asserts equal to the grounding value on every run. A wrong value moves
+      reference_final_state_control_mean off target_control_mean and this gate
+      scores the session zero, so the graded path depends on it.
+
 stale_controls:
   - id: ctl-verdict-from-pre-flattening-surface
     binds: reallocation_follows_flattening
@@ -213,3 +238,6 @@ stale_controls:
   - id: ctl-weights-from-submission-selected-checkpoint
     binds: graded_weights_are_run_weights
     statement: "Weights taken from a submission-selected checkpoint score a step the run never held."
+  - id: ctl-reference-control-measured-at-a-state-no-session-holds
+    binds: reference_operating_point_matches_final_state
+    statement: "A reference-operating-point control measured at coordinates the reference session never ends on divides the reward by a bar nothing reached, so every session is scored against a scale its own carried state cannot be read back from."

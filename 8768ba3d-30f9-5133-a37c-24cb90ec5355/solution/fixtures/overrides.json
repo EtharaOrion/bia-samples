@@ -37,6 +37,13 @@
       "note": "an evaluation recorded at a batch the feed never reached",
       "set_record_batch_index": 999
     },
+    "feed_budget": {
+      "handle": "feed",
+      "note": "a feed ledger graded against a token budget this bundle never froze",
+      "set": {
+        "budget": 24000
+      }
+    },
     "model_counts": {
       "handle": "model",
       "note": "a count table that does not derive from the feed ledger",

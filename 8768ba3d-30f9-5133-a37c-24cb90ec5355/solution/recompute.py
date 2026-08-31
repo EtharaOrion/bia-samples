@@ -278,6 +278,7 @@ def rubrics_json(ground: dict) -> str:
 
 
 TEST_ROWS = (
+    ("frozen_token_budget_is_the_graded_budget", "check_frozen_token_budget_is_the_graded_budget"),
     ("bound_evaluation_point_reached", "check_bound_evaluation_point_reached"),
     ("token_budget_respected_as_fed", "check_token_budget_respected_as_fed"),
     ("evaluation_split_untrained", "check_evaluation_split_untrained"),
@@ -288,6 +289,24 @@ TEST_ROWS = (
     ("loss_sustained_across_verifier_folds", "check_loss_sustained_across_verifier_folds"),
     ("mixture_beats_default_simplex_optimum", "check_mixture_beats_default_simplex_optimum"),
 )
+
+
+def budget_spec_json(ground: dict) -> str:
+    substrate = ground["substrate"]
+    binding = ground["graded_budget_binding"]
+    return _json(
+        _stamp(
+            {
+                "schema": "oer08.budget/v1",
+                "budget_tokens": int(substrate["budget_tokens"]),
+                "budget_unit": "tokens",
+                "doc_tokens": int(substrate["doc_tokens"]),
+                "graded_by": binding["graded_by"],
+                "read_back_from": binding["read_back_from"].strip(),
+                "why_it_is_load_bearing": binding["why_it_is_load_bearing"].strip(),
+            }
+        )
+    )
 
 
 def test_output_py(ground: dict) -> str:
@@ -380,6 +399,7 @@ def artifacts(ground: dict) -> dict:
         "solution/TRUTH.md": truth_md(ground),
         "solution/rubrics.json": rubrics_json(ground),
         "tests/test_output.py": test_output_py(ground),
+        "tests/budget_spec.json": budget_spec_json(ground),
         "solution/fixtures/manifest.json": _json(
             _stamp({"slot": ground["slot"], "fixtures": fixture_rows(ground)})
         ),

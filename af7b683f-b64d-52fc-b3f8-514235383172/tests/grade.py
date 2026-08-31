@@ -44,6 +44,7 @@ CHECKER_ORDER = (
     ("iteration_sequence_ordered", "check_iteration_sequence_ordered"),
     ("summary_matches_durable_record", "check_summary_matches_durable_record"),
     ("every_request_accounted", "check_every_request_accounted"),
+    ("arrival_cadence_ordered", "check_arrival_cadence_ordered"),
     ("no_early_stop_harvest", "check_no_early_stop_harvest"),
     ("unsmoothed_graded_readout", "check_unsmoothed_graded_readout"),
     ("slo_p99_respected", "check_slo_p99_respected"),

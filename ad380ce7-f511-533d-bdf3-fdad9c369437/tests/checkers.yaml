@@ -26,15 +26,16 @@ graded_quantity:
 
 isolation_substitutions:
   note: >-
-    Invariant 17 requires both halves of every checker. NINE of the eleven cannot be
+    Invariant 17 requires both halves of every checker. TEN of the twelve cannot be
     fired by any submission, because tests/runner.py never lets a submission near the
-    compute counter, the model state, the denominator or the schedule. Their rejecting
-    halves are carried on planted telemetry fixtures generated from
-    solution/grounding.yaml, and the substitution is recorded here and in
+    compute counter, the model state, the denominator, the training corpus or the
+    schedule. Their rejecting halves are carried on planted telemetry fixtures generated
+    from solution/grounding.yaml, and the substitution is recorded here and in
     seed/tasks/OER-15/feasibility.yaml rather than papering over it.
   corrected_in_resume_run: >-
     The count read "Eight" against eleven rows and did not add up. Recounted against the
-    rows as they stand: nine rejecting halves are planted in tests/test_output.py and two
+    rows as they stand, and recounted again when train_corpus_merge_capacity was added:
+    ten rejecting halves are planted in tests/test_output.py and two
     are live. Separately, seed/tasks/OER-15/adequacy.py fires
     submission_vocabulary_took_effect LIVE as well, with a no-op submission whose
     build_vocab returns an empty list, so that checker's rejecting half is observed on a
@@ -69,6 +70,29 @@ checkers:
     live_state_read: "telemetry.frozen, recomputed by environment/harness.py from the corpora on disk and from its own model constants, against environment/manifest.json in the delivery unit"
     compiled_test: "tests/test_output.py::test_frozen_axes_unmoved"
     rejecting_half: planted-telemetry-fixture
+
+  - id: train_corpus_merge_capacity
+    statement: "The frozen training corpus supports exactly the measured number of greedy most-frequent-pair merges, recomputed by the verifier from the corpus bytes the harness resolves, over the same corpus digest the graded run trained on."
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: check_train_corpus_merge_capacity
+    zero_reason: train-corpus-merge-capacity-moved
+    required: true
+    weight: 1
+    live_state_read: "the merge capacity tests/runner.py recomputes in the verifier's own process from harness.BASE/corpus/train.txt under harness.MAX_TOKEN_LEN and the manifest's vocab_budget, carried as run_record.train_merge_capacity with the sha256 it was computed over, against telemetry.frozen.train_corpus_digest"
+    compiled_test: "tests/test_output.py::test_train_corpus_merge_capacity"
+    rejecting_half: planted-telemetry-fixture
+    discovery_value_note: >-
+      This row is why the merge capacity is a DISCOVERY value rather than a
+      decorative one. The count is published on no agent-visible byte: not in
+      instruction.md, not in task.toml, not in environment/manifest.json. It is a
+      property of the training corpus that only running the construction over the
+      live corpus returns. The expected count is held verifier-side in
+      tests/anchors.json, which tests/grade.py overlays onto the run record so a
+      tampered environment/manifest.json cannot move it, and the comparison is
+      exact equality. The rejecting half moves the recomputed capacity by exactly
+      one, so this checker is proven to depend on the VALUE and not on the shape
+      of an integer.
 
   - id: eval_points_ordered_by_updates
     statement: "The evaluation schedule ascends strictly in update count, carries exactly one bound point, and places every sustain point after it."

@@ -294,6 +294,11 @@ planted_fixtures:
   - checker: multi_seed_separation_established
     mutation: make one seed carry the whole separation while the others sit on their control
     expected_reason: separation-not-established
+  - checker: reference_operating_point_matches_final_state
+    mutation: >-
+      rewrite the header's reference final state as one attempt-cap of movement moved off a
+      paying direction onto the flattened one, and remeasure its control from that wrong state
+    expected_reason: reference-operating-point-unheld
 
 # ---------------------------------------------------------------------------
 # Statement ambiguity: two readings of instruction.md, one graded quantity.
@@ -386,6 +391,8 @@ rubric_criteria:
     criterion: The reference requests no blended readout, no halt, no checkpoint and no claimed crossing, so every readout-integrity checker passes on its accepting half.
   - id: reference-separates-on-every-seed
     criterion: Every seed on the bound ladder separates from its own control with a spread of zero, well inside the bound artifact band.
+  - id: reference-final-state-is-the-graded-operating-point
+    criterion: The reference session ends carrying expected_final_state, and the reference-operating-point control the reward divides by is the operating point tests/lab.py measures at exactly that state, so the graded scale is read back from live state rather than authored beside it.
   - id: reference-is-the-bytes-the-checkers-accepted
     criterion: The sha256 of solution/reference.py recorded in the golden trajectory equals the digest the telemetry header carries, so the accepting half proves the checkers accept this reference and not merely some file.
 

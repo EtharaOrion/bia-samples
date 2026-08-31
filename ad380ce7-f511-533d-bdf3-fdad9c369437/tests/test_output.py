@@ -17,10 +17,11 @@ Each `test_<checker id>` carries BOTH halves of exactly one checker declared in
                      checker must return exactly the `zero_reason` its manifest row
                      declares, and no other checker's reason is accepted.
 
-Nine of the eleven rejecting halves are carried on planted telemetry fixtures,
+Ten of the twelve rejecting halves are carried on planted telemetry fixtures,
 because `tests/runner.py` never lets a submission near the compute counter, the
-model state, the denominator or the evaluation schedule. That substitution is
-recorded in `tests/checkers.yaml` and in `seed/tasks/OER-15/feasibility.yaml`.
+model state, the denominator, the training corpus or the evaluation schedule. That
+substitution is recorded in `tests/checkers.yaml` and in
+`seed/tasks/OER-15/feasibility.yaml`.
 
 `seed/tasks/OER-15/adequacy.py` imports the helpers below rather than
 reimplementing them, so the adequacy proof and this suite can never disagree about
@@ -45,6 +46,7 @@ if str(TESTS) not in sys.path:
     sys.path.insert(0, str(TESTS))
 
 import checkers as C  # noqa: E402
+import grade as G  # noqa: E402
 
 
 SUBMISSION_REFERENCE = (
@@ -143,8 +145,14 @@ def apply_ops(record: dict, ops: list) -> dict:
 
 
 def outcome(record: dict, selector: str):
-    """Drive ONE live checker over one record through the real evidence assembly."""
-    evidence = C.evidence_from_record(record, str(BUNDLE))
+    """Drive ONE live checker over one record through the real evidence assembly.
+
+    The verifier-owned anchors in `tests/anchors.json` are overlaid first, exactly as
+    `tests/grade.py` overlays them before it assembles Evidence, so a checker reading a
+    verifier-side operating point sees here what it sees on the graded path.
+    """
+    merged = G.merge_verifier_anchors(record, G.load_anchors())
+    evidence = C.evidence_from_record(merged, str(BUNDLE))
     return getattr(C, selector)(evidence)
 
 
@@ -178,6 +186,13 @@ def test_frozen_axes_unmoved():
     accepts('check_frozen_axes_unmoved')
     planted = apply_ops(base_record(), [{'op': 'set', 'path': ['telemetry', 'frozen', 'model_spec_digest'], 'value': '0000000000000000000000000000000000000000000000000000000000000000'}])
     rejects(planted, 'check_frozen_axes_unmoved', 'frozen-axis-moved')
+
+
+def test_train_corpus_merge_capacity():
+    """train-corpus-merge-capacity-moved. Both halves, one checker."""
+    accepts('check_train_corpus_merge_capacity')
+    planted = apply_ops(base_record(), [{'op': 'add_int', 'path': ['train_merge_capacity'], 'delta': -1}])
+    rejects(planted, 'check_train_corpus_merge_capacity', 'train-corpus-merge-capacity-moved')
 
 
 def test_eval_points_ordered_by_updates():

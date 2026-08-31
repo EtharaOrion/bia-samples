@@ -12,8 +12,10 @@
   "reward_clip": "score = min(max(raw, 0.0), 1.0)",
   "floor_carrier": "environment/manifest.json measured_operating_points.default_construction_optimum_bpb",
   "ceiling_carrier": "tests/anchors.json measured_operating_points.reference_construction_optimum_bpb",
+  "discovery_value_note": "reference_merges is the merge capacity of environment/corpus/train.txt: the number of greedy most-frequent adjacent-pair merges the corpus supports before no pair occurs twice, under the frozen encoder's 16-byte token cap and the vocabulary room the manifest leaves past the 256 single bytes. It appears nowhere on the agent surface. tests/runner.py recomputes it from the live corpus bytes the frozen harness resolves and tests/checkers.check_train_corpus_merge_capacity compares the two exactly, so an off-by-one capacity is graded as a different corpus.",
   "measured_operating_points": {
     "reference_construction_optimum_bpb": 0.2818765313056418,
-    "measured_plateau_gap_bpb": 0.055475307487323655
+    "measured_plateau_gap_bpb": 0.055475307487323655,
+    "reference_merges": 623
   }
 }

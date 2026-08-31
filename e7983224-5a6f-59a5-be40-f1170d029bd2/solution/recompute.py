@@ -147,10 +147,20 @@ def frozen_manifest(train: bytes, evaluation: bytes) -> str:
 
 
 def controls_document(source: dict) -> str:
+    # `corpus_construction` carries this slot's two discovery values, `stride` and `offset`,
+    # into the VERIFIER-ONLY control table, which is where they are readable and the agent
+    # surface is not. They are the fixed index arithmetic the frozen corpus is built by.
+    block = source["corpus"]
     return _json(
         {
             "banner": BANNER,
             "source": SOURCE,
+            "corpus_construction": {
+                "stride": int(block["stride"]),
+                "offset": int(block["offset"]),
+                "fields": list(block["fields"]),
+                "eval_start": int(block["eval_start"]),
+            },
             "single_direction_sweep": source["controls"]["single_direction_sweep"],
             "reference_allocation": source["controls"]["reference_allocation"],
             "flatten_epsilon_bits": source["golden_trajectory"]["flatten_epsilon_bits"],

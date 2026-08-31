@@ -101,6 +101,14 @@ def test_eval_split_not_trained_on():
     assert rejected.reason == "eval-split-leaked", rejected.reason
 
 
+def test_control_arm_displaced():
+    accepted = checkers.check_control_arm_displaced(GOLDEN)
+    assert accepted.passed, accepted.detail
+    rejected = checkers.check_control_arm_displaced(_planted("nc-control-arm-not-displaced"))
+    assert not rejected.passed, "planted fixture nc-control-arm-not-displaced did not fire control_arm_displaced"
+    assert rejected.reason == "control-arm-not-displaced", rejected.reason
+
+
 def test_reference_reaches_full_reward():
     document = grade.score_document(FIXTURES["golden"])
     assert document["reward"] == FIXTURES["expected"]["golden_reward"], document

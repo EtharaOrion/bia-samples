@@ -456,6 +456,12 @@ def fixtures(ground: dict) -> dict:
     ).hexdigest()
     planted["nc-submission-selected-checkpoint"] = row
 
+    row = _deep(base)
+    row["evaluation"]["samples"][0]["loss"] = float(
+        ground["undisplaced_demonstration"]["graded_loss"]
+    )
+    planted["nc-control-arm-not-displaced"] = row
+
     graded = float(base["evaluation"]["samples"][0]["loss"])
     control = float(base["ladder"]["control_arm_loss"])
     floor = float(base["ladder"]["reference_floor_loss"])
@@ -489,6 +495,12 @@ def fixtures(ground: dict) -> dict:
             ),
             "l1_floor": excl["l1_floor"],
             "fed_doc_count": len(base["corpus"]["fed_doc_ids"]),
+            "graded_loss": graded,
+            "control_arm_loss": control,
+            "undisplaced_graded_loss": float(ground["undisplaced_demonstration"]["graded_loss"]),
+            "undisplaced_reward": round(
+                ladder_score(control, floor, float(ground["undisplaced_demonstration"]["graded_loss"])), 12
+            ),
         },
         "reasons": {
             row["id"]: row["expect_reason"] for row in ground["negative_controls"]
@@ -514,6 +526,7 @@ CHECKERS = (
     ("evaluated_weights_harness_owned", "VALUE", "weights-not-harness-owned"),
     ("token_budget_respected_as_fed", "EFFECT", "token-budget-overspent"),
     ("eval_split_not_trained_on", "ABSENCE", "eval-split-leaked"),
+    ("control_arm_displaced", "EFFECT", "control-arm-not-displaced"),
 )
 
 FIXTURE_FOR = {
@@ -526,6 +539,7 @@ FIXTURE_FOR = {
     "evaluated_weights_harness_owned": "nc-submission-selected-checkpoint",
     "token_budget_respected_as_fed": "nc-budget-overspend",
     "eval_split_not_trained_on": "nc-split-leak",
+    "control_arm_displaced": "nc-control-arm-not-displaced",
 }
 
 
@@ -597,6 +611,31 @@ def truth(ground: dict) -> str:
         + " lands at "
         + repr(exp["partial_reward"])
         + ", strictly between 0 and 1."
+    )
+    lines.append("")
+    lines.append("## The loss levels are load-bearing, not decorative")
+    lines.append("")
+    lines.append(
+        "`control_arm_displaced` is the checker whose outcome is a function of the loss LEVELS the "
+        "run reached. The graded loss of "
+        + repr(exp["graded_loss"])
+        + " sits below the control arm of "
+        + repr(exp["control_arm_loss"])
+        + " the harness measured inside the same run, so the accepting half passes. The planted "
+        "fixture `nc-control-arm-not-displaced` carries a graded loss of "
+        + repr(exp["undisplaced_graded_loss"])
+        + ", above that control arm, and the checker rejects it with `control-arm-not-displaced`. "
+        "Its ladder value would be "
+        + repr(exp["undisplaced_reward"])
+        + " either way, so the gate moves no run's number, only the attribution of that zero."
+    )
+    lines.append("")
+    lines.append(
+        "No loss level appears on the agent-visible surface. `instruction.md` names the evaluation "
+        "points, the frozen axes and the scoring formula and never a loss, so the series is "
+        "established only by training and reading the harness's own evaluation back. A solver that "
+        "never interacted with the environment carries no sample series and no measured ladder "
+        "ends, and fails this checker with a named reason rather than passing vacuously."
     )
     lines.append("")
     lines.append("## Anchors")

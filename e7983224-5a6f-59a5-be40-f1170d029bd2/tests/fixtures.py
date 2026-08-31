@@ -156,6 +156,11 @@ def apply_defect(context: dict, defect: dict) -> dict:
                 attempt["carried_frontier"].pop(defect["key"], None)
         return row
 
+    if kind == "perturb_corpus_param":
+        name = str(defect["param"])
+        row["corpus"][name] = int(row["corpus"][name]) + int(defect["delta"])
+        return row
+
     if kind == "set_graded_allocation":
         allocation = {name: 0 for name in harness.substrate.DIRECTIONS}
         allocation.update(defect["allocation"])

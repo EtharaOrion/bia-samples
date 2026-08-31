@@ -3,6 +3,21 @@
   "anchors_gap": "gap-oer-per-family-anchors-unmeasured",
   "anchors_state": "absent",
   "banner": "GENERATED SECTION. DO NOT HAND-EDIT.",
+  "corpus_construction": {
+    "eval_start": 50000,
+    "fields": [
+      "id",
+      "seq",
+      "code",
+      "rank",
+      "slot",
+      "mass",
+      "span",
+      "unit"
+    ],
+    "offset": 13,
+    "stride": 7919
+  },
   "drift_state_final": {
     "compute_meter_source": "harness-counter",
     "evaluation_points_scheduled": 3,

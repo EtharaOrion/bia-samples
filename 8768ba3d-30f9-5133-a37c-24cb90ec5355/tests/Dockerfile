@@ -21,6 +21,7 @@ COPY grade.py /verifier/tests/grade.py
 COPY rubrics.jsonl /verifier/tests/rubrics.jsonl
 COPY test_output.py /verifier/tests/test_output.py
 COPY heldout_spec.json /verifier/tests/heldout_spec.json
+COPY budget_spec.json /verifier/tests/budget_spec.json
 
 RUN chmod +x /verifier/tests/test.sh
 

@@ -162,6 +162,22 @@
       "targets": "frozen_axes_unmoved_across_run"
     },
     {
+      "expect_reason": "graded-readout-off-the-bound-evaluation-step",
+      "expect_reward": 0.0,
+      "id": "neg-graded-readout-off-the-bound-eval-step",
+      "path": "solution/fixtures/neg-graded-readout-off-the-bound-eval-step",
+      "role": "rejecting",
+      "targets": "graded_readout_at_frozen_bound_eval_step"
+    },
+    {
+      "expect_reason": "sustain-schedule-not-the-frozen-schedule",
+      "expect_reward": 0.0,
+      "id": "neg-sustain-schedule-truncated",
+      "path": "solution/fixtures/neg-sustain-schedule-truncated",
+      "role": "rejecting",
+      "targets": "sustain_schedule_matches_frozen_recipe"
+    },
+    {
       "expect_reason": "graded-loss-not-verifier-computed",
       "expect_reward": 0.0,
       "id": "neg-submission-written-reward",

@@ -26,7 +26,7 @@ aggregation:
     Every row below is a required gate and tests/grade.py runs them in the order declared
     here, so required_pass is a literal description of what that file does: one refusal
     resolves the reward to 0.0 carrying that row's zero_reason, and the universal quantifier
-    is never over an empty set because ten rows are marked required. When every required gate
+    is never over an empty set because twelve rows are marked required. When every required gate
     passes, grade.py does NOT return a bare 1.0; it returns the bound continuous formula
     raw = (baseline_metric - agent_metric) / (baseline_metric - target_metric), clipped into
     the closed interval, against anchors the harness measured in that same process. The
@@ -236,3 +236,61 @@ checkers:
       re-measurement of that attempt's allocation, so a fabricated frontier does not survive
     compiled_test: "tests/test_output.py::test_carried_direction_frontier_never_collapses"
     rejecting_half: submission-reachable
+
+  # The two rows below are the GRADED WEIGHT of this slot's two discovery values, `offset`
+  # and `stride`. Both are established only in the built environment: they are the phase and
+  # the period of the fixed index arithmetic every line of environment/corpus/ is picked by.
+  # Neither occurs in instruction.md, task.toml, environment/substrate.py or any other
+  # agent-visible byte; both are carried privately in tests/controls.json, which
+  # solution/recompute.py derives from solution/grounding.yaml. Each row isolates exactly one
+  # of the two, because at a line index congruent to 0 modulo the table width the stride term
+  # cancels out of the phase, and within one record the offset term cancels out of the step.
+  - id: corpus_phase_matches_frozen_offset
+    statement: >-
+      The evaluation corpus this environment was built with opens its record at the phase of
+      the frozen construction, so the reading is taken over the bytes the verifier measures
+      over and not over a corpus assembled under some other construction.
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: corpus_phase_matches_frozen_offset
+    zero_reason: frozen-corpus-phase-not-established
+    required: true
+    weight: 1
+    discovery_value: offset
+    live_state_read: >-
+      the bytes of environment/corpus/eval.txt read back through substrate.load_frozen inside
+      the verifier process, reduced by harness.corpus_probe() to the table position of the
+      opening field name of the first record line standing at an index congruent to 0 modulo
+      the frozen table width, against the phase the frozen construction places it at
+    compiled_test: "tests/test_output.py::test_corpus_phase_matches_frozen_offset"
+    rejecting_half: planted-construction-fixture
+    rejecting_half_substitution: >-
+      No submission can move the phase of the frozen corpus: the corpus is frozen, the agent
+      surface never carries the value, and the harness reads the bytes back off disk inside
+      the grading process. The accepting half drives the checker over the grounding-derived
+      phase and the live corpus; the rejecting half perturbs the frozen construction phase the
+      checker derives its expectation from, so a wrong value is demonstrated to be refused.
+
+  - id: corpus_period_matches_frozen_stride
+    statement: >-
+      The evaluation corpus this environment was built with advances its record by the period
+      of the frozen construction, so the reading is taken over the bytes the verifier measures
+      over and not over a corpus assembled under some other construction.
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: corpus_period_matches_frozen_stride
+    zero_reason: frozen-corpus-period-not-established
+    required: true
+    weight: 1
+    discovery_value: stride
+    live_state_read: >-
+      the same live bytes of environment/corpus/eval.txt, reduced by harness.corpus_probe() to
+      the one constant cyclic distance between consecutive field names inside that record,
+      against the period the frozen construction advances it by
+    compiled_test: "tests/test_output.py::test_corpus_period_matches_frozen_stride"
+    rejecting_half: planted-construction-fixture
+    rejecting_half_substitution: >-
+      No submission can move the period of the frozen corpus, for the same reason. The
+      accepting half drives the checker over the grounding-derived period and the live corpus;
+      the rejecting half perturbs the frozen construction stride the checker derives its
+      expectation from, so a wrong value is demonstrated to be refused.

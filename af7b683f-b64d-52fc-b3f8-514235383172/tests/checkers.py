@@ -1,4 +1,4 @@
-"""The eight graded checkers. Pure, deterministic, and none of them reads a clock.
+"""The nine graded checkers. Pure, deterministic, and none of them reads a clock.
 
 Every number a checker compares comes from one of two places and never from a third:
 
@@ -43,6 +43,7 @@ REASON_EARLY_STOP = "early-stop-window-harvest"
 REASON_SMOOTHED = "readout-smoothed"
 REASON_SLO_EXCEEDED = "p99-slo-exceeded"
 REASON_NOT_SUSTAINED = "reading-not-sustained"
+REASON_ARRIVAL_CADENCE = "arrival-cadence-violated"
 
 
 @dataclass(frozen=True)
@@ -60,6 +61,10 @@ class Bound:
     retain: int
     instance_baseline_tps: float
     instance_target_tps: float
+    arrival_gap_base_ms: int
+    arrival_gap_modulus_ms: int
+    arrival_gap_min_ms: int
+    arrival_gap_max_ms: int
 
     @staticmethod
     def from_mapping(payload: Dict[str, Any]) -> "Bound":
@@ -75,6 +80,10 @@ class Bound:
             retain=int(payload["retain"]),
             instance_baseline_tps=float(payload["instance_baseline_tps"]),
             instance_target_tps=float(payload["instance_target_tps"]),
+            arrival_gap_base_ms=int(payload["arrival_gap_base_ms"]),
+            arrival_gap_modulus_ms=int(payload["arrival_gap_modulus_ms"]),
+            arrival_gap_min_ms=int(payload["arrival_gap_min_ms"]),
+            arrival_gap_max_ms=int(payload["arrival_gap_max_ms"]),
         )
 
 
@@ -226,6 +235,42 @@ def p99_latency_ms(harness: Harness) -> Optional[int]:
     return percentile_99([int(row["latency_ms"]) for row in harness.completions()])
 
 
+def recorded_arrival_sequence(harness: Harness) -> List[int]:
+    """The arrival instants the HARNESS recorded, ascending. Never a clock read.
+
+    Every completion record the simulator emits carries the `arrival_ms` the harness stamped
+    when that request entered the system, so the whole arrival sequence is recoverable from
+    recorded state alone. The `arrival` records carry the instant the serving loop OBSERVED a
+    request, which is coarsened to the step boundary that noticed it; the completion records
+    carry the uncoarsened instant, so the cadence is read from those.
+
+    An empty list is returned when any completion record is missing its arrival stamp, so the
+    caller decides what an unreadable sequence means rather than this helper guessing.
+    """
+    stamps: List[int] = []
+    for row in harness.completions():
+        value = row.get("arrival_ms")
+        if value is None:
+            return []
+        stamps.append(int(value))
+    return sorted(stamps)
+
+
+def arrival_gaps(stamps: List[int]) -> List[int]:
+    """Consecutive inter-arrival gaps, the first measured from the harness origin of zero.
+
+    The frozen trace generator starts its arrival clock at zero and advances it once per
+    request, so the gap from the origin to the first arrival is a draw of the same cadence as
+    every later gap and is included rather than discarded.
+    """
+    gaps: List[int] = []
+    previous = 0
+    for stamp in stamps:
+        gaps.append(stamp - previous)
+        previous = stamp
+    return gaps
+
+
 def windows(harness: Harness, count: int):
     """The verifier's own measurement windows, scheduled by the verifier, not the run.
 
@@ -264,7 +309,7 @@ def windows(harness: Harness, count: int):
 
 
 # ---------------------------------------------------------------------------
-# The eight checkers. Exactly one reduction each.
+# The nine checkers. Exactly one reduction each.
 # ---------------------------------------------------------------------------
 
 
@@ -527,6 +572,137 @@ def check_every_request_accounted(harness: Harness, bound: Bound) -> Outcome:
             sorted(unknown),
         )
     return _pass(ident, "all " + str(len(frozen)) + " requests completed exactly once", len(frozen))
+
+
+def check_arrival_cadence_ordered(harness: Harness, bound: Bound) -> Outcome:
+    """ORDERING. The recorded arrival sequence carries the frozen inter-arrival cadence.
+
+    The graded span opens at the first arrival and closes at the last completion, so the
+    arrival cadence sits directly under the throughput quotient. Nothing else in the chain
+    reads it back: `trace_and_envelope_unmodified` digests the frozen trace and envelope as
+    they sit on disk, and it cannot see a harness replay whose arrival stamps disagree with
+    that cadence, which is exactly what a shifted, compressed or reordered arrival stream
+    would look like on the way to a shorter span and a flattering quotient.
+
+    So this checker reads the sequence back out of the harness's own recorded telemetry and
+    holds it against the bound cadence. Three ordering statements, in order:
+
+      1. the harness emitted one arrival record per request in the frozen trace, and emitted
+         them with non-decreasing stamps, so the observation order is the arrival order;
+      2. the recorded arrival instants are distinct, so the sequence is strictly ascending;
+      3. every inter-arrival gap holds inside the bound cadence window, which is the closed
+         interval from the bound base to base plus modulus minus one, and the widest and
+         narrowest gaps the sequence realises are the bound ones.
+
+    Clause 3 is what makes the cadence load-bearing rather than decorative. The window alone
+    would accept a sequence drawn under a wider modulus, and the realised extremes alone
+    would accept a sequence that never leaves one favourable stretch, so both are required
+    and an off-by-one in either the base or the modulus fails at least one of them.
+
+    No clock is read anywhere here. Every number compared is a virtual millisecond stamp the
+    harness recorded, or a constant the bound handed in.
+    """
+    ident = "arrival_cadence_ordered"
+    emitted = harness.arrivals()
+    if len(emitted) != bound.request_count:
+        return _fail(
+            ident,
+            REASON_ARRIVAL_CADENCE,
+            "the harness telemetry carries "
+            + str(len(emitted))
+            + " arrival records against "
+            + str(bound.request_count)
+            + " requests in the frozen trace",
+            len(emitted),
+        )
+    observed = [int(row["t_ms"]) for row in emitted]
+    for position in range(1, len(observed)):
+        if observed[position] < observed[position - 1]:
+            return _fail(
+                ident,
+                REASON_ARRIVAL_CADENCE,
+                "arrival record "
+                + str(position)
+                + " is stamped at "
+                + str(observed[position])
+                + " ms, before its predecessor at "
+                + str(observed[position - 1])
+                + " ms",
+                observed[position],
+            )
+
+    stamps = recorded_arrival_sequence(harness)
+    if len(stamps) != bound.request_count:
+        return _fail(
+            ident,
+            REASON_ARRIVAL_CADENCE,
+            "the harness completion records carry "
+            + str(len(stamps))
+            + " recorded arrival instants against "
+            + str(bound.request_count)
+            + " requests in the frozen trace",
+            len(stamps),
+        )
+    if len(set(stamps)) != len(stamps):
+        return _fail(
+            ident,
+            REASON_ARRIVAL_CADENCE,
+            "two requests share a recorded arrival instant, so the arrival sequence is not "
+            "strictly ascending",
+            len(set(stamps)),
+        )
+
+    gaps = arrival_gaps(stamps)
+    floor = bound.arrival_gap_base_ms
+    ceiling = bound.arrival_gap_base_ms + bound.arrival_gap_modulus_ms - 1
+    for position, gap in enumerate(gaps):
+        if gap < floor or gap > ceiling:
+            return _fail(
+                ident,
+                REASON_ARRIVAL_CADENCE,
+                "inter-arrival gap "
+                + str(gap)
+                + " ms at position "
+                + str(position)
+                + " falls outside the frozen cadence window ["
+                + str(floor)
+                + ", "
+                + str(ceiling)
+                + "] ms",
+                gap,
+            )
+    narrowest = min(gaps)
+    widest = max(gaps)
+    if widest != bound.arrival_gap_max_ms or narrowest != bound.arrival_gap_min_ms:
+        return _fail(
+            ident,
+            REASON_ARRIVAL_CADENCE,
+            "the recorded arrival cadence realises gaps in ["
+            + str(narrowest)
+            + ", "
+            + str(widest)
+            + "] ms and the frozen cadence realises ["
+            + str(bound.arrival_gap_min_ms)
+            + ", "
+            + str(bound.arrival_gap_max_ms)
+            + "] ms, so the recorded sequence was not drawn under the frozen cadence",
+            [narrowest, widest],
+        )
+    return _pass(
+        ident,
+        "all "
+        + str(len(gaps))
+        + " recorded inter-arrival gaps hold the frozen cadence window ["
+        + str(floor)
+        + ", "
+        + str(ceiling)
+        + "] ms and realise ["
+        + str(narrowest)
+        + ", "
+        + str(widest)
+        + "] ms",
+        [narrowest, widest],
+    )
 
 
 def check_no_early_stop_harvest(harness: Harness, bound: Bound) -> Outcome:

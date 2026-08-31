@@ -169,6 +169,20 @@
       "submission": null,
       "substitution": true,
       "telemetry_override": "eval_batch_index"
+    },
+    {
+      "expected_reason": "frozen-token-budget-not-the-graded-budget",
+      "expected_reward": 0.0,
+      "fires": "frozen_token_budget_is_the_graded_budget",
+      "id": "budget_not_frozen",
+      "kind": "planted-telemetry",
+      "plan_file": "plan-reference.json",
+      "pool_override": null,
+      "readout_override": null,
+      "role": "A feed ledger graded against a token budget this bundle never froze. tests/runner.py writes that field from the corpus it actually fed and the submission never touches it, so the isolation boundary holds and the rejecting half is planted on the handle.",
+      "submission": null,
+      "substitution": true,
+      "telemetry_override": "feed_budget"
     }
   ],
   "slot": "OER-08"

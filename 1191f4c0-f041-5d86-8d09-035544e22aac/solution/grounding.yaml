@@ -98,6 +98,23 @@ trace:
   gap_expression: "1 + (draw mod (2 * mean_gap_ticks - 1))"
   prompt_expression: "96 + (draw mod 416)"
   output_expression: "12 + (draw mod 52)"
+  # The same recurrence and the same three expressions as closed integers. recompute.py
+  # reads them from here instead of carrying constants of its own, and the verifier-owned
+  # seed_derivation block of tests/fixtures/substrate.json is derived from exactly these.
+  multiplier: 1103515245
+  increment: 12345
+  modulus: 2147483648
+  prompt_base: 96
+  prompt_span: 416
+  output_base: 12
+  output_span: 52
+  seed_is_a_discovery_value: >-
+    The seed appears on no agent-visible byte and its consequence does: the whole frozen
+    request stream, two hundred arrival ticks, prompt lengths and output lengths. The
+    graded checker trace_is_seed_derived re-derives that stream from the seed held on the
+    verifier side and refuses a built environment whose trace does not reproduce it, so a
+    seed that moves moves the graded outcome. The checker never asserts the integer
+    itself, which would only re-read a constant; it asserts what the integer produced.
 
 hardware:
   step_base_ticks: 8
@@ -184,6 +201,13 @@ control_schedules:
     max_queue_depth: 16
   exceed_slo_for_throughput:
     max_batch_size: 32
+  reseeded_trace:
+    statement: >-
+      The same recurrence, the same count and the same three expressions, advanced from a
+      different starting state. Every arrival tick, every prompt length and every output
+      length moves with it, so the environment it builds is a different environment.
+      trace_is_seed_derived carries this as its rejecting half.
+    seed: 20260826
   pre_tightening_slo_stale:
     statement: >-
       The verdict computed under the pre-tightening objective of 1900 centiticks, carried

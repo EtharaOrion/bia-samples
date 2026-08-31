@@ -75,6 +75,15 @@ def test_allocation_matches_in_force_calibration():
     assert rejecting['by_checker']['allocation_matches_in_force_calibration'] is False, rejecting
 
 
+def test_surrogate_scale_witness_matches_live_substrate():
+    accepting = _score('reference-accepted')
+    assert accepting['by_checker']['surrogate_scale_witness_matches_live_substrate'] is True, accepting
+    rejecting = _score('ctl-surrogate-scale-witness-near-miss')
+    assert rejecting['reward'] == 0.0, rejecting
+    assert rejecting['reason'] == CASES['ctl-surrogate-scale-witness-near-miss']['expect_reason'], rejecting
+    assert rejecting['by_checker']['surrogate_scale_witness_matches_live_substrate'] is False, rejecting
+
+
 def test_graded_degradation_is_verifier_recomputed():
     accepting = _score('reference-accepted')
     assert accepting['by_checker']['graded_degradation_is_verifier_recomputed'] is True, accepting
@@ -100,6 +109,26 @@ def test_degradation_sustained_across_scheduled_points():
     assert rejecting['reward'] == 0.0, rejecting
     assert rejecting['reason'] == CASES['ctl-sustained-claim-over-two-points']['expect_reason'], rejecting
     assert rejecting['by_checker']['degradation_sustained_across_scheduled_points'] is False, rejecting
+
+
+def test_surrogate_scale_probe_is_sensitive_to_the_constant():
+    probe = FIXTURES['surrogate_scale_probe']
+    accepted = CASES['reference-accepted']['submission']['surrogate_scale_witness']
+    assert accepted == probe['witness'], accepted
+    wrong = [probe['near_miss_witness'], probe['unit_constant_witness']]
+    assert probe['near_miss_constant_delta'] > 0.0, probe
+    for other in wrong:
+        assert other != accepted, other
+    assert wrong[0] != wrong[1], wrong
+    for case_id in (
+        'ctl-surrogate-scale-witness-near-miss',
+        'ctl-surrogate-scale-constant-guessed-unit',
+        'ctl-surrogate-scale-witness-absent',
+    ):
+        row = _score(case_id)
+        assert row['reward'] == 0.0, row
+        assert row['reason'] == 'surrogate-scale-constant-not-established', row
+        assert row['by_checker']['surrogate_scale_witness_matches_live_substrate'] is False, row
 
 
 def test_statement_admits_exactly_one_graded_outcome():

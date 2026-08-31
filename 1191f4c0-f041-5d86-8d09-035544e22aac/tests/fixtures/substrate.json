@@ -33,6 +33,18 @@
     "statement": "The graded tail is the 99th percentile, over every request in the frozen trace, of the per-output-token decode latency measured in hundredths of a tick. It is a raw order statistic recomputed by the verifier and never a number a submission reported."
   },
   "schema": "oer23.substrate/v1",
+  "seed_derivation": {
+    "count": 200,
+    "increment": 12345,
+    "mean_gap_ticks": 12,
+    "modulus": 2147483648,
+    "multiplier": 1103515245,
+    "output_base": 12,
+    "output_span": 52,
+    "prompt_base": 96,
+    "prompt_span": 416,
+    "seed": 20260825
+  },
   "source": "solution/grounding.yaml",
   "sustain_floor_den": 2,
   "sustain_floor_num": 1,

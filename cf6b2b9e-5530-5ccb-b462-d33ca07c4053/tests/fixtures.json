@@ -39,7 +39,8 @@
           "filter": "none",
           "reported_degradation": 0.269349757
         },
-        "schema": "oer22.submission/v1"
+        "schema": "oer22.submission/v1",
+        "surrogate_scale_witness": "e1e72240deb6299474577024a7e9fd53eafc4c5e01f3311504fb0f10b40d56a9"
       },
       "workspace_mutation": null
     },
@@ -68,7 +69,8 @@
           "filter": "none",
           "reported_degradation": 0.269349757
         },
-        "schema": "oer22.submission/v1"
+        "schema": "oer22.submission/v1",
+        "surrogate_scale_witness": "e1e72240deb6299474577024a7e9fd53eafc4c5e01f3311504fb0f10b40d56a9"
       },
       "workspace_mutation": null
     },
@@ -110,7 +112,8 @@
           "filter": "none",
           "reported_degradation": 0.269349757
         },
-        "schema": "oer22.submission/v1"
+        "schema": "oer22.submission/v1",
+        "surrogate_scale_witness": "e1e72240deb6299474577024a7e9fd53eafc4c5e01f3311504fb0f10b40d56a9"
       },
       "workspace_mutation": "environment/reference_model.json"
     },
@@ -152,7 +155,8 @@
           "filter": "none",
           "reported_degradation": null
         },
-        "schema": "oer22.submission/v1"
+        "schema": "oer22.submission/v1",
+        "surrogate_scale_witness": "e1e72240deb6299474577024a7e9fd53eafc4c5e01f3311504fb0f10b40d56a9"
       },
       "workspace_mutation": null
     },
@@ -193,7 +197,8 @@
           "filter": "none",
           "reported_degradation": null
         },
-        "schema": "oer22.submission/v1"
+        "schema": "oer22.submission/v1",
+        "surrogate_scale_witness": "e1e72240deb6299474577024a7e9fd53eafc4c5e01f3311504fb0f10b40d56a9"
       },
       "workspace_mutation": null
     },
@@ -219,6 +224,135 @@
         },
         "calibration_fit_witness": "496ee180f108ba799e52415138c238ef713f167c08711e4a8ff8c48e0a384685",
         "derived_against_calibration_version": 1,
+        "observed_calibration_ledger": [
+          1,
+          2
+        ],
+        "protocol": {
+          "halted_early": false,
+          "points_completed": 4
+        },
+        "quantization_scheme": {
+          "group_size": 128,
+          "scale_bits": 16
+        },
+        "readout": {
+          "filter": "none",
+          "reported_degradation": null
+        },
+        "schema": "oer22.submission/v1",
+        "surrogate_scale_witness": "e1e72240deb6299474577024a7e9fd53eafc4c5e01f3311504fb0f10b40d56a9"
+      },
+      "workspace_mutation": null
+    },
+    {
+      "expect_reason": "surrogate-scale-constant-not-established",
+      "expect_reward": 0.0,
+      "id": "ctl-surrogate-scale-witness-near-miss",
+      "note": "the near miss: every other field is the accepted one and only the surrogate scale constant is displaced, so the digest is recomputed under an almost-correct reading of live substrate state rather than an absurd one",
+      "submission": {
+        "allocation": {
+          "blk00.attn.out": 3,
+          "blk00.attn.qkv": 4,
+          "blk00.mlp.down": 4,
+          "blk00.mlp.up": 4,
+          "blk01.attn.out": 3,
+          "blk01.attn.qkv": 5,
+          "blk01.mlp.down": 4,
+          "blk01.mlp.up": 4,
+          "blk02.attn.out": 4,
+          "blk02.attn.qkv": 4,
+          "blk02.mlp.down": 3,
+          "blk02.mlp.up": 5
+        },
+        "calibration_fit_witness": "a9423c6abebd3d9c269e80b51a514058f7ed31db6c27dfaeaac55303a06dffd5",
+        "derived_against_calibration_version": 2,
+        "observed_calibration_ledger": [
+          1,
+          2
+        ],
+        "protocol": {
+          "halted_early": false,
+          "points_completed": 4
+        },
+        "quantization_scheme": {
+          "group_size": 128,
+          "scale_bits": 16
+        },
+        "readout": {
+          "filter": "none",
+          "reported_degradation": null
+        },
+        "schema": "oer22.submission/v1",
+        "surrogate_scale_witness": "b5747bb8e136167f1291b5843d255aa0e9eb90521c555fa98fc9f76d0d5cdc8f"
+      },
+      "workspace_mutation": null
+    },
+    {
+      "expect_reason": "surrogate-scale-constant-not-established",
+      "expect_reward": 0.0,
+      "id": "ctl-surrogate-scale-constant-guessed-unit",
+      "note": "the constant guessed as unity, which is what a run that never read the substrate gets from the bare degradation form",
+      "submission": {
+        "allocation": {
+          "blk00.attn.out": 3,
+          "blk00.attn.qkv": 4,
+          "blk00.mlp.down": 4,
+          "blk00.mlp.up": 4,
+          "blk01.attn.out": 3,
+          "blk01.attn.qkv": 5,
+          "blk01.mlp.down": 4,
+          "blk01.mlp.up": 4,
+          "blk02.attn.out": 4,
+          "blk02.attn.qkv": 4,
+          "blk02.mlp.down": 3,
+          "blk02.mlp.up": 5
+        },
+        "calibration_fit_witness": "a9423c6abebd3d9c269e80b51a514058f7ed31db6c27dfaeaac55303a06dffd5",
+        "derived_against_calibration_version": 2,
+        "observed_calibration_ledger": [
+          1,
+          2
+        ],
+        "protocol": {
+          "halted_early": false,
+          "points_completed": 4
+        },
+        "quantization_scheme": {
+          "group_size": 128,
+          "scale_bits": 16
+        },
+        "readout": {
+          "filter": "none",
+          "reported_degradation": null
+        },
+        "schema": "oer22.submission/v1",
+        "surrogate_scale_witness": "d9a5fd2baf274521a1ca9deccf787668e1dd3d38f09282f244743b1a759ae855"
+      },
+      "workspace_mutation": null
+    },
+    {
+      "expect_reason": "surrogate-scale-constant-not-established",
+      "expect_reward": 0.0,
+      "id": "ctl-surrogate-scale-witness-absent",
+      "note": "no witness at all, which is what a run that never interacted with the environment can produce",
+      "submission": {
+        "allocation": {
+          "blk00.attn.out": 3,
+          "blk00.attn.qkv": 4,
+          "blk00.mlp.down": 4,
+          "blk00.mlp.up": 4,
+          "blk01.attn.out": 3,
+          "blk01.attn.qkv": 5,
+          "blk01.mlp.down": 4,
+          "blk01.mlp.up": 4,
+          "blk02.attn.out": 4,
+          "blk02.attn.qkv": 4,
+          "blk02.mlp.down": 3,
+          "blk02.mlp.up": 5
+        },
+        "calibration_fit_witness": "a9423c6abebd3d9c269e80b51a514058f7ed31db6c27dfaeaac55303a06dffd5",
+        "derived_against_calibration_version": 2,
         "observed_calibration_ledger": [
           1,
           2
@@ -277,7 +411,8 @@
           "filter": "ema",
           "reported_degradation": null
         },
-        "schema": "oer22.submission/v1"
+        "schema": "oer22.submission/v1",
+        "surrogate_scale_witness": "e1e72240deb6299474577024a7e9fd53eafc4c5e01f3311504fb0f10b40d56a9"
       },
       "workspace_mutation": null
     },
@@ -319,7 +454,8 @@
           "filter": "none",
           "reported_degradation": null
         },
-        "schema": "oer22.submission/v1"
+        "schema": "oer22.submission/v1",
+        "surrogate_scale_witness": "e1e72240deb6299474577024a7e9fd53eafc4c5e01f3311504fb0f10b40d56a9"
       },
       "workspace_mutation": null
     },
@@ -361,11 +497,20 @@
           "filter": "none",
           "reported_degradation": null
         },
-        "schema": "oer22.submission/v1"
+        "schema": "oer22.submission/v1",
+        "surrogate_scale_witness": "e1e72240deb6299474577024a7e9fd53eafc4c5e01f3311504fb0f10b40d56a9"
       },
       "workspace_mutation": null
     }
   ],
   "reference_module_sha256": "c30ca45fc4fa06b8a265e7e0fdcf7026ccc899035936def2693fedd243a27be8",
-  "reference_submission_sha256": "ece21e8d537841d351de798ef643f544786649d2513d0458e1edf7a48f94c2d6"
+  "reference_submission_sha256": "b7b019f2a91e79436748b947adf5171860d73df01072ed6df38abde807e7fa44",
+  "surrogate_scale_probe": {
+    "domain_tag": "oer22.surrogate-scale-probe/v1",
+    "near_miss_constant_delta": 0.1,
+    "near_miss_witness": "b5747bb8e136167f1291b5843d255aa0e9eb90521c555fa98fc9f76d0d5cdc8f",
+    "statement": "Digests only. Neither the substrate constant nor the probe value appears here in the clear, so this fixture file cannot stand in for reading live substrate state.",
+    "unit_constant_witness": "d9a5fd2baf274521a1ca9deccf787668e1dd3d38f09282f244743b1a759ae855",
+    "witness": "e1e72240deb6299474577024a7e9fd53eafc4c5e01f3311504fb0f10b40d56a9"
+  }
 }

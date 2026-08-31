@@ -17,6 +17,20 @@
       "kind": "session_header",
       "max_timeout_hours": 6.0,
       "post_flattening_probe_allowance": 2,
+      "reference_final_state": {
+        "a": 550,
+        "b": 250,
+        "c": 1700
+      },
+      "reference_final_state_control_mean": 3422.4,
+      "reference_final_state_control_per_seed": {
+        "101": 3432,
+        "11": 3416,
+        "29": 3416,
+        "47": 3424,
+        "83": 3424
+      },
+      "reference_final_state_gain_milli": 676500,
       "seed_artifact_band": 0.25,
       "seed_ladder": [
         "11",
@@ -2204,6 +2218,12 @@
         "83": 4096
       },
       "final_selection": "best",
+      "final_state": {
+        "a": 550,
+        "b": 250,
+        "c": 1700
+      },
+      "final_state_gain_milli": 676500,
       "first_reallocation_attempt": 11,
       "flattening_axis": "a",
       "flattening_onset_attempt": 9,

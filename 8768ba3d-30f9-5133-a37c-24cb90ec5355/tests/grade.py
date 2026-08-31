@@ -15,6 +15,7 @@ carrier can never disagree.
 
 Selectors graded here, named so an outside reader can match them against
 `tests/checkers.yaml` row by row:
+  check_frozen_token_budget_is_the_graded_budget
   check_bound_evaluation_point_reached
   check_token_budget_respected_as_fed
   check_evaluation_split_untrained

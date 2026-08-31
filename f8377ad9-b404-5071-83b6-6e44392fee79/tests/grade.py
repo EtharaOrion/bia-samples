@@ -40,6 +40,8 @@ from checkers import (  # noqa: E402
     SELECTORS,
     check_allocation_wellformed,
     check_bit_budget,
+    check_calibration_band,
+    check_calibration_noise_band,
     check_evaluation_schedule_order,
     check_frozen_inputs_intact,
     check_graded_metric_harness_sourced,
@@ -64,6 +66,8 @@ BOUND_SELECTORS = {
     "reading_sustained_across_scheduled_points": check_reading_sustained,
     "allocation_not_degrading_past_bar": check_not_degrading_past_bar,
     "separation_margin_cleared": check_separation_margin,
+    "calibration_separation_within_band": check_calibration_band,
+    "calibration_noise_band_width_held": check_calibration_noise_band,
 }
 
 # A telemetry record that never arrived is not a zero-scoring submission, it is a

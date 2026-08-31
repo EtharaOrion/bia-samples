@@ -58,6 +58,17 @@ ledger = [int(row["version"]) for row in probe["ledger"] if int(row["version"]) 
 record = next(row for row in stats["versions"] if int(row["version"]) == in_force)
 vector = [float(value) for value in record["sensitivity"]]
 tensors = substrate["tensors"]
+
+# The surrogate scale constant is established only in built environment state and
+# is on no agent-visible byte, so it is read back out of the substrate here and
+# replayed over the uniform reference allocation against the in-force vector.
+constant = float(substrate["degradation_constant_K"])
+uniform = {
+    row["id"]: int(substrate["uniform_reference_bits"]) for row in tensors
+}
+probe_value = reference.degradation(tensors, uniform, vector, constant)
+scale_witness = reference.digest(["oer22.surrogate-scale-probe/v1", probe_value])
+
 allocation = reference.allocate(
     tensors,
     vector,
@@ -77,6 +88,7 @@ payload = {
     },
     "derived_against_calibration_version": in_force,
     "calibration_fit_witness": reference.sensitivity_digest(vector),
+    "surrogate_scale_witness": scale_witness,
     "observed_calibration_ledger": ledger,
     "protocol": {
         "points_completed": 4,

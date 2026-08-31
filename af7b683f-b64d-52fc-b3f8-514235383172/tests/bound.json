@@ -1,6 +1,10 @@
 {
   "anchors_gap": "gap-oer-per-family-anchors-unmeasured",
   "anchors_state": "absent",
+  "arrival_gap_base_ms": 55,
+  "arrival_gap_max_ms": 114,
+  "arrival_gap_min_ms": 56,
+  "arrival_gap_modulus_ms": 60,
   "banner": "GENERATED SECTION. DO NOT HAND-EDIT.",
   "envelope_sha256": "d846c151799296853fec38cf4c2419722319f3750ac0e2d22fbd2d358d51ad81",
   "family_baseline_metric": null,

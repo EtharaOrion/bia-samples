@@ -666,6 +666,15 @@ REGISTRY = (
     Registered("frozen_axes_unmoved_across_run", "EFFECT",
                ZERO_FROZEN_AXIS_MUTATED, 2, True,
                check_frozen_axes_unmoved_across_run),
+    # Last on purpose. Both read the schedule the harness transcribed out of the frozen
+    # recipe, and a run that never produced telemetry at all is attributed to the
+    # earlier checker that names that absence rather than to the schedule.
+    Registered("graded_readout_at_frozen_bound_eval_step", "VALUE",
+               ZERO_GRADED_READOUT_OFF_BOUND_EVAL_STEP, 3, True,
+               check_graded_readout_at_frozen_bound_eval_step),
+    Registered("sustain_schedule_matches_frozen_recipe", "ORDERING",
+               ZERO_SUSTAIN_SCHEDULE_NOT_FROZEN, 3, True,
+               check_sustain_schedule_matches_frozen_recipe),
 )
 
 

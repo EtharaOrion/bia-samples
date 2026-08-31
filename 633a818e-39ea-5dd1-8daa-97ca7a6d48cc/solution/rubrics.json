@@ -22,6 +22,10 @@
       "id": "reference-separates-on-every-seed"
     },
     {
+      "criterion": "The reference session ends carrying expected_final_state, and the reference-operating-point control the reward divides by is the operating point tests/lab.py measures at exactly that state, so the graded scale is read back from live state rather than authored beside it.",
+      "id": "reference-final-state-is-the-graded-operating-point"
+    },
+    {
       "criterion": "The sha256 of solution/reference.py recorded in the golden trajectory equals the digest the telemetry header carries, so the accepting half proves the checkers accept this reference and not merely some file.",
       "id": "reference-is-the-bytes-the-checkers-accepted"
     }

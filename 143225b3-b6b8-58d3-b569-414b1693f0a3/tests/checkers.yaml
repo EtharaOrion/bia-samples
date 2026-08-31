@@ -175,6 +175,32 @@ checkers:
     live_state_read: "the per-axis open_digest and close_digest pairs the harness recorded at <run>/harness/freeze_ledger.json"
     compiled_test: "tests/test_output.py::test_frozen_axes_unmoved_across_run"
 
+  - id: graded_readout_at_frozen_bound_eval_step
+    statement: "The graded loss was read at the bound evaluation point the ENVIRONMENT establishes, not at a point the run chose. tests/grade.py takes the graded number from the eval ledger row at the run's bound evaluation step, so a run that moved that step reports a different point in training as the result."
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: check_graded_readout_at_frozen_bound_eval_step
+    zero_reason: graded-readout-off-the-bound-evaluation-step
+    required: true
+    weight: 3
+    basis: parsed
+    discovery_value: "bound_eval_step. Established in environment/frozen_recipe.json under frozen_axes.evaluation.bound_eval_step and read back by the harness at run open. instruction.md names the path and never the number, so the value is obtainable only by interacting with the environment, and this checker's outcome depends on it."
+    live_state_read: "the bound_eval_step the harness transcribed from the frozen recipe into <run>/harness/recipe_ledger.json, against the bound_eval_step of <run>/harness/run.json and the eval ledger row at that step"
+    compiled_test: "tests/test_output.py::test_graded_readout_at_frozen_bound_eval_step"
+
+  - id: sustain_schedule_matches_frozen_recipe
+    statement: "The level was sustained over the schedule the ENVIRONMENT establishes, in that order and strictly after the bound evaluation point, with an evaluation record at every one of its points and a halt no earlier than its last. A run that drops, reorders or substitutes a sustain point held its level over something other than the frozen schedule."
+    reduction: ORDERING
+    reached_by: tests/grade.py
+    selector: check_sustain_schedule_matches_frozen_recipe
+    zero_reason: sustain-schedule-not-the-frozen-schedule
+    required: true
+    weight: 3
+    basis: parsed
+    discovery_value: "sustain_points. Established in environment/frozen_recipe.json under frozen_axes.evaluation.sustain_points and read back by the harness at run open. instruction.md names the path and never the points, so the value is obtainable only by interacting with the environment, and this checker's outcome depends on it."
+    live_state_read: "the sustain_points the harness transcribed from the frozen recipe into <run>/harness/recipe_ledger.json, against the sustain_points and halted_at_step of <run>/harness/run.json and the eval ledger rows at those steps"
+    compiled_test: "tests/test_output.py::test_sustain_schedule_matches_frozen_recipe"
+
 substitutions:
   - subject: probe-write-the-reward-yourself
     kind: closed-by-isolation-not-by-a-checker

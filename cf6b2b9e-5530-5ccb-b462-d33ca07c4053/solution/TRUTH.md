@@ -25,6 +25,24 @@ force at the graded evaluation. The agent must reason about WHEN each calibratio
 statistic was true. `environment/calibration_probe.py` is the first-class handle
 for asking; it is a skill under test, not a trap with no handle.
 
+## The discovery value the graded path depends on
+
+The surrogate scale constant is established only in built environment state, at
+`environment/substrate.json` `degradation_constant_K`, and appears on no
+agent-visible byte. A run must read it back out of that state, replay the probe the
+substrate's `degradation_form` defines over the uniform reference allocation against
+the in-force calibration sensitivity vector, and carry the digest as
+`surrogate_scale_witness`. The checker
+`surrogate_scale_witness_matches_live_substrate` refuses any other reading with
+`surrogate-scale-constant-not-established`, so the environment is load-bearing for
+the constant rather than decorative.
+
+| quantity | value |
+|---|---|
+| probe digest the verifier expects | `e1e72240deb6299474577024a7e9fd53eafc4c5e01f3311504fb0f10b40d56a9` |
+| same probe under the constant displaced by 0.1 | `b5747bb8e136167f1291b5843d255aa0e9eb90521c555fa98fc9f76d0d5cdc8f` |
+| same probe under a unit constant | `d9a5fd2baf274521a1ca9deccf787668e1dd3d38f09282f244743b1a759ae855` |
+
 ## The frozen substrate
 
 | quantity | value |

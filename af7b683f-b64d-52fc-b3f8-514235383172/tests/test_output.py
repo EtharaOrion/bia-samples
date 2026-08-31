@@ -22,6 +22,7 @@ import checkers  # noqa: E402
 import grade  # noqa: E402
 
 REFERENCE = BUNDLE / 'solution' / 'fixtures' / 'reference_run'
+PLANTED = BUNDLE / 'solution' / 'fixtures' / 'planted'
 
 
 def _outcomes():
@@ -30,8 +31,22 @@ def _outcomes():
     return {row.ident: row for row in grade.run_all(harness, bound)}
 
 
+def _planted_telemetry(name):
+    rows = []
+    for line in (PLANTED / name).read_text(encoding='utf-8').splitlines():
+        line = line.strip()
+        if line:
+            rows.append(json.loads(line))
+    return rows
+
+
+def _cadence_outcome_over(name):
+    harness = checkers.Harness(telemetry=_planted_telemetry(name))
+    return checkers.check_arrival_cadence_ordered(harness, grade.load_bound(BUNDLE))
+
+
 def test_every_checker_is_declared():
-    declared = set(grade.CHECKER_ORDER)
+    declared = {ident for ident, _selector in grade.CHECKER_ORDER}
     assert declared == set(_outcomes())
 
 
@@ -55,6 +70,11 @@ def test_every_request_accounted():
     assert outcome.passed, outcome.detail
 
 
+def test_arrival_cadence_ordered():
+    outcome = _outcomes()['arrival_cadence_ordered']
+    assert outcome.passed, outcome.detail
+
+
 def test_no_early_stop_harvest():
     outcome = _outcomes()['no_early_stop_harvest']
     assert outcome.passed, outcome.detail
@@ -72,6 +92,37 @@ def test_slo_p99_respected():
 
 def test_measurement_windows_sustained():
     outcome = _outcomes()['measurement_windows_sustained']
+    assert outcome.passed, outcome.detail
+
+
+def test_arrival_cadence_rejects_base_minus_one():
+    outcome = _cadence_outcome_over('arrival_cadence_base_minus_one.jsonl')
+    assert not outcome.passed, outcome.detail
+    assert outcome.reason == checkers.REASON_ARRIVAL_CADENCE, outcome.reason
+
+
+def test_arrival_cadence_rejects_base_plus_one():
+    outcome = _cadence_outcome_over('arrival_cadence_base_plus_one.jsonl')
+    assert not outcome.passed, outcome.detail
+    assert outcome.reason == checkers.REASON_ARRIVAL_CADENCE, outcome.reason
+
+
+def test_arrival_cadence_rejects_modulus_minus_one():
+    outcome = _cadence_outcome_over('arrival_cadence_modulus_minus_one.jsonl')
+    assert not outcome.passed, outcome.detail
+    assert outcome.reason == checkers.REASON_ARRIVAL_CADENCE, outcome.reason
+
+
+def test_arrival_cadence_rejects_modulus_plus_one():
+    outcome = _cadence_outcome_over('arrival_cadence_modulus_plus_one.jsonl')
+    assert not outcome.passed, outcome.detail
+    assert outcome.reason == checkers.REASON_ARRIVAL_CADENCE, outcome.reason
+
+
+def test_arrival_cadence_accepts_the_reference_telemetry():
+    harness = grade.build_harness(BUNDLE, REFERENCE)
+    bound = grade.load_bound(BUNDLE)
+    outcome = checkers.check_arrival_cadence_ordered(harness, bound)
     assert outcome.passed, outcome.detail
 
 

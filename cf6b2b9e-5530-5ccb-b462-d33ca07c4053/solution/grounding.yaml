@@ -123,6 +123,41 @@ substrate:
     - {id: blk02.mlp.down, numel: 6144}
   reference_perplexity: 12.75
 
+# ---------------------------------------------------------------------------
+# The surrogate scale probe. This is what makes degradation_constant_K load-bearing
+# rather than decorative. The constant is established ONLY in live environment state,
+# at environment/substrate.json degradation_constant_K, and it appears nowhere on the
+# agent-visible statement surface. A solver obtains it by reading the substrate the
+# harness built, applies it to the probe allocation against the in-force calibration
+# sensitivity vector, and carries a witness digest over the result. The verifier
+# recomputes the same probe from its own pristine substrate copy and refuses any
+# witness computed under a different constant, including a near miss.
+# ---------------------------------------------------------------------------
+surrogate_scale_probe:
+  witness_field: surrogate_scale_witness
+  domain_tag: oer22.surrogate-scale-probe/v1
+  probe_allocation: uniform_reference_bits
+  probe_sensitivity_source: in_force
+  near_miss_constant_delta: 0.1
+  zero_reason: surrogate-scale-constant-not-established
+  definition: >-
+    probe_value = degradation(uniform_reference_allocation, in_force_sensitivity)
+    under substrate.degradation_form with substrate.degradation_constant_K, rounded to
+    round_decimals. The witness is sha256 over the canonical bytes of
+    [domain_tag, probe_value], canonical meaning
+    json.dumps(payload, sort_keys=True, separators=(",", ":"), ensure_ascii=True).
+  why_a_digest_and_not_the_number: >-
+    The witness is a digest so no agent-visible byte and no verifier-owned fixture
+    ever carries the constant or the probe value in the clear. The digest is
+    reproducible only by a run that read the constant out of live substrate state.
+  near_miss_rationale: >-
+    The constant is a round number, so a solver that never touched the environment
+    could plausibly guess it. The near-miss control recomputes the whole probe under
+    the constant displaced by near_miss_constant_delta, which moves the probe value at
+    the fourth decimal place and moves the digest entirely, so the rejecting half is
+    fired by an almost-correct reading rather than only by an absurd one.
+  bound_to_checker: surrogate_scale_witness_matches_live_substrate
+
 # The frozen held-out evaluation corpus. The verifier owns this payload. It is
 # never assembled onto the non-oracle agent surface.
 evaluation_corpus:

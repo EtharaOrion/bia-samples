@@ -39,9 +39,11 @@ from checkers import (  # noqa: E402
     check_frozen_axes_unmoved_across_run,
     check_graded_loss_from_verifier_evaluation,
     check_graded_loss_sustained,
+    check_graded_readout_at_frozen_bound_eval_step,
     check_graded_readout_unsmoothed,
     check_parse_outcome_classes_partitioned,
     check_parse_outcome_three_way_resolved,
+    check_sustain_schedule_matches_frozen_recipe,
     check_token_budget_respected_as_fed,
 )
 
@@ -59,6 +61,8 @@ GRADED_SELECTORS = (
     check_ambiguity_policy_declared_before_classification,
     check_token_budget_respected_as_fed,
     check_frozen_axes_unmoved_across_run,
+    check_graded_readout_at_frozen_bound_eval_step,
+    check_sustain_schedule_matches_frozen_recipe,
 )
 
 AGGREGATION_MODE = "required_pass"

@@ -8,6 +8,11 @@ written to survive:
 
     json, math, hashlib, pathlib, dataclasses, typing
 
+plus the one verifier-only sibling `expected_pool`, which solution/recompute.py generates from
+solution/grounding.yaml. The bound reference curation's document count, token total and digest
+live there rather than as literals here, so no expected value in this module was ever
+hand-copied and re-running the generator keeps them consistent by construction.
+
 Numbers arrive from harness records. A number the submission printed or wrote is admitted
 only into the `claim` section, and the `claim` section is graded exclusively as a CLAIM, by
 comparison against what the harness observed. It is never graded as a value in itself.
@@ -21,6 +26,8 @@ import pathlib
 from dataclasses import dataclass
 from typing import Any, Callable, Dict, List, Tuple
 
+import expected_pool
+
 # Machine-readable zero reasons. One per checker, lowercase kebab, branchable downstream.
 REASON_GRADED_LOSS_SMOOTHED = "graded-loss-smoothed"
 REASON_WEIGHTS_NOT_HARNESS_OWNED = "weights-not-harness-owned"
@@ -31,6 +38,8 @@ REASON_IMPROVEMENT_NOT_SUSTAINED = "improvement-not-sustained"
 REASON_EVAL_SPLIT_LEAKED = "eval-split-leaked"
 REASON_EARLY_STOP_LOSS_NOT_ESTABLISHED = "early-stop-loss-not-established"
 REASON_CURATION_AFTER_FEED_START = "curation-after-feed-start"
+REASON_REFERENCE_ARM_NOT_BOUND = "reference-arm-not-the-bound-curation"
+REASON_CURATED_TOKEN_ACCOUNTING_DIVERGES = "curated-token-accounting-diverges"
 
 # Reasons the reward document can carry that are not a checker verdict.
 REASON_STATE_UNREADABLE = "harness-state-unreadable"
@@ -336,6 +345,169 @@ def check_filter_claim_matches_observed_pool(state: Dict[str, Any]) -> Verdict:
 
 
 # ---------------------------------------------------------------------------------------
+# DIVERGENCE: the TOKEN accounting, which document counts do not establish. Documents are of
+# unequal length, so two chains retaining the same number of documents can feed very different
+# corpora. Three things must agree: the harness observed the frozen register's own token total
+# on the source pool, it observed a strictly smaller total on the curated pool, and the token
+# total the submission's report claims is the one the harness observed. The reference arm's
+# token total is bound to the generated expectation because the normalisation denominator was
+# measured over that corpus; an arm carrying a different total is a different denominator.
+# live state: /logs/harness/reference_arm.json against /logs/harness/pool_observed.json
+#             and /logs/harness/curation_claim.json
+# ---------------------------------------------------------------------------------------
+def check_curated_token_accounting_matches_observation(state: Dict[str, Any]) -> Verdict:
+    ident = "curated_token_accounting_matches_observation"
+    reference = _section(state, "reference")
+    pool = _section(state, "pool")
+    claim = _section(state, "claim")
+
+    arm_tokens = _integer(reference.get("curated_tokens"))
+    if arm_tokens != expected_pool.REFERENCE_CURATED_TOKENS:
+        return _no(
+            ident,
+            REASON_CURATED_TOKEN_ACCOUNTING_DIVERGES,
+            "the reference arm carries "
+            + repr(reference.get("curated_tokens"))
+            + " tokens, not the bound reference total "
+            + repr(expected_pool.REFERENCE_CURATED_TOKENS),
+        )
+
+    source_tokens = _integer(pool.get("source_tokens"))
+    if source_tokens != expected_pool.REFERENCE_SOURCE_TOKENS:
+        return _no(
+            ident,
+            REASON_CURATED_TOKEN_ACCOUNTING_DIVERGES,
+            "the harness observed "
+            + repr(pool.get("source_tokens"))
+            + " source tokens, not the frozen register's "
+            + repr(expected_pool.REFERENCE_SOURCE_TOKENS),
+        )
+
+    curated_tokens = _integer(pool.get("curated_tokens"))
+    if curated_tokens is None or curated_tokens <= 0:
+        return _no(
+            ident,
+            REASON_CURATED_TOKEN_ACCOUNTING_DIVERGES,
+            "the harness observed " + repr(pool.get("curated_tokens")) + " curated tokens",
+        )
+    if not curated_tokens < source_tokens:
+        return _no(
+            ident,
+            REASON_CURATED_TOKEN_ACCOUNTING_DIVERGES,
+            "the observed curated pool carries "
+            + repr(curated_tokens)
+            + " tokens against a source pool of "
+            + repr(source_tokens)
+            + ", so no token was shed",
+        )
+
+    if _integer(claim.get("source_tokens")) != source_tokens:
+        return _no(
+            ident,
+            REASON_CURATED_TOKEN_ACCOUNTING_DIVERGES,
+            "the report claims "
+            + repr(claim.get("source_tokens"))
+            + " source tokens against the observed "
+            + repr(source_tokens),
+        )
+    if _integer(claim.get("curated_tokens")) != curated_tokens:
+        return _no(
+            ident,
+            REASON_CURATED_TOKEN_ACCOUNTING_DIVERGES,
+            "the report claims "
+            + repr(claim.get("curated_tokens"))
+            + " curated tokens against the observed "
+            + repr(curated_tokens),
+        )
+    return _ok(
+        ident,
+        "claimed and observed token totals agree at "
+        + repr(curated_tokens)
+        + " against a source pool of "
+        + repr(source_tokens),
+    )
+
+
+# ---------------------------------------------------------------------------------------
+# VALUE: the harness's reference arm produced the BOUND reference curation. reference_loss is
+# the denominator of the whole reward scale, and it is only the reference curation's loss if
+# the arm that measured it actually reached the reference pool. The document count, the pool
+# digest and the per-stage counts are compared against the generated expectation, and the
+# denominator is bound to the loss that arm recorded rather than to a free-standing number.
+# live state: /logs/harness/reference_arm.json against /logs/harness/eval_record.json
+# ---------------------------------------------------------------------------------------
+def check_reference_arm_curation_is_bound(state: Dict[str, Any]) -> Verdict:
+    ident = "reference_arm_curation_is_bound"
+    reference = _section(state, "reference")
+    evaluation = _section(state, "evaluation")
+
+    if reference.get("arm") != "harness":
+        return _no(
+            ident,
+            REASON_REFERENCE_ARM_NOT_BOUND,
+            "the reference arm is owned by " + repr(reference.get("arm")) + ", not the harness",
+        )
+
+    documents = _integer(reference.get("curated_documents"))
+    if documents != expected_pool.REFERENCE_CURATED_DOCUMENTS:
+        return _no(
+            ident,
+            REASON_REFERENCE_ARM_NOT_BOUND,
+            "the reference arm curated to "
+            + repr(reference.get("curated_documents"))
+            + " documents, not the bound "
+            + repr(expected_pool.REFERENCE_CURATED_DOCUMENTS),
+        )
+
+    if reference.get("curated_digest") != expected_pool.REFERENCE_CURATED_DIGEST:
+        return _no(
+            ident,
+            REASON_REFERENCE_ARM_NOT_BOUND,
+            "the reference arm's pool digest "
+            + repr(reference.get("curated_digest"))
+            + " is not the bound reference pool "
+            + repr(expected_pool.REFERENCE_CURATED_DIGEST),
+        )
+
+    stages = reference.get("stage_counts")
+    stages = [_integer(value) for value in stages] if isinstance(stages, list) else None
+    if stages != expected_pool.REFERENCE_STAGE_COUNTS:
+        return _no(
+            ident,
+            REASON_REFERENCE_ARM_NOT_BOUND,
+            "the reference arm's stage counts "
+            + repr(reference.get("stage_counts"))
+            + " are not the bound "
+            + repr(expected_pool.REFERENCE_STAGE_COUNTS),
+        )
+
+    arm_loss = _number(reference.get("loss"))
+    denominator = _number(evaluation.get("reference_loss"))
+    if arm_loss is None or denominator is None:
+        return _no(
+            ident,
+            REASON_REFERENCE_ARM_NOT_BOUND,
+            "the reference arm loss or the normalisation denominator is not a finite number",
+        )
+    if arm_loss != denominator:
+        return _no(
+            ident,
+            REASON_REFERENCE_ARM_NOT_BOUND,
+            "the normalisation denominator "
+            + repr(denominator)
+            + " is not the loss the reference arm reached "
+            + repr(arm_loss),
+        )
+    return _ok(
+        ident,
+        "the reference arm reached the bound curation of "
+        + repr(documents)
+        + " documents and set the denominator at "
+        + repr(denominator),
+    )
+
+
+# ---------------------------------------------------------------------------------------
 # INVARIANT: the improvement holds at the bound point AND at every sustain point the
 # verifier itself scheduled. A single favourable evaluation is a dip, not a result.
 # live state: /logs/harness/eval_record.json
@@ -492,20 +664,28 @@ def check_curation_precedes_first_feed(state: Dict[str, Any]) -> Verdict:
 # ---------------------------------------------------------------------------------------
 # The graded set, in a fixed order. grade.py walks this and nothing else.
 #
-# The order is load bearing and is not alphabetical. The DIVERGENCE checker sits first
+# The order is load bearing and is not alphabetical. The two DIVERGENCE checkers sit first
 # because a silent filter no-op is the failure this slot exists to name, and a run whose pool
 # never moved must be attributed to `silent-filter-no-op` rather than to whichever downstream
-# consequence happens to be checked earlier. Every checker is required, so the order changes
-# only WHICH reason a failing run carries, never whether it fails.
+# consequence happens to be checked earlier. The document-axis divergence precedes the
+# token-axis one for the same reason. Every checker is required, so the order changes only
+# WHICH reason a failing run carries, never whether it fails.
 # ---------------------------------------------------------------------------------------
 CHECKERS: List[Tuple[str, Callable[[Dict[str, Any]], Verdict], str, int]] = [
     ("filter_claim_matches_observed_pool", check_filter_claim_matches_observed_pool, REASON_SILENT_FILTER_NO_OP, 4),
+    (
+        "curated_token_accounting_matches_observation",
+        check_curated_token_accounting_matches_observation,
+        REASON_CURATED_TOKEN_ACCOUNTING_DIVERGES,
+        3,
+    ),
     ("curated_pool_consumed_by_trainer", check_curated_pool_consumed_by_trainer, REASON_CURATED_POOL_NOT_CONSUMED, 3),
     ("curation_precedes_first_feed", check_curation_precedes_first_feed, REASON_CURATION_AFTER_FEED_START, 2),
     ("token_budget_respected_as_fed", check_token_budget_respected_as_fed, REASON_TOKEN_BUDGET_OVERSPENT, 3),
     ("eval_split_never_trained_on", check_eval_split_never_trained_on, REASON_EVAL_SPLIT_LEAKED, 3),
     ("graded_weights_harness_owned", check_graded_weights_harness_owned, REASON_WEIGHTS_NOT_HARNESS_OWNED, 3),
     ("graded_loss_unsmoothed", check_graded_loss_unsmoothed, REASON_GRADED_LOSS_SMOOTHED, 3),
+    ("reference_arm_curation_is_bound", check_reference_arm_curation_is_bound, REASON_REFERENCE_ARM_NOT_BOUND, 3),
     ("improvement_sustained_across_points", check_improvement_sustained_across_points, REASON_IMPROVEMENT_NOT_SUSTAINED, 3),
     ("early_stop_does_not_establish_loss", check_early_stop_does_not_establish_loss, REASON_EARLY_STOP_LOSS_NOT_ESTABLISHED, 3),
 ]

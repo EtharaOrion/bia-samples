@@ -51,6 +51,7 @@ HARNESS_DOCUMENTS = (
     "event_log",
     "freeze_ledger",
     "policy_state",
+    "recipe_ledger",
     "anchors",
 )
 
@@ -85,6 +86,7 @@ def base_documents(ground: dict, curve_id: str) -> dict:
 
     schema = json.loads((ENVIRONMENT / "schema.json").read_text(encoding="utf-8"))
     split = json.loads((ENVIRONMENT / "split.json").read_text(encoding="utf-8"))
+    recipe = json.loads((ENVIRONMENT / "frozen_recipe.json").read_text(encoding="utf-8"))
     corpus = (ENVIRONMENT / "corpus" / "corpus.rec").read_text(encoding="utf-8")
     eval_ordinals = list(split["eval_record_ordinals"])
 
@@ -149,6 +151,10 @@ def base_documents(ground: dict, curve_id: str) -> dict:
             ]
         },
         "policy_state": {"state": state},
+        # Derived from the ENVIRONMENT bytes, not from harness_run. The accepting half
+        # therefore passes only while grounding's harness_run agrees with what the
+        # environment establishes, which is what makes the environment load-bearing.
+        "recipe_ledger": runner.recipe_ledger(recipe),
         "anchors": {
             "anchors_state": anchors["anchors_state"],
             "baseline_metric": float(anchors["baseline_metric"]),
@@ -196,6 +202,14 @@ def apply_defect(documents: dict, defect: dict, ground: dict) -> dict:
     if kind == "early_stop":
         documents["run"]["halt_kind"] = defect["halt_kind"]
         documents["run"]["halted_at_step"] = int(defect["halted_at_step"])
+        return documents
+
+    if kind == "retime_eval_point":
+        documents["run"]["bound_eval_step"] = int(defect["bound_eval_step"])
+        return documents
+
+    if kind == "retime_sustain_schedule":
+        documents["run"]["sustain_points"] = [int(step) for step in defect["sustain_points"]]
         return documents
 
     if kind == "selected_checkpoint":

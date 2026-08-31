@@ -37,6 +37,10 @@ def test_environment_frozen():
     _halves('environment_frozen', 'frozen-substrate-modified')
 
 
+def test_trace_is_seed_derived():
+    _halves('trace_is_seed_derived', 'trace-not-seed-derived')
+
+
 def test_attempt_ledger_recomputed():
     _halves('attempt_ledger_recomputed', 'telemetry-ledger-divergent')
 

@@ -115,3 +115,21 @@ def test_graded_band_exceeds_single_direction_sweep():
     refused = checkers.graded_band_exceeds_single_direction_sweep(planted)
     assert not refused.passed
     assert refused.reason == 'single-direction-sweep-not-exceeded'
+
+
+def test_corpus_phase_matches_frozen_offset():
+    outcome = checkers.corpus_phase_matches_frozen_offset(CLEAN)
+    assert outcome.passed, outcome.detail
+    planted = fixtures.planted_context('corpus_phase_matches_frozen_offset')
+    refused = checkers.corpus_phase_matches_frozen_offset(planted)
+    assert not refused.passed
+    assert refused.reason == 'frozen-corpus-phase-not-established'
+
+
+def test_corpus_period_matches_frozen_stride():
+    outcome = checkers.corpus_period_matches_frozen_stride(CLEAN)
+    assert outcome.passed, outcome.detail
+    planted = fixtures.planted_context('corpus_period_matches_frozen_stride')
+    refused = checkers.corpus_period_matches_frozen_stride(planted)
+    assert not refused.passed
+    assert refused.reason == 'frozen-corpus-period-not-established'

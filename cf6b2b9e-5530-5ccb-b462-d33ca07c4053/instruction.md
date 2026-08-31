@@ -77,6 +77,11 @@ Degradation over this substrate is a closed-form deterministic function of your
 allocation and a frozen per-tensor sensitivity vector. It is a deterministic
 surrogate, not a live forward pass, and `environment/substrate.json` says so.
 
+The scale of that function is **not stated here**. `environment/substrate.json`
+carries the `degradation_form` and the constant it is evaluated at, and that file, as
+the harness built it, is the only place either is established. Do not assume a value
+for the constant and do not carry one over from another substrate. Read it.
+
 The bit budget is accounted over the quantized tensors **including the per-group
 scale tensors**. `environment/substrate.json` records the accounting in force. Read
 it rather than assuming; it is not the only accounting that has ever been in force
@@ -93,6 +98,7 @@ Write `submission.json` into your workspace:
   "quantization_scheme": {"group_size": <int>, "scale_bits": <int>},
   "derived_against_calibration_version": <int>,
   "calibration_fit_witness": "<sha256 over the canonical bytes of the sensitivity vector you fitted against>",
+  "surrogate_scale_witness": "<sha256 over the canonical bytes of the surrogate scale probe>",
   "observed_calibration_ledger": [<the versions you observed through the probe, in the order you observed them>],
   "protocol": {"points_completed": <int>, "halted_early": false},
   "readout": {"filter": "none", "reported_degradation": null}
@@ -106,6 +112,18 @@ There is no default and a partial allocation is refused.
 `json.dumps(vector, sort_keys=True, separators=(",", ":"), ensure_ascii=True)` with
 each element rounded to 9 decimal places. `environment/calibration_probe.py` prints
 exactly this digest for the version in force.
+
+`surrogate_scale_witness` proves you evaluated the surrogate at the scale the
+substrate actually declares, rather than at one you assumed. Compute the **surrogate
+scale probe**, which is `degradation_form` evaluated over the **uniform reference
+allocation**, meaning every tensor at `substrate.uniform_reference_bits`, against the
+sensitivity vector of the calibration version in force, at the constant
+`environment/substrate.json` records, rounded to 9 decimal places. The witness is
+`sha256` over
+`json.dumps([tag, probe], sort_keys=True, separators=(",", ":"), ensure_ascii=True)`
+where `tag` is the literal string `oer22.surrogate-scale-probe/v1` and `probe` is that
+rounded number. The verifier replays the same probe from its own pristine copy of the
+substrate and compares digests, so a guessed constant does not survive.
 
 ## How you score
 
@@ -140,6 +158,7 @@ calibration version in force. These are substrate-internal and are declared unde
 | an allocation that overspends the budget as accounted | `bit-budget-overspent` |
 | a probe sequence that is not ascending, or does not end at the version in force | `calibration-version-sequence-disordered` |
 | an allocation fitted against a calibration version that is not the one in force | `allocation-derived-against-stale-calibration` |
+| a surrogate scale witness computed at any constant other than the one the substrate declares, or absent | `surrogate-scale-constant-not-established` |
 | a declared readout filter outside the registry in force | `readout-smoothed` |
 | halting before the scheduled protocol completes | `early-stop-metric-not-established` |
 | a bar met at some evaluation points and not at others | `degradation-not-sustained` |

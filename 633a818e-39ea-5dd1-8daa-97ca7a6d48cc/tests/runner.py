@@ -194,8 +194,11 @@ def _footer(records, baseline_mean, target_mean, digest):
                 wasted += 1
             elif row["axis"] in lab.AXIS_MILLI_PER_UNIT and reallocated is None:
                 reallocated = row["index"]
+    final_state = dict(records[-1]["state_after"]) if records else {}
     return {
         "kind": "session_footer",
+        "final_state": final_state,
+        "final_state_gain_milli": lab.gain_milli(final_state),
         "attempts_recorded": len(records),
         "terminator": lab.ATTEMPT_BUDGET,
         "final_selection": lab.FINAL_SELECTION,
@@ -214,6 +217,7 @@ def _footer(records, baseline_mean, target_mean, digest):
 
 def _header(digest, controls):
     baseline_mean, baseline_seeds, target_mean, target_seeds = controls
+    reference_mean, reference_seeds, reference_gain = lab.reference_final_state_detail()
     return {
         "kind": "session_header",
         "surface_id": lab.SURFACE_ID,
@@ -234,6 +238,10 @@ def _header(digest, controls):
         "baseline_control_per_seed": baseline_seeds,
         "target_control_mean": target_mean,
         "target_control_per_seed": target_seeds,
+        "reference_final_state": dict(lab.REFERENCE_FINAL_STATE),
+        "reference_final_state_gain_milli": reference_gain,
+        "reference_final_state_control_mean": reference_mean,
+        "reference_final_state_control_per_seed": reference_seeds,
         "submission_sha256": digest,
     }
 

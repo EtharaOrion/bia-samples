@@ -26,6 +26,7 @@ from checkers import (
     check_compaction_dropped_entries_reconstructed,
     check_crossing_sustained_across_scheduled_points,
     check_early_stop_is_not_a_crossing,
+    check_evaluation_schedule_as_scheduled,
     check_frozen_axes_unmoved,
     check_graded_crossing_recomputed_unsmoothed,
     check_graded_weights_are_harness_owned,
@@ -61,6 +62,7 @@ GRADED = (
     ("summary_agrees_with_durable_ledger", check_summary_agrees_with_durable_ledger, True, 3),
     ("compaction_dropped_entries_reconstructed", check_compaction_dropped_entries_reconstructed, True, 3),
     ("frozen_axes_unmoved", check_frozen_axes_unmoved, True, 2),
+    ("evaluation_schedule_as_scheduled", check_evaluation_schedule_as_scheduled, True, 3),
 )
 
 # checkers is imported as a module as well as by name so tests/checkers.py is

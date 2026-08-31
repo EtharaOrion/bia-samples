@@ -1,9 +1,3 @@
-# FORGE-CANARY-BEGIN
-# 0: ba537009ea76cf68b56acfb17a8e1aee38488ab609306fb33573039d45eef0f1
-# 1: c45fbc41e9750db9a493fc13f34afe523c68cc3f4121000b759b49689193f170
-# 2: 8d6d3897966c846c6282e5558ba5b3198d65b224d071e634eb445f918f4f6df9
-# 3: 93c9b7cb12711670ba59984dbfc74114261f6d90d2de2c5c0e529906432ebb27
-# FORGE-CANARY-END
 <!-- GENERATED SECTION. DO NOT HAND-EDIT. Source: solution/grounding.yaml -->
 
 # TRUTH, slot OER-10
@@ -44,6 +38,12 @@ The paraphrase control shares not one source byte with the baseline it restates 
 
 The reward is not binary. The same gate chain over the same fixture with a graded loss of 3.25 lands at 0.447513812155, strictly between 0 and 1.
 
+## The loss levels are load-bearing, not decorative
+
+`control_arm_displaced` is the checker whose outcome is a function of the loss LEVELS the run reached. The graded loss of 3.0412 sits below the control arm of 3.412 the harness measured inside the same run, so the accepting half passes. The planted fixture `nc-control-arm-not-displaced` carries a graded loss of 3.46, above that control arm, and the checker rejects it with `control-arm-not-displaced`. Its ladder value would be 0.0 either way, so the gate moves no run's number, only the attribution of that zero.
+
+No loss level appears on the agent-visible surface. `instruction.md` names the evaluation points, the frozen axes and the scoring formula and never a loss, so the series is established only by training and reading the harness's own evaluation back. A solver that never interacted with the environment carries no sample series and no measured ladder ends, and fails this checker with a named reason rather than passing vacuously.
+
 ## Anchors
 
 `anchors_state: absent`. F12's baseline and target are unmeasured and are NOT invented here; the gap is `gap-oer-per-family-anchors-unmeasured`. The graded ladder's two ends are run-local measured quantities under `gap-oer-10-run-local-ladder-is-not-a-family-anchor` and are not the family anchors.
@@ -61,6 +61,7 @@ The reward is not binary. The same gate chain over the same fixture with a grade
 | `evaluated_weights_harness_owned` | VALUE | `weights-not-harness-owned` |
 | `token_budget_respected_as_fed` | EFFECT | `token-budget-overspent` |
 | `eval_split_not_trained_on` | ABSENCE | `eval-split-leaked` |
+| `control_arm_displaced` | EFFECT | `control-arm-not-displaced` |
 
 ## Not claimed
 

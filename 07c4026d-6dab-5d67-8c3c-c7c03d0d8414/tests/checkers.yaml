@@ -150,6 +150,34 @@ checkers:
     live_state_read: "telemetry.submission_reported.loss_claims collected by the harness from the composition plan and the stage reports, against the raw recomputation the checker performs, and bound.readout_smoothing_policy and bound.reported_loss_tolerance"
     compiled_test: "tests/test_output.py::test_no_smoothing_on_graded_path"
 
+  - id: floor_anchor_matches_bound_reference
+    statement: "The reference composition the harness measures in-run reproduces the bound reference loss, so the span the reward is divided by rests on an anchor the live environment established rather than on a number nobody checked."
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: check_floor_anchor_matches_bound_reference
+    zero_reason: floor-anchor-not-the-bound-reference
+    required: true
+    weight: 1
+    live_state_read: "telemetry.floor.loss_per_byte, which tests/harness.py measures in-run by executing the reference composition stage by stage through the identical frozen protocol and scoring the harness-written weights with checkers.fold_loss, against bound.reference_loss_per_byte, bound.reference_loss_tolerance and bound.reference_anchor_budget_tokens resolved from the admin plane"
+    compiled_test: "tests/test_output.py::test_floor_anchor_matches_bound_reference"
+    discovery_value: >-
+      reference_loss_per_byte. It is carried on no agent-visible byte and is not
+      derivable from one: instruction.md, task.toml and everything under
+      environment/ name the quantity and never its value. It exists only once the
+      chain has been run in the live environment. This checker is where it carries
+      graded weight.
+    adequacy_substitution:
+      half: rejecting
+      carried_on: planted fixture
+      why: >-
+        The floor anchor is measured over a reference composition materialized from
+        solution/reference.py into a verifier-owned workspace, so no submission has
+        a handle on it and no submission can move it. The rejecting half is carried
+        on the planted fixture in tests/test_output.py, which drives this selector
+        over a reference loss the environment does not establish and requires the
+        bound zero reason; the accepting half is carried on the same fixture pair
+        at the established value and on the live reference run.
+
   - id: loss_sustained_across_bound_evals
     statement: "The improvement over the in-run measured baseline holds at the bound evaluation point and at every one of the folds the verifier's own schedule selects, so a single favourable evaluation cannot be harvested."
     reduction: INVARIANT

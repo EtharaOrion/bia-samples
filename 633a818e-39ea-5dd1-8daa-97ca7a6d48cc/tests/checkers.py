@@ -1,4 +1,4 @@
-"""The ten graded checkers. Pure, deterministic, and read only harness telemetry.
+"""The eleven graded checkers. Pure, deterministic, and read only harness telemetry.
 
 Every function here is a pure function of one session telemetry document that
 the verifier's own process wrote. Nothing in this file reads a planted answer,
@@ -356,6 +356,62 @@ def check_multi_seed_separation_established(session: Session) -> Verdict:
     )
 
 
+def check_reference_operating_point_matches_final_state(session: Session) -> Verdict:
+    """VALUE. The reward's reference control is the operating point the reference
+    session's own final carried state produces, and the session's recorded final
+    state is the state its last attempt actually closed on."""
+    ident = "reference_operating_point_matches_final_state"
+    header = session.header
+    bound_state = header.get("reference_final_state")
+    bound_mean = header.get("reference_final_state_control_mean")
+    bound_seeds = header.get("reference_final_state_control_per_seed") or {}
+    target_mean = header.get("target_control_mean")
+    target_seeds = header.get("target_control_per_seed") or {}
+    if not bound_state or bound_mean is None or target_mean is None:
+        return Verdict(
+            ident, False, "reference-operating-point-unheld",
+            "the telemetry header carries no measured reference final state to read the operating point back from",
+        )
+    if float(bound_mean) != float(target_mean):
+        return Verdict(
+            ident, False, "reference-operating-point-unheld",
+            "the reference final state " + json.dumps(bound_state, sort_keys=True)
+            + " measures " + repr(bound_mean)
+            + " while the reference-operating-point control the reward divides by is " + repr(target_mean),
+        )
+    diverged = sorted(
+        seed for seed in target_seeds if bound_seeds.get(seed) != target_seeds.get(seed)
+    )
+    if not bound_seeds or not target_seeds or diverged:
+        return Verdict(
+            ident, False, "reference-operating-point-unheld",
+            "the reference final state and the reference-operating-point control are not one operating"
+            " point on seeds " + json.dumps(diverged),
+        )
+    recorded = (session.footer or {}).get("final_state")
+    closing = session.attempts[-1].get("state_after") if session.attempts else None
+    if not recorded or not closing:
+        return Verdict(
+            ident, False, "reference-operating-point-unheld",
+            "the telemetry records no final carried state for the session",
+        )
+    if {axis: int(value) for axis, value in recorded.items()} != {
+        axis: int(value) for axis, value in closing.items()
+    }:
+        return Verdict(
+            ident, False, "reference-operating-point-unheld",
+            "the recorded final carried state " + json.dumps(recorded, sort_keys=True)
+            + " is not the state the last attempt closed on " + json.dumps(closing, sort_keys=True),
+        )
+    return Verdict(
+        ident, True, "",
+        "the reference-operating-point control " + repr(target_mean)
+        + " is the operating point the reference final state "
+        + json.dumps(bound_state, sort_keys=True) + " holds, and the session closed carrying "
+        + json.dumps(recorded, sort_keys=True),
+    )
+
+
 ORDERED_CHECKS = (
     check_attempt_sequence_contiguous,
     check_session_holds_attempt_budget,
@@ -367,6 +423,7 @@ ORDERED_CHECKS = (
     check_crossing_sustained,
     check_target_band_reached_by_session,
     check_multi_seed_separation_established,
+    check_reference_operating_point_matches_final_state,
 )
 
 

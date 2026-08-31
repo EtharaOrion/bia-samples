@@ -37,6 +37,7 @@ HARNESS_LOGS = Path("/logs/harness")
 SECTIONS = (
     ("register", "register.json"),
     ("pool", "pool_observed.json"),
+    ("reference", "reference_arm.json"),
     ("claim", "curation_claim.json"),
     ("feed", "feed_ledger.json"),
     ("curation", "curation_ledger.json"),
@@ -47,13 +48,15 @@ SECTIONS = (
 )
 
 # Named so verifier.py can see every selector this carrier reaches. The list is walked, not
-# just declared: checkers.CHECKERS holds the same nine in the same order.
+# just declared: checkers.CHECKERS holds the same eleven in the same order.
 SELECTORS = (
     "check_graded_loss_unsmoothed",
     "check_graded_weights_harness_owned",
     "check_token_budget_respected_as_fed",
     "check_curated_pool_consumed_by_trainer",
     "check_filter_claim_matches_observed_pool",
+    "check_curated_token_accounting_matches_observation",
+    "check_reference_arm_curation_is_bound",
     "check_improvement_sustained_across_points",
     "check_eval_split_never_trained_on",
     "check_early_stop_does_not_establish_loss",

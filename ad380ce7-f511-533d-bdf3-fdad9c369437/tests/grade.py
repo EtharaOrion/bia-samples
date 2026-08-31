@@ -44,6 +44,7 @@ from checkers import (  # noqa: E402
     check_metric_not_taken_from_submission_report,
     check_reading_sustained_across_scheduled_points,
     check_submission_vocabulary_took_effect,
+    check_train_corpus_merge_capacity,
     evidence_from_record,
     score_from_reading,
 )
@@ -51,6 +52,7 @@ from checkers import (  # noqa: E402
 SELECTORS = {
     "check_early_stop_not_an_established_metric": check_early_stop_not_an_established_metric,
     "check_frozen_axes_unmoved": check_frozen_axes_unmoved,
+    "check_train_corpus_merge_capacity": check_train_corpus_merge_capacity,
     "check_eval_points_ordered_by_updates": check_eval_points_ordered_by_updates,
     "check_compute_budget_respected_as_spent": check_compute_budget_respected_as_spent,
     "check_denominator_is_frozen_eval_bytes": check_denominator_is_frozen_eval_bytes,
@@ -112,6 +114,14 @@ def load_anchors(path: Path = ANCHORS_PATH) -> dict:
         raise SystemExit(
             "verifier anchors malformed: " + str(path) + " carries no "
             "measured_operating_points.reference_construction_optimum_bpb"
+        )
+    if not isinstance(measured.get("reference_merges"), int) or isinstance(
+        measured.get("reference_merges"), bool
+    ):
+        raise SystemExit(
+            "verifier anchors malformed: " + str(path) + " carries no integer "
+            "measured_operating_points.reference_merges, which is the merge capacity "
+            "check_train_corpus_merge_capacity compares the live corpus against"
         )
     return measured
 

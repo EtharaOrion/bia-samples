@@ -435,6 +435,106 @@ def carried_direction_frontier_never_collapses(context: dict) -> Outcome:
     )
 
 
+# ---------------------------------------------------------------------------
+# VALUE. The corpus this environment was BUILT with is the one being measured over.
+# ---------------------------------------------------------------------------
+
+
+def _probe_width(context: dict) -> int:
+    return int((context.get("corpus_probe") or {}).get("table_width") or 0)
+
+
+def corpus_phase_matches_frozen_offset(context: dict) -> Outcome:
+    """VALUE: the live corpus opens its record at the frozen construction phase.
+
+    The expectation is `offset % width`, derived from the frozen construction and from
+    nothing else. The observation is read off the built corpus bytes at a line index
+    congruent to 0 modulo the width, where the stride term cancels, so this outcome is a
+    function of the offset alone.
+    """
+    construction = context.get("corpus") or {}
+    probe = context.get("corpus_probe") or {}
+    width = _probe_width(context)
+    if width <= 0 or "offset" not in construction:
+        return Outcome(
+            False,
+            "frozen-corpus-phase-not-established",
+            "the frozen construction declares no phase over a non-empty table, so nothing "
+            "about the corpus in this environment can be established",
+        )
+    index, phase = probe.get("line_index"), probe.get("phase")
+    if index is None or phase is None:
+        return Outcome(
+            False,
+            "frozen-corpus-phase-not-established",
+            "the evaluation corpus in this environment carries no record line at an index "
+            "where the construction phase is isolable, so the phase was never observed",
+        )
+    if int(index) % width:
+        return Outcome(
+            False,
+            "frozen-corpus-phase-not-established",
+            "the probed record stands at index " + str(index)
+            + ", which does not isolate the phase over a table of width " + str(width),
+        )
+    expected = int(construction["offset"]) % width
+    if int(phase) != expected:
+        return Outcome(
+            False,
+            "frozen-corpus-phase-not-established",
+            "the evaluation corpus opens its record at table position " + str(phase)
+            + " where the frozen construction places it at " + str(expected)
+            + "; the corpus in this environment was not built by the construction the "
+            + "verifier measures over, so the reading is over other bytes",
+        )
+    return _held(
+        "the evaluation corpus opens its record at the frozen construction phase, table "
+        "position " + str(expected) + " of " + str(width)
+    )
+
+
+def corpus_period_matches_frozen_stride(context: dict) -> Outcome:
+    """VALUE: the live corpus advances its record by the frozen construction period.
+
+    The expectation is `stride % width`, derived from the frozen construction and from
+    nothing else. The observation is the cyclic distance between consecutive field names
+    inside one record, where the offset cancels, so this outcome is a function of the stride
+    alone.
+    """
+    construction = context.get("corpus") or {}
+    probe = context.get("corpus_probe") or {}
+    width = _probe_width(context)
+    if width <= 0 or "stride" not in construction:
+        return Outcome(
+            False,
+            "frozen-corpus-period-not-established",
+            "the frozen construction declares no period over a non-empty table, so nothing "
+            "about the corpus in this environment can be established",
+        )
+    step = probe.get("step")
+    if step is None:
+        return Outcome(
+            False,
+            "frozen-corpus-period-not-established",
+            "the probed record does not advance by one constant step, so the construction "
+            "period was never observed",
+        )
+    expected = int(construction["stride"]) % width
+    if int(step) != expected:
+        return Outcome(
+            False,
+            "frozen-corpus-period-not-established",
+            "the evaluation corpus advances its record by " + str(step)
+            + " table positions where the frozen construction advances it by " + str(expected)
+            + "; the corpus in this environment was not built by the construction the "
+            + "verifier measures over, so the reading is over other bytes",
+        )
+    return _held(
+        "the evaluation corpus advances its record by the frozen construction period, "
+        + str(expected) + " of " + str(width)
+    )
+
+
 #: The gate chain, in the order `tests/grade.py` runs it and `tests/checkers.yaml` declares
 #: it. Order is load-bearing for attribution only: a run that both halted early and reported
 #: an unsustained level is attributed to the halt, because the halt is what caused the rest.
@@ -449,4 +549,6 @@ REGISTRY: Tuple[Tuple[str, Callable], ...] = (
     ("graded_band_exceeds_single_direction_sweep", graded_band_exceeds_single_direction_sweep),
     ("reallocation_follows_flattening", reallocation_follows_flattening),
     ("carried_direction_frontier_never_collapses", carried_direction_frontier_never_collapses),
+    ("corpus_phase_matches_frozen_offset", corpus_phase_matches_frozen_offset),
+    ("corpus_period_matches_frozen_stride", corpus_period_matches_frozen_stride),
 )

@@ -27,6 +27,11 @@ def _handles():
     return runner.handles(EVIDENCE)
 
 
+def test_frozen_token_budget_is_the_graded_budget():
+    outcome = checkers.check_frozen_token_budget_is_the_graded_budget(_handles())
+    assert outcome.ok, outcome.reason
+
+
 def test_bound_evaluation_point_reached():
     outcome = checkers.check_bound_evaluation_point_reached(_handles())
     assert outcome.ok, outcome.reason
@@ -73,6 +78,7 @@ def test_mixture_beats_default_simplex_optimum():
 
 
 ROWS = (
+    ("frozen_token_budget_is_the_graded_budget", test_frozen_token_budget_is_the_graded_budget),
     ("bound_evaluation_point_reached", test_bound_evaluation_point_reached),
     ("token_budget_respected_as_fed", test_token_budget_respected_as_fed),
     ("evaluation_split_untrained", test_evaluation_split_untrained),

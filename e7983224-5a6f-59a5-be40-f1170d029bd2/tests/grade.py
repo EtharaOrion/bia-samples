@@ -36,6 +36,8 @@ manifest's reachability claim from bytes:
     graded_band_exceeds_single_direction_sweep
     reallocation_follows_flattening
     carried_direction_frontier_never_collapses
+    corpus_phase_matches_frozen_offset
+    corpus_period_matches_frozen_stride
 
 The trajectory rubrics in `tests/rubrics.jsonl` are judged elsewhere, by a judge reading the
 trajectory. They are bucket N: they may lower an outcome and never raise one, and this file

@@ -79,6 +79,14 @@ def test_frozen_axes_unmoved_across_run() -> None:
     _assert("frozen_axes_unmoved_across_run", "frozen-axis-mutated", checkers.check_frozen_axes_unmoved_across_run(handles()))
 
 
+def test_graded_readout_at_frozen_bound_eval_step() -> None:
+    _assert("graded_readout_at_frozen_bound_eval_step", "graded-readout-off-the-bound-evaluation-step", checkers.check_graded_readout_at_frozen_bound_eval_step(handles()))
+
+
+def test_sustain_schedule_matches_frozen_recipe() -> None:
+    _assert("sustain_schedule_matches_frozen_recipe", "sustain-schedule-not-the-frozen-schedule", checkers.check_sustain_schedule_matches_frozen_recipe(handles()))
+
+
 CASES = (
     ("graded_loss_from_verifier_evaluation", test_graded_loss_from_verifier_evaluation),
     ("graded_readout_unsmoothed", test_graded_readout_unsmoothed),
@@ -91,6 +99,8 @@ CASES = (
     ("token_budget_respected_as_fed", test_token_budget_respected_as_fed),
     ("evaluation_split_not_trained_on", test_evaluation_split_not_trained_on),
     ("frozen_axes_unmoved_across_run", test_frozen_axes_unmoved_across_run),
+    ("graded_readout_at_frozen_bound_eval_step", test_graded_readout_at_frozen_bound_eval_step),
+    ("sustain_schedule_matches_frozen_recipe", test_sustain_schedule_matches_frozen_recipe),
 )
 
 

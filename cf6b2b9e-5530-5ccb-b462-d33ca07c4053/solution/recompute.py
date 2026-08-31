@@ -131,6 +131,20 @@ def derive(ground) -> dict:
     baseline_scale_point = reference.mean_degradation(uniform_points)
     target_scale_point = reference.mean_degradation(reference_points)
 
+    probe = ground["surrogate_scale_probe"]
+    if probe["probe_allocation"] != "uniform_reference_bits":
+        raise ValueError("unknown probe_allocation: " + str(probe["probe_allocation"]))
+    if probe["probe_sensitivity_source"] != "in_force":
+        raise ValueError("unknown probe_sensitivity_source: " + str(probe["probe_sensitivity_source"]))
+    probe_tag = str(probe["domain_tag"])
+    probe_delta = float(probe["near_miss_constant_delta"])
+    probe_vector = by_version[in_force]["sensitivity"]
+
+    def scale_witness(scale_constant):
+        return reference.digest(
+            [probe_tag, reference.degradation(tensors, uniform, probe_vector, scale_constant)]
+        )
+
     return {
         "tensors": tensors,
         "group_size": group_size,
@@ -159,6 +173,11 @@ def derive(ground) -> dict:
         "reference_perplexity": float(ground["substrate"]["reference_perplexity"]),
         "permitted_filters": list(ground["readout"]["permitted_filters"]),
         "include_scales": bool(ground["accounting"]["includes_scale_tensors"]),
+        "probe_tag": probe_tag,
+        "probe_delta": probe_delta,
+        "surrogate_witness": scale_witness(constant),
+        "surrogate_witness_near_miss": scale_witness(constant + probe_delta),
+        "surrogate_witness_unit_constant": scale_witness(1.0),
     }
 
 
@@ -168,13 +187,16 @@ def derive(ground) -> dict:
 
 
 def submission(model, allocation, version, witness_vector, ledger, points_completed,
-               halted_early, readout_filter, reported):
+               halted_early, readout_filter, reported, scale_witness=None):
     return {
         "schema": "oer22.submission/v1",
         "allocation": {key: int(value) for key, value in sorted(allocation.items())},
         "quantization_scheme": {"group_size": model["group_size"], "scale_bits": model["scale_bits"]},
         "derived_against_calibration_version": int(version),
         "calibration_fit_witness": reference.sensitivity_digest(witness_vector),
+        "surrogate_scale_witness": (
+            model["surrogate_witness"] if scale_witness is None else scale_witness
+        ),
         "observed_calibration_ledger": [int(v) for v in ledger],
         "protocol": {
             "points_completed": int(points_completed),
@@ -246,6 +268,21 @@ def fixtures(model) -> dict:
         len(model["scheduled"]), False, "none", None,
     )
     starved["calibration_fit_witness"] = reference.sensitivity_digest(current)
+    near_miss = submission(
+        model, model["reference_allocation"], version, current, model["ledger"],
+        len(model["scheduled"]), False, "none", None,
+        scale_witness=model["surrogate_witness_near_miss"],
+    )
+    guessed_unit = submission(
+        model, model["reference_allocation"], version, current, model["ledger"],
+        len(model["scheduled"]), False, "none", None,
+        scale_witness=model["surrogate_witness_unit_constant"],
+    )
+    never_probed = submission(
+        model, model["reference_allocation"], version, current, model["ledger"],
+        len(model["scheduled"]), False, "none", None,
+    )
+    never_probed.pop("surrogate_scale_witness")
 
     cases = [
         case("reference-accepted", 1.0, "target-scale-point-reached", accepted,
@@ -262,6 +299,19 @@ def fixtures(model) -> dict:
         case("ctl-allocation-frozen-at-calibration-v1", 0.0, "allocation-derived-against-stale-calibration",
              frozen_answer,
              note="stale control for the headline silent mutation calibration-set-drifts-to-v2"),
+        case("ctl-surrogate-scale-witness-near-miss", 0.0, "surrogate-scale-constant-not-established",
+             near_miss,
+             note="the near miss: every other field is the accepted one and only the surrogate "
+                  "scale constant is displaced, so the digest is recomputed under an almost-correct "
+                  "reading of live substrate state rather than an absurd one"),
+        case("ctl-surrogate-scale-constant-guessed-unit", 0.0, "surrogate-scale-constant-not-established",
+             guessed_unit,
+             note="the constant guessed as unity, which is what a run that never read the substrate "
+                  "gets from the bare degradation form"),
+        case("ctl-surrogate-scale-witness-absent", 0.0, "surrogate-scale-constant-not-established",
+             never_probed,
+             note="no witness at all, which is what a run that never interacted with the environment "
+                  "can produce"),
         case("ctl-readout-ema-blended", 0.0, "readout-smoothed", smoothed,
              note="stale control for silent mutation readout-filter-registry-closes-ema"),
         case("ctl-early-stop-on-favourable-point", 0.0, "early-stop-metric-not-established", early,
@@ -275,6 +325,18 @@ def fixtures(model) -> dict:
             (BUNDLE / "solution" / "reference.py").read_bytes()
         ).hexdigest(),
         "reference_submission_sha256": hashlib.sha256(reference.canonical(accepted)).hexdigest(),
+        "surrogate_scale_probe": {
+            "domain_tag": model["probe_tag"],
+            "witness": model["surrogate_witness"],
+            "near_miss_witness": model["surrogate_witness_near_miss"],
+            "unit_constant_witness": model["surrogate_witness_unit_constant"],
+            "near_miss_constant_delta": model["probe_delta"],
+            "statement": (
+                "Digests only. Neither the substrate constant nor the probe value appears "
+                "here in the clear, so this fixture file cannot stand in for reading live "
+                "substrate state."
+            ),
+        },
         "cases": cases,
     }
 
@@ -505,6 +567,17 @@ def solve_sh(model) -> str:
         'record = next(row for row in stats["versions"] if int(row["version"]) == in_force)',
         'vector = [float(value) for value in record["sensitivity"]]',
         'tensors = substrate["tensors"]',
+        "",
+        "# The surrogate scale constant is established only in built environment state and",
+        "# is on no agent-visible byte, so it is read back out of the substrate here and",
+        "# replayed over the uniform reference allocation against the in-force vector.",
+        'constant = float(substrate["degradation_constant_K"])',
+        "uniform = {",
+        '    row["id"]: int(substrate["uniform_reference_bits"]) for row in tensors',
+        "}",
+        "probe_value = reference.degradation(tensors, uniform, vector, constant)",
+        'scale_witness = reference.digest(["' + model["probe_tag"] + '", probe_value])',
+        "",
         "allocation = reference.allocate(",
         "    tensors,",
         "    vector,",
@@ -524,6 +597,7 @@ def solve_sh(model) -> str:
         "    },",
         '    "derived_against_calibration_version": in_force,',
         '    "calibration_fit_witness": reference.sensitivity_digest(vector),',
+        '    "surrogate_scale_witness": scale_witness,',
         '    "observed_calibration_ledger": ledger,',
         '    "protocol": {',
         '        "points_completed": ' + str(len(model["scheduled"])) + ",",
@@ -564,6 +638,25 @@ def truth_md(ground, model) -> str:
         "force at the graded evaluation. The agent must reason about WHEN each calibration",
         "statistic was true. `environment/calibration_probe.py` is the first-class handle",
         "for asking; it is a skill under test, not a trap with no handle.",
+        "",
+        "## The discovery value the graded path depends on",
+        "",
+        "The surrogate scale constant is established only in built environment state, at",
+        "`environment/substrate.json` `degradation_constant_K`, and appears on no",
+        "agent-visible byte. A run must read it back out of that state, replay the probe the",
+        "substrate's `degradation_form` defines over the uniform reference allocation against",
+        "the in-force calibration sensitivity vector, and carry the digest as",
+        "`surrogate_scale_witness`. The checker",
+        "`surrogate_scale_witness_matches_live_substrate` refuses any other reading with",
+        "`surrogate-scale-constant-not-established`, so the environment is load-bearing for",
+        "the constant rather than decorative.",
+        "",
+        "| quantity | value |",
+        "|---|---|",
+        "| probe digest the verifier expects | `" + model["surrogate_witness"] + "` |",
+        "| same probe under the constant displaced by " + str(model["probe_delta"])
+        + " | `" + model["surrogate_witness_near_miss"] + "` |",
+        "| same probe under a unit constant | `" + model["surrogate_witness_unit_constant"] + "` |",
         "",
         "## The frozen substrate",
         "",
@@ -659,6 +752,15 @@ def rubrics_json(model) -> dict:
                 "reference_value": accepted["calibration_fit_witness"],
             },
             {
+                "id": "surrogate-scale-witness-matches-live-substrate",
+                "expectation": (
+                    "surrogate_scale_witness equals the digest of the scale probe replayed under "
+                    "the degradation constant the live substrate declares, which the run must read "
+                    "back out of environment state because it is on no agent-visible byte"
+                ),
+                "reference_value": accepted["surrogate_scale_witness"],
+            },
+            {
                 "id": "declared-calibration-version-in-force",
                 "expectation": "derived_against_calibration_version equals the version in force at the graded evaluation",
                 "reference_value": accepted["derived_against_calibration_version"],
@@ -701,6 +803,7 @@ CHECKER_IDS = [
     "bit_budget_respected_as_allocated",
     "calibration_probe_ledger_ordered",
     "allocation_matches_in_force_calibration",
+    "surrogate_scale_witness_matches_live_substrate",
     "graded_degradation_is_verifier_recomputed",
     "early_stop_does_not_establish_metric",
     "degradation_sustained_across_scheduled_points",
@@ -748,6 +851,7 @@ def test_output_py(model) -> str:
         "bit_budget_respected_as_allocated": "ctl-budget-accounted-weights-only",
         "calibration_probe_ledger_ordered": "ctl-probe-ledger-truncated-at-v1",
         "allocation_matches_in_force_calibration": "ctl-allocation-frozen-at-calibration-v1",
+        "surrogate_scale_witness_matches_live_substrate": "ctl-surrogate-scale-witness-near-miss",
         "graded_degradation_is_verifier_recomputed": "ctl-readout-ema-blended",
         "early_stop_does_not_establish_metric": "ctl-early-stop-on-favourable-point",
         "degradation_sustained_across_scheduled_points": "ctl-sustained-claim-over-two-points",
@@ -766,6 +870,26 @@ def test_output_py(model) -> str:
             "",
         ]
     lines += [
+        "def test_surrogate_scale_probe_is_sensitive_to_the_constant():",
+        "    probe = FIXTURES['surrogate_scale_probe']",
+        "    accepted = CASES['reference-accepted']['submission']['surrogate_scale_witness']",
+        "    assert accepted == probe['witness'], accepted",
+        "    wrong = [probe['near_miss_witness'], probe['unit_constant_witness']]",
+        "    assert probe['near_miss_constant_delta'] > 0.0, probe",
+        "    for other in wrong:",
+        "        assert other != accepted, other",
+        "    assert wrong[0] != wrong[1], wrong",
+        "    for case_id in (",
+        "        'ctl-surrogate-scale-witness-near-miss',",
+        "        'ctl-surrogate-scale-constant-guessed-unit',",
+        "        'ctl-surrogate-scale-witness-absent',",
+        "    ):",
+        "        row = _score(case_id)",
+        "        assert row['reward'] == 0.0, row",
+        "        assert row['reason'] == 'surrogate-scale-constant-not-established', row",
+        "        assert row['by_checker']['surrogate_scale_witness_matches_live_substrate'] is False, row",
+        "",
+        "",
         "def test_statement_admits_exactly_one_graded_outcome():",
         "    row = _score('reference-accepted')",
         "    assert row['metric']['graded_quantity'] == 'mean-perplexity-degradation-over-scheduled-points', row",

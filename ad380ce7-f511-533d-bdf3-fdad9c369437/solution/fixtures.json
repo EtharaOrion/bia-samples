@@ -52,6 +52,24 @@
       "zero_reason": "frozen-axis-moved"
     },
     {
+      "checker": "train_corpus_merge_capacity",
+      "kind": "planted-telemetry-fixture",
+      "minimal": true,
+      "near_miss": true,
+      "near_miss_note": "An OFF-BY-ONE on the discovery value. The accepting half is the live reference run, in which tests/runner.py recomputes the merge capacity of the frozen training corpus and gets measured.reference_merges. The rejecting half moves that recomputed count by exactly one and changes nothing else, so the fixture keeps the shape of a plausible capacity and only the VALUE differs. A checker that merely tested for a positive integer would accept it.",
+      "ops": [
+        {
+          "delta": -1,
+          "op": "add_int",
+          "path": [
+            "train_merge_capacity"
+          ]
+        }
+      ],
+      "planted_at": "run_record.train_merge_capacity",
+      "zero_reason": "train-corpus-merge-capacity-moved"
+    },
+    {
       "checker": "eval_points_ordered_by_updates",
       "kind": "planted-telemetry-fixture",
       "minimal": true,

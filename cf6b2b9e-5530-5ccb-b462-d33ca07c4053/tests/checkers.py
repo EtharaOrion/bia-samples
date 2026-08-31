@@ -134,6 +134,29 @@ def check_allocation_matches_in_force_calibration(telemetry: Dict[str, Any]) -> 
     return True, ""
 
 
+def check_surrogate_scale_witness_matches_live_substrate(telemetry: Dict[str, Any]) -> Verdict:
+    """DIVERGENCE. The scale the submission fitted under IS the one live substrate declares.
+
+    The surrogate scale constant is established only in harness-built environment state,
+    at environment/substrate.json degradation_constant_K, and appears on no agent-visible
+    byte. tests/grade.py reads it back from the verifier's own pristine copy, replays the
+    probe the substrate's degradation_form defines over the uniform reference allocation
+    against the in-force calibration sensitivity vector, and digests the result. A run
+    that never read that state cannot reproduce the digest, and a run that read it wrong
+    diverges here even when every other declared field is correct.
+    """
+    block = telemetry.get("surrogate_scale") or {}
+    expected = block.get("witness_from_live_substrate")
+    declared = block.get("declared_witness")
+    if not isinstance(expected, str) or not expected:
+        return False, "surrogate-scale-constant-not-established"
+    if not isinstance(declared, str) or not declared:
+        return False, "surrogate-scale-constant-not-established"
+    if declared != expected:
+        return False, "surrogate-scale-constant-not-established"
+    return True, ""
+
+
 def check_graded_degradation_is_verifier_recomputed(telemetry: Dict[str, Any]) -> Verdict:
     """VALUE. The graded readout is the verifier's own unsmoothed recomputation.
 

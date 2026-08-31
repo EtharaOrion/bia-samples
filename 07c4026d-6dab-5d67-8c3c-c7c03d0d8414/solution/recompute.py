@@ -414,17 +414,23 @@ manifest whose bindings have drifted away from the checkers aborts the verifier
 before anything is graded and the EXIT trap writes an attributed zero rather than
 a number resting on a stale binding.
 
-Every test below is a pure text binding check over frozen bundle bytes. It reads
-no clock, opens no socket, consults no random source, imports no submission and
-runs no composition. Grading the run is tests/grade.py's job, not this file's.
+Every test below is either a pure text binding check over frozen bundle bytes or a
+drive of one live selector over a frozen in-memory fixture. It reads no clock,
+opens no socket, consults no random source, imports no submission and runs no
+composition. Grading the run is tests/grade.py's job, not this file's.
 """
 
 from __future__ import annotations
 
+import json
 import sys
 from pathlib import Path
 
 HERE = Path(__file__).resolve().parent
+if str(HERE) not in sys.path:
+    sys.path.insert(0, str(HERE))
+
+import checkers  # noqa: E402
 
 MANIFEST = (HERE / "checkers.yaml").read_text(encoding="utf-8")
 CHECKER_SOURCE = (HERE / "checkers.py").read_text(encoding="utf-8")
@@ -499,6 +505,82 @@ def test_{ident}() -> None:
 
 '''
 
+FLOOR_ANCHOR_FIXTURE = '''
+# The discovery-value fixture pair, frozen from solution/grounding.yaml `observed`.
+# The accepting half feeds the selector the reference loss the live environment
+# establishes and the rejecting half feeds it one the environment does not, so a
+# selector that stopped reading the value would fail one half or the other.
+FLOOR_ANCHOR = {
+    "established": ANCHOR_RIGHT,
+    "unestablished": ANCHOR_WRONG,
+    "tolerance": ANCHOR_TOLERANCE,
+    "budget": ANCHOR_BUDGET,
+    "zero_reason": "ANCHOR_REASON",
+}
+
+
+def _floor_anchor_outcome(measured: float):
+    handle = checkers.Harness(
+        submission=HERE,
+        verifier=HERE,
+        telemetry={"floor": {"loss_per_byte": measured}},
+        bound={
+            "reference_loss_per_byte": FLOOR_ANCHOR["established"],
+            "reference_loss_tolerance": FLOOR_ANCHOR["tolerance"],
+            "reference_anchor_budget_tokens": FLOOR_ANCHOR["budget"],
+            "token_budget_tokens": FLOOR_ANCHOR["budget"],
+        },
+        eval_split=HERE / "bound.json",
+        folds={},
+    )
+    return checkers.check_floor_anchor_matches_bound_reference(handle)
+
+
+def test_floor_anchor_is_bound_on_the_admin_plane() -> None:
+    bound = json.loads((HERE / "bound.json").read_text(encoding="utf-8"))
+    for key, expected in (
+        ("reference_loss_per_byte", FLOOR_ANCHOR["established"]),
+        ("reference_loss_tolerance", FLOOR_ANCHOR["tolerance"]),
+        ("reference_anchor_budget_tokens", FLOOR_ANCHOR["budget"]),
+    ):
+        if key not in bound:
+            raise AssertionError("tests/bound.json binds no " + key)
+        if bound[key] != expected:
+            raise AssertionError(
+                "tests/bound.json binds " + key + "=" + repr(bound[key])
+                + " against the grounded " + repr(expected)
+            )
+
+
+def test_floor_anchor_fixture_accepts_the_established_reference() -> None:
+    outcome = _floor_anchor_outcome(FLOOR_ANCHOR["established"])
+    if not outcome.passed:
+        raise AssertionError("the established reference loss was refused: " + outcome.detail)
+
+
+def test_floor_anchor_fixture_rejects_an_unestablished_reference() -> None:
+    outcome = _floor_anchor_outcome(FLOOR_ANCHOR["unestablished"])
+    if outcome.passed:
+        raise AssertionError("an unestablished reference loss was accepted, so nothing reads the value")
+    if outcome.reason != FLOOR_ANCHOR["zero_reason"]:
+        raise AssertionError("the rejecting half carries the reason " + repr(outcome.reason))
+
+'''
+
+
+def build_floor_anchor_fixture(g: dict) -> str:
+    obs = g["observed"]
+    established = obs["reference_loss_per_byte"]
+    row = next(item for item in g["checkers"] if item["id"] == "floor_anchor_matches_bound_reference")
+    return (
+        FLOOR_ANCHOR_FIXTURE.replace("ANCHOR_RIGHT", repr(established))
+        .replace("ANCHOR_WRONG", repr(round(established + 0.1, 9)))
+        .replace("ANCHOR_TOLERANCE", repr(obs["reference_loss_tolerance"]))
+        .replace("ANCHOR_BUDGET", repr(obs["token_budget_tokens_in_force"]))
+        .replace("ANCHOR_REASON", row["zero_reason"])
+    )
+
+
 TEST_MAIN = '''
 def main() -> int:
     failures = []
@@ -539,6 +621,7 @@ def build_test_output(g: dict) -> str:
                 zero_reason=row["zero_reason"],
             )
         )
+    parts.append(build_floor_anchor_fixture(g))
     parts.append(TEST_MAIN)
     return "".join(parts)
 

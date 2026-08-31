@@ -25,6 +25,11 @@
       "reference_value": "a9423c6abebd3d9c269e80b51a514058f7ed31db6c27dfaeaac55303a06dffd5"
     },
     {
+      "expectation": "surrogate_scale_witness equals the digest of the scale probe replayed under the degradation constant the live substrate declares, which the run must read back out of environment state because it is on no agent-visible byte",
+      "id": "surrogate-scale-witness-matches-live-substrate",
+      "reference_value": "e1e72240deb6299474577024a7e9fd53eafc4c5e01f3311504fb0f10b40d56a9"
+    },
+    {
       "expectation": "derived_against_calibration_version equals the version in force at the graded evaluation",
       "id": "declared-calibration-version-in-force",
       "reference_value": 2

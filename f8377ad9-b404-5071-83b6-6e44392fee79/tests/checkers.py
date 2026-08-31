@@ -4,8 +4,11 @@
 Every function below is a total function of the telemetry mapping that
 `tests/runner.py` produced inside the verifier's own process. No file outside
 that record is opened, no environment variable is read, no clock is consulted, no
-random source exists, and the submission is never imported. The imports are the
-allowlisted six and nothing else.
+random source exists, and the submission is never imported. The standard-library
+imports are the allowlisted six and nothing else. The one non-standard import is
+`tests/calibration.py`, a generated sibling that carries frozen constants derived
+from `solution/grounding.yaml` and no logic at all, so importing it adds a value
+to read and never a behaviour to execute.
 
 Each reduction returns one `Verdict` carrying a value in the closed interval and,
 when that value is not full, the machine-readable reason it is not. A reason is
@@ -27,6 +30,13 @@ import hashlib
 import math
 from dataclasses import dataclass
 from typing import Any, Mapping
+
+from calibration import (
+    BAND_EPSILON,
+    EXPECTED_NOISE_HALF_WIDTH,
+    EXPECTED_SEPARATION_MEAN,
+    HALF_WIDTH_TOLERANCE,
+)
 
 FULL = 1.0
 NONE = 0.0
@@ -53,6 +63,9 @@ VERDICT_UNPROVEN = "unproven"
 REASON_ESTABLISHED = "separation-margin-cleared"
 REASON_DEGRADED = "degradation-past-bar"
 REASON_UNPROVEN = "significance-unestablished-at-ceiling"
+
+REASON_CALIBRATION_BAND = "calibration-separation-outside-band"
+REASON_CALIBRATION_WIDTH = "calibration-noise-band-width-moved"
 
 FROZEN_INPUT_NAMES = ("eval_corpus", "model_stats", "reference_unquantized")
 
@@ -423,8 +436,89 @@ def check_separation_margin(telemetry: Mapping) -> Verdict:
     )
 
 
+# --------------------------------------------------------------------------
+# The harness calibration probe. tests/runner.py measures the reference
+# allocation against the built environment on every run, independently of the
+# submission, and records the reading under telemetry.calibration. The two
+# reductions below require that reading to be the one the built environment
+# establishes, which is a constraint on the measurement path and never on the
+# solver's search.
+# --------------------------------------------------------------------------
+def _probe_reading(telemetry: Mapping, field: str, reason: str) -> tuple:
+    probe = _mapping(telemetry, "calibration")
+    if probe.get("source") != "harness-recompute" or probe.get("wellformed") is not True:
+        return NONE, Verdict(
+            NONE,
+            reason,
+            "no harness-measured calibration probe is present: the reading was sourced from "
+            + str(probe.get("source")),
+        )
+    if int(probe.get("points_used") or 0) < 2:
+        return NONE, Verdict(
+            NONE,
+            reason,
+            "the calibration probe rests on " + str(probe.get("points_used"))
+            + " evaluation point(s), which produces no band at all",
+        )
+    value = probe.get(field)
+    if isinstance(value, bool) or not isinstance(value, (int, float)) or not math.isfinite(float(value)):
+        return NONE, Verdict(
+            NONE,
+            reason,
+            "the calibration probe carries no finite " + field + ": " + repr(value),
+        )
+    return float(value), None
+
+
+# --------------------------------------------------------------------------
+# DIVERGENCE: the probe's separation sits inside the grounded band.
+# --------------------------------------------------------------------------
+def check_calibration_band(telemetry: Mapping) -> Verdict:
+    value, refusal = _probe_reading(telemetry, "separation_mean", REASON_CALIBRATION_BAND)
+    if refusal is not None:
+        return refusal
+    drift = abs(value - EXPECTED_SEPARATION_MEAN)
+    if drift > EXPECTED_NOISE_HALF_WIDTH + BAND_EPSILON:
+        return Verdict(
+            NONE,
+            REASON_CALIBRATION_BAND,
+            "the calibration probe separated by " + repr(value) + ", which is " + repr(drift)
+            + " from the centre the built environment establishes and outside its half width of "
+            + repr(EXPECTED_NOISE_HALF_WIDTH)
+            + "; the measurement path no longer reads the environment the way this bundle recorded",
+        )
+    return _ok(
+        "the calibration probe separated by " + repr(value)
+        + ", inside the band the built environment establishes"
+    )
+
+
+# --------------------------------------------------------------------------
+# VALUE: the probe's noise half width is the one the environment establishes.
+# --------------------------------------------------------------------------
+def check_calibration_noise_band(telemetry: Mapping) -> Verdict:
+    value, refusal = _probe_reading(telemetry, "noise_half_width", REASON_CALIBRATION_WIDTH)
+    if refusal is not None:
+        return refusal
+    drift = abs(value - EXPECTED_NOISE_HALF_WIDTH)
+    if drift > HALF_WIDTH_TOLERANCE + BAND_EPSILON:
+        return Verdict(
+            NONE,
+            REASON_CALIBRATION_WIDTH,
+            "the calibration probe's noise half width reads " + repr(value) + ", which is "
+            + repr(drift) + " from the half width the built environment establishes and outside "
+            + "the bound tolerance of " + repr(HALF_WIDTH_TOLERANCE),
+        )
+    return _ok(
+        "the calibration probe's noise half width is the one the built environment establishes"
+    )
+
+
 # The selector table the grader reads. Order is the order the score document
-# reports, so it is fixed here rather than left to a mapping's iteration.
+# reports, so it is fixed here rather than left to a mapping's iteration. The two
+# calibration reductions are appended LAST on purpose: grade.py attributes a zero
+# to the first failing required reduction, so appending them leaves every
+# pre-existing reduction's attribution exactly where it was.
 SELECTORS = (
     ("submission_allocation_wellformed", check_allocation_wellformed),
     ("bit_budget_respected_as_allocated", check_bit_budget),
@@ -436,6 +530,8 @@ SELECTORS = (
     ("reading_sustained_across_scheduled_points", check_reading_sustained),
     ("allocation_not_degrading_past_bar", check_not_degrading_past_bar),
     ("separation_margin_cleared", check_separation_margin),
+    ("calibration_separation_within_band", check_calibration_band),
+    ("calibration_noise_band_width_held", check_calibration_noise_band),
 )
 
 # Which reductions gate. A gate that fails takes the reward to zero and hands its

@@ -205,6 +205,46 @@ graded_checkers:
   - {id: token_budget_respected_as_fed, reduction: VALUE, zero_reason: token-budget-overspent, weight: 3, required: true, selector: check_token_budget_respected_as_fed}
   - {id: evaluation_split_not_trained_on, reduction: ABSENCE, zero_reason: evaluation-split-leaked-into-training, weight: 3, required: true, selector: check_evaluation_split_not_trained_on}
   - {id: frozen_axes_unmoved_across_run, reduction: EFFECT, zero_reason: frozen-axis-mutated, weight: 2, required: true, selector: check_frozen_axes_unmoved_across_run}
+  # The two discovery-value checkers. Registered LAST so that a run which produced no
+  # telemetry at all is still attributed to the checker that names that absence, and the
+  # attribution of every pre-existing negative fixture is unchanged.
+  - {id: graded_readout_at_frozen_bound_eval_step, reduction: VALUE, zero_reason: graded-readout-off-the-bound-evaluation-step, weight: 3, required: true, selector: check_graded_readout_at_frozen_bound_eval_step}
+  - {id: sustain_schedule_matches_frozen_recipe, reduction: ORDERING, zero_reason: sustain-schedule-not-the-frozen-schedule, weight: 3, required: true, selector: check_sustain_schedule_matches_frozen_recipe}
+
+# ---------------------------------------------------------------------------------
+# Discovery values. Each one is established in the ENVIRONMENT, is absent from every
+# agent-visible byte of the statement, and carries graded weight through the checker
+# named below: change the value in environment/frozen_recipe.json and that checker's
+# outcome changes with it.
+# ---------------------------------------------------------------------------------
+discovery_values:
+  - name: bound_eval_step
+    value: 400
+    established_in: environment/frozen_recipe.json at frozen_axes.evaluation.bound_eval_step
+    read_back_by: >-
+      tests/runner.py recipe_ledger(), which transcribes the frozen evaluation block into
+      the harness-written document recipe_ledger.json at run open.
+    absent_from_the_statement: >-
+      instruction.md names the file and the key path under "How the loss is actually
+      measured" and never states the number, so a solver obtains it only by reading the
+      environment.
+    graded_by: graded_readout_at_frozen_bound_eval_step
+    accepting_half: ref-accepted, ref-partial-credit and ref-anchors-absent
+    rejecting_half: neg-graded-readout-off-the-bound-eval-step
+    also_load_bearing_on_the_metric: >-
+      tests/grade.py graded_loss() reads the eval ledger row whose step is the run's
+      bound evaluation step, so the graded NUMBER is the number at this step.
+  - name: sustain_points
+    value: [450, 500, 550]
+    established_in: environment/frozen_recipe.json at frozen_axes.evaluation.sustain_points
+    read_back_by: >-
+      tests/runner.py recipe_ledger(), same document, same run-open read.
+    absent_from_the_statement: >-
+      instruction.md names frozen_recipe.json:frozen_axes.evaluation.sustain_points and
+      never lists the points.
+    graded_by: sustain_schedule_matches_frozen_recipe
+    accepting_half: ref-accepted, ref-partial-credit and ref-anchors-absent
+    rejecting_half: neg-sustain-schedule-truncated
 
 # ---------------------------------------------------------------------------------
 # Fixture-local anchors. These are FIXTURE INPUTS, not task anchors.
@@ -417,6 +457,36 @@ scenarios:
     expect_reason: frozen-axis-mutated
     curve: accepted
     defect: {kind: move_axis, axis: token_budget}
+
+  - id: neg-graded-readout-off-the-bound-eval-step
+    role: rejecting
+    targets: graded_readout_at_frozen_bound_eval_step
+    expect_reward: 0.0
+    expect_reason: graded-readout-off-the-bound-evaluation-step
+    curve: accepted
+    defect: {kind: retime_eval_point, bound_eval_step: 450}
+    note: >-
+      The WRONG-VALUE half for the discovery value bound_eval_step. The readout is taken
+      at a step that is a real evaluation point of this run, so every earlier checker
+      still passes: the loss there is verifier-computed, unsmoothed, sustained, on
+      harness-owned weights, and the run still ran to the end of its schedule. Only the
+      comparison against the step the harness read out of environment/frozen_recipe.json
+      refuses it. A solver that never read the environment cannot tell 450 from the
+      bound point, and this is the fixture that says so.
+
+  - id: neg-sustain-schedule-truncated
+    role: rejecting
+    targets: sustain_schedule_matches_frozen_recipe
+    expect_reward: 0.0
+    expect_reason: sustain-schedule-not-the-frozen-schedule
+    curve: accepted
+    defect: {kind: retime_sustain_schedule, sustain_points: [450, 500]}
+    note: >-
+      The WRONG-VALUE half for the discovery value sustain_points. The level is held at
+      every point the run scheduled and the run halts after the last of them, so the
+      sustained-loss checker and the early-stop checker both pass; the schedule is simply
+      not the frozen one, because its last point was dropped. Only the comparison against
+      the schedule the harness read out of environment/frozen_recipe.json refuses it.
 
   - id: neg-submission-written-reward
     role: rejecting-by-isolation

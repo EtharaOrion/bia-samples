@@ -54,6 +54,13 @@ measured:
   default_word_types_available: 201
   reference_construction: "solution/reference.py, greedy corpus-derived pair merges"
   reference_construction_optimum_bpb: 0.2818765313056418
+  # DISCOVERY VALUE. The merge capacity of environment/corpus/train.txt: the number of
+  # greedy most-frequent adjacent-pair merges the corpus supports before no pair occurs
+  # twice, under the frozen 16-byte token cap and the 1024 entries the vocabulary budget
+  # leaves past the 256 single bytes. It is on no agent-visible byte and it is graded:
+  # tests/runner.py recomputes it from the live corpus and
+  # tests/checkers.check_train_corpus_merge_capacity compares it for exact equality
+  # against the copy held verifier-side in tests/anchors.json.
   reference_merges: 623
   reference_vocab_size: 879
   reference_eval_tokens: 970
@@ -172,6 +179,22 @@ fixtures:
       minimal: true
       ops:
         - {op: set, path: [telemetry, frozen, model_spec_digest], value: "0000000000000000000000000000000000000000000000000000000000000000"}
+    - checker: train_corpus_merge_capacity
+      zero_reason: train-corpus-merge-capacity-moved
+      kind: planted-telemetry-fixture
+      minimal: true
+      planted_at: run_record.train_merge_capacity
+      near_miss: true
+      near_miss_note: >-
+        An OFF-BY-ONE on the discovery value. The accepting half is the live reference
+        run, in which tests/runner.py recomputes the merge capacity of the frozen
+        training corpus and gets measured.reference_merges. The rejecting half moves
+        that recomputed count by exactly one and changes nothing else, so the fixture
+        keeps the shape of a plausible capacity and only the VALUE differs. A checker
+        that merely tested for a positive integer would accept it.
+      ops:
+        - {op: add_int, path: [train_merge_capacity], delta: -1}
+
     - checker: eval_points_ordered_by_updates
       zero_reason: eval-schedule-out-of-order
       kind: planted-telemetry-fixture

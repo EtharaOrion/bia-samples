@@ -31,5 +31,6 @@
     "filter": "none",
     "reported_degradation": null
   },
-  "schema": "oer22.submission/v1"
+  "schema": "oer22.submission/v1",
+  "surrogate_scale_witness": "e1e72240deb6299474577024a7e9fd53eafc4c5e01f3311504fb0f10b40d56a9"
 }

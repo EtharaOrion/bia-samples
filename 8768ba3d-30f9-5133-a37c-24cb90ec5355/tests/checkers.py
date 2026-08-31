@@ -36,6 +36,13 @@ REASON_SPLIT_LEAKED = "evaluation-split-leaked"
 REASON_POOL_DIVERGED = "pool-state-diverged-from-graded-verdict"
 REASON_EVAL_BEFORE_FEED = "evaluation-precedes-its-feed"
 REASON_NO_BETTER_THAN_DEFAULT = "mixture-no-better-than-default-simplex-optimum"
+REASON_BUDGET_NOT_FROZEN = "frozen-token-budget-not-the-graded-budget"
+
+# The frozen token budget, verifier side. It is generated from
+# solution/grounding.yaml substrate.budget_tokens by solution/recompute.py and
+# ships in this directory, so the number a run is graded against is the number
+# this bundle froze and never the number the pool bytes happen to declare.
+BUDGET_SPEC = "budget_spec.json"
 
 
 @dataclass(frozen=True)
@@ -51,6 +58,10 @@ class Outcome:
 def _read(handles: Mapping, name: str) -> dict:
     path = handles[name]
     return json.loads(Path(path).read_text(encoding="utf-8"))
+
+
+def _frozen(name: str) -> dict:
+    return json.loads((Path(__file__).resolve().parent / name).read_text(encoding="utf-8"))
 
 
 def _close(left: float, right: float) -> bool:
@@ -81,6 +92,47 @@ def _ledger_digest(batches) -> str:
 
 
 # --------------------------------------------------------------------------
+
+
+def check_frozen_token_budget_is_the_graded_budget(handles: Mapping) -> Outcome:
+    """VALUE. The budget the harness graded against is the budget this bundle froze.
+
+    Every other budget row in this file is relative: it compares what was fed
+    against whatever `feed.json` says the budget is, so a pool whose declared
+    budget had drifted would be graded, consistently, against the wrong number.
+    This row pins that number to the frozen one and makes the bound evaluation
+    point mean budget exhaustion at the frozen figure.
+    """
+    frozen = int(_frozen(BUDGET_SPEC)["budget_tokens"])
+    feed = _read(handles, "feed")
+    report = _read(handles, "eval")
+    live = int(feed["budget"])
+    if live != frozen:
+        return Outcome(
+            False,
+            REASON_BUDGET_NOT_FROZEN,
+            "the harness graded against a token budget of "
+            + str(live)
+            + " while the frozen budget is "
+            + str(frozen)
+            + "; a run measured against a budget nobody froze is not a run against this budget",
+        )
+    if bool(report.get("bound_point_reached")) != (int(feed["tokens_fed"]) >= frozen):
+        return Outcome(
+            False,
+            REASON_BUDGET_NOT_FROZEN,
+            "the harness recorded bound_point_reached "
+            + repr(report.get("bound_point_reached"))
+            + " after feeding "
+            + str(feed["tokens_fed"])
+            + " tokens against the frozen budget of "
+            + str(frozen),
+        )
+    return Outcome(
+        True,
+        "",
+        "the graded budget is the frozen " + str(frozen) + " tokens and the bound point is its exhaustion",
+    )
 
 
 def check_graded_loss_recomputed_unsmoothed(handles: Mapping) -> Outcome:
@@ -358,6 +410,7 @@ def check_mixture_beats_default_simplex_optimum(handles: Mapping) -> Outcome:
 
 # The graded set, in gate order. grade.py walks this and nothing else.
 SELECTORS = (
+    ("frozen_token_budget_is_the_graded_budget", check_frozen_token_budget_is_the_graded_budget),
     ("bound_evaluation_point_reached", check_bound_evaluation_point_reached),
     ("token_budget_respected_as_fed", check_token_budget_respected_as_fed),
     ("evaluation_split_untrained", check_evaluation_split_untrained),

@@ -54,6 +54,7 @@ from checkers import (  # noqa: E402
     check_sustained_across_windows,
     check_throughput_from_harness_telemetry,
     check_trace_fully_accounted,
+    check_trace_is_seed_derived,
     evaluate,
 )
 
@@ -66,6 +67,7 @@ DEFAULT_REWARD_ROOT = "/logs/verifier"
 
 FIXTURES = "fixtures"
 SUBSTRATE = "substrate.json"
+TRACE = "trace.json"
 
 # The files whose bytes are the graded checker path. `check_harness_owns_the_clock` reads
 # exactly these, so the ban is measured against what ran and not against a claim.
@@ -88,6 +90,25 @@ def observed_digests(environment_dir: Path, names) -> dict:
         path = environment_dir / name
         rows[name] = digest_bytes(path.read_bytes()) if path.is_file() else ""
     return rows
+
+
+def observed_trace(environment_dir: Path) -> tuple:
+    """The request rows standing in the built agent-visible environment at grade time.
+
+    Read here, in the verifier's own process, off the surface the environment image
+    actually carries. An unreadable or absent surface returns nothing, which
+    check_trace_is_seed_derived refuses rather than treats as an absent result.
+    """
+    path = environment_dir / TRACE
+    if not path.is_file():
+        return ()
+    try:
+        document = json.loads(path.read_text(encoding="utf-8"))
+    except ValueError:
+        return ()
+    if not isinstance(document, dict):
+        return ()
+    return tuple(document.get("requests") or ())
 
 
 def graded_path_source(tests_dir: Path) -> str:
@@ -173,6 +194,9 @@ def build_handle(session, substrate: dict, environment_dir: Path, tests_dir: Pat
         sustain_floor_den=int(substrate["sustain_floor_den"]),
         flatten_window=int(substrate["flatten_window"]),
         trace_ids=tuple(str(row["id"]) for row in trace["requests"]),
+        seed_derivation=dict(substrate.get("seed_derivation") or {}),
+        observed_trace=observed_trace(environment_dir),
+        graded_trace=tuple(trace.get("requests") or ()),
         ledger=ledger,
         recomputed=recomputed,
         selected_index=int((session or {}).get("selected_attempt", -1)),

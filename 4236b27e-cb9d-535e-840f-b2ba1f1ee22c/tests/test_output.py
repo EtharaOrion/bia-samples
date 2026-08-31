@@ -57,3 +57,8 @@ def test_compaction_dropped_entries_reconstructed():
 def test_frozen_axes_unmoved():
     result = checkers.check_frozen_axes_unmoved(RUN_ROOT)
     assert result.ok, 'frozen-axis-moved' + ": " + result.detail
+
+
+def test_evaluation_schedule_as_scheduled():
+    result = checkers.check_evaluation_schedule_as_scheduled(RUN_ROOT)
+    assert result.ok, 'evaluation-schedule-not-as-scheduled' + ": " + result.detail

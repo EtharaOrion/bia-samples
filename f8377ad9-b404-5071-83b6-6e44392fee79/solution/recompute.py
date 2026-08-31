@@ -35,6 +35,7 @@ import yaml
 
 BANNER = "GENERATED SECTION. DO NOT HAND-EDIT."
 SOURCE = "solution/grounding.yaml"
+CALIBRATION_ARTIFACT = "tests/calibration.py"
 
 BUNDLE = Path(__file__).resolve().parent.parent
 GROUNDING = BUNDLE / "solution" / "grounding.yaml"
@@ -110,6 +111,82 @@ def check_recorded_result(grounding: dict, derived: dict) -> None:
                 "expected_result." + key + " in " + SOURCE + " records " + repr(recorded.get(key))
                 + " and the derivation produces " + repr(value)
             )
+
+
+def build_calibration_py(grounding: dict) -> str:
+    """Render the frozen band constants and the frozen band fixtures.
+
+    This artifact takes `grounding` alone and never `derived`, because
+    tests/runner.py imports it and derive_result() imports tests/runner.py. A
+    builder that needed the derivation would need the derivation to already have
+    run, which is the cycle this signature refuses.
+    """
+    ref = grounding["reference"]
+    probe = grounding["calibration_probe"]
+    result = grounding["expected_result"]
+    centre = float(result["separation_mean"])
+    width = float(result["noise_half_width"])
+    points = int(grounding["bindings"]["evaluation_repeat_floor"])
+    lines = [
+        "#!/usr/bin/env python3",
+        '"""' + BANNER,
+        "",
+        "Source: " + SOURCE,
+        "",
+        "Frozen constants and frozen fixtures, and no logic at all.",
+        "",
+        "tests/runner.py reads CALIBRATION_ALLOCATION and measures it against the built",
+        "environment on every run. tests/checkers.py reads the band constants and reduces",
+        "that measurement. tests/test_output.py reads BAND_FIXTURES and exercises the",
+        "accepting and the rejecting half of each reduction over frozen bytes.",
+        "",
+        "EXPECTED_SEPARATION_MEAN and EXPECTED_NOISE_HALF_WIDTH are discovery values.",
+        "They appear on no agent-visible surface and are obtainable only by measuring the",
+        "built environment, which is why the graded path is required to read them back.",
+        '"""',
+        "",
+        "from __future__ import annotations",
+        "",
+        "CALIBRATION_ALLOCATION = {",
+        '    "scheme": ' + repr(str(ref["scheme"])) + ",",
+        '    "bits": {',
+    ]
+    for name in sorted(ref["bits"]):
+        lines.append("        " + repr(str(name)) + ": " + repr(int(ref["bits"][name])) + ",")
+    lines += [
+        "    },",
+        "}",
+        "",
+        "EXPECTED_SEPARATION_MEAN = " + repr(centre),
+        "EXPECTED_NOISE_HALF_WIDTH = " + repr(width),
+        "HALF_WIDTH_TOLERANCE = " + repr(float(probe["half_width_tolerance"])),
+        "BAND_EPSILON = " + repr(float(probe["band_epsilon"])),
+        "",
+        "BAND_FIXTURES = {",
+    ]
+    for row in grounding["calibration_band_fixtures"]:
+        mean = centre + float(row["mean_offset_in_widths"]) * width + float(row["mean_offset"])
+        half = width * float(row["width_scale"]) + float(row["width_offset"])
+        lines += [
+            "    " + repr(str(row["id"])) + ": {",
+            '        "checker": ' + repr(str(row["checker"])) + ",",
+            '        "half": ' + repr(str(row["half"])) + ",",
+            '        "expect_reason": ' + repr(str(row["expect_reason"])) + ",",
+            '        "proves": ' + repr(str(row["proves"])) + ",",
+            '        "telemetry": {',
+            '            "schema": "oer20.telemetry/v1",',
+            '            "calibration": {',
+            '                "source": "harness-recompute",',
+            '                "wellformed": True,',
+            '                "points_used": ' + repr(points) + ",",
+            '                "separation_mean": ' + repr(mean) + ",",
+            '                "noise_half_width": ' + repr(half) + ",",
+            "            },",
+            "        },",
+            "    },",
+        ]
+    lines += ["}", ""]
+    return "\n".join(lines)
 
 
 def build_solve_sh(grounding: dict, derived: dict) -> str:
@@ -286,6 +363,9 @@ def build_rubrics_json(grounding: dict, derived: dict) -> str:
 def build_test_output(grounding: dict, derived: dict) -> str:
     fixtures = grounding["checker_fixtures"]
     rows = [row for row in fixtures if row.get("checker")]
+    band_rows = list(grounding["calibration_band_fixtures"])
+    selector_count = len(rows)
+    required_count = len([row for row in rows if row["checker"] != "separation_margin_cleared"])
     lines = [
         "#!/usr/bin/env python3",
         '"""' + BANNER,
@@ -311,6 +391,7 @@ def build_test_output(grounding: dict, derived: dict) -> str:
         "",
         "sys.path.insert(0, str(Path(__file__).resolve().parent))",
         "",
+        "from calibration import BAND_FIXTURES  # noqa: E402",
         "from checkers import (  # noqa: E402",
         "    REQUIRED,",
         "    SELECTORS,",
@@ -343,11 +424,15 @@ def build_test_output(grounding: dict, derived: dict) -> str:
         "    return _STATE[\"verdict\"]",
         "",
         "",
-        "def _reduction(name):",
+        "def _reduction_over(name, record):",
         "    for ident, selector in SELECTORS:",
         "        if ident == name:",
-        "            return selector(telemetry())",
+        "            return selector(record)",
         "    raise AssertionError(\"tests/checkers.yaml names a selector checkers.py does not carry: \" + name)",
+        "",
+        "",
+        "def _reduction(name):",
+        "    return _reduction_over(name, telemetry())",
         "",
         "",
     ]
@@ -369,6 +454,25 @@ def build_test_output(grounding: dict, derived: dict) -> str:
             "",
             "",
         ]
+    for row in band_rows:
+        ident = str(row["id"])
+        checker = str(row["checker"])
+        reason = str(row["expect_reason"])
+        accepting = str(row["half"]) == "accepting"
+        lines += [
+            "def test_band_fixture_" + ident + "():",
+            '    """' + str(row["proves"]).strip() + '"""',
+            "    fixture = BAND_FIXTURES[" + repr(ident) + "]",
+            "    outcome = _reduction_over(fixture[\"checker\"], fixture[\"telemetry\"])",
+            (
+                "    assert outcome.passed, " + repr(ident) + " + \" scored \" + repr(outcome.value) + \" with reason \" + outcome.reason"
+                if accepting
+                else "    assert not outcome.passed, " + repr(ident) + " + \" was accepted at \" + repr(outcome.value) + \", so \" + " + repr(checker) + " + \" does not depend on the grounded value\""
+            ),
+            "    assert outcome.reason == " + repr(reason) + ", " + repr(ident) + " + \" carried reason \" + repr(outcome.reason)",
+            "",
+            "",
+        ]
     lines += [
         "def test_reward_is_continuous_across_the_margin():",
         '    """The graded ramp moves through the margin; it does not step at it."""',
@@ -385,8 +489,8 @@ def build_test_output(grounding: dict, derived: dict) -> str:
         "",
         "def test_every_manifest_selector_is_reachable():",
         '    """Every reduction the manifest names resolves, and the required set is non-empty."""',
-        "    assert len(SELECTORS) == 10",
-        "    assert len(REQUIRED) == 9",
+        "    assert len(SELECTORS) == " + repr(selector_count),
+        "    assert len(REQUIRED) == " + repr(required_count),
         "    for ident, _ in SELECTORS:",
         "        assert _reduction(ident) is not None",
         "",
@@ -451,6 +555,22 @@ def main(argv=None) -> int:
 
     grounding = load_grounding()
     verify_substrate(grounding)
+
+    # tests/calibration.py is the bootstrap artifact: tests/runner.py imports it and
+    # derive_result() imports tests/runner.py, so it is emitted or compared BEFORE
+    # the derivation rather than inside the uniform render loop below.
+    bootstrap = BUNDLE / CALIBRATION_ARTIFACT
+    bootstrap_text = build_calibration_py(grounding)
+    if args.check:
+        current = bootstrap.read_text(encoding="utf-8") if bootstrap.is_file() else ""
+        if current != bootstrap_text:
+            print("DRIFTED " + CALIBRATION_ARTIFACT)
+            print("recompute --check: 1 artifact(s) drifted")
+            return 1
+    else:
+        bootstrap.parent.mkdir(parents=True, exist_ok=True)
+        bootstrap.write_text(bootstrap_text, encoding="utf-8")
+
     derived = derive_result(grounding)
     check_recorded_result(grounding, derived)
     rendered = render(grounding, derived)

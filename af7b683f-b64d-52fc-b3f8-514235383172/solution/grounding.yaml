@@ -257,6 +257,21 @@ checker_fixture_substitution:
       the rejecting half is carried on a planted telemetry fixture rather than on a
       configuration, and the substitution is recorded here, in tests/checkers.yaml and in
       seed/tasks/OER-24/feasibility.yaml.
+  - checker: arrival_cadence_ordered
+    substitution: planted telemetry fixtures
+    why: >-
+      trace.inter_arrival_ms is a property of the frozen request trace and the free
+      configuration surface is batching, scheduling and admission, none of which moves an
+      arrival cadence. No submission can therefore reach this checker's rejecting half by
+      choosing a configuration. What can move the cadence is a harness replay whose arrival
+      stamps disagree with the frozen trace, which is what a shifted or compressed arrival
+      stream looks like on the way to a shorter measured span and a flattering quotient, and
+      which trace_and_envelope_unmodified cannot see because it digests bytes on disk rather
+      than the recorded telemetry. The rejecting half is carried on four planted telemetry
+      fixtures, each the simulator's own output over a trace regenerated with the base or the
+      modulus moved by exactly one, so the rejection is proven to turn on the VALUE rather
+      than on the shape of an arrival stream. The substitution is recorded here and in
+      tests/checkers.yaml.
 
 gaps:
   - id: gap-oer-per-family-anchors-unmeasured

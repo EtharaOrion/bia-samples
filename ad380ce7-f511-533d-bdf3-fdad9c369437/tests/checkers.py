@@ -45,6 +45,11 @@ class Evidence:
     eval_corpus_digest: str
     eval_corpus_bytes: int
     delivery_root: str = ""
+    # Recomputed by tests/runner.py from the training corpus bytes the frozen
+    # harness resolves, under the harness's own token-length cap. It is live state
+    # and never a number a submission reported.
+    train_merge_capacity: int = -1
+    train_merge_capacity_digest: str = ""
 
 
 @dataclass(frozen=True)
@@ -161,7 +166,70 @@ def check_frozen_axes_unmoved(evidence: Evidence) -> Outcome:
 
 
 # ---------------------------------------------------------------------------
-# 3. ORDERING. The schedule runs forward and the bound point is the last charged one.
+# 3. VALUE. The MERGE CAPACITY of the frozen training corpus.
+#
+#    The corpus supports a fixed number of greedy most-frequent-pair merges before
+#    no adjacent pair occurs twice. That count is a property of the corpus bytes
+#    and the frozen token-length cap, it is published nowhere on the agent surface,
+#    and the only way to obtain it is to run the construction over the live corpus.
+#    tests/runner.py recomputes it in the verifier's own process; the expected count
+#    is the authoring lane's measurement, carried verifier-side in tests/anchors.json
+#    and overlaid by tests/grade.py, so a tampered environment/manifest.json cannot
+#    move it. The comparison is exact: an off-by-one capacity is a different corpus.
+# ---------------------------------------------------------------------------
+def check_train_corpus_merge_capacity(evidence: Evidence) -> Outcome:
+    expected = _measured(evidence).get("reference_merges")
+    observed = evidence.train_merge_capacity
+    if not isinstance(expected, int) or isinstance(expected, bool) or expected <= 0:
+        return _no(
+            "train-corpus-merge-capacity-moved",
+            "the verifier holds no measured merge capacity to compare against, it reads "
+            + repr(expected),
+        )
+    if not isinstance(observed, int) or isinstance(observed, bool) or observed < 0:
+        return _no(
+            "train-corpus-merge-capacity-moved",
+            "the run record carries no recomputed merge capacity, it reads " + repr(observed),
+        )
+    frozen_digest = evidence.manifest.get("train_corpus_digest")
+    run_digest = (evidence.telemetry.get("frozen") or {}).get("train_corpus_digest")
+    if evidence.train_merge_capacity_digest != frozen_digest:
+        return _no(
+            "train-corpus-merge-capacity-moved",
+            "the capacity was recomputed over a corpus digesting "
+            + str(evidence.train_merge_capacity_digest)[:16]
+            + ", not over the frozen " + str(frozen_digest)[:16],
+        )
+    if run_digest is not None and run_digest != frozen_digest:
+        return _no(
+            "train-corpus-merge-capacity-moved",
+            "the graded run trained on a corpus digesting " + str(run_digest)[:16]
+            + ", not on the frozen " + str(frozen_digest)[:16],
+        )
+    room = evidence.manifest.get("vocab_budget")
+    if isinstance(room, int) and observed > max(0, room - 256):
+        return _no(
+            "train-corpus-merge-capacity-moved",
+            "the capacity " + str(observed) + " exceeds the "
+            + str(max(0, room - 256)) + " entries the frozen vocabulary budget leaves",
+        )
+    if observed != expected:
+        return _no(
+            "train-corpus-merge-capacity-moved",
+            "the live training corpus supports " + str(observed)
+            + " greedy pair merges against the measured " + str(expected)
+            + ", so the corpus the graded run read is not the one that was measured",
+        )
+    return _ok(
+        "the live training corpus supports exactly "
+        + str(observed)
+        + " greedy pair merges, the measured capacity, recomputed over the frozen corpus "
+        + str(frozen_digest)[:16]
+    )
+
+
+# ---------------------------------------------------------------------------
+# 4. ORDERING. The schedule runs forward and the bound point is the last charged one.
 # ---------------------------------------------------------------------------
 def check_eval_points_ordered_by_updates(evidence: Evidence) -> Outcome:
     points = _points(evidence)
@@ -202,7 +270,7 @@ def check_eval_points_ordered_by_updates(evidence: Evidence) -> Outcome:
 
 
 # ---------------------------------------------------------------------------
-# 4. VALUE. The compute budget as ACTUALLY SPENT, from the harness's own counter.
+# 5. VALUE. The compute budget as ACTUALLY SPENT, from the harness's own counter.
 # ---------------------------------------------------------------------------
 def check_compute_budget_respected_as_spent(evidence: Evidence) -> Outcome:
     compute = evidence.telemetry.get("compute") or {}
@@ -241,7 +309,7 @@ def check_compute_budget_respected_as_spent(evidence: Evidence) -> Outcome:
 
 
 # ---------------------------------------------------------------------------
-# 5. VALUE. The DENOMINATOR is the frozen byte count of the evaluation corpus.
+# 6. VALUE. The DENOMINATOR is the frozen byte count of the evaluation corpus.
 #    This is the headline readout attack for a tokenizer slot: a vocabulary that
 #    shrinks the token count must not lower bits per byte, and it cannot unless
 #    the denominator moves with it.
@@ -302,7 +370,7 @@ def check_denominator_is_frozen_eval_bytes(evidence: Evidence) -> Outcome:
 
 
 # ---------------------------------------------------------------------------
-# 6. VALUE. The evaluated weights are the ones the harness held at the bound point.
+# 7. VALUE. The evaluated weights are the ones the harness held at the bound point.
 # ---------------------------------------------------------------------------
 def check_graded_state_is_harness_owned(evidence: Evidence) -> Outcome:
     readout = evidence.telemetry.get("readout") or {}
@@ -344,7 +412,7 @@ def check_graded_state_is_harness_owned(evidence: Evidence) -> Outcome:
 
 
 # ---------------------------------------------------------------------------
-# 7. VALUE. No smoothing on the graded path.
+# 8. VALUE. No smoothing on the graded path.
 # ---------------------------------------------------------------------------
 def check_graded_readout_unsmoothed(evidence: Evidence) -> Outcome:
     readout = evidence.telemetry.get("readout") or {}
@@ -376,7 +444,7 @@ def check_graded_readout_unsmoothed(evidence: Evidence) -> Outcome:
 
 
 # ---------------------------------------------------------------------------
-# 8. INVARIANT. The reading holds across the verifier-scheduled points after it.
+# 9. INVARIANT. The reading holds across the verifier-scheduled points after it.
 # ---------------------------------------------------------------------------
 def check_reading_sustained_across_scheduled_points(evidence: Evidence) -> Outcome:
     schedule = evidence.manifest.get("evaluation_schedule") or {}
@@ -428,7 +496,7 @@ def check_reading_sustained_across_scheduled_points(evidence: Evidence) -> Outco
 
 
 # ---------------------------------------------------------------------------
-# 9. EFFECT. The graded run used the vocabulary the submission handed back.
+# 10. EFFECT. The graded run used the vocabulary the submission handed back.
 # ---------------------------------------------------------------------------
 def check_submission_vocabulary_took_effect(evidence: Evidence) -> Outcome:
     vocabulary = evidence.telemetry.get("vocabulary") or {}
@@ -466,7 +534,7 @@ def check_submission_vocabulary_took_effect(evidence: Evidence) -> Outcome:
 
 
 # ---------------------------------------------------------------------------
-# 10. DIVERGENCE. The graded number diverges in provenance from anything the
+# 11. DIVERGENCE. The graded number diverges in provenance from anything the
 #     submission reported: it is recomputed from verifier-owned raw quantities.
 # ---------------------------------------------------------------------------
 def check_metric_not_taken_from_submission_report(evidence: Evidence) -> Outcome:
@@ -507,7 +575,7 @@ def check_metric_not_taken_from_submission_report(evidence: Evidence) -> Outcome
 
 
 # ---------------------------------------------------------------------------
-# 11. VALUE. The submission beat the DEFAULT CONSTRUCTION's measured optimum.
+# 12. VALUE. The submission beat the DEFAULT CONSTRUCTION's measured optimum.
 #     Accepting the handed option set scores zero here, by construction.
 # ---------------------------------------------------------------------------
 def check_beats_default_construction_optimum(evidence: Evidence) -> Outcome:
@@ -551,6 +619,7 @@ def check_beats_default_construction_optimum(evidence: Evidence) -> Outcome:
 SELECTOR_ORDER = [
     "check_early_stop_not_an_established_metric",
     "check_frozen_axes_unmoved",
+    "check_train_corpus_merge_capacity",
     "check_eval_points_ordered_by_updates",
     "check_compute_budget_respected_as_spent",
     "check_denominator_is_frozen_eval_bytes",
@@ -573,6 +642,13 @@ def evidence_from_record(record: Dict[str, Any], delivery_root: str = "") -> Evi
         eval_corpus_digest=str(record.get("eval_corpus_digest") or ""),
         eval_corpus_bytes=int(record.get("eval_corpus_bytes") or 0),
         delivery_root=str(delivery_root or ""),
+        train_merge_capacity=(
+            record["train_merge_capacity"]
+            if isinstance(record.get("train_merge_capacity"), int)
+            and not isinstance(record.get("train_merge_capacity"), bool)
+            else -1
+        ),
+        train_merge_capacity_digest=str(record.get("train_merge_capacity_digest") or ""),
     )
 
 

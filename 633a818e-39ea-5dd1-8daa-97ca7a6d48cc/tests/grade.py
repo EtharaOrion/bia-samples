@@ -34,6 +34,7 @@ from checkers import (  # noqa: E402
     check_graded_weights_are_run_weights,
     check_multi_seed_separation_established,
     check_reallocation_follows_flattening,
+    check_reference_operating_point_matches_final_state,
     check_session_holds_attempt_budget,
     check_target_band_reached_by_session,
     load_session,
@@ -55,6 +56,7 @@ GATES = (
     check_crossing_sustained,
     check_target_band_reached_by_session,
     check_multi_seed_separation_established,
+    check_reference_operating_point_matches_final_state,
 )
 
 

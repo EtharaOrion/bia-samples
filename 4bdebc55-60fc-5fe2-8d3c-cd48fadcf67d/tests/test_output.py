@@ -65,6 +65,29 @@ def test_filter_claim_matches_observed_pool():
     assert document['reason'] == 'silent-filter-no-op', document
 
 
+def test_curated_token_accounting_matches_observation():
+    accepted = _verdict(BASE, 'curated_token_accounting_matches_observation')
+    assert accepted.ok, accepted.detail
+    planted = _verdict(CONTROLS['nc-reference-token-total-wrong']['state'], 'curated_token_accounting_matches_observation')
+    assert not planted.ok, 'nc-reference-token-total-wrong did not fire curated_token_accounting_matches_observation'
+    assert planted.reason == 'curated-token-accounting-diverges', planted.reason
+    document = grade.evaluate(CONTROLS['nc-reference-token-total-wrong']['state'])
+    assert document['reward'] == 0.0, document
+    assert document['reason'] == 'curated-token-accounting-diverges', document
+    planted = _verdict(CONTROLS['nc-claimed-token-accounting-diverges']['state'], 'curated_token_accounting_matches_observation')
+    assert not planted.ok, 'nc-claimed-token-accounting-diverges did not fire curated_token_accounting_matches_observation'
+    assert planted.reason == 'curated-token-accounting-diverges', planted.reason
+    document = grade.evaluate(CONTROLS['nc-claimed-token-accounting-diverges']['state'])
+    assert document['reward'] == 0.0, document
+    assert document['reason'] == 'curated-token-accounting-diverges', document
+    planted = _verdict(CONTROLS['nc-token-total-not-reduced']['state'], 'curated_token_accounting_matches_observation')
+    assert not planted.ok, 'nc-token-total-not-reduced did not fire curated_token_accounting_matches_observation'
+    assert planted.reason == 'curated-token-accounting-diverges', planted.reason
+    document = grade.evaluate(CONTROLS['nc-token-total-not-reduced']['state'])
+    assert document['reward'] == 0.0, document
+    assert document['reason'] == 'curated-token-accounting-diverges', document
+
+
 def test_curated_pool_consumed_by_trainer():
     accepted = _verdict(BASE, 'curated_pool_consumed_by_trainer')
     assert accepted.ok, accepted.detail
@@ -143,6 +166,29 @@ def test_graded_loss_unsmoothed():
     assert document['reason'] == 'graded-loss-smoothed', document
 
 
+def test_reference_arm_curation_is_bound():
+    accepted = _verdict(BASE, 'reference_arm_curation_is_bound')
+    assert accepted.ok, accepted.detail
+    planted = _verdict(CONTROLS['nc-reference-arm-document-count-wrong']['state'], 'reference_arm_curation_is_bound')
+    assert not planted.ok, 'nc-reference-arm-document-count-wrong did not fire reference_arm_curation_is_bound'
+    assert planted.reason == 'reference-arm-not-the-bound-curation', planted.reason
+    document = grade.evaluate(CONTROLS['nc-reference-arm-document-count-wrong']['state'])
+    assert document['reward'] == 0.0, document
+    assert document['reason'] == 'reference-arm-not-the-bound-curation', document
+    planted = _verdict(CONTROLS['nc-reference-arm-digest-drift']['state'], 'reference_arm_curation_is_bound')
+    assert not planted.ok, 'nc-reference-arm-digest-drift did not fire reference_arm_curation_is_bound'
+    assert planted.reason == 'reference-arm-not-the-bound-curation', planted.reason
+    document = grade.evaluate(CONTROLS['nc-reference-arm-digest-drift']['state'])
+    assert document['reward'] == 0.0, document
+    assert document['reason'] == 'reference-arm-not-the-bound-curation', document
+    planted = _verdict(CONTROLS['nc-reference-arm-loss-not-the-arm']['state'], 'reference_arm_curation_is_bound')
+    assert not planted.ok, 'nc-reference-arm-loss-not-the-arm did not fire reference_arm_curation_is_bound'
+    assert planted.reason == 'reference-arm-not-the-bound-curation', planted.reason
+    document = grade.evaluate(CONTROLS['nc-reference-arm-loss-not-the-arm']['state'])
+    assert document['reward'] == 0.0, document
+    assert document['reason'] == 'reference-arm-not-the-bound-curation', document
+
+
 def test_improvement_sustained_across_points():
     accepted = _verdict(BASE, 'improvement_sustained_across_points')
     assert accepted.ok, accepted.detail
@@ -169,12 +215,14 @@ TESTS = [
     'test_reference_accepted_end_to_end',
     'test_reward_is_not_binary',
     'test_filter_claim_matches_observed_pool',
+    'test_curated_token_accounting_matches_observation',
     'test_curated_pool_consumed_by_trainer',
     'test_curation_precedes_first_feed',
     'test_token_budget_respected_as_fed',
     'test_eval_split_never_trained_on',
     'test_graded_weights_harness_owned',
     'test_graded_loss_unsmoothed',
+    'test_reference_arm_curation_is_bound',
     'test_improvement_sustained_across_points',
     'test_early_stop_does_not_establish_loss',
 ]

@@ -19,6 +19,7 @@ COPY runner.py      /verifier/tests/runner.py
 COPY grade.py       /verifier/tests/grade.py
 COPY checkers.py    /verifier/tests/checkers.py
 COPY checkers.yaml  /verifier/tests/checkers.yaml
+COPY expected_pool.py /verifier/tests/expected_pool.py
 COPY test_output.py /verifier/tests/test_output.py
 COPY rubrics.jsonl  /verifier/tests/rubrics.jsonl
 

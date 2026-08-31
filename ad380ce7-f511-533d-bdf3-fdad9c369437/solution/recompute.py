@@ -414,10 +414,11 @@ Each `test_<checker id>` carries BOTH halves of exactly one checker declared in
                      checker must return exactly the `zero_reason` its manifest row
                      declares, and no other checker's reason is accepted.
 
-Nine of the eleven rejecting halves are carried on planted telemetry fixtures,
+Ten of the twelve rejecting halves are carried on planted telemetry fixtures,
 because `tests/runner.py` never lets a submission near the compute counter, the
-model state, the denominator or the evaluation schedule. That substitution is
-recorded in `tests/checkers.yaml` and in `seed/tasks/OER-15/feasibility.yaml`.
+model state, the denominator, the training corpus or the evaluation schedule. That
+substitution is recorded in `tests/checkers.yaml` and in
+`seed/tasks/OER-15/feasibility.yaml`.
 
 `seed/tasks/OER-15/adequacy.py` imports the helpers below rather than
 reimplementing them, so the adequacy proof and this suite can never disagree about
@@ -442,6 +443,7 @@ if str(TESTS) not in sys.path:
     sys.path.insert(0, str(TESTS))
 
 import checkers as C  # noqa: E402
+import grade as G  # noqa: E402
 
 
 SUBMISSION_REFERENCE = (
@@ -540,8 +542,14 @@ def apply_ops(record: dict, ops: list) -> dict:
 
 
 def outcome(record: dict, selector: str):
-    """Drive ONE live checker over one record through the real evidence assembly."""
-    evidence = C.evidence_from_record(record, str(BUNDLE))
+    """Drive ONE live checker over one record through the real evidence assembly.
+
+    The verifier-owned anchors in `tests/anchors.json` are overlaid first, exactly as
+    `tests/grade.py` overlays them before it assembles Evidence, so a checker reading a
+    verifier-side operating point sees here what it sees on the graded path.
+    """
+    merged = G.merge_verifier_anchors(record, G.load_anchors())
+    evidence = C.evidence_from_record(merged, str(BUNDLE))
     return getattr(C, selector)(evidence)
 
 
@@ -610,6 +618,7 @@ def test_output_py(g: dict) -> str:
 _CHECKER_ORDER = [
     "early_stop_not_an_established_metric",
     "frozen_axes_unmoved",
+    "train_corpus_merge_capacity",
     "eval_points_ordered_by_updates",
     "compute_budget_respected_as_spent",
     "denominator_is_frozen_eval_bytes",

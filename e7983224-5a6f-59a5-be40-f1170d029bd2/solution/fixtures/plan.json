@@ -112,6 +112,34 @@
       "id": "graded_band_exceeds_single_direction_sweep",
       "reduction": "DIVERGENCE",
       "zero_reason": "single-direction-sweep-not-exceeded"
+    },
+    {
+      "defect": {
+        "delta": 1,
+        "kind": "perturb_corpus_param",
+        "param": "offset"
+      },
+      "discovery_value": "offset",
+      "discovery_value_note": "`corpus.offset` is established ONLY in the built environment: it is the phase of the fixed index arithmetic every corpus line is picked by, so it is readable off environment/corpus/eval.txt and appears in no agent-visible byte. The probe isolates it exactly: the first record line of the evaluation corpus stands at index eval_start, which is congruent to 0 modulo len(fields), so its opening field name sits at table position `offset % len(fields)` and the stride term cancels identically. A solver that never read the corpus cannot produce that position, and the checker's outcome moves the moment the phase moves.",
+      "firable_by_submission": false,
+      "id": "corpus_phase_matches_frozen_offset",
+      "reduction": "VALUE",
+      "substitution": "No submission can move the phase of the frozen corpus, because the corpus is frozen and the harness reads it back off disk inside the verifier process. The rejecting half is carried on a fixture that perturbs the frozen construction phase this checker derives its expectation from, so the accepting half is the grounding-derived phase and the rejecting half is a wrong one.",
+      "zero_reason": "frozen-corpus-phase-not-established"
+    },
+    {
+      "defect": {
+        "delta": 1,
+        "kind": "perturb_corpus_param",
+        "param": "stride"
+      },
+      "discovery_value": "stride",
+      "discovery_value_note": "`corpus.stride` is established ONLY in the built environment: it is the step of the same fixed index arithmetic, so it is readable off environment/corpus/eval.txt and appears in no agent-visible byte. The probe isolates it exactly: consecutive field names inside one record line advance by `stride % len(fields)` and the offset term cancels identically, so the observed step is a function of the stride alone. A solver that never read the corpus cannot produce that step, and the checker's outcome moves the moment it moves.",
+      "firable_by_submission": false,
+      "id": "corpus_period_matches_frozen_stride",
+      "reduction": "VALUE",
+      "substitution": "No submission can move the period of the frozen corpus, for the same reason. The rejecting half is carried on a fixture that perturbs the frozen construction stride this checker derives its expectation from, so the accepting half is the grounding-derived stride and the rejecting half is a wrong one.",
+      "zero_reason": "frozen-corpus-period-not-established"
     }
   ],
   "drift_state": {

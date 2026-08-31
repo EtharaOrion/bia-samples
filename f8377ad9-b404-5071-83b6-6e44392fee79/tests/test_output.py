@@ -22,6 +22,7 @@ from pathlib import Path
 
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 
+from calibration import BAND_FIXTURES  # noqa: E402
 from checkers import (  # noqa: E402
     REQUIRED,
     SELECTORS,
@@ -54,11 +55,15 @@ def verdict():
     return _STATE["verdict"]
 
 
-def _reduction(name):
+def _reduction_over(name, record):
     for ident, selector in SELECTORS:
         if ident == name:
-            return selector(telemetry())
+            return selector(record)
     raise AssertionError("tests/checkers.yaml names a selector checkers.py does not carry: " + name)
+
+
+def _reduction(name):
+    return _reduction_over(name, telemetry())
 
 
 def test_submission_allocation_wellformed():
@@ -141,6 +146,78 @@ def test_separation_margin_cleared():
     assert outcome.reason in ("", 'significance-unestablished-at-ceiling')
 
 
+def test_calibration_separation_within_band():
+    """calibration_separation_within_band: passes at full value, and its zero carries calibration-separation-outside-band."""
+    outcome = _reduction('calibration_separation_within_band')
+    assert 0.0 <= outcome.value <= 1.0
+    assert 'calibration-separation-outside-band' == 'calibration-separation-outside-band'
+    assert outcome.passed, 'calibration_separation_within_band' + " scored " + repr(outcome.value) + " with reason " + outcome.reason
+
+
+def test_calibration_noise_band_width_held():
+    """calibration_noise_band_width_held: passes at full value, and its zero carries calibration-noise-band-width-moved."""
+    outcome = _reduction('calibration_noise_band_width_held')
+    assert 0.0 <= outcome.value <= 1.0
+    assert 'calibration-noise-band-width-moved' == 'calibration-noise-band-width-moved'
+    assert outcome.passed, 'calibration_noise_band_width_held' + " scored " + repr(outcome.value) + " with reason " + outcome.reason
+
+
+def test_band_fixture_accept_calibration_band_at_the_grounded_centre():
+    """the reading the built environment produces is accepted"""
+    fixture = BAND_FIXTURES['accept_calibration_band_at_the_grounded_centre']
+    outcome = _reduction_over(fixture["checker"], fixture["telemetry"])
+    assert outcome.passed, 'accept_calibration_band_at_the_grounded_centre' + " scored " + repr(outcome.value) + " with reason " + outcome.reason
+    assert outcome.reason == '', 'accept_calibration_band_at_the_grounded_centre' + " carried reason " + repr(outcome.reason)
+
+
+def test_band_fixture_accept_calibration_band_on_the_inner_edge():
+    """a recorded width any smaller would reject this, so the width is load bearing for the accepting half"""
+    fixture = BAND_FIXTURES['accept_calibration_band_on_the_inner_edge']
+    outcome = _reduction_over(fixture["checker"], fixture["telemetry"])
+    assert outcome.passed, 'accept_calibration_band_on_the_inner_edge' + " scored " + repr(outcome.value) + " with reason " + outcome.reason
+    assert outcome.reason == '', 'accept_calibration_band_on_the_inner_edge' + " carried reason " + repr(outcome.reason)
+
+
+def test_band_fixture_reject_calibration_band_near_miss_outside_the_edge():
+    """one near-miss offset past the inner edge rejects, so the checker depends on the value and not on the shape"""
+    fixture = BAND_FIXTURES['reject_calibration_band_near_miss_outside_the_edge']
+    outcome = _reduction_over(fixture["checker"], fixture["telemetry"])
+    assert not outcome.passed, 'reject_calibration_band_near_miss_outside_the_edge' + " was accepted at " + repr(outcome.value) + ", so " + 'calibration_separation_within_band' + " does not depend on the grounded value"
+    assert outcome.reason == 'calibration-separation-outside-band', 'reject_calibration_band_near_miss_outside_the_edge' + " carried reason " + repr(outcome.reason)
+
+
+def test_band_fixture_reject_calibration_band_far_from_the_centre():
+    """a separation that is the right shape and the wrong size rejects"""
+    fixture = BAND_FIXTURES['reject_calibration_band_far_from_the_centre']
+    outcome = _reduction_over(fixture["checker"], fixture["telemetry"])
+    assert not outcome.passed, 'reject_calibration_band_far_from_the_centre' + " was accepted at " + repr(outcome.value) + ", so " + 'calibration_separation_within_band' + " does not depend on the grounded value"
+    assert outcome.reason == 'calibration-separation-outside-band', 'reject_calibration_band_far_from_the_centre' + " carried reason " + repr(outcome.reason)
+
+
+def test_band_fixture_accept_calibration_width_at_the_grounded_value():
+    """the recorded noise half width accepts"""
+    fixture = BAND_FIXTURES['accept_calibration_width_at_the_grounded_value']
+    outcome = _reduction_over(fixture["checker"], fixture["telemetry"])
+    assert outcome.passed, 'accept_calibration_width_at_the_grounded_value' + " scored " + repr(outcome.value) + " with reason " + outcome.reason
+    assert outcome.reason == '', 'accept_calibration_width_at_the_grounded_value' + " carried reason " + repr(outcome.reason)
+
+
+def test_band_fixture_reject_calibration_width_near_miss_outside_tolerance():
+    """a half width one near-miss offset past half_width_tolerance rejects"""
+    fixture = BAND_FIXTURES['reject_calibration_width_near_miss_outside_tolerance']
+    outcome = _reduction_over(fixture["checker"], fixture["telemetry"])
+    assert not outcome.passed, 'reject_calibration_width_near_miss_outside_tolerance' + " was accepted at " + repr(outcome.value) + ", so " + 'calibration_noise_band_width_held' + " does not depend on the grounded value"
+    assert outcome.reason == 'calibration-noise-band-width-moved', 'reject_calibration_width_near_miss_outside_tolerance' + " carried reason " + repr(outcome.reason)
+
+
+def test_band_fixture_reject_calibration_width_doubled():
+    """a band twice as wide rejects, so a noisier measurement cannot be passed off as this one"""
+    fixture = BAND_FIXTURES['reject_calibration_width_doubled']
+    outcome = _reduction_over(fixture["checker"], fixture["telemetry"])
+    assert not outcome.passed, 'reject_calibration_width_doubled' + " was accepted at " + repr(outcome.value) + ", so " + 'calibration_noise_band_width_held' + " does not depend on the grounded value"
+    assert outcome.reason == 'calibration-noise-band-width-moved', 'reject_calibration_width_doubled' + " carried reason " + repr(outcome.reason)
+
+
 def test_reward_is_continuous_across_the_margin():
     """The graded ramp moves through the margin; it does not step at it."""
     band = dict(telemetry()["measurement"])
@@ -156,8 +233,8 @@ def test_reward_is_continuous_across_the_margin():
 
 def test_every_manifest_selector_is_reachable():
     """Every reduction the manifest names resolves, and the required set is non-empty."""
-    assert len(SELECTORS) == 10
-    assert len(REQUIRED) == 9
+    assert len(SELECTORS) == 12
+    assert len(REQUIRED) == 11
     for ident, _ in SELECTORS:
         assert _reduction(ident) is not None
 

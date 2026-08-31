@@ -93,6 +93,21 @@ def assert_single_source(ground: dict) -> None:
                 + "; the derivation source and the graded surface have drifted apart"
             )
 
+    declared = ground["reference_policy"]["expected_final_state"]
+    if declared != lab.REFERENCE_FINAL_STATE:
+        raise SystemExit(
+            "grounding.yaml reference_policy.expected_final_state is " + repr(declared)
+            + " while tests/lab.py holds REFERENCE_FINAL_STATE " + repr(lab.REFERENCE_FINAL_STATE)
+            + "; the graded reference operating point and the derivation source have drifted apart"
+        )
+    if lab.gain_milli(declared) != lab.gain_milli(lab.REFERENCE_STATE):
+        raise SystemExit(
+            "the declared final state holds " + repr(lab.gain_milli(declared))
+            + " milli-steps while the canonical reference state holds "
+            + repr(lab.gain_milli(lab.REFERENCE_STATE))
+            + "; they are not one operating point and split invariance does not hold between them"
+        )
+
 
 def expand_plan(ground: dict) -> list:
     plan = []
@@ -194,6 +209,18 @@ def reject_fixtures(records: list) -> dict:
             carried[seed] = baseline_seeds[seed]
     rows[-1]["best_per_seed_steps"] = carried
     out["multi_seed_separation_established"] = rows
+
+    rows = _clone(records)
+    wrong = dict(lab.REFERENCE_FINAL_STATE)
+    paying = [axis for axis in lab.AXIS_ORDER if axis != lab.FLATTENING_AXIS]
+    wrong[lab.FLATTENING_AXIS] += lab.DELTA_CAP_UNITS
+    wrong[paying[-1]] -= lab.DELTA_CAP_UNITS
+    wrong_mean, wrong_seeds = lab.mean_steps(dict(wrong))
+    rows[0]["reference_final_state"] = wrong
+    rows[0]["reference_final_state_gain_milli"] = lab.gain_milli(wrong)
+    rows[0]["reference_final_state_control_mean"] = wrong_mean
+    rows[0]["reference_final_state_control_per_seed"] = wrong_seeds
+    out["reference_operating_point_matches_final_state"] = rows
 
     return out
 

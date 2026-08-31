@@ -12,13 +12,15 @@ aggregation:
   mode: required_pass
   rationale: >-
     required_pass names what the GATE does, and the gate is only half of what
-    tests/grade.py does. Nine reductions are marked required: allocation
+    tests/grade.py does. Eleven reductions are marked required: allocation
     resolution, the bit-budget accounting, the frozen-input digests, the
     provenance of the graded number, the absence of smoothing on the graded path,
     the verifier-derived evaluation order, the sustained single-state reading, the
-    completed evaluation ceiling, and the absence of measurable degradation. If
+    completed evaluation ceiling, the absence of measurable degradation, and the
+    two calibration-probe readings that require the built environment to produce
+    the separation and the noise half width this bundle recorded for it. If
     any of them is short of full, the reward is 0.0 and the score document carries
-    that reduction's own zero_reason. If all nine hold, the reward is NOT the 1.0
+    that reduction's own zero_reason. If all eleven hold, the reward is NOT the 1.0
     the mode name implies: it is the value of separation_margin_cleared, which is
     a continuous ramp on the closed interval and is deliberately not marked
     required. That is why the mode is a description of the gate and never of the
@@ -76,6 +78,24 @@ substitutions:
       state between readings. The rejecting half is carried on a planted fixture
       carrying two distinct state digests, and a second planted fixture carrying
       fewer points than the repeat floor.
+  - checker: calibration_separation_within_band
+    why: >-
+      Same boundary, and here it is the point rather than a limitation. The
+      calibration probe is measured by tests/runner.py from the frozen substrate
+      alone, so no submission supplies an input to it and none can move its
+      reading. Both halves are therefore carried on frozen fixtures generated into
+      tests/calibration.py from solution/grounding.yaml and exercised by
+      tests/test_output.py: accept_calibration_band_at_the_grounded_centre and
+      accept_calibration_band_on_the_inner_edge accept, and
+      reject_calibration_band_near_miss_outside_the_edge, which sits one 1.0e-06
+      offset past that same inner edge, and
+      reject_calibration_band_far_from_the_centre both reject.
+  - checker: calibration_noise_band_width_held
+    why: >-
+      Same boundary. accept_calibration_width_at_the_grounded_value accepts,
+      reject_calibration_width_near_miss_outside_tolerance sits one 1.0e-06 offset
+      past the bound tolerance and rejects, and reject_calibration_width_doubled
+      rejects a band twice as wide.
 
 checkers:
   - id: submission_allocation_wellformed
@@ -215,3 +235,49 @@ checkers:
       degradation reason, which the required allocation_not_degrading_past_bar
       reduction owns instead, so a reader can always tell a loss from a
       non-measurement.
+
+  - id: calibration_separation_within_band
+    statement: "The harness calibration probe, which measures the reference allocation against the built environment on every run independently of the submission, separated from the control by an amount that sits inside the band the built environment establishes: the centre plus or minus its own measured noise half width."
+    reduction: DIVERGENCE
+    reached_by: tests/grade.py
+    selector: check_calibration_band
+    zero_reason: calibration-separation-outside-band
+    required: true
+    weight: 4
+    basis: telemetry
+    live_state_read: "telemetry.calibration.separation_mean, computed by tests/runner.py calibration_probe() from model_stats.json, eval_corpus.json and reference_unquantized.json over the verifier-derived shard order, compared against the centre and the half width solution/grounding.yaml records and tests/calibration.py carries"
+    compiled_test: "tests/test_output.py::test_calibration_separation_within_band"
+    note: >-
+      This reduction is what makes the built environment load-bearing. The centre
+      and the half width are discovery values: they occur on no agent-visible
+      surface, they are obtainable only by measuring the built environment, and
+      until this reduction existed no graded outcome read either of them. The
+      probe is independent of the submission, so requiring it constrains the
+      measurement path and never the solver's search: an allocation that clears
+      the margin still scores 1.0 and one that does not still scores its ramp
+      value. Its accepting fixture sits exactly on the inner edge of the band and
+      its rejecting fixture sits one near-miss offset outside that same edge, so
+      the recorded half width can be neither shrunk without breaking the first
+      half nor widened without breaking the second, and a second rejecting fixture
+      places the centre forty half widths away to close the shape-only reading.
+
+  - id: calibration_noise_band_width_held
+    statement: "The noise half width the harness calibration probe measured over the built environment equals the half width recorded for it, inside the bound tolerance, so the spread of the graded quantity is the spread the environment produces."
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: check_calibration_noise_band
+    zero_reason: calibration-noise-band-width-moved
+    required: true
+    weight: 3
+    basis: telemetry
+    live_state_read: "telemetry.calibration.noise_half_width, the half-range of the paired per-shard separations tests/runner.py measured for the calibration probe, compared against the half width solution/grounding.yaml records and tests/calibration.py carries"
+    compiled_test: "tests/test_output.py::test_calibration_noise_band_width_held"
+    note: >-
+      The band reduction above routes the half width through the centre. This one
+      pins it on its own, so the second discovery value carries graded weight
+      without depending on the first. The tolerance is 1.0e-05 because the
+      recorded half width is rounded to six decimals while the harness measures it
+      at full precision; the largest rounding residual is 5.0e-07, so the
+      tolerance admits the rounding and still refuses the near-miss fixture one
+      offset outside it. A widened band is refused too, which is the case that
+      matters: a noisier measurement path cannot be passed off as this one.

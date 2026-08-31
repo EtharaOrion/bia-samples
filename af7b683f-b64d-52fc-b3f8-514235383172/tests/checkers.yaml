@@ -35,7 +35,7 @@ readout_manipulation: >-
 aggregation:
   mode: required_pass
   rationale: >-
-    tests/grade.py walks the eight checkers below in the declared order and returns 0.0 with
+    tests/grade.py walks the nine checkers below in the declared order and returns 0.0 with
     the first failing checker's machine-readable reason. Only when every required checker
     passes does it compute the continuous term, the clamped normalised throughput. That is
     exactly required_pass over the required set, composed with a bounded-continuous score
@@ -66,6 +66,22 @@ fixture_substitutions:
       inside the p99 objective is 0.539 against a sustain floor of 2/5. No submission can
       therefore breach the sustain floor and still reach this checker, so its rejecting half
       is carried on a planted telemetry fixture rather than on a configuration. Recorded here
+      rather than papered over.
+  - checker: arrival_cadence_ordered
+    substitution: planted telemetry fixtures
+    fixture: solution/fixtures/planted/arrival_cadence_base_minus_one.jsonl
+    also:
+      - solution/fixtures/planted/arrival_cadence_base_plus_one.jsonl
+      - solution/fixtures/planted/arrival_cadence_modulus_minus_one.jsonl
+      - solution/fixtures/planted/arrival_cadence_modulus_plus_one.jsonl
+    why: >-
+      The inter-arrival cadence is a property of the frozen trace and the free configuration
+      surface cannot move it, so no submission can reach this checker's rejecting half by
+      choosing a configuration. What CAN move it is a harness replay whose arrival stamps
+      disagree with the frozen cadence, and that is what the rejecting half has to exhibit.
+      Each fixture is the harness telemetry the simulator emits over a trace regenerated with
+      the inter-arrival base or modulus moved by exactly one, so the rejection is proven to
+      turn on the cadence VALUE and not on the shape of an arrival stream. Recorded here
       rather than papered over.
 
 checkers:
@@ -118,6 +134,20 @@ checkers:
     live_state_read: "the completion and rejection records the harness simulator emitted during the verifier's own replay, against the frozen trace's request identifiers."
     compiled_test: "tests/test_output.py::test_every_request_accounted"
     grades_drift_key: admission_policy_default
+
+  - id: arrival_cadence_ordered
+    statement: "The arrival sequence the harness recorded is strictly ascending, observed in order, one record per request in the frozen trace, and every inter-arrival gap holds the frozen cadence window from the bound base to base plus modulus minus one while realising the bound narrowest and widest gaps."
+    reduction: ORDERING
+    reached_by: tests/grade.py
+    selector: check_arrival_cadence_ordered
+    zero_reason: arrival-cadence-violated
+    required: true
+    weight: 1
+    basis: computed
+    live_state_read: "the arrival records the harness simulator emitted during the verifier's own replay, and the arrival_ms instant each completion record carries, both read back off recorded telemetry and never off a clock."
+    compiled_test: "tests/test_output.py::test_arrival_cadence_ordered"
+    grades_drift_key: trace_inter_arrival_ms
+    rejecting_half: planted fixtures, see fixture_substitutions
 
   - id: no_early_stop_harvest
     statement: "The declared measurement interval spans the whole harness run, so a reading harvested by halting on a favourable window is graded as not having established the throughput."

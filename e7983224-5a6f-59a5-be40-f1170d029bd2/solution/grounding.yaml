@@ -306,7 +306,7 @@ checkers:
     defect: {kind: perturb_corpus_param, param: offset, delta: 1}
   - id: corpus_period_matches_frozen_stride
     reduction: VALUE
-    zero_reason: frozen-corpus-stride-not-established
+    zero_reason: frozen-corpus-period-not-established
     firable_by_submission: false
     discovery_value: stride
     discovery_value_note: >-

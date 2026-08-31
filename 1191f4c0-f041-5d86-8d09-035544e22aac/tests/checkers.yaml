@@ -77,6 +77,14 @@ anchors:
     as a literal nowhere in this bundle.
 
 checker_adequacy_substitutions:
+  - checker: trace_is_seed_derived
+    reason: >-
+      The starting state of the trace recurrence is a discovery value: it reaches no agent-visible
+      byte, and what the agent can see is only the two hundred requests it produced. No move in the
+      free configuration lattice raises the environment from a different starting state, and the
+      environment surface is a read-only lower layer, so the rejecting half is carried on a planted
+      fixture whose trace comes from the control state in grounding.yaml control_schedules
+      .reseeded_trace rather than on a submission.
   - checker: trace_fully_accounted
     reason: >-
       No configuration in the free lattice can produce a request with no terminal telemetry
@@ -105,6 +113,17 @@ checkers:
     weight: 1
     live_state_read: "sha256 over the agent-visible environment/ surface as it stands at grade time, compared against tests/fixtures/substrate.json bound_digests held on the verifier side."
     compiled_test: "tests/test_output.py::test_environment_frozen"
+
+  - id: trace_is_seed_derived
+    statement: "The request trace standing in the built environment, and the trace the verifier simulates over, are both exactly the stream the bound starting state of the trace recurrence produces."
+    reduction: DIVERGENCE
+    reached_by: tests/grade.py
+    selector: check_trace_is_seed_derived
+    zero_reason: trace-not-seed-derived
+    required: true
+    weight: 1
+    live_state_read: "the request rows of environment/trace.json as the built environment carries them at grade time, read by tests/grade.py, against the stream tests/checkers.py advances from the seed_derivation block held verifier-side in tests/fixtures/substrate.json."
+    compiled_test: "tests/test_output.py::test_trace_is_seed_derived"
 
   - id: attempt_ledger_recomputed
     statement: "Every configuration in the recorded attempt ledger reproduces, telemetry field for telemetry field, under the verifier's own re-simulation over the frozen trace."
