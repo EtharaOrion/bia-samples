@@ -20,6 +20,32 @@ The submission's stdout, its own log files, and any number it writes are
 reconciliation input only. They are compared against re-execution and can lower an
 outcome. They can never raise one and they never enter the reward.
 
+## The claim the submission owns
+
+`/app/claim.json` is the one artifact the submission owns that the verifier reads
+before it spends a training run. It carries a single graded-path-relevant field:
+
+| field | type | what it is |
+|---|---|---|
+| `claimed_step` | int | the step count the submission claims reaches below 3.28 |
+
+`claimed_step` is not the score and it is not `graded_step`. It is where the screen
+stage starts: the verifier re-executes on one seed and asks whether that run reaches
+below 3.28 at `claimed_step`. A claim the re-execution does not reach is refused with
+`screen-target-not-reached` at the cost of one run, before the eight-seed confirm
+stage is entered.
+
+Reconciliation is one-directional. A `claimed_step` below what re-execution
+establishes cannot raise the outcome, because `graded_step` is computed from the
+verifier's own grid and never from the claim. A `claimed_step` the re-execution
+misses lowers it to zero at the screen. Claiming a step you did not reach therefore
+costs the whole submission and buys nothing.
+
+`train.py` writes this file at the end of a run, with `claimed_step` set to the step
+count the run actually completed, so the baseline produces the claim that describes
+it. Run it and read `/app/claim.json` to see the claim you have to beat. Pass
+`--claim <path>` to write it elsewhere.
+
 ## The ladder, predeclared and frozen
 
 | stage | seeds | test | on failure |

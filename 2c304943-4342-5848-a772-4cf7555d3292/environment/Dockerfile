@@ -13,7 +13,7 @@ WORKDIR /app
 # The agent surface and nothing else. tests/ and solution/ are not copied, and
 # they are absent from this file rather than filtered out of it, so no
 # misconfiguration can let the held-out checkers or the reference through.
-COPY train_baseline.py recipe_contract.md frozen_axes.json published_records.json fingerprint_tool.py /app/environment/
+COPY train_baseline.py recipe_contract.md frozen_axes.json published_records.json fingerprint_tool.py graded_readout.json /app/environment/
 
 RUN mkdir -p /workspace/submission /logs/agent
 

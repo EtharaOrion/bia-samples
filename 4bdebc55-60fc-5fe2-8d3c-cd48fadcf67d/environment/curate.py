@@ -48,6 +48,17 @@ def load_register(path: Path) -> list:
     return rows
 
 
+def pool_tokens(rows: list) -> int:
+    """Total token count of a pool, summed over the register's own `tokens` field.
+
+    This is what the trainer actually eats. Document count alone does not tell you
+    whether a curated pool covers the frozen token budget, because documents are of
+    unequal length; a chain that keeps many short documents and one that keeps few
+    long ones can report the same curated_documents and feed very different corpora.
+    """
+    return sum(int(row.get("tokens") or 0) for row in rows)
+
+
 def pool_digest(rows: list) -> str:
     payload = json.dumps(
         [row.get("doc_id") for row in rows], sort_keys=False, separators=(",", ":")
@@ -121,6 +132,7 @@ def main(argv=None) -> int:
     rows = load_register(Path(args.register))
     source_digest = pool_digest(rows)
     source_count = len(rows)
+    source_tokens = pool_tokens(rows)
 
     notes = []
     for stage in stages:
@@ -139,8 +151,10 @@ def main(argv=None) -> int:
         # pool_state is derived from "the chain ran without raising", not from "the pool moved".
         "pool_state": "curated" if stages else "uncurated",
         "source_documents": source_count,
+        "source_tokens": source_tokens,
         "source_digest": source_digest,
         "curated_documents": len(rows),
+        "curated_tokens": pool_tokens(rows),
         "curated_digest": pool_digest(rows),
         "match_count": sum(int(note.get("matched", 0)) for note in notes),
         "stages": len(stages),
@@ -152,6 +166,7 @@ def main(argv=None) -> int:
 
     print("status: ok")
     print("curated_documents: " + str(len(rows)))
+    print("curated_tokens: " + str(report["curated_tokens"]))
     if args.explain:
         for note in notes:
             print("  " + json.dumps(note, sort_keys=True))

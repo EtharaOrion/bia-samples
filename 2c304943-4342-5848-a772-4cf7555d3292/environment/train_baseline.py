@@ -30,6 +30,59 @@ FROZEN = {
 
 TARGET_VALIDATION_LOSS = 3.28
 
+# The evaluation grid and the readout contract are data, not prose, and they live
+# beside this file so the loop and the agent read the same bytes.
+GRADED_READOUT_PATH = Path(__file__).with_name("graded_readout.json")
+
+
+def graded_readout():
+    """The evaluation grid and readout contract this loop runs against."""
+    return json.loads(GRADED_READOUT_PATH.read_text(encoding="utf-8"))
+
+
+def evaluation_schedule(readout=None):
+    """The steps at which the verifier evaluates, read off the bound grid.
+
+    The grid is closed on the right: there is no scheduled point after
+    `last_scheduled_step`, which is why a crossing too late to be sustained inside
+    the grid cannot be observed at all rather than being observed and rejected.
+    """
+    grid = (readout or graded_readout())["evaluation_grid"]
+    first = int(grid["first_eval_step"])
+    stride = int(grid["evaluation_cadence_steps"])
+    last = int(grid["last_scheduled_step"])
+    return list(range(first, last + 1, stride))
+
+
+def halt_step(total_steps, readout=None):
+    """The optimizer step at which this run stops, and why.
+
+    Schedule exhaustion is the ordinary cause: the loop runs to the last scheduled
+    evaluation point and stops there, because nothing past it is ever evaluated.
+    A `total_steps` shorter than that grid halts the run early, and an early halt
+    is graded as not having crossed rather than as a shorter run.
+    """
+    readout = readout or graded_readout()
+    exhausted = int(readout["evaluation_grid"]["last_scheduled_step"])
+    if int(total_steps) < exhausted:
+        return {"halt_step": int(total_steps), "halt_cause": "total-steps-exhausted"}
+    return {"halt_step": exhausted,
+            "halt_cause": readout["halt_rule"]["default_cause"]}
+
+
+def readout_row(step, raw_loss, reported_loss):
+    """One evaluation row of the telemetry record this loop writes.
+
+    `verifier_raw_loss` is the graded channel and is written unsmoothed. Whatever
+    smoothing your recipe applies belongs in `submission_reported_loss`, which is
+    carried for your diagnostics and is never read on the graded path.
+    """
+    return {
+        "step": int(step),
+        "verifier_raw_loss": None if raw_loss is None else float(raw_loss),
+        "submission_reported_loss": None if reported_loss is None else float(reported_loss),
+    }
+
 BASELINE_RECIPE = {
     "update_chain": [
         {"primitive": "heavy_ball_momentum", "role": "hidden_matrices"},
@@ -90,6 +143,9 @@ def load_recipe_module(path):
 def main(recipe_path, total_steps):
     module = load_recipe_module(Path(recipe_path))
     plan = module.build_optimizer(PARAM_GROUPS, total_steps)
+    readout = graded_readout()
+    schedule = evaluation_schedule(readout)
+    run = halt_step(total_steps, readout)
     print(
         json.dumps(
             {
@@ -98,7 +154,12 @@ def main(recipe_path, total_steps):
                 "total_steps": total_steps,
                 "groups": [row["role"] for row in plan["groups"]],
                 "init_family": plan["init_family"],
-                "note": "this stub reports the plan it would run; the accelerator loop is provided by the pinned image",
+                "evaluation_schedule": schedule,
+                "run": run,
+                "evaluations": [readout_row(step, None, None) for step in schedule
+                                if step <= run["halt_step"]],
+                "graded_channel": "verifier_raw_loss",
+                "note": "this stub reports the plan it would run and the telemetry shape it would write; the accelerator loop is provided by the pinned image, and it fills verifier_raw_loss at each scheduled step",
             },
             sort_keys=True,
         )

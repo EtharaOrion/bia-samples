@@ -1,0 +1,13 @@
+{
+  "slot": "OER-18",
+  "family": "F14",
+  "anchors_state": "absent",
+  "baseline_metric": null,
+  "target_metric": null,
+  "authority": "none",
+  "gap": "gap-oer-per-family-anchors-unmeasured",
+  "reason": "seed/contract.yaml families.entries.F14 carries scope_state unscoped and records baseline, target, pass threshold and instance count as unresolved. No value is invented here.",
+  "runtime_carrier": "/logs/verifier/anchors.json",
+  "runtime_carrier_shape": "{\"baseline_metric\": <float>, \"target_metric\": <float>, \"authority\": <string>}",
+  "unbound_behaviour": "grade.py resolves 0.0 with reason anchors-unbound and still records the measured benchmark score in the metric block. An absent anchor never resolves to a vacuous pass."
+}

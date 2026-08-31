@@ -42,8 +42,9 @@
     "note": "A small agent-visible probe drawn from the same generating distribution as the graded evaluation split. It is NOT the graded split and its documents carry different bytes. Use it to measure your own mixtures locally."
   },
   "budget": {
+    "budget_tokens": 12000,
     "total_tokens": 12000,
     "unit": "tokens",
-    "note": "The frozen token budget. A graded run consumes exactly this many tokens. Fewer is an early stop, more is an overspend, and both score zero."
+    "note": "The frozen token budget. A graded run consumes exactly this many tokens. Fewer is an early stop, more is an overspend, and both score zero. budget_tokens is the canonical name the harness reads and the substrate carries; total_tokens is the same quantity under its earlier name and is kept so an older plan tool still resolves it. harness.py refuses to run if the two disagree, so the pair cannot drift into two different budgets."
   }
 }

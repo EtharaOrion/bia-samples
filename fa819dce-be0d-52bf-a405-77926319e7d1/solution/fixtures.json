@@ -1,0 +1,1617 @@
+{
+  "accepting": {
+    "expected_reason": "normalised-improvement",
+    "expected_reward": 1.0,
+    "id": "reference-accepted-end-to-end",
+    "state": {
+      "claim": {
+        "curated_digest": "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9",
+        "curated_documents": 1959,
+        "exit_status": 0,
+        "match_count": 2137,
+        "pool_state": "curated",
+        "source_digest": "sha256:e6906c89673963d9bc1dfa408364782e482e9e8ab5cb3d8a9c5e765c0f1bdf4e",
+        "source_documents": 4096,
+        "stages": 4,
+        "status": "ok"
+      },
+      "curation": {
+        "completed_at_seq": 5,
+        "verdict": "applied"
+      },
+      "evaluation": {
+        "bound_point": 600,
+        "computed_on": "held-out-split",
+        "control_loss": 3.330662,
+        "graded_loss": 3.192807,
+        "last_scheduled_point": 800,
+        "points": [
+          {
+            "loss": 3.192807,
+            "point": 600,
+            "smoothed": false,
+            "weights_digest": "sha256:7d57b2f6d489acc40d0543242409588933ffd7adda81b8d3fc312ec33cdd6426"
+          },
+          {
+            "loss": 3.1197,
+            "point": 700,
+            "smoothed": false,
+            "weights_digest": "sha256:ca8339c2b10f22e50ac9f1e2f4a940d1640561cbcca2715db2e4c20b51509f79"
+          },
+          {
+            "loss": 3.059776,
+            "point": 800,
+            "smoothed": false,
+            "weights_digest": "sha256:2e03d31a53085d36a258cd4944f38b9f0a9bcbe071d2c7e2d45a677285041341"
+          }
+        ],
+        "readout_mode": "raw",
+        "reference_loss": 3.192807,
+        "source": "harness-recomputed",
+        "sustain_points": [
+          700,
+          800
+        ]
+      },
+      "feed": {
+        "budget_tokens": 3145728,
+        "first_feed_seq": 6,
+        "frozen_budget_tokens": 3145728,
+        "resolved_quality_field": "quality.bucket",
+        "resolved_register_schema": "curation/v4",
+        "stream_digest": "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9",
+        "tokens_fed": 3145728
+      },
+      "pool": {
+        "curated_digest": "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9",
+        "curated_documents": 1959,
+        "observed_at_seq": 4,
+        "source_digest": "sha256:e6906c89673963d9bc1dfa408364782e482e9e8ab5cb3d8a9c5e765c0f1bdf4e",
+        "source_documents": 4096
+      },
+      "register": {
+        "observed_at_seq": 3,
+        "quality_field": "quality.bucket",
+        "schema": "curation/v4"
+      },
+      "run": {
+        "halt_reason": "schedule-complete",
+        "terminated_at_point": 800
+      },
+      "split": {
+        "audited_by": "harness",
+        "audited_documents": 455,
+        "audited_split_digest": "sha-holdout-v2",
+        "audited_split_id": "held-out-v2",
+        "eval_split_digest": "sha-holdout-v2",
+        "eval_split_id": "held-out-v2",
+        "train_eval_overlap": 0
+      },
+      "weights": {
+        "ledger": {
+          "600": "sha256:7d57b2f6d489acc40d0543242409588933ffd7adda81b8d3fc312ec33cdd6426",
+          "700": "sha256:ca8339c2b10f22e50ac9f1e2f4a940d1640561cbcca2715db2e4c20b51509f79",
+          "800": "sha256:2e03d31a53085d36a258cd4944f38b9f0a9bcbe071d2c7e2d45a677285041341"
+        },
+        "owner": "harness",
+        "selected_by": "harness"
+      }
+    }
+  },
+  "banner": "GENERATED SECTION. DO NOT HAND-EDIT.",
+  "base": {
+    "claim": {
+      "curated_digest": "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9",
+      "curated_documents": 1959,
+      "exit_status": 0,
+      "match_count": 2137,
+      "pool_state": "curated",
+      "source_digest": "sha256:e6906c89673963d9bc1dfa408364782e482e9e8ab5cb3d8a9c5e765c0f1bdf4e",
+      "source_documents": 4096,
+      "stages": 4,
+      "status": "ok"
+    },
+    "curation": {
+      "completed_at_seq": 5,
+      "verdict": "applied"
+    },
+    "evaluation": {
+      "bound_point": 600,
+      "computed_on": "held-out-split",
+      "control_loss": 3.330662,
+      "graded_loss": 3.192807,
+      "last_scheduled_point": 800,
+      "points": [
+        {
+          "loss": 3.192807,
+          "point": 600,
+          "smoothed": false,
+          "weights_digest": "sha256:7d57b2f6d489acc40d0543242409588933ffd7adda81b8d3fc312ec33cdd6426"
+        },
+        {
+          "loss": 3.1197,
+          "point": 700,
+          "smoothed": false,
+          "weights_digest": "sha256:ca8339c2b10f22e50ac9f1e2f4a940d1640561cbcca2715db2e4c20b51509f79"
+        },
+        {
+          "loss": 3.059776,
+          "point": 800,
+          "smoothed": false,
+          "weights_digest": "sha256:2e03d31a53085d36a258cd4944f38b9f0a9bcbe071d2c7e2d45a677285041341"
+        }
+      ],
+      "readout_mode": "raw",
+      "reference_loss": 3.192807,
+      "source": "harness-recomputed",
+      "sustain_points": [
+        700,
+        800
+      ]
+    },
+    "feed": {
+      "budget_tokens": 3145728,
+      "first_feed_seq": 6,
+      "frozen_budget_tokens": 3145728,
+      "resolved_quality_field": "quality.bucket",
+      "resolved_register_schema": "curation/v4",
+      "stream_digest": "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9",
+      "tokens_fed": 3145728
+    },
+    "pool": {
+      "curated_digest": "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9",
+      "curated_documents": 1959,
+      "observed_at_seq": 4,
+      "source_digest": "sha256:e6906c89673963d9bc1dfa408364782e482e9e8ab5cb3d8a9c5e765c0f1bdf4e",
+      "source_documents": 4096
+    },
+    "register": {
+      "observed_at_seq": 3,
+      "quality_field": "quality.bucket",
+      "schema": "curation/v4"
+    },
+    "run": {
+      "halt_reason": "schedule-complete",
+      "terminated_at_point": 800
+    },
+    "split": {
+      "audited_by": "harness",
+      "audited_documents": 455,
+      "audited_split_digest": "sha-holdout-v2",
+      "audited_split_id": "held-out-v2",
+      "eval_split_digest": "sha-holdout-v2",
+      "eval_split_id": "held-out-v2",
+      "train_eval_overlap": 0
+    },
+    "weights": {
+      "ledger": {
+        "600": "sha256:7d57b2f6d489acc40d0543242409588933ffd7adda81b8d3fc312ec33cdd6426",
+        "700": "sha256:ca8339c2b10f22e50ac9f1e2f4a940d1640561cbcca2715db2e4c20b51509f79",
+        "800": "sha256:2e03d31a53085d36a258cd4944f38b9f0a9bcbe071d2c7e2d45a677285041341"
+      },
+      "owner": "harness",
+      "selected_by": "harness"
+    }
+  },
+  "continuity": {
+    "expected_reason": "normalised-improvement",
+    "expected_reward": 0.5125820608610511,
+    "id": "partial-improvement-scores-partially",
+    "state": {
+      "claim": {
+        "curated_digest": "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9",
+        "curated_documents": 1959,
+        "exit_status": 0,
+        "match_count": 2137,
+        "pool_state": "curated",
+        "source_digest": "sha256:e6906c89673963d9bc1dfa408364782e482e9e8ab5cb3d8a9c5e765c0f1bdf4e",
+        "source_documents": 4096,
+        "stages": 4,
+        "status": "ok"
+      },
+      "curation": {
+        "completed_at_seq": 5,
+        "verdict": "applied"
+      },
+      "evaluation": {
+        "bound_point": 600,
+        "computed_on": "held-out-split",
+        "control_loss": 3.330662,
+        "graded_loss": 3.26,
+        "last_scheduled_point": 800,
+        "points": [
+          {
+            "loss": 3.26,
+            "point": 600,
+            "smoothed": false,
+            "weights_digest": "sha256:7d57b2f6d489acc40d0543242409588933ffd7adda81b8d3fc312ec33cdd6426"
+          },
+          {
+            "loss": 3.1197,
+            "point": 700,
+            "smoothed": false,
+            "weights_digest": "sha256:ca8339c2b10f22e50ac9f1e2f4a940d1640561cbcca2715db2e4c20b51509f79"
+          },
+          {
+            "loss": 3.059776,
+            "point": 800,
+            "smoothed": false,
+            "weights_digest": "sha256:2e03d31a53085d36a258cd4944f38b9f0a9bcbe071d2c7e2d45a677285041341"
+          }
+        ],
+        "readout_mode": "raw",
+        "reference_loss": 3.192807,
+        "source": "harness-recomputed",
+        "sustain_points": [
+          700,
+          800
+        ]
+      },
+      "feed": {
+        "budget_tokens": 3145728,
+        "first_feed_seq": 6,
+        "frozen_budget_tokens": 3145728,
+        "resolved_quality_field": "quality.bucket",
+        "resolved_register_schema": "curation/v4",
+        "stream_digest": "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9",
+        "tokens_fed": 3145728
+      },
+      "pool": {
+        "curated_digest": "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9",
+        "curated_documents": 1959,
+        "observed_at_seq": 4,
+        "source_digest": "sha256:e6906c89673963d9bc1dfa408364782e482e9e8ab5cb3d8a9c5e765c0f1bdf4e",
+        "source_documents": 4096
+      },
+      "register": {
+        "observed_at_seq": 3,
+        "quality_field": "quality.bucket",
+        "schema": "curation/v4"
+      },
+      "run": {
+        "halt_reason": "schedule-complete",
+        "terminated_at_point": 800
+      },
+      "split": {
+        "audited_by": "harness",
+        "audited_documents": 455,
+        "audited_split_digest": "sha-holdout-v2",
+        "audited_split_id": "held-out-v2",
+        "eval_split_digest": "sha-holdout-v2",
+        "eval_split_id": "held-out-v2",
+        "train_eval_overlap": 0
+      },
+      "weights": {
+        "ledger": {
+          "600": "sha256:7d57b2f6d489acc40d0543242409588933ffd7adda81b8d3fc312ec33cdd6426",
+          "700": "sha256:ca8339c2b10f22e50ac9f1e2f4a940d1640561cbcca2715db2e4c20b51509f79",
+          "800": "sha256:2e03d31a53085d36a258cd4944f38b9f0a9bcbe071d2c7e2d45a677285041341"
+        },
+        "owner": "harness",
+        "selected_by": "harness"
+      }
+    }
+  },
+  "negative_controls": [
+    {
+      "checker": "filter_claim_matches_observed_pool",
+      "description": "the filter exits zero and reports a curated pool the harness never observed",
+      "expected_reason": "silent-filter-no-op",
+      "expected_reward": 0.0,
+      "id": "nc-silent-filter-no-op",
+      "state": {
+        "claim": {
+          "curated_digest": "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9",
+          "curated_documents": 1959,
+          "exit_status": 0,
+          "match_count": 2137,
+          "pool_state": "curated",
+          "source_digest": "sha256:e6906c89673963d9bc1dfa408364782e482e9e8ab5cb3d8a9c5e765c0f1bdf4e",
+          "source_documents": 4096,
+          "stages": 4,
+          "status": "ok"
+        },
+        "curation": {
+          "completed_at_seq": 5,
+          "verdict": "applied"
+        },
+        "evaluation": {
+          "bound_point": 600,
+          "computed_on": "held-out-split",
+          "control_loss": 3.330662,
+          "graded_loss": 3.192807,
+          "last_scheduled_point": 800,
+          "points": [
+            {
+              "loss": 3.192807,
+              "point": 600,
+              "smoothed": false,
+              "weights_digest": "sha256:7d57b2f6d489acc40d0543242409588933ffd7adda81b8d3fc312ec33cdd6426"
+            },
+            {
+              "loss": 3.1197,
+              "point": 700,
+              "smoothed": false,
+              "weights_digest": "sha256:ca8339c2b10f22e50ac9f1e2f4a940d1640561cbcca2715db2e4c20b51509f79"
+            },
+            {
+              "loss": 3.059776,
+              "point": 800,
+              "smoothed": false,
+              "weights_digest": "sha256:2e03d31a53085d36a258cd4944f38b9f0a9bcbe071d2c7e2d45a677285041341"
+            }
+          ],
+          "readout_mode": "raw",
+          "reference_loss": 3.192807,
+          "source": "harness-recomputed",
+          "sustain_points": [
+            700,
+            800
+          ]
+        },
+        "feed": {
+          "budget_tokens": 3145728,
+          "first_feed_seq": 6,
+          "frozen_budget_tokens": 3145728,
+          "resolved_quality_field": "quality.bucket",
+          "resolved_register_schema": "curation/v4",
+          "stream_digest": "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9",
+          "tokens_fed": 3145728
+        },
+        "pool": {
+          "curated_digest": "sha256:e6906c89673963d9bc1dfa408364782e482e9e8ab5cb3d8a9c5e765c0f1bdf4e",
+          "curated_documents": 4096,
+          "observed_at_seq": 4,
+          "source_digest": "sha256:e6906c89673963d9bc1dfa408364782e482e9e8ab5cb3d8a9c5e765c0f1bdf4e",
+          "source_documents": 4096
+        },
+        "register": {
+          "observed_at_seq": 3,
+          "quality_field": "quality.bucket",
+          "schema": "curation/v4"
+        },
+        "run": {
+          "halt_reason": "schedule-complete",
+          "terminated_at_point": 800
+        },
+        "split": {
+          "audited_by": "harness",
+          "audited_documents": 455,
+          "audited_split_digest": "sha-holdout-v2",
+          "audited_split_id": "held-out-v2",
+          "eval_split_digest": "sha-holdout-v2",
+          "eval_split_id": "held-out-v2",
+          "train_eval_overlap": 0
+        },
+        "weights": {
+          "ledger": {
+            "600": "sha256:7d57b2f6d489acc40d0543242409588933ffd7adda81b8d3fc312ec33cdd6426",
+            "700": "sha256:ca8339c2b10f22e50ac9f1e2f4a940d1640561cbcca2715db2e4c20b51509f79",
+            "800": "sha256:2e03d31a53085d36a258cd4944f38b9f0a9bcbe071d2c7e2d45a677285041341"
+          },
+          "owner": "harness",
+          "selected_by": "harness"
+        }
+      }
+    },
+    {
+      "checker": "filter_claim_matches_observed_pool",
+      "description": "the submission changed nothing at all; no curation was ever attempted",
+      "expected_reason": "silent-filter-no-op",
+      "expected_reward": 0.0,
+      "id": "nc-no-op-submission",
+      "state": {
+        "claim": {
+          "curated_digest": "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9",
+          "curated_documents": 1959,
+          "exit_status": 0,
+          "match_count": 0,
+          "pool_state": "uncurated",
+          "source_digest": "sha256:e6906c89673963d9bc1dfa408364782e482e9e8ab5cb3d8a9c5e765c0f1bdf4e",
+          "source_documents": 4096,
+          "stages": 4,
+          "status": "ok"
+        },
+        "curation": {
+          "completed_at_seq": 5,
+          "verdict": "not-applied"
+        },
+        "evaluation": {
+          "bound_point": 600,
+          "computed_on": "held-out-split",
+          "control_loss": 3.330662,
+          "graded_loss": 3.192807,
+          "last_scheduled_point": 800,
+          "points": [
+            {
+              "loss": 3.192807,
+              "point": 600,
+              "smoothed": false,
+              "weights_digest": "sha256:7d57b2f6d489acc40d0543242409588933ffd7adda81b8d3fc312ec33cdd6426"
+            },
+            {
+              "loss": 3.1197,
+              "point": 700,
+              "smoothed": false,
+              "weights_digest": "sha256:ca8339c2b10f22e50ac9f1e2f4a940d1640561cbcca2715db2e4c20b51509f79"
+            },
+            {
+              "loss": 3.059776,
+              "point": 800,
+              "smoothed": false,
+              "weights_digest": "sha256:2e03d31a53085d36a258cd4944f38b9f0a9bcbe071d2c7e2d45a677285041341"
+            }
+          ],
+          "readout_mode": "raw",
+          "reference_loss": 3.192807,
+          "source": "harness-recomputed",
+          "sustain_points": [
+            700,
+            800
+          ]
+        },
+        "feed": {
+          "budget_tokens": 3145728,
+          "first_feed_seq": 6,
+          "frozen_budget_tokens": 3145728,
+          "resolved_quality_field": "quality.bucket",
+          "resolved_register_schema": "curation/v4",
+          "stream_digest": "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9",
+          "tokens_fed": 3145728
+        },
+        "pool": {
+          "curated_digest": "sha256:e6906c89673963d9bc1dfa408364782e482e9e8ab5cb3d8a9c5e765c0f1bdf4e",
+          "curated_documents": 4096,
+          "observed_at_seq": 4,
+          "source_digest": "sha256:e6906c89673963d9bc1dfa408364782e482e9e8ab5cb3d8a9c5e765c0f1bdf4e",
+          "source_documents": 4096
+        },
+        "register": {
+          "observed_at_seq": 3,
+          "quality_field": "quality.bucket",
+          "schema": "curation/v4"
+        },
+        "run": {
+          "halt_reason": "schedule-complete",
+          "terminated_at_point": 800
+        },
+        "split": {
+          "audited_by": "harness",
+          "audited_documents": 455,
+          "audited_split_digest": "sha-holdout-v2",
+          "audited_split_id": "held-out-v2",
+          "eval_split_digest": "sha-holdout-v2",
+          "eval_split_id": "held-out-v2",
+          "train_eval_overlap": 0
+        },
+        "weights": {
+          "ledger": {
+            "600": "sha256:7d57b2f6d489acc40d0543242409588933ffd7adda81b8d3fc312ec33cdd6426",
+            "700": "sha256:ca8339c2b10f22e50ac9f1e2f4a940d1640561cbcca2715db2e4c20b51509f79",
+            "800": "sha256:2e03d31a53085d36a258cd4944f38b9f0a9bcbe071d2c7e2d45a677285041341"
+          },
+          "owner": "harness",
+          "selected_by": "harness"
+        }
+      }
+    },
+    {
+      "checker": "filter_claim_matches_observed_pool",
+      "description": "a curation verdict carried forward from the pre-failure pool",
+      "expected_reason": "silent-filter-no-op",
+      "expected_reward": 0.0,
+      "id": "nc-stale-curation-verdict",
+      "state": {
+        "claim": {
+          "curated_digest": "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9",
+          "curated_documents": 1959,
+          "exit_status": 0,
+          "match_count": 2137,
+          "pool_state": "curated",
+          "source_digest": "sha256:e6906c89673963d9bc1dfa408364782e482e9e8ab5cb3d8a9c5e765c0f1bdf4e",
+          "source_documents": 4096,
+          "stages": 4,
+          "status": "ok"
+        },
+        "curation": {
+          "completed_at_seq": 5,
+          "verdict": "unverified"
+        },
+        "evaluation": {
+          "bound_point": 600,
+          "computed_on": "held-out-split",
+          "control_loss": 3.330662,
+          "graded_loss": 3.192807,
+          "last_scheduled_point": 800,
+          "points": [
+            {
+              "loss": 3.192807,
+              "point": 600,
+              "smoothed": false,
+              "weights_digest": "sha256:7d57b2f6d489acc40d0543242409588933ffd7adda81b8d3fc312ec33cdd6426"
+            },
+            {
+              "loss": 3.1197,
+              "point": 700,
+              "smoothed": false,
+              "weights_digest": "sha256:ca8339c2b10f22e50ac9f1e2f4a940d1640561cbcca2715db2e4c20b51509f79"
+            },
+            {
+              "loss": 3.059776,
+              "point": 800,
+              "smoothed": false,
+              "weights_digest": "sha256:2e03d31a53085d36a258cd4944f38b9f0a9bcbe071d2c7e2d45a677285041341"
+            }
+          ],
+          "readout_mode": "raw",
+          "reference_loss": 3.192807,
+          "source": "harness-recomputed",
+          "sustain_points": [
+            700,
+            800
+          ]
+        },
+        "feed": {
+          "budget_tokens": 3145728,
+          "first_feed_seq": 6,
+          "frozen_budget_tokens": 3145728,
+          "resolved_quality_field": "quality.bucket",
+          "resolved_register_schema": "curation/v4",
+          "stream_digest": "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9",
+          "tokens_fed": 3145728
+        },
+        "pool": {
+          "curated_digest": "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9",
+          "curated_documents": 1959,
+          "observed_at_seq": 4,
+          "source_digest": "sha256:e6906c89673963d9bc1dfa408364782e482e9e8ab5cb3d8a9c5e765c0f1bdf4e",
+          "source_documents": 4096
+        },
+        "register": {
+          "observed_at_seq": 3,
+          "quality_field": "quality.bucket",
+          "schema": "curation/v4"
+        },
+        "run": {
+          "halt_reason": "schedule-complete",
+          "terminated_at_point": 800
+        },
+        "split": {
+          "audited_by": "harness",
+          "audited_documents": 455,
+          "audited_split_digest": "sha-holdout-v2",
+          "audited_split_id": "held-out-v2",
+          "eval_split_digest": "sha-holdout-v2",
+          "eval_split_id": "held-out-v2",
+          "train_eval_overlap": 0
+        },
+        "weights": {
+          "ledger": {
+            "600": "sha256:7d57b2f6d489acc40d0543242409588933ffd7adda81b8d3fc312ec33cdd6426",
+            "700": "sha256:ca8339c2b10f22e50ac9f1e2f4a940d1640561cbcca2715db2e4c20b51509f79",
+            "800": "sha256:2e03d31a53085d36a258cd4944f38b9f0a9bcbe071d2c7e2d45a677285041341"
+          },
+          "owner": "harness",
+          "selected_by": "harness"
+        }
+      }
+    },
+    {
+      "checker": "curated_pool_consumed_by_trainer",
+      "description": "a curated pool was produced and the trainer consumed the source pool anyway",
+      "expected_reason": "curated-pool-not-consumed",
+      "expected_reward": 0.0,
+      "id": "nc-pool-not-consumed",
+      "state": {
+        "claim": {
+          "curated_digest": "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9",
+          "curated_documents": 1959,
+          "exit_status": 0,
+          "match_count": 2137,
+          "pool_state": "curated",
+          "source_digest": "sha256:e6906c89673963d9bc1dfa408364782e482e9e8ab5cb3d8a9c5e765c0f1bdf4e",
+          "source_documents": 4096,
+          "stages": 4,
+          "status": "ok"
+        },
+        "curation": {
+          "completed_at_seq": 5,
+          "verdict": "applied"
+        },
+        "evaluation": {
+          "bound_point": 600,
+          "computed_on": "held-out-split",
+          "control_loss": 3.330662,
+          "graded_loss": 3.192807,
+          "last_scheduled_point": 800,
+          "points": [
+            {
+              "loss": 3.192807,
+              "point": 600,
+              "smoothed": false,
+              "weights_digest": "sha256:7d57b2f6d489acc40d0543242409588933ffd7adda81b8d3fc312ec33cdd6426"
+            },
+            {
+              "loss": 3.1197,
+              "point": 700,
+              "smoothed": false,
+              "weights_digest": "sha256:ca8339c2b10f22e50ac9f1e2f4a940d1640561cbcca2715db2e4c20b51509f79"
+            },
+            {
+              "loss": 3.059776,
+              "point": 800,
+              "smoothed": false,
+              "weights_digest": "sha256:2e03d31a53085d36a258cd4944f38b9f0a9bcbe071d2c7e2d45a677285041341"
+            }
+          ],
+          "readout_mode": "raw",
+          "reference_loss": 3.192807,
+          "source": "harness-recomputed",
+          "sustain_points": [
+            700,
+            800
+          ]
+        },
+        "feed": {
+          "budget_tokens": 3145728,
+          "first_feed_seq": 6,
+          "frozen_budget_tokens": 3145728,
+          "resolved_quality_field": "quality.bucket",
+          "resolved_register_schema": "curation/v4",
+          "stream_digest": "sha256:e6906c89673963d9bc1dfa408364782e482e9e8ab5cb3d8a9c5e765c0f1bdf4e",
+          "tokens_fed": 3145728
+        },
+        "pool": {
+          "curated_digest": "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9",
+          "curated_documents": 1959,
+          "observed_at_seq": 4,
+          "source_digest": "sha256:e6906c89673963d9bc1dfa408364782e482e9e8ab5cb3d8a9c5e765c0f1bdf4e",
+          "source_documents": 4096
+        },
+        "register": {
+          "observed_at_seq": 3,
+          "quality_field": "quality.bucket",
+          "schema": "curation/v4"
+        },
+        "run": {
+          "halt_reason": "schedule-complete",
+          "terminated_at_point": 800
+        },
+        "split": {
+          "audited_by": "harness",
+          "audited_documents": 455,
+          "audited_split_digest": "sha-holdout-v2",
+          "audited_split_id": "held-out-v2",
+          "eval_split_digest": "sha-holdout-v2",
+          "eval_split_id": "held-out-v2",
+          "train_eval_overlap": 0
+        },
+        "weights": {
+          "ledger": {
+            "600": "sha256:7d57b2f6d489acc40d0543242409588933ffd7adda81b8d3fc312ec33cdd6426",
+            "700": "sha256:ca8339c2b10f22e50ac9f1e2f4a940d1640561cbcca2715db2e4c20b51509f79",
+            "800": "sha256:2e03d31a53085d36a258cd4944f38b9f0a9bcbe071d2c7e2d45a677285041341"
+          },
+          "owner": "harness",
+          "selected_by": "harness"
+        }
+      }
+    },
+    {
+      "checker": "curated_pool_consumed_by_trainer",
+      "description": "the feed resolved the pre-drift quality field while the harness observed the drifted register",
+      "expected_reason": "curated-pool-not-consumed",
+      "expected_reward": 0.0,
+      "id": "nc-schema-drift-unhandled",
+      "state": {
+        "claim": {
+          "curated_digest": "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9",
+          "curated_documents": 1959,
+          "exit_status": 0,
+          "match_count": 2137,
+          "pool_state": "curated",
+          "source_digest": "sha256:e6906c89673963d9bc1dfa408364782e482e9e8ab5cb3d8a9c5e765c0f1bdf4e",
+          "source_documents": 4096,
+          "stages": 4,
+          "status": "ok"
+        },
+        "curation": {
+          "completed_at_seq": 5,
+          "verdict": "applied"
+        },
+        "evaluation": {
+          "bound_point": 600,
+          "computed_on": "held-out-split",
+          "control_loss": 3.330662,
+          "graded_loss": 3.192807,
+          "last_scheduled_point": 800,
+          "points": [
+            {
+              "loss": 3.192807,
+              "point": 600,
+              "smoothed": false,
+              "weights_digest": "sha256:7d57b2f6d489acc40d0543242409588933ffd7adda81b8d3fc312ec33cdd6426"
+            },
+            {
+              "loss": 3.1197,
+              "point": 700,
+              "smoothed": false,
+              "weights_digest": "sha256:ca8339c2b10f22e50ac9f1e2f4a940d1640561cbcca2715db2e4c20b51509f79"
+            },
+            {
+              "loss": 3.059776,
+              "point": 800,
+              "smoothed": false,
+              "weights_digest": "sha256:2e03d31a53085d36a258cd4944f38b9f0a9bcbe071d2c7e2d45a677285041341"
+            }
+          ],
+          "readout_mode": "raw",
+          "reference_loss": 3.192807,
+          "source": "harness-recomputed",
+          "sustain_points": [
+            700,
+            800
+          ]
+        },
+        "feed": {
+          "budget_tokens": 3145728,
+          "first_feed_seq": 6,
+          "frozen_budget_tokens": 3145728,
+          "resolved_quality_field": "quality_bucket",
+          "resolved_register_schema": "curation/v4",
+          "stream_digest": "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9",
+          "tokens_fed": 3145728
+        },
+        "pool": {
+          "curated_digest": "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9",
+          "curated_documents": 1959,
+          "observed_at_seq": 4,
+          "source_digest": "sha256:e6906c89673963d9bc1dfa408364782e482e9e8ab5cb3d8a9c5e765c0f1bdf4e",
+          "source_documents": 4096
+        },
+        "register": {
+          "observed_at_seq": 3,
+          "quality_field": "quality.bucket",
+          "schema": "curation/v4"
+        },
+        "run": {
+          "halt_reason": "schedule-complete",
+          "terminated_at_point": 800
+        },
+        "split": {
+          "audited_by": "harness",
+          "audited_documents": 455,
+          "audited_split_digest": "sha-holdout-v2",
+          "audited_split_id": "held-out-v2",
+          "eval_split_digest": "sha-holdout-v2",
+          "eval_split_id": "held-out-v2",
+          "train_eval_overlap": 0
+        },
+        "weights": {
+          "ledger": {
+            "600": "sha256:7d57b2f6d489acc40d0543242409588933ffd7adda81b8d3fc312ec33cdd6426",
+            "700": "sha256:ca8339c2b10f22e50ac9f1e2f4a940d1640561cbcca2715db2e4c20b51509f79",
+            "800": "sha256:2e03d31a53085d36a258cd4944f38b9f0a9bcbe071d2c7e2d45a677285041341"
+          },
+          "owner": "harness",
+          "selected_by": "harness"
+        }
+      }
+    },
+    {
+      "checker": "curation_precedes_first_feed",
+      "description": "curation completed after the first training token was fed",
+      "expected_reason": "curation-after-feed-start",
+      "expected_reward": 0.0,
+      "id": "nc-curation-after-feed",
+      "state": {
+        "claim": {
+          "curated_digest": "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9",
+          "curated_documents": 1959,
+          "exit_status": 0,
+          "match_count": 2137,
+          "pool_state": "curated",
+          "source_digest": "sha256:e6906c89673963d9bc1dfa408364782e482e9e8ab5cb3d8a9c5e765c0f1bdf4e",
+          "source_documents": 4096,
+          "stages": 4,
+          "status": "ok"
+        },
+        "curation": {
+          "completed_at_seq": 7,
+          "verdict": "applied"
+        },
+        "evaluation": {
+          "bound_point": 600,
+          "computed_on": "held-out-split",
+          "control_loss": 3.330662,
+          "graded_loss": 3.192807,
+          "last_scheduled_point": 800,
+          "points": [
+            {
+              "loss": 3.192807,
+              "point": 600,
+              "smoothed": false,
+              "weights_digest": "sha256:7d57b2f6d489acc40d0543242409588933ffd7adda81b8d3fc312ec33cdd6426"
+            },
+            {
+              "loss": 3.1197,
+              "point": 700,
+              "smoothed": false,
+              "weights_digest": "sha256:ca8339c2b10f22e50ac9f1e2f4a940d1640561cbcca2715db2e4c20b51509f79"
+            },
+            {
+              "loss": 3.059776,
+              "point": 800,
+              "smoothed": false,
+              "weights_digest": "sha256:2e03d31a53085d36a258cd4944f38b9f0a9bcbe071d2c7e2d45a677285041341"
+            }
+          ],
+          "readout_mode": "raw",
+          "reference_loss": 3.192807,
+          "source": "harness-recomputed",
+          "sustain_points": [
+            700,
+            800
+          ]
+        },
+        "feed": {
+          "budget_tokens": 3145728,
+          "first_feed_seq": 6,
+          "frozen_budget_tokens": 3145728,
+          "resolved_quality_field": "quality.bucket",
+          "resolved_register_schema": "curation/v4",
+          "stream_digest": "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9",
+          "tokens_fed": 3145728
+        },
+        "pool": {
+          "curated_digest": "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9",
+          "curated_documents": 1959,
+          "observed_at_seq": 4,
+          "source_digest": "sha256:e6906c89673963d9bc1dfa408364782e482e9e8ab5cb3d8a9c5e765c0f1bdf4e",
+          "source_documents": 4096
+        },
+        "register": {
+          "observed_at_seq": 3,
+          "quality_field": "quality.bucket",
+          "schema": "curation/v4"
+        },
+        "run": {
+          "halt_reason": "schedule-complete",
+          "terminated_at_point": 800
+        },
+        "split": {
+          "audited_by": "harness",
+          "audited_documents": 455,
+          "audited_split_digest": "sha-holdout-v2",
+          "audited_split_id": "held-out-v2",
+          "eval_split_digest": "sha-holdout-v2",
+          "eval_split_id": "held-out-v2",
+          "train_eval_overlap": 0
+        },
+        "weights": {
+          "ledger": {
+            "600": "sha256:7d57b2f6d489acc40d0543242409588933ffd7adda81b8d3fc312ec33cdd6426",
+            "700": "sha256:ca8339c2b10f22e50ac9f1e2f4a940d1640561cbcca2715db2e4c20b51509f79",
+            "800": "sha256:2e03d31a53085d36a258cd4944f38b9f0a9bcbe071d2c7e2d45a677285041341"
+          },
+          "owner": "harness",
+          "selected_by": "harness"
+        }
+      }
+    },
+    {
+      "checker": "token_budget_respected_as_fed",
+      "description": "more tokens fed than the frozen budget binds",
+      "expected_reason": "token-budget-overspent",
+      "expected_reward": 0.0,
+      "id": "nc-budget-overspend",
+      "state": {
+        "claim": {
+          "curated_digest": "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9",
+          "curated_documents": 1959,
+          "exit_status": 0,
+          "match_count": 2137,
+          "pool_state": "curated",
+          "source_digest": "sha256:e6906c89673963d9bc1dfa408364782e482e9e8ab5cb3d8a9c5e765c0f1bdf4e",
+          "source_documents": 4096,
+          "stages": 4,
+          "status": "ok"
+        },
+        "curation": {
+          "completed_at_seq": 5,
+          "verdict": "applied"
+        },
+        "evaluation": {
+          "bound_point": 600,
+          "computed_on": "held-out-split",
+          "control_loss": 3.330662,
+          "graded_loss": 3.192807,
+          "last_scheduled_point": 800,
+          "points": [
+            {
+              "loss": 3.192807,
+              "point": 600,
+              "smoothed": false,
+              "weights_digest": "sha256:7d57b2f6d489acc40d0543242409588933ffd7adda81b8d3fc312ec33cdd6426"
+            },
+            {
+              "loss": 3.1197,
+              "point": 700,
+              "smoothed": false,
+              "weights_digest": "sha256:ca8339c2b10f22e50ac9f1e2f4a940d1640561cbcca2715db2e4c20b51509f79"
+            },
+            {
+              "loss": 3.059776,
+              "point": 800,
+              "smoothed": false,
+              "weights_digest": "sha256:2e03d31a53085d36a258cd4944f38b9f0a9bcbe071d2c7e2d45a677285041341"
+            }
+          ],
+          "readout_mode": "raw",
+          "reference_loss": 3.192807,
+          "source": "harness-recomputed",
+          "sustain_points": [
+            700,
+            800
+          ]
+        },
+        "feed": {
+          "budget_tokens": 3145728,
+          "first_feed_seq": 6,
+          "frozen_budget_tokens": 3145728,
+          "resolved_quality_field": "quality.bucket",
+          "resolved_register_schema": "curation/v4",
+          "stream_digest": "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9",
+          "tokens_fed": 4194304
+        },
+        "pool": {
+          "curated_digest": "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9",
+          "curated_documents": 1959,
+          "observed_at_seq": 4,
+          "source_digest": "sha256:e6906c89673963d9bc1dfa408364782e482e9e8ab5cb3d8a9c5e765c0f1bdf4e",
+          "source_documents": 4096
+        },
+        "register": {
+          "observed_at_seq": 3,
+          "quality_field": "quality.bucket",
+          "schema": "curation/v4"
+        },
+        "run": {
+          "halt_reason": "schedule-complete",
+          "terminated_at_point": 800
+        },
+        "split": {
+          "audited_by": "harness",
+          "audited_documents": 455,
+          "audited_split_digest": "sha-holdout-v2",
+          "audited_split_id": "held-out-v2",
+          "eval_split_digest": "sha-holdout-v2",
+          "eval_split_id": "held-out-v2",
+          "train_eval_overlap": 0
+        },
+        "weights": {
+          "ledger": {
+            "600": "sha256:7d57b2f6d489acc40d0543242409588933ffd7adda81b8d3fc312ec33cdd6426",
+            "700": "sha256:ca8339c2b10f22e50ac9f1e2f4a940d1640561cbcca2715db2e4c20b51509f79",
+            "800": "sha256:2e03d31a53085d36a258cd4944f38b9f0a9bcbe071d2c7e2d45a677285041341"
+          },
+          "owner": "harness",
+          "selected_by": "harness"
+        }
+      }
+    },
+    {
+      "checker": "eval_split_never_trained_on",
+      "description": "held-out documents appear in the fed training stream",
+      "expected_reason": "eval-split-leaked",
+      "expected_reward": 0.0,
+      "id": "nc-split-leak",
+      "state": {
+        "claim": {
+          "curated_digest": "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9",
+          "curated_documents": 1959,
+          "exit_status": 0,
+          "match_count": 2137,
+          "pool_state": "curated",
+          "source_digest": "sha256:e6906c89673963d9bc1dfa408364782e482e9e8ab5cb3d8a9c5e765c0f1bdf4e",
+          "source_documents": 4096,
+          "stages": 4,
+          "status": "ok"
+        },
+        "curation": {
+          "completed_at_seq": 5,
+          "verdict": "applied"
+        },
+        "evaluation": {
+          "bound_point": 600,
+          "computed_on": "held-out-split",
+          "control_loss": 3.330662,
+          "graded_loss": 3.192807,
+          "last_scheduled_point": 800,
+          "points": [
+            {
+              "loss": 3.192807,
+              "point": 600,
+              "smoothed": false,
+              "weights_digest": "sha256:7d57b2f6d489acc40d0543242409588933ffd7adda81b8d3fc312ec33cdd6426"
+            },
+            {
+              "loss": 3.1197,
+              "point": 700,
+              "smoothed": false,
+              "weights_digest": "sha256:ca8339c2b10f22e50ac9f1e2f4a940d1640561cbcca2715db2e4c20b51509f79"
+            },
+            {
+              "loss": 3.059776,
+              "point": 800,
+              "smoothed": false,
+              "weights_digest": "sha256:2e03d31a53085d36a258cd4944f38b9f0a9bcbe071d2c7e2d45a677285041341"
+            }
+          ],
+          "readout_mode": "raw",
+          "reference_loss": 3.192807,
+          "source": "harness-recomputed",
+          "sustain_points": [
+            700,
+            800
+          ]
+        },
+        "feed": {
+          "budget_tokens": 3145728,
+          "first_feed_seq": 6,
+          "frozen_budget_tokens": 3145728,
+          "resolved_quality_field": "quality.bucket",
+          "resolved_register_schema": "curation/v4",
+          "stream_digest": "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9",
+          "tokens_fed": 3145728
+        },
+        "pool": {
+          "curated_digest": "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9",
+          "curated_documents": 1959,
+          "observed_at_seq": 4,
+          "source_digest": "sha256:e6906c89673963d9bc1dfa408364782e482e9e8ab5cb3d8a9c5e765c0f1bdf4e",
+          "source_documents": 4096
+        },
+        "register": {
+          "observed_at_seq": 3,
+          "quality_field": "quality.bucket",
+          "schema": "curation/v4"
+        },
+        "run": {
+          "halt_reason": "schedule-complete",
+          "terminated_at_point": 800
+        },
+        "split": {
+          "audited_by": "harness",
+          "audited_documents": 455,
+          "audited_split_digest": "sha-holdout-v2",
+          "audited_split_id": "held-out-v2",
+          "eval_split_digest": "sha-holdout-v2",
+          "eval_split_id": "held-out-v2",
+          "train_eval_overlap": 37
+        },
+        "weights": {
+          "ledger": {
+            "600": "sha256:7d57b2f6d489acc40d0543242409588933ffd7adda81b8d3fc312ec33cdd6426",
+            "700": "sha256:ca8339c2b10f22e50ac9f1e2f4a940d1640561cbcca2715db2e4c20b51509f79",
+            "800": "sha256:2e03d31a53085d36a258cd4944f38b9f0a9bcbe071d2c7e2d45a677285041341"
+          },
+          "owner": "harness",
+          "selected_by": "harness"
+        }
+      }
+    },
+    {
+      "checker": "eval_split_never_trained_on",
+      "description": "the leak audit was computed against the pre-rotation held-out split",
+      "expected_reason": "eval-split-leaked",
+      "expected_reward": 0.0,
+      "id": "nc-stale-holdout-audit",
+      "state": {
+        "claim": {
+          "curated_digest": "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9",
+          "curated_documents": 1959,
+          "exit_status": 0,
+          "match_count": 2137,
+          "pool_state": "curated",
+          "source_digest": "sha256:e6906c89673963d9bc1dfa408364782e482e9e8ab5cb3d8a9c5e765c0f1bdf4e",
+          "source_documents": 4096,
+          "stages": 4,
+          "status": "ok"
+        },
+        "curation": {
+          "completed_at_seq": 5,
+          "verdict": "applied"
+        },
+        "evaluation": {
+          "bound_point": 600,
+          "computed_on": "held-out-split",
+          "control_loss": 3.330662,
+          "graded_loss": 3.192807,
+          "last_scheduled_point": 800,
+          "points": [
+            {
+              "loss": 3.192807,
+              "point": 600,
+              "smoothed": false,
+              "weights_digest": "sha256:7d57b2f6d489acc40d0543242409588933ffd7adda81b8d3fc312ec33cdd6426"
+            },
+            {
+              "loss": 3.1197,
+              "point": 700,
+              "smoothed": false,
+              "weights_digest": "sha256:ca8339c2b10f22e50ac9f1e2f4a940d1640561cbcca2715db2e4c20b51509f79"
+            },
+            {
+              "loss": 3.059776,
+              "point": 800,
+              "smoothed": false,
+              "weights_digest": "sha256:2e03d31a53085d36a258cd4944f38b9f0a9bcbe071d2c7e2d45a677285041341"
+            }
+          ],
+          "readout_mode": "raw",
+          "reference_loss": 3.192807,
+          "source": "harness-recomputed",
+          "sustain_points": [
+            700,
+            800
+          ]
+        },
+        "feed": {
+          "budget_tokens": 3145728,
+          "first_feed_seq": 6,
+          "frozen_budget_tokens": 3145728,
+          "resolved_quality_field": "quality.bucket",
+          "resolved_register_schema": "curation/v4",
+          "stream_digest": "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9",
+          "tokens_fed": 3145728
+        },
+        "pool": {
+          "curated_digest": "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9",
+          "curated_documents": 1959,
+          "observed_at_seq": 4,
+          "source_digest": "sha256:e6906c89673963d9bc1dfa408364782e482e9e8ab5cb3d8a9c5e765c0f1bdf4e",
+          "source_documents": 4096
+        },
+        "register": {
+          "observed_at_seq": 3,
+          "quality_field": "quality.bucket",
+          "schema": "curation/v4"
+        },
+        "run": {
+          "halt_reason": "schedule-complete",
+          "terminated_at_point": 800
+        },
+        "split": {
+          "audited_by": "harness",
+          "audited_documents": 455,
+          "audited_split_digest": "sha-holdout-v1",
+          "audited_split_id": "held-out-v1",
+          "eval_split_digest": "sha-holdout-v2",
+          "eval_split_id": "held-out-v2",
+          "train_eval_overlap": 0
+        },
+        "weights": {
+          "ledger": {
+            "600": "sha256:7d57b2f6d489acc40d0543242409588933ffd7adda81b8d3fc312ec33cdd6426",
+            "700": "sha256:ca8339c2b10f22e50ac9f1e2f4a940d1640561cbcca2715db2e4c20b51509f79",
+            "800": "sha256:2e03d31a53085d36a258cd4944f38b9f0a9bcbe071d2c7e2d45a677285041341"
+          },
+          "owner": "harness",
+          "selected_by": "harness"
+        }
+      }
+    },
+    {
+      "checker": "graded_weights_harness_owned",
+      "description": "the evaluated weights are a checkpoint the submission chose",
+      "expected_reason": "weights-not-harness-owned",
+      "expected_reward": 0.0,
+      "id": "nc-submission-selected-weights",
+      "state": {
+        "claim": {
+          "curated_digest": "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9",
+          "curated_documents": 1959,
+          "exit_status": 0,
+          "match_count": 2137,
+          "pool_state": "curated",
+          "source_digest": "sha256:e6906c89673963d9bc1dfa408364782e482e9e8ab5cb3d8a9c5e765c0f1bdf4e",
+          "source_documents": 4096,
+          "stages": 4,
+          "status": "ok"
+        },
+        "curation": {
+          "completed_at_seq": 5,
+          "verdict": "applied"
+        },
+        "evaluation": {
+          "bound_point": 600,
+          "computed_on": "held-out-split",
+          "control_loss": 3.330662,
+          "graded_loss": 3.192807,
+          "last_scheduled_point": 800,
+          "points": [
+            {
+              "loss": 3.192807,
+              "point": 600,
+              "smoothed": false,
+              "weights_digest": "sha256:7d57b2f6d489acc40d0543242409588933ffd7adda81b8d3fc312ec33cdd6426"
+            },
+            {
+              "loss": 3.1197,
+              "point": 700,
+              "smoothed": false,
+              "weights_digest": "sha256:ca8339c2b10f22e50ac9f1e2f4a940d1640561cbcca2715db2e4c20b51509f79"
+            },
+            {
+              "loss": 3.059776,
+              "point": 800,
+              "smoothed": false,
+              "weights_digest": "sha256:2e03d31a53085d36a258cd4944f38b9f0a9bcbe071d2c7e2d45a677285041341"
+            }
+          ],
+          "readout_mode": "raw",
+          "reference_loss": 3.192807,
+          "source": "harness-recomputed",
+          "sustain_points": [
+            700,
+            800
+          ]
+        },
+        "feed": {
+          "budget_tokens": 3145728,
+          "first_feed_seq": 6,
+          "frozen_budget_tokens": 3145728,
+          "resolved_quality_field": "quality.bucket",
+          "resolved_register_schema": "curation/v4",
+          "stream_digest": "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9",
+          "tokens_fed": 3145728
+        },
+        "pool": {
+          "curated_digest": "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9",
+          "curated_documents": 1959,
+          "observed_at_seq": 4,
+          "source_digest": "sha256:e6906c89673963d9bc1dfa408364782e482e9e8ab5cb3d8a9c5e765c0f1bdf4e",
+          "source_documents": 4096
+        },
+        "register": {
+          "observed_at_seq": 3,
+          "quality_field": "quality.bucket",
+          "schema": "curation/v4"
+        },
+        "run": {
+          "halt_reason": "schedule-complete",
+          "terminated_at_point": 800
+        },
+        "split": {
+          "audited_by": "harness",
+          "audited_documents": 455,
+          "audited_split_digest": "sha-holdout-v2",
+          "audited_split_id": "held-out-v2",
+          "eval_split_digest": "sha-holdout-v2",
+          "eval_split_id": "held-out-v2",
+          "train_eval_overlap": 0
+        },
+        "weights": {
+          "ledger": {
+            "600": "sha256:7d57b2f6d489acc40d0543242409588933ffd7adda81b8d3fc312ec33cdd6426",
+            "700": "sha256:ca8339c2b10f22e50ac9f1e2f4a940d1640561cbcca2715db2e4c20b51509f79",
+            "800": "sha256:2e03d31a53085d36a258cd4944f38b9f0a9bcbe071d2c7e2d45a677285041341"
+          },
+          "owner": "harness",
+          "selected_by": "submission"
+        }
+      }
+    },
+    {
+      "checker": "graded_loss_unsmoothed",
+      "description": "the graded loss is an EMA-blended readout rather than the raw recomputation",
+      "expected_reason": "graded-loss-smoothed",
+      "expected_reward": 0.0,
+      "id": "nc-smoothed-readout",
+      "state": {
+        "claim": {
+          "curated_digest": "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9",
+          "curated_documents": 1959,
+          "exit_status": 0,
+          "match_count": 2137,
+          "pool_state": "curated",
+          "source_digest": "sha256:e6906c89673963d9bc1dfa408364782e482e9e8ab5cb3d8a9c5e765c0f1bdf4e",
+          "source_documents": 4096,
+          "stages": 4,
+          "status": "ok"
+        },
+        "curation": {
+          "completed_at_seq": 5,
+          "verdict": "applied"
+        },
+        "evaluation": {
+          "bound_point": 600,
+          "computed_on": "held-out-split",
+          "control_loss": 3.330662,
+          "graded_loss": 3.192807,
+          "last_scheduled_point": 800,
+          "points": [
+            {
+              "loss": 3.192807,
+              "point": 600,
+              "smoothed": false,
+              "weights_digest": "sha256:7d57b2f6d489acc40d0543242409588933ffd7adda81b8d3fc312ec33cdd6426"
+            },
+            {
+              "loss": 3.1197,
+              "point": 700,
+              "smoothed": false,
+              "weights_digest": "sha256:ca8339c2b10f22e50ac9f1e2f4a940d1640561cbcca2715db2e4c20b51509f79"
+            },
+            {
+              "loss": 3.059776,
+              "point": 800,
+              "smoothed": false,
+              "weights_digest": "sha256:2e03d31a53085d36a258cd4944f38b9f0a9bcbe071d2c7e2d45a677285041341"
+            }
+          ],
+          "readout_mode": "ema-blended",
+          "reference_loss": 3.192807,
+          "source": "harness-recomputed",
+          "sustain_points": [
+            700,
+            800
+          ]
+        },
+        "feed": {
+          "budget_tokens": 3145728,
+          "first_feed_seq": 6,
+          "frozen_budget_tokens": 3145728,
+          "resolved_quality_field": "quality.bucket",
+          "resolved_register_schema": "curation/v4",
+          "stream_digest": "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9",
+          "tokens_fed": 3145728
+        },
+        "pool": {
+          "curated_digest": "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9",
+          "curated_documents": 1959,
+          "observed_at_seq": 4,
+          "source_digest": "sha256:e6906c89673963d9bc1dfa408364782e482e9e8ab5cb3d8a9c5e765c0f1bdf4e",
+          "source_documents": 4096
+        },
+        "register": {
+          "observed_at_seq": 3,
+          "quality_field": "quality.bucket",
+          "schema": "curation/v4"
+        },
+        "run": {
+          "halt_reason": "schedule-complete",
+          "terminated_at_point": 800
+        },
+        "split": {
+          "audited_by": "harness",
+          "audited_documents": 455,
+          "audited_split_digest": "sha-holdout-v2",
+          "audited_split_id": "held-out-v2",
+          "eval_split_digest": "sha-holdout-v2",
+          "eval_split_id": "held-out-v2",
+          "train_eval_overlap": 0
+        },
+        "weights": {
+          "ledger": {
+            "600": "sha256:7d57b2f6d489acc40d0543242409588933ffd7adda81b8d3fc312ec33cdd6426",
+            "700": "sha256:ca8339c2b10f22e50ac9f1e2f4a940d1640561cbcca2715db2e4c20b51509f79",
+            "800": "sha256:2e03d31a53085d36a258cd4944f38b9f0a9bcbe071d2c7e2d45a677285041341"
+          },
+          "owner": "harness",
+          "selected_by": "harness"
+        }
+      }
+    },
+    {
+      "checker": "improvement_sustained_across_points",
+      "description": "the improvement holds at the bound point and lapses at a sustain point",
+      "expected_reason": "improvement-not-sustained",
+      "expected_reward": 0.0,
+      "id": "nc-unsustained-improvement",
+      "state": {
+        "claim": {
+          "curated_digest": "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9",
+          "curated_documents": 1959,
+          "exit_status": 0,
+          "match_count": 2137,
+          "pool_state": "curated",
+          "source_digest": "sha256:e6906c89673963d9bc1dfa408364782e482e9e8ab5cb3d8a9c5e765c0f1bdf4e",
+          "source_documents": 4096,
+          "stages": 4,
+          "status": "ok"
+        },
+        "curation": {
+          "completed_at_seq": 5,
+          "verdict": "applied"
+        },
+        "evaluation": {
+          "bound_point": 600,
+          "computed_on": "held-out-split",
+          "control_loss": 3.330662,
+          "graded_loss": 3.192807,
+          "last_scheduled_point": 800,
+          "points": [
+            {
+              "loss": 3.192807,
+              "point": 600,
+              "smoothed": false,
+              "weights_digest": "sha256:7d57b2f6d489acc40d0543242409588933ffd7adda81b8d3fc312ec33cdd6426"
+            },
+            {
+              "loss": 3.1197,
+              "point": 700,
+              "smoothed": false,
+              "weights_digest": "sha256:ca8339c2b10f22e50ac9f1e2f4a940d1640561cbcca2715db2e4c20b51509f79"
+            },
+            {
+              "loss": 3.51,
+              "point": 800,
+              "smoothed": false,
+              "weights_digest": "sha256:2e03d31a53085d36a258cd4944f38b9f0a9bcbe071d2c7e2d45a677285041341"
+            }
+          ],
+          "readout_mode": "raw",
+          "reference_loss": 3.192807,
+          "source": "harness-recomputed",
+          "sustain_points": [
+            700,
+            800
+          ]
+        },
+        "feed": {
+          "budget_tokens": 3145728,
+          "first_feed_seq": 6,
+          "frozen_budget_tokens": 3145728,
+          "resolved_quality_field": "quality.bucket",
+          "resolved_register_schema": "curation/v4",
+          "stream_digest": "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9",
+          "tokens_fed": 3145728
+        },
+        "pool": {
+          "curated_digest": "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9",
+          "curated_documents": 1959,
+          "observed_at_seq": 4,
+          "source_digest": "sha256:e6906c89673963d9bc1dfa408364782e482e9e8ab5cb3d8a9c5e765c0f1bdf4e",
+          "source_documents": 4096
+        },
+        "register": {
+          "observed_at_seq": 3,
+          "quality_field": "quality.bucket",
+          "schema": "curation/v4"
+        },
+        "run": {
+          "halt_reason": "schedule-complete",
+          "terminated_at_point": 800
+        },
+        "split": {
+          "audited_by": "harness",
+          "audited_documents": 455,
+          "audited_split_digest": "sha-holdout-v2",
+          "audited_split_id": "held-out-v2",
+          "eval_split_digest": "sha-holdout-v2",
+          "eval_split_id": "held-out-v2",
+          "train_eval_overlap": 0
+        },
+        "weights": {
+          "ledger": {
+            "600": "sha256:7d57b2f6d489acc40d0543242409588933ffd7adda81b8d3fc312ec33cdd6426",
+            "700": "sha256:ca8339c2b10f22e50ac9f1e2f4a940d1640561cbcca2715db2e4c20b51509f79",
+            "800": "sha256:2e03d31a53085d36a258cd4944f38b9f0a9bcbe071d2c7e2d45a677285041341"
+          },
+          "owner": "harness",
+          "selected_by": "harness"
+        }
+      }
+    },
+    {
+      "checker": "early_stop_does_not_establish_loss",
+      "description": "the run halts on a favourable eval before the last scheduled point",
+      "expected_reason": "early-stop-loss-not-established",
+      "expected_reward": 0.0,
+      "id": "nc-early-stop",
+      "state": {
+        "claim": {
+          "curated_digest": "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9",
+          "curated_documents": 1959,
+          "exit_status": 0,
+          "match_count": 2137,
+          "pool_state": "curated",
+          "source_digest": "sha256:e6906c89673963d9bc1dfa408364782e482e9e8ab5cb3d8a9c5e765c0f1bdf4e",
+          "source_documents": 4096,
+          "stages": 4,
+          "status": "ok"
+        },
+        "curation": {
+          "completed_at_seq": 5,
+          "verdict": "applied"
+        },
+        "evaluation": {
+          "bound_point": 600,
+          "computed_on": "held-out-split",
+          "control_loss": 3.330662,
+          "graded_loss": 3.192807,
+          "last_scheduled_point": 800,
+          "points": [
+            {
+              "loss": 3.192807,
+              "point": 600,
+              "smoothed": false,
+              "weights_digest": "sha256:7d57b2f6d489acc40d0543242409588933ffd7adda81b8d3fc312ec33cdd6426"
+            },
+            {
+              "loss": 3.1197,
+              "point": 700,
+              "smoothed": false,
+              "weights_digest": "sha256:ca8339c2b10f22e50ac9f1e2f4a940d1640561cbcca2715db2e4c20b51509f79"
+            },
+            {
+              "loss": 3.059776,
+              "point": 800,
+              "smoothed": false,
+              "weights_digest": "sha256:2e03d31a53085d36a258cd4944f38b9f0a9bcbe071d2c7e2d45a677285041341"
+            }
+          ],
+          "readout_mode": "raw",
+          "reference_loss": 3.192807,
+          "source": "harness-recomputed",
+          "sustain_points": [
+            700,
+            800
+          ]
+        },
+        "feed": {
+          "budget_tokens": 3145728,
+          "first_feed_seq": 6,
+          "frozen_budget_tokens": 3145728,
+          "resolved_quality_field": "quality.bucket",
+          "resolved_register_schema": "curation/v4",
+          "stream_digest": "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9",
+          "tokens_fed": 3145728
+        },
+        "pool": {
+          "curated_digest": "sha256:fe709861d7cfc56ffec223e6f4ea81e1bba9265762adc4e5a311816324ee1ea9",
+          "curated_documents": 1959,
+          "observed_at_seq": 4,
+          "source_digest": "sha256:e6906c89673963d9bc1dfa408364782e482e9e8ab5cb3d8a9c5e765c0f1bdf4e",
+          "source_documents": 4096
+        },
+        "register": {
+          "observed_at_seq": 3,
+          "quality_field": "quality.bucket",
+          "schema": "curation/v4"
+        },
+        "run": {
+          "halt_reason": "early-stop-favourable-eval",
+          "terminated_at_point": 600
+        },
+        "split": {
+          "audited_by": "harness",
+          "audited_documents": 455,
+          "audited_split_digest": "sha-holdout-v2",
+          "audited_split_id": "held-out-v2",
+          "eval_split_digest": "sha-holdout-v2",
+          "eval_split_id": "held-out-v2",
+          "train_eval_overlap": 0
+        },
+        "weights": {
+          "ledger": {
+            "600": "sha256:7d57b2f6d489acc40d0543242409588933ffd7adda81b8d3fc312ec33cdd6426",
+            "700": "sha256:ca8339c2b10f22e50ac9f1e2f4a940d1640561cbcca2715db2e4c20b51509f79",
+            "800": "sha256:2e03d31a53085d36a258cd4944f38b9f0a9bcbe071d2c7e2d45a677285041341"
+          },
+          "owner": "harness",
+          "selected_by": "harness"
+        }
+      }
+    }
+  ],
+  "reference_binding": {
+    "binding_note": "adequacy.py recomputes this digest from the bytes on disk and asserts equality before it drives the accepting half. That is what makes the accepting half prove the checkers accept THIS reference rather than merely some file.",
+    "identity": "oer-09-reference-curation-verified-against-harness-observation",
+    "path": "solution/reference.py",
+    "sha256": "093c37b8571115d3e2210e96c5d90237b5cdea5807f1f4b894deb4534b4acc1e"
+  },
+  "source": "solution/grounding.yaml"
+}

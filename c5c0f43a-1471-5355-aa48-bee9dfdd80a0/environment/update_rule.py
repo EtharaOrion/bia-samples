@@ -1,46 +1,78 @@
 #!/usr/bin/env python3
-"""The one file the agent edits.
+"""The reference update rule the live checkers accept end to end. Held out.
 
-The rule shipped here is a plain momentum step. It works, it reaches the target,
-and it is BEHAVIOURALLY PRESENT IN THE PINNED CORPUS, so submitting it unchanged
-scores zero with the reason `behaviour-matches-corpus-entry`. It is here to be
-the working starting point the instruction promises, not the answer.
+Design, stated so a reader can check that it is not a corpus entry wearing a
+different name. Three things it does that no entry in `tests/corpus/entries.json`
+does, and all three move the DELTA pattern the probe records rather than the
+source text:
 
-Contract for this file, enforced by the frozen loop and by the verifier's probe:
+1. **Sign-agreement gating.** A coordinate whose momentum and current gradient
+   disagree in sign is damped rather than followed. No corpus entry conditions
+   its step on the agreement of two of its own quantities.
+2. **Median-magnitude normalization over the block.** The step is divided by the
+   median absolute gated magnitude across the block, not by an L2 norm, not by
+   an RMS and not per-coordinate by a second moment. A median is a rank
+   statistic, so it responds to the shape of the block rather than to its
+   energy, and that shows up in the recorded deltas as a different distribution
+   across coordinates at the same step.
+3. **A schedule-free trailing average.** Parameters are pulled toward an
+   internal anchor with a 1/(t+1) weight rather than being displaced directly,
+   so the recorded delta at step t is a fraction of the anchor's own movement
+   and shrinks with t at a rate no corpus entry reproduces.
 
-- `build_update_rule(shape, hyper)` returns an object with a `step` method.
-- `step(params, grads, state)` returns `(new_params, new_state)`.
-- The rule sees gradients from exactly one forward-backward pass per step. It
-  must not request another.
-- The rule may keep any internal state it likes across steps, and may schedule
-  its own hyperparameters however it likes.
-- The rule must be deterministic given `(params, grads, state)`. The verifier
-  drives it twice over identical probe inputs and requires an identical
-  behavioural signature; a rule that consults a clock, a random source or an
-  environment variable will not reproduce and scores
-  `probe-digest-nondeterministic`.
+Determinism: pure function of `(params, grads, state)`. No clock, no random
+source, no environment read, no import beyond the standard library, so
+`tests/probe.py` reproduces its transcript exactly on every pass.
 """
 
 from __future__ import annotations
 
 
-class MomentumRule:
-    """Heavy-ball momentum. Present in the corpus; replace its behaviour."""
+class SignGatedMedianAnchorRule:
+    """Sign-gated, median-normalized, schedule-free anchored update."""
 
     def __init__(self, shape, hyper) -> None:
         self.width = int(shape[0])
-        self.lr = float(hyper.get("lr", 0.05))
-        self.beta = float(hyper.get("beta", 0.9))
+        self.lr = float(hyper.get("lr", 0.06))
+        self.beta = float(hyper.get("beta", 0.7))
+        self.damp = float(hyper.get("damp", 0.25))
+        self.eps = float(hyper.get("eps", 1e-8))
 
     def step(self, params, grads, state):
-        buffer = state.get("buffer")
-        if buffer is None:
-            buffer = [0.0] * len(params)
-        buffer = [self.beta * b + g for b, g in zip(buffer, grads)]
-        params = [p - self.lr * b for p, b in zip(params, buffer)]
-        return params, {"buffer": buffer}
+        count = int(state.get("count", 0)) + 1
+        momentum = state.get("momentum")
+        if momentum is None:
+            momentum = [0.0] * len(params)
+        anchor = state.get("anchor")
+        if anchor is None:
+            anchor = list(params)
+
+        momentum = [
+            self.beta * m + (1.0 - self.beta) * g for m, g in zip(momentum, grads)
+        ]
+
+        # Sign-agreement gate. Disagreement is damped, never followed.
+        gated = [
+            m if m * g > 0.0 else self.damp * m for m, g in zip(momentum, grads)
+        ]
+
+        # Median absolute magnitude across the block. A rank statistic, so the
+        # reduction order is fixed by a sort over magnitudes and never by the
+        # order the block happened to be built in.
+        magnitudes = sorted(abs(value) for value in gated)
+        middle = magnitudes[len(magnitudes) // 2] if magnitudes else 0.0
+        scale = middle + self.eps
+
+        # The anchor moves; the parameters trail it. The schedule is internal
+        # and needs no step budget, which is what makes it schedule-free.
+        rate = self.lr * (1.0 + 1.0 / float(count))
+        anchor = [a - rate * (value / scale) for a, value in zip(anchor, gated)]
+        weight = 1.0 / float(count + 1)
+        params = [(1.0 - weight) * p + weight * a for p, a in zip(params, anchor)]
+
+        return params, {"momentum": momentum, "anchor": anchor, "count": count}
 
 
 def build_update_rule(shape, hyper):
-    """The one entry point the frozen loop and the verifier's probe both call."""
-    return MomentumRule(shape, hyper or {})
+    """The entry point the frozen loop and the verifier's probe both call."""
+    return SignGatedMedianAnchorRule(shape, hyper or {})

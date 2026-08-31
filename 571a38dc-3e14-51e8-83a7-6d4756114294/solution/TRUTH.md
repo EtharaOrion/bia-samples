@@ -1,9 +1,3 @@
-# FORGE-CANARY-BEGIN
-# 0: 6a619bc6d0c936fb3cb2ef4fbbdd2f465b64c6dd3e7dd68b707ad02c447b7ed8
-# 1: 392793b21ec4555a6151873f246179d0f0617fb6f37cde5269232b4d747c686e
-# 2: 155224ac8d8754445f8de86e3f6a3f56a94f58b238d80a028964c953229913cc
-# 3: 1b888dc20200409a760ea6d6437580e3a62f76aff40b61a2eb534bb351ee9780
-# FORGE-CANARY-END
 <!-- GENERATED SECTION. DO NOT HAND-EDIT. Source: solution/grounding.yaml -->
 
 # TRUTH: OER-11 -- Parser built against a corpus snapshot that moves during the session

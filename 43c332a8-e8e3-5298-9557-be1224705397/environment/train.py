@@ -197,6 +197,7 @@ def main() -> int:
     parser.add_argument("--data-dir", type=str, default=Config.data_dir)
     parser.add_argument("--out-dir", type=str, default=Config.out_dir)
     parser.add_argument("--manifest", type=str, default="")
+    parser.add_argument("--claim", type=str, default="/app/claim.json")
     parser.add_argument("--snapshot-dir", type=str, default="")
     parser.add_argument("--snapshot-steps", type=str, default="")
     args = parser.parse_args()
@@ -240,7 +241,17 @@ def main() -> int:
             print("step " + str(i) + " train_loss " + format(train_loss, ".4f"), flush=True)
 
     torch.save(model.state_dict(), os.path.join(cfg.out_dir, "final.pt"))
-    print("done " + str(cfg.steps) + " steps", flush=True)
+
+    # The claim this run supports. It is the step count the run actually completed,
+    # not an aspiration: the verifier's screen stage re-executes at claimed_step and
+    # a claim the re-execution does not reach is refused with screen-target-not-reached.
+    # See eval_protocol.md, "The claim the submission owns".
+    claim = {"claimed_step": cfg.steps, "target_validation_loss": TARGET_VAL_LOSS, "seed": cfg.seed}
+    if args.claim:
+        with open(args.claim, "w", encoding="utf-8") as handle:
+            json.dump(claim, handle, sort_keys=True)
+
+    print("done " + str(cfg.steps) + " steps, claimed_step " + str(claim["claimed_step"]), flush=True)
     return 0
 
 

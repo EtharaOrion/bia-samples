@@ -34,6 +34,24 @@ def load_corpus(path: Path) -> dict:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
+def budget_tokens(corpus: dict) -> int:
+    """The frozen token budget a graded run feeds, exactly.
+
+    `budget_tokens` is canonical and `total_tokens` is the same quantity under its
+    earlier name. Both are read and required to agree, so the alias cannot drift
+    into a second budget that this simulator and the graded harness disagree on.
+    """
+    budget = corpus["budget"]
+    value = budget["budget_tokens"]
+    legacy = budget.get("total_tokens", value)
+    if int(legacy) != int(value):
+        raise ValueError(
+            "corpus_spec.json carries two disagreeing budgets: budget_tokens="
+            + str(value) + " total_tokens=" + str(legacy)
+        )
+    return int(value)
+
+
 def keystream(seed: str):
     """A deterministic byte stream keyed by a document seed. No random module."""
     block = hashlib.sha256(seed.encode("utf-8")).digest()
@@ -105,7 +123,7 @@ def feed(corpus: dict, plan: dict) -> dict:
     """Execute a plan and return the feed ledger plus the trained count table."""
     width = corpus["vocab_size"]
     doc_len = corpus["doc_tokens"]
-    budget = corpus["budget"]["total_tokens"]
+    budget = budget_tokens(corpus)
     counts = [0.0] * width
     batches = []
     touched = {}
@@ -215,13 +233,19 @@ def main() -> int:
     value = loss(
         ledger["counts"], dev, float(readout["alpha"]), corpus["vocab_size"], ledger["tokens_fed"]
     )
+    heldout = readout["heldout"]
+    probe_docs = len(corpus["dev_probe"]["profiles"])
     print(
         json.dumps(
             {
                 "tokens_fed": ledger["tokens_fed"],
-                "budget": ledger["budget"],
+                "budget_tokens": ledger["budget"],
                 "dev_probe_loss": value,
-                "note": "dev_probe only. The graded loss is recomputed by the verifier on the frozen split.",
+                "dev_probe_docs": probe_docs,
+                "heldout_docs": heldout["docs"],
+                "heldout_fold_docs": heldout["fold_docs"],
+                "extrapolation_factor": heldout["docs"] / probe_docs,
+                "note": "dev_probe only. The graded loss is recomputed by the verifier on the frozen split, which holds heldout_docs documents split into the folds above. This probe is smaller by extrapolation_factor, and it is one sample rather than two folds, so it cannot show you a fold artifact.",
             },
             indent=2,
             sort_keys=True,

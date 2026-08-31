@@ -1,0 +1,35 @@
+{
+  "allocation": {
+    "blk00.attn.out": 3,
+    "blk00.attn.qkv": 4,
+    "blk00.mlp.down": 4,
+    "blk00.mlp.up": 4,
+    "blk01.attn.out": 3,
+    "blk01.attn.qkv": 5,
+    "blk01.mlp.down": 4,
+    "blk01.mlp.up": 4,
+    "blk02.attn.out": 4,
+    "blk02.attn.qkv": 4,
+    "blk02.mlp.down": 3,
+    "blk02.mlp.up": 5
+  },
+  "calibration_fit_witness": "a9423c6abebd3d9c269e80b51a514058f7ed31db6c27dfaeaac55303a06dffd5",
+  "derived_against_calibration_version": 2,
+  "observed_calibration_ledger": [
+    1,
+    2
+  ],
+  "protocol": {
+    "halted_early": false,
+    "points_completed": 4
+  },
+  "quantization_scheme": {
+    "group_size": 128,
+    "scale_bits": 16
+  },
+  "readout": {
+    "filter": "none",
+    "reported_degradation": null
+  },
+  "schema": "oer22.submission/v1"
+}

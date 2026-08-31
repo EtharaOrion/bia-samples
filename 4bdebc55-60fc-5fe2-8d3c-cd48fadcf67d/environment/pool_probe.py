@@ -50,6 +50,7 @@ def main() -> int:
         print("your report claims")
         print("  pool_state=" + str(claim.get("pool_state")))
         print("  curated_documents=" + str(claim.get("curated_documents")))
+        print("  curated_tokens=" + str(claim.get("curated_tokens")))
         print("  curated_digest=" + str(claim.get("curated_digest")))
         if claim.get("curated_digest") != curated:
             print("  MISMATCH: the digest you claim is not the digest the harness observed")

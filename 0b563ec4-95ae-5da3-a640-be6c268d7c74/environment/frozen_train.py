@@ -58,9 +58,63 @@ FROZEN_AXES = {
 }
 
 
+GRADED_SAMPLE_SOURCE = "verifier-recompute"
+SUBMISSION_SAMPLE_SOURCE = "submission-reported"
+
+
 def frozen_axes():
     """The frozen axes, so a submission can read them and never has to guess them."""
     return dict(FROZEN_AXES)
+
+
+def evaluation_sample(step, loss, source=GRADED_SAMPLE_SOURCE):
+    """One row of the run record's `samples` series.
+
+    The trainer evaluates the held-out split itself at every scheduled sustain point
+    and appends one of these per point. `source` is what separates the graded series
+    from the reported one: only `verifier-recompute` rows are graded, and whatever the
+    submission says about its own loss is carried as `submission-reported` and is never
+    read on the graded path.
+    """
+    return {"step": int(step), "loss": float(loss), "source": str(source)}
+
+
+def graded_samples(samples):
+    """The verifier-recomputed subset of a `samples` series, in step order."""
+    return sorted(
+        (row for row in samples if row.get("source") == GRADED_SAMPLE_SOURCE),
+        key=lambda row: int(row["step"]),
+    )
+
+
+def sustained(samples, tolerance=SUSTAIN_TOLERANCE):
+    """Whether the level established at the bound point held at every sustain point.
+
+    Returns the verdict and, when it is negative, the machine-readable reason the
+    score document will carry. Two distinct failures are kept apart deliberately:
+    a series MISSING a scheduled point is a run that stopped early and is graded as
+    not having established the loss, while a series that carries every point but
+    drifts above the bound loss by more than `tolerance` reached a level it did not
+    hold. Scoring the first as the second would score a dip.
+    """
+    graded = graded_samples(samples)
+    seen = {int(row["step"]): float(row["loss"]) for row in graded}
+    missing = [step for step in SUSTAIN_POINTS if step not in seen]
+    if missing:
+        return False, "early-stop-not-a-result"
+    bound = seen[BOUND_EVAL_STEP]
+    for step in SUSTAIN_POINTS:
+        if seen[step] > bound + float(tolerance):
+            return False, "level-not-sustained"
+    return True, ""
+
+
+def graded_loss(samples):
+    """The one graded number: the verifier's unsmoothed loss at the bound point."""
+    for row in graded_samples(samples):
+        if int(row["step"]) == BOUND_EVAL_STEP:
+            return float(row["loss"])
+    return None
 
 
 def token_cost(steps):
@@ -76,4 +130,27 @@ def steps_within_budget(tokens=TOKEN_BUDGET):
 if __name__ == "__main__":
     import json
 
-    print(json.dumps({"frozen_axes": frozen_axes(), "run_record": RUN_RECORD_PATH}, indent=2))
+    print(
+        json.dumps(
+            {
+                "frozen_axes": frozen_axes(),
+                "run_record": RUN_RECORD_PATH,
+                "run_record_evaluation": {
+                    "bound_eval_step": BOUND_EVAL_STEP,
+                    "sustain_points": list(SUSTAIN_POINTS),
+                    "sustain_tolerance": SUSTAIN_TOLERANCE,
+                    "samples": {
+                        "one_row_per": "scheduled sustain point",
+                        "fields": ["step", "loss", "source"],
+                        "graded_source": GRADED_SAMPLE_SOURCE,
+                        "ungraded_source": SUBMISSION_SAMPLE_SOURCE,
+                    },
+                    "submission_reported": {
+                        "graded": False,
+                        "note": "copied verbatim from whatever the submission reported, smoothing and all, and never read on the graded path",
+                    },
+                },
+            },
+            indent=2,
+        )
+    )

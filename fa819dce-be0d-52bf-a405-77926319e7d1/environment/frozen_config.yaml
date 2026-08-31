@@ -1,0 +1,92 @@
+# FROZEN. Every value in this file is an axis the submission may not move.
+# The curation filter chain applied to the source pool is the only free axis.
+
+schema: oer.frozen_config/v1
+slot: OER-09
+
+budget:
+  token_budget_tokens: 3145728
+  fed_once: true
+  overspend_is: token-budget-overspent
+
+model:
+  arch: decoder-only-transformer
+  layers: 6
+  d_model: 384
+  heads: 6
+  vocab: 8192
+  context: 512
+  init_seed: 20260820
+
+optimizer:
+  name: adamw
+  lr: 0.0006
+  betas: [0.9, 0.95]
+  weight_decay: 0.1
+  warmup_steps: 60
+  schedule: cosine
+  grad_clip: 1.0
+  one_forward_backward_per_step: true
+
+evaluation:
+  split_id: held-out-v2
+  split_digest: sha-holdout-v2
+  documents: 512
+  # The verifier schedules these points itself. The bound point is the graded one; the
+  # sustain points are re-tests the submission does not choose and cannot skip.
+  bound_point: 600
+  sustain_points: [700, 800]
+  last_scheduled_point: 800
+  readout_mode: raw
+  smoothing_on_graded_path: false
+  weights_owner: harness
+
+register:
+  # The register schema the harness observes at run time. environment/pool/REGISTER.md is
+  # documentation and documentation drifts; this and the register bytes are the authority.
+  schema: curation/v4
+  quality_field: quality.bucket
+
+# ---------------------------------------------------------------------------------------
+# The training substrate.
+#
+# WHAT THIS IS. The grading host carries no accelerator and no transformer is trained on it.
+# `tests/harness.py` computes the graded validation loss from the deterministic surrogate
+# parameterised here: loss falls as a power law in the EFFECTIVE tokens a run consumed, where
+# a token's effective contribution is the training utility of the document it came from, and
+# where repetition is admitted up to a tolerance and decays past it. That shape is the
+# data-constrained scaling regime, in which repeating high-quality data for a small number of
+# epochs is close to fresh data and the return collapses after that.
+#
+# WHAT THIS IS NOT. These are substrate parameters, not anchors. `baseline_metric` and
+# `target_metric` for family F12 remain ABSENT under gap-oer-per-family-anchors-unmeasured and
+# nothing here supplies either. The two ends of the reward ladder are the control loss and the
+# reference loss, and both are MEASURED inside each run by tests/harness.py rather than read
+# from this file. The surrogate itself is declared as
+# gap-oer-09-training-substrate-is-a-deterministic-surrogate.
+#
+# The submission may read every value here and may move none of them.
+substrate:
+  quality_field: quality.bucket
+  # Training utility per token, by the quality bucket the register carries. A junk token
+  # costs the same budget as a high token and teaches almost nothing, which is the entire
+  # reason a curation stage can pay for itself.
+  quality_utility:
+    high: 1.0
+    mid: 0.7
+    low: 0.25
+    junk: 0.05
+  unknown_quality_utility: 0.05
+  # The evaluation split is English. Tokens in another language spend budget on a
+  # distribution the graded split does not measure.
+  language_utility:
+    en: 1.0
+  other_language_utility: 0.15
+  # Exposure is counted per duplicate group, so a near-duplicate costs what a re-read costs.
+  repeat_tolerance: 4
+  repeat_decay: 0.5
+  # loss(effective) = loss_floor + loss_scale * effective ** -loss_exponent
+  loss_floor: 2.2
+  loss_scale: 1400.0
+  loss_exponent: 0.5
+  loss_decimals: 6
