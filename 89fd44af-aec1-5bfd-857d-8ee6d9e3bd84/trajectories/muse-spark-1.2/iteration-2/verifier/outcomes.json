@@ -7,5 +7,5 @@
  "one_fwd_bwd_per_step": true,
  "optimizer_not_verbatim_copy": true,
  "submission_binding_verified": true,
- "telemetry_chain_verified": true
+ "telemetry_chain_verified": false
 }
