@@ -386,8 +386,6 @@ binding_block:
   canonical_bundle_hash: 009200ced4275390b85cbdcfaf2f302da5a2937e52faf153bce6cdc205852788
   pinned_image_digest: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
   binding_envelope: DSSE, payloadType application/vnd.in-toto+json, DSSEv1 pre-authentication encoding
-  unit_uuid: d6370a21-150a-51d0-a85a-000678f70c22
-  derivation: uuid5(FORGE_TASK_NAMESPACE, canonical_content_hash)
 keyid: bia-provenance-2026-08b
 trust_root_public_key_hex: 87de350694dcbacc3829fa78591c13dc80cb0ab6323046cbbdac8b01e20e6fc9
 namespace:
@@ -400,7 +398,3 @@ namespace:
   resolvable_from_this_unit: The uuid relation above, recomputed from this unit's own bytes, and the identity of the normalization domain that hash was computed under, which normalization_domain_version names. Two units carrying the same domain version are hash-comparable and two carrying different versions are not.
 normalization_domain_version: oer-canary-v1
 signer_identity: bia-producer-provenance
-canonical_hash_method: forge.canonical_content_hash/v1
-predecessor: 571a38dc-3e14-51e8-83a7-6d4756114294
-predecessor_retained: true
-signature_state: absent. The detached signature covers solution/provenance.yaml and nothing else, and signed evidence does not carry across changed bytes, so the predecessor keeps its own signature and this node carries none. FORGE never signs.
