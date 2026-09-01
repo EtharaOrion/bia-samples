@@ -1,37 +1,44 @@
 {
  "agent_execution": {
-  "finished_at": "2026-08-20T10:39:36.759465Z",
-  "started_at": "2026-08-20T10:39:34.260132Z"
+  "finished_at": "2026-08-20T03:47:06.551722Z",
+  "started_at": "2026-08-19T19:56:13.968602Z"
  },
  "agent_info": {
-  "model_info": null,
-  "name": "oracle",
-  "version": "1.0.0"
+  "model_info": {
+   "name": "gpt-5.6-sol",
+   "provider": "openai"
+  },
+  "name": "codex",
+  "version": "0.148.0"
  },
  "agent_result": {
-  "cost_usd": null,
+  "cost_usd": 26.484609999999993,
   "metadata": null,
-  "n_cache_tokens": null,
-  "n_input_tokens": null,
-  "n_output_tokens": null,
+  "n_cache_tokens": 39836160,
+  "n_input_tokens": 40801694,
+  "n_output_tokens": 57962,
   "rollout_details": null
  },
  "agent_setup": {
-  "finished_at": "2026-08-20T10:39:34.260050Z",
-  "started_at": "2026-08-20T10:39:34.259984Z"
+  "finished_at": "2026-08-19T19:56:13.968441Z",
+  "started_at": "2026-08-19T19:55:21.970211Z"
  },
  "config": {
   "agent": {
    "concurrency_group": null,
+   "env": {
+    "OPENAI_API_KEY": "oaut****der",
+    "OPENAI_BASE_URL": "http://172.17.0.1:8788"
+   },
    "extra_allowed_hosts": [],
    "import_path": null,
    "kwargs": {},
    "load_trajectory": null,
    "max_timeout_sec": null,
    "mcp_servers": [],
-   "model_name": null,
+   "model_name": "gpt-5.6-sol",
    "n_concurrent": null,
-   "name": "oracle",
+   "name": "codex",
    "override_setup_timeout_sec": null,
    "override_timeout_sec": null,
    "resume_trajectory": false,
@@ -60,7 +67,7 @@
   "environment_build_timeout_multiplier": null,
   "extra_instruction_paths": [],
   "install_only": false,
-  "job_id": "7b18033c-2004-4eb9-aced-db8ce85d7b65",
+  "job_id": "46969f83-7c3b-43c2-8169-7ad5b7c6e086",
   "source_trial": null,
   "task": {
    "download_dir": null,
@@ -68,13 +75,13 @@
    "git_url": null,
    "name": null,
    "overwrite": false,
-   "path": "track3-pipeline/ship-task/campaign-task-retest",
+   "path": "track3-pipeline/ship-task/campaign-task",
    "ref": null,
    "source": null
   },
   "timeout_multiplier": 1.0,
-  "trial_name": "campaign-task-retest__gqn8mAf",
-  "trials_dir": "track3-pipeline/ship-task/runs-gpt/agentic-gpt_iter01-retest",
+  "trial_name": "campaign-task__mX6cPFX",
+  "trials_dir": "track3-pipeline/ship-task/runs-gpt/agentic-gpt_iter01",
   "verifier": {
    "disable": false,
    "max_timeout_sec": null,
@@ -83,25 +90,25 @@
   "verifier_timeout_multiplier": null
  },
  "environment_setup": {
-  "finished_at": "2026-08-20T10:39:34.259933Z",
-  "started_at": "2026-08-20T10:39:31.431059Z"
+  "finished_at": "2026-08-19T19:55:21.970157Z",
+  "started_at": "2026-08-19T19:55:19.145861Z"
  },
  "exception_info": null,
- "finished_at": "2026-08-20T10:39:50.123357Z",
- "id": "2e8c07a9-97fa-424d-8ea9-f1659add66a9",
+ "finished_at": "2026-08-20T03:48:55.925166Z",
+ "id": "c88c79d8-42b7-4c14-9fad-a2b3cc2c29ca",
  "source": null,
- "started_at": "2026-08-20T10:39:31.410236Z",
+ "started_at": "2026-08-19T19:55:19.124645Z",
  "step_results": null,
- "task_checksum": "861540843c7aeff4dfdf19ba4db51d67dbefeba5d8f02ebc7cb389e7fa4b11a7",
+ "task_checksum": "d541fb12d68c127078e2f850ae5832c9b75d11bc4242415f8ad2b208cc2048d9",
  "task_id": {
-  "path": "track3-pipeline/ship-task/campaign-task-retest"
+  "path": "track3-pipeline/ship-task/campaign-task"
  },
  "task_name": "bia/track3nov",
- "trial_name": "campaign-task-retest__gqn8mAf",
- "trial_uri": "track3-pipeline/ship-task/runs-gpt/agentic-gpt_iter01-retest/campaign-task-retest__gqn8mAf",
+ "trial_name": "campaign-task__mX6cPFX",
+ "trial_uri": "track3-pipeline/ship-task/runs-gpt/agentic-gpt_iter01/campaign-task__mX6cPFX",
  "verifier": {
-  "finished_at": "2026-08-20T10:39:38.997555Z",
-  "started_at": "2026-08-20T10:39:37.722680Z"
+  "finished_at": "2026-08-20T03:48:55.918212Z",
+  "started_at": "2026-08-20T03:48:07.137681Z"
  },
  "verifier_environment_mode": "shared",
  "verifier_result": {
@@ -109,6 +116,10 @@
    "composite": 0.416667,
    "graded_score": 0.4166666666666667,
    "graded_step": 3250,
+   "loss_at_graded_step": 3.276725,
+   "loss_per_seed_seed0": 3.27542,
+   "loss_per_seed_seed1": 3.27803,
+   "loss_steps": 3250,
    "pytests_executed": 0,
    "pytests_failed": 0,
    "pytests_passed": 0,
