@@ -11,7 +11,14 @@
   },
   "formula": "graded_score * (pytests_passed/executed) * (rubrics_passed/total)",
   "graded_score": 0.4166666666666667,
-  "loss": null,
+  "loss": {
+    "at_graded_step": 3.276725,
+    "per_seed": {
+      "seed0": 3.27542,
+      "seed1": 3.27803
+    },
+    "steps": 3250
+  },
   "metrics": {
     "n_seeds": 2
   },
