@@ -71,7 +71,7 @@ details>h4:first-of-type{margin-top:11px}
 <tr><td>window</td><td>2026-08-12T18:57:00.739916Z to 2026-08-12T20:34:05.544730Z</td></tr>
 <tr><td>graded score</td><td><b>0.000000</b></td></tr>
 <tr><td>graded_step</td><td>not reached; telemetry stops at step 375 on 1 of 2 seeds, so no step was graded. The trial closed while the graded run was still training, with no error recorded</td></tr>
-<tr><td>gate reason</td><td><code></code></td></tr>
+<tr><td>gate reason</td><td><code>telemetry_not_bound_to_submission_step_0</code> &middot; <span class='fail'>an integrity gate failed before a crossing could be graded</span></td></tr>
 <tr><td>2-seed mean at crossing</td><td>3.93013</td></tr>
 <tr><td>per seed</td><td>{&quot;seed0&quot;: 3.93013}</td></tr>
 <tr><td>significance bar</td><td>3.277172</td></tr>
@@ -425,7 +425,7 @@ def build_optimizer(params, lr=0.02, **kwargs):
 <tr><td>window</td><td>2026-08-14T05:50:50.672442Z to 2026-08-14T12:58:24.396910Z</td></tr>
 <tr><td>graded score</td><td><b>0.375000</b></td></tr>
 <tr><td>graded_step</td><td>3275</td></tr>
-<tr><td>gate reason</td><td><code></code></td></tr>
+<tr><td>gate reason</td><td><code>graded_step=3275</code> &middot; no gate fired</td></tr>
 <tr><td>2-seed mean at crossing</td><td>3.275735</td></tr>
 <tr><td>per seed</td><td>{&quot;seed0&quot;: 3.27479, &quot;seed1&quot;: 3.27668}</td></tr>
 <tr><td>significance bar</td><td>3.277172</td></tr>
@@ -685,7 +685,7 @@ def build_optimizer(params, lr=0.025, **kwargs):
 <tr><td>window</td><td>2026-08-14T12:58:37.380848Z to 2026-08-14T18:58:19.329349Z</td></tr>
 <tr><td>graded score</td><td><b>0.500000</b></td></tr>
 <tr><td>graded_step</td><td>3200</td></tr>
-<tr><td>gate reason</td><td><code></code></td></tr>
+<tr><td>gate reason</td><td><code>graded_step=3200</code> &middot; no gate fired</td></tr>
 <tr><td>2-seed mean at crossing</td><td>3.27679</td></tr>
 <tr><td>per seed</td><td>{&quot;seed0&quot;: 3.27644, &quot;seed1&quot;: 3.27714}</td></tr>
 <tr><td>significance bar</td><td>3.277172</td></tr>
@@ -1132,7 +1132,7 @@ def build_optimizer(params, lr=0.025, **kwargs):
 <tr><td>window</td><td>2026-08-14T22:46:07.608175Z to 2026-08-15T05:41:50.461581Z</td></tr>
 <tr><td>graded score</td><td><b>0.500000</b></td></tr>
 <tr><td>graded_step</td><td>3200</td></tr>
-<tr><td>gate reason</td><td><code></code></td></tr>
+<tr><td>gate reason</td><td><code>graded_step=3200</code> &middot; no gate fired</td></tr>
 <tr><td>2-seed mean at crossing</td><td>3.276675</td></tr>
 <tr><td>per seed</td><td>{&quot;seed0&quot;: 3.27626, &quot;seed1&quot;: 3.27709}</td></tr>
 <tr><td>significance bar</td><td>3.277172</td></tr>
@@ -1660,7 +1660,7 @@ def build_optimizer(params, lr=0.025, **kwargs):
 <tr><td>window</td><td>2026-08-15T05:42:47.638148Z to 2026-08-15T13:09:01.397079Z</td></tr>
 <tr><td>graded score</td><td><b>0.375000</b></td></tr>
 <tr><td>graded_step</td><td>3275</td></tr>
-<tr><td>gate reason</td><td><code></code></td></tr>
+<tr><td>gate reason</td><td><code>graded_step=3275</code> &middot; no gate fired</td></tr>
 <tr><td>2-seed mean at crossing</td><td>3.276195</td></tr>
 <tr><td>per seed</td><td>{&quot;seed0&quot;: 3.27562, &quot;seed1&quot;: 3.27677}</td></tr>
 <tr><td>significance bar</td><td>3.277172</td></tr>
@@ -2249,7 +2249,7 @@ def build_optimizer(params, lr=0.025, **kwargs):
 <tr><td>window</td><td>2026-08-19T19:56:16.764Z to 2026-08-20T03:47:06.108Z<br><span style="color:#6b5c42">taken from the trajectory step timestamps: this iteration&#x27;s <code>result.json</code> is a verifier re-grade record and its own window spans 19 s, not the agent run</span></td></tr>
 <tr><td>graded score</td><td><b>0.416667</b></td></tr>
 <tr><td>graded_step</td><td>3250</td></tr>
-<tr><td>gate reason</td><td><code></code></td></tr>
+<tr><td>gate reason</td><td><code>graded_step=3250</code> &middot; no gate fired</td></tr>
 <tr><td>2-seed mean at crossing</td><td>None</td></tr>
 <tr><td>per seed</td><td>not recorded</td></tr>
 <tr><td>significance bar</td><td>3.277172</td></tr>
@@ -2370,13 +2370,13 @@ def build_optimizer(params, lr=0.02, **kwargs):
 </pre></details>
 </details>
 
-<details><summary>iteration 2 &middot; score 0.3750 &middot; graded_step 3275 &middot; 123,838,786 tokens &middot; 27,204 s</summary>
+<details><summary>iteration 2 &middot; score 0.3750 &middot; graded_step 3275 &middot; 82,979,130 tokens &middot; 27,204 s</summary>
 <h4>Measured by the verifier</h4>
 <table class='kv'>
 <tr><td>window</td><td>2026-08-20T13:49:47.857554Z to 2026-08-20T21:23:11.574885Z</td></tr>
 <tr><td>graded score</td><td><b>0.375000</b></td></tr>
 <tr><td>graded_step</td><td>3275</td></tr>
-<tr><td>gate reason</td><td><code></code></td></tr>
+<tr><td>gate reason</td><td><code>graded_step=3275</code> &middot; no gate fired</td></tr>
 <tr><td>2-seed mean at crossing</td><td>3.275815</td></tr>
 <tr><td>per seed</td><td>{&quot;seed0&quot;: 3.27458, &quot;seed1&quot;: 3.27705}</td></tr>
 <tr><td>significance bar</td><td>3.277172</td></tr>
@@ -2630,13 +2630,13 @@ def build_optimizer(params, lr=0.02, **kwargs):
 </pre></details>
 </details>
 
-<details><summary>iteration 3 &middot; score 0.4583 &middot; graded_step 3225 &middot; 182,501,987 tokens &middot; 34,433 s</summary>
+<details><summary>iteration 3 &middot; score 0.4583 &middot; graded_step 3225 &middot; 58,663,201 tokens &middot; 34,433 s</summary>
 <h4>Measured by the verifier</h4>
 <table class='kv'>
 <tr><td>window</td><td>2026-08-21T06:57:00.395575Z to 2026-08-21T16:30:52.916106Z</td></tr>
 <tr><td>graded score</td><td><b>0.458333</b></td></tr>
 <tr><td>graded_step</td><td>3225</td></tr>
-<tr><td>gate reason</td><td><code></code></td></tr>
+<tr><td>gate reason</td><td><code>graded_step=3225</code> &middot; no gate fired</td></tr>
 <tr><td>2-seed mean at crossing</td><td>3.276765</td></tr>
 <tr><td>per seed</td><td>{&quot;seed0&quot;: 3.27577, &quot;seed1&quot;: 3.27776}</td></tr>
 <tr><td>significance bar</td><td>3.277172</td></tr>
@@ -2879,15 +2879,15 @@ def build_optimizer(params, lr=0.02, **kwargs):
 </pre></details>
 </details>
 
-<details><summary>iteration 4 &middot; score 0.4167 &middot; graded_step 3250 &middot; 226,884,907 tokens &middot; 28,898 s</summary>
+<details><summary>iteration 4 &middot; score 0.4167 &middot; graded_step 3250 &middot; 44,382,920 tokens &middot; 28,898 s</summary>
 <h4>Measured by the verifier</h4>
 <table class='kv'>
 <tr><td>window</td><td>2026-08-21T20:07:39.963163Z to 2026-08-22T04:09:17.648862Z</td></tr>
 <tr><td>graded score</td><td><b>0.416667</b></td></tr>
 <tr><td>graded_step</td><td>3250</td></tr>
-<tr><td>gate reason</td><td><code></code></td></tr>
-<tr><td>2-seed mean at crossing</td><td>3.26397</td></tr>
-<tr><td>per seed</td><td>{&quot;seed0&quot;: 3.26263, &quot;seed1&quot;: 3.26531}</td></tr>
+<tr><td>gate reason</td><td><code>graded_step=3250</code> &middot; no gate fired</td></tr>
+<tr><td>2-seed mean at crossing</td><td>3.27573</td></tr>
+<tr><td>per seed</td><td>{&quot;seed0&quot;: 3.2744, &quot;seed1&quot;: 3.27706}</td></tr>
 <tr><td>significance bar</td><td>3.277172</td></tr>
 <tr><td>tokens</td><td>input 44,309,105, output 73,815, cumulative 226,884,907</td></tr>
 <tr><td>cost</td><td>$26.88</td></tr>
@@ -3142,13 +3142,13 @@ def build_optimizer(params, lr=0.02, **kwargs):
 </pre></details>
 </details>
 
-<details><summary>iteration 5 &middot; score 0.4583 &middot; graded_step 3225 &middot; 288,522,838 tokens &middot; 32,078 s</summary>
+<details><summary>iteration 5 &middot; score 0.4583 &middot; graded_step 3225 &middot; 61,637,931 tokens &middot; 32,078 s</summary>
 <h4>Measured by the verifier</h4>
 <table class='kv'>
 <tr><td>window</td><td>2026-08-22T20:38:21.354710Z to 2026-08-23T05:32:59.521431Z</td></tr>
 <tr><td>graded score</td><td><b>0.458333</b></td></tr>
 <tr><td>graded_step</td><td>3225</td></tr>
-<tr><td>gate reason</td><td><code></code></td></tr>
+<tr><td>gate reason</td><td><code>graded_step=3225</code> &middot; no gate fired</td></tr>
 <tr><td>2-seed mean at crossing</td><td>3.27673</td></tr>
 <tr><td>per seed</td><td>{&quot;seed0&quot;: 3.27587, &quot;seed1&quot;: 3.27759}</td></tr>
 <tr><td>significance bar</td><td>3.277172</td></tr>
@@ -3456,7 +3456,7 @@ def build_optimizer(params, lr=0.02, **kwargs):
 <tr><td>window</td><td>2026-08-25T12:34:08.830534Z to 2026-08-25T15:57:22.189975Z</td></tr>
 <tr><td>graded score</td><td><b>0.250000</b></td></tr>
 <tr><td>graded_step</td><td>3350</td></tr>
-<tr><td>gate reason</td><td><code></code></td></tr>
+<tr><td>gate reason</td><td><code>graded_step=3350</code> &middot; no gate fired</td></tr>
 <tr><td>2-seed mean at crossing</td><td>3.276915</td></tr>
 <tr><td>per seed</td><td>{&quot;seed0&quot;: 3.27593, &quot;seed1&quot;: 3.2779}</td></tr>
 <tr><td>significance bar</td><td>3.277172</td></tr>
@@ -3622,13 +3622,13 @@ def build_optimizer(params, lr=0.02, **kwargs):
 </pre></details>
 </details>
 
-<details><summary>iteration 2 &middot; score 0.0833 &middot; graded_step 3450 &middot; 46,194,668 tokens &middot; 11,917 s</summary>
+<details><summary>iteration 2 &middot; score 0.0833 &middot; graded_step 3450 &middot; 25,213,022 tokens &middot; 11,917 s</summary>
 <h4>Measured by the verifier</h4>
 <table class='kv'>
 <tr><td>window</td><td>2026-08-25T17:50:43.923742Z to 2026-08-25T21:09:20.942371Z</td></tr>
 <tr><td>graded score</td><td><b>0.083333</b></td></tr>
 <tr><td>graded_step</td><td>3450</td></tr>
-<tr><td>gate reason</td><td><code></code></td></tr>
+<tr><td>gate reason</td><td><code>graded_step=3450</code> &middot; no gate fired</td></tr>
 <tr><td>2-seed mean at crossing</td><td>3.2768</td></tr>
 <tr><td>per seed</td><td>{&quot;seed0&quot;: 3.27614, &quot;seed1&quot;: 3.27746}</td></tr>
 <tr><td>significance bar</td><td>3.277172</td></tr>
@@ -3968,13 +3968,13 @@ def build_optimizer(params, lr=0.02, **kwargs):
 </pre></details>
 </details>
 
-<details><summary>iteration 3 &middot; score 0.2500 &middot; graded_step 3350 &middot; 54,408,388 tokens &middot; 10,678 s</summary>
+<details><summary>iteration 3 &middot; score 0.2500 &middot; graded_step 3350 &middot; 8,213,720 tokens &middot; 10,678 s</summary>
 <h4>Measured by the verifier</h4>
 <table class='kv'>
 <tr><td>window</td><td>2026-08-26T01:13:57.404625Z to 2026-08-26T04:11:55.354173Z</td></tr>
 <tr><td>graded score</td><td><b>0.250000</b></td></tr>
 <tr><td>graded_step</td><td>3350</td></tr>
-<tr><td>gate reason</td><td><code></code></td></tr>
+<tr><td>gate reason</td><td><code>graded_step=3350</code> &middot; no gate fired</td></tr>
 <tr><td>2-seed mean at crossing</td><td>3.27576</td></tr>
 <tr><td>per seed</td><td>{&quot;seed0&quot;: 3.27537, &quot;seed1&quot;: 3.27615}</td></tr>
 <tr><td>significance bar</td><td>3.277172</td></tr>
@@ -4323,13 +4323,13 @@ def build_optimizer(params, lr=0.02, **kwargs):
 </pre></details>
 </details>
 
-<details><summary>iteration 4 &middot; score 0.2917 &middot; graded_step 3325 &middot; 59,792,791 tokens &middot; 10,104 s</summary>
+<details><summary>iteration 4 &middot; score 0.2917 &middot; graded_step 3325 &middot; 5,384,403 tokens &middot; 10,104 s</summary>
 <h4>Measured by the verifier</h4>
 <table class='kv'>
 <tr><td>window</td><td>2026-08-26T07:24:12.428366Z to 2026-08-26T10:12:36.414248Z</td></tr>
 <tr><td>graded score</td><td><b>0.291667</b></td></tr>
 <tr><td>graded_step</td><td>3325</td></tr>
-<tr><td>gate reason</td><td><code></code></td></tr>
+<tr><td>gate reason</td><td><code>graded_step=3325</code> &middot; no gate fired</td></tr>
 <tr><td>2-seed mean at crossing</td><td>3.276505</td></tr>
 <tr><td>per seed</td><td>{&quot;seed0&quot;: 3.27558, &quot;seed1&quot;: 3.27743}</td></tr>
 <tr><td>significance bar</td><td>3.277172</td></tr>
@@ -4731,13 +4731,13 @@ def build_optimizer(params, lr=0.02, **kwargs):
 </pre></details>
 </details>
 
-<details><summary>iteration 5 &middot; score 0.2917 &middot; graded_step 3325 &middot; 67,485,494 tokens &middot; 22,227 s</summary>
+<details><summary>iteration 5 &middot; score 0.2917 &middot; graded_step 3325 &middot; 7,692,703 tokens &middot; 22,227 s</summary>
 <h4>Measured by the verifier</h4>
 <table class='kv'>
 <tr><td>window</td><td>2026-08-26T12:56:15.725953Z to 2026-08-26T19:06:43.042721Z</td></tr>
 <tr><td>graded score</td><td><b>0.291667</b></td></tr>
 <tr><td>graded_step</td><td>3325</td></tr>
-<tr><td>gate reason</td><td><code></code></td></tr>
+<tr><td>gate reason</td><td><code>graded_step=3325</code> &middot; no gate fired</td></tr>
 <tr><td>2-seed mean at crossing</td><td>3.276235</td></tr>
 <tr><td>per seed</td><td>{&quot;seed0&quot;: 3.27541, &quot;seed1&quot;: 3.27706}</td></tr>
 <tr><td>significance bar</td><td>3.277172</td></tr>
