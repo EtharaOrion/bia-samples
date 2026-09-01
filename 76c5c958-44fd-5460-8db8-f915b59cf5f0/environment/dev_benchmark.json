@@ -1,0 +1,108 @@
+{
+  "_generated": "GENERATED SECTION. DO NOT HAND-EDIT.",
+  "_source": "Source: solution/grounding.yaml. Regenerate with solution/recompute.py.",
+  "items": [
+    {
+      "label": "yes",
+      "stratum": "calc",
+      "text": "calc adds alpha"
+    },
+    {
+      "label": "yes",
+      "stratum": "calc",
+      "text": "calc sums beta"
+    },
+    {
+      "label": "yes",
+      "stratum": "calc",
+      "text": "calc totals alpha"
+    },
+    {
+      "label": "no",
+      "stratum": "calc",
+      "text": "calc voids beta"
+    },
+    {
+      "label": "yes",
+      "stratum": "cmp",
+      "text": "cmp exceeds alpha"
+    },
+    {
+      "label": "yes",
+      "stratum": "cmp",
+      "text": "cmp outranks beta"
+    },
+    {
+      "label": "yes",
+      "stratum": "cmp",
+      "text": "cmp tops alpha"
+    },
+    {
+      "label": "no",
+      "stratum": "cmp",
+      "text": "cmp trails beta"
+    },
+    {
+      "label": "yes",
+      "stratum": "fact",
+      "text": "fact holds alpha"
+    },
+    {
+      "label": "yes",
+      "stratum": "fact",
+      "text": "fact stands beta"
+    },
+    {
+      "label": "yes",
+      "stratum": "fact",
+      "text": "fact obtains alpha"
+    },
+    {
+      "label": "no",
+      "stratum": "fact",
+      "text": "fact fails beta"
+    },
+    {
+      "label": "yes",
+      "stratum": "neg",
+      "text": "neg denies alpha"
+    },
+    {
+      "label": "yes",
+      "stratum": "neg",
+      "text": "neg refutes beta"
+    },
+    {
+      "label": "yes",
+      "stratum": "neg",
+      "text": "neg rejects alpha"
+    },
+    {
+      "label": "no",
+      "stratum": "neg",
+      "text": "neg affirms beta"
+    },
+    {
+      "label": "yes",
+      "stratum": "seq",
+      "text": "seq follows alpha"
+    },
+    {
+      "label": "yes",
+      "stratum": "seq",
+      "text": "seq succeeds beta"
+    },
+    {
+      "label": "yes",
+      "stratum": "seq",
+      "text": "seq trails2 alpha"
+    },
+    {
+      "label": "no",
+      "stratum": "seq",
+      "text": "seq precedes beta"
+    }
+  ],
+  "note": "Agent-visible development split. It reveals the grammar and no held-out item; the held-out split uses a disjoint filler vocabulary.",
+  "split": "development"
+}

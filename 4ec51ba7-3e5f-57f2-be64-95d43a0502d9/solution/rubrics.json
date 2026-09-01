@@ -1,0 +1,37 @@
+{
+  "banner": "GENERATED SECTION. DO NOT HAND-EDIT.",
+  "criteria": [
+    {
+      "criterion": "The reference emits exactly the bound corpus size in strictly ascending emission order.",
+      "id": "corpus-size-exact"
+    },
+    {
+      "criterion": "Every emission segment of the reference corpus clears the published segment floor.",
+      "id": "segment-diversity"
+    },
+    {
+      "criterion": "The reference corpus mode share sits at or below the published ceiling.",
+      "id": "mode-share"
+    },
+    {
+      "criterion": "No reference sample is a near-duplicate of a held-out benchmark item at the bound threshold.",
+      "id": "benchmark-clean"
+    },
+    {
+      "criterion": "The reference run feeds exactly the bound update and sample counts.",
+      "id": "budget-as-fed"
+    },
+    {
+      "criterion": "The reference run's graded readout is the raw verifier evaluation at the bound point.",
+      "id": "readout-raw"
+    },
+    {
+      "criterion": "The reference run report's declared statistics match the verifier's recomputation.",
+      "id": "self-report-honest"
+    }
+  ],
+  "graded_against": "solution/reference.py",
+  "reference_sha256": "e1bc4867770f7271dc80e93541b297ac873269586fb195c32ff15f184d8be364",
+  "slot": "OER-19",
+  "source": "solution/grounding.yaml"
+}

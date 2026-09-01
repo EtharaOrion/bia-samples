@@ -1,0 +1,84 @@
+{
+  "corpus": {
+    "benchmark_near_duplicate_hits": [],
+    "corpus_distinct_ngram_ratio": 0.0,
+    "emission_sequence": [],
+    "labels_seen": [],
+    "max_mode_share": 0.0,
+    "mode_share_threshold": 0.6,
+    "near_duplicate_threshold": 0.55,
+    "normalization": "oer19-lower-alnum-collapse/v1",
+    "prefix_checkpoints": [],
+    "prefix_mode_share": [],
+    "samples": 0,
+    "segment_count": 0,
+    "segment_distinct_ngram_ratio": []
+  },
+  "evaluation": {
+    "benchmark_items": 120,
+    "bound_point": 1440,
+    "graded_accuracy": 0.25,
+    "graded_correct": 30,
+    "graded_model_state_digest": "b03be35d6c97a2f1e2ad96140409882fdd8cfe6b4a43559d8486fecb27e5460e",
+    "graded_point": 1440,
+    "graded_total": 120,
+    "model_state_digest": {
+      "1200": "b03be35d6c97a2f1e2ad96140409882fdd8cfe6b4a43559d8486fecb27e5460e",
+      "1440": "b03be35d6c97a2f1e2ad96140409882fdd8cfe6b4a43559d8486fecb27e5460e",
+      "960": "b03be35d6c97a2f1e2ad96140409882fdd8cfe6b4a43559d8486fecb27e5460e"
+    },
+    "points": [
+      {
+        "accuracy": 0.25,
+        "correct": 30,
+        "total": 120,
+        "update": 960
+      },
+      {
+        "accuracy": 0.25,
+        "correct": 30,
+        "total": 120,
+        "update": 1200
+      },
+      {
+        "accuracy": 0.25,
+        "correct": 30,
+        "total": 120,
+        "update": 1440
+      }
+    ],
+    "readout": {
+      "ema_alpha": null,
+      "kind": "raw",
+      "window": 1
+    },
+    "scheduled_points": [
+      960,
+      1200,
+      1440
+    ],
+    "sustain_tolerance": 0.08,
+    "weights_source": "harness-trainer"
+  },
+  "generator": {
+    "exit_status": 0,
+    "exit_status_is_not_evidence": true,
+    "sha256": "e1bc4867770f7271dc80e93541b297ac873269586fb195c32ff15f184d8be364"
+  },
+  "produced_by": "tests/runner.py",
+  "schema": "forge.oer19.telemetry/v1",
+  "self_report": {
+    "present": false
+  },
+  "training": {
+    "bound_corpus_samples": 480,
+    "bound_epochs": 3,
+    "bound_samples_fed": 1440,
+    "bound_updates": 1440,
+    "counter_source": "harness-trainer",
+    "epochs_completed": 0,
+    "samples_fed": 0,
+    "terminated_early": false,
+    "updates": 0
+  }
+}
