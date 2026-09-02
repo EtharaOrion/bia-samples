@@ -1,8 +1,0 @@
-{
-  "schema": "oer12.split/v1",
-  "note": "The frozen evaluation split. Hand-authored task substrate; not generated. The split id in force during a run is read from the harness, never from this file alone, because the split partition can be rotated during a session.",
-  "split_id": "split-v2",
-  "eval_record_ordinals": ["r13", "r14"],
-  "eval_record_ids": ["d013", "d014"],
-  "rule": "No record in the evaluation split may reach the training feed under any parse outcome, including any ambiguity policy. A partial record that would be admitted by policy is still excluded if it is an evaluation-split record."
-}

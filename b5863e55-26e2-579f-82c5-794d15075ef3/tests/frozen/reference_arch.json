@@ -1,5 +1,0 @@
-{
-  "note": "Shipped reference allocation. It is the paired arm every graded run trains beside the submission, and it is also the suboptimal starter the objective asks you to beat. It spends the frozen budget the way a recalled scaling-law aspect ratio spends it: d_model over n_layer equal to 128, full multi-head attention, head_dim 64, and whatever feed-forward width is left after that.",
-  "full": {"n_layer": 4, "d_model": 512, "head_dim": 64, "n_head": 8, "n_kv_head": 8, "d_ff": 1224},
-  "smoke": {"n_layer": 2, "d_model": 64, "head_dim": 32, "n_head": 2, "n_kv_head": 2, "d_ff": 480}
-}

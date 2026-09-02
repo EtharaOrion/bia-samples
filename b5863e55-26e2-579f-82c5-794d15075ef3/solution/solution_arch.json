@@ -1,5 +1,0 @@
-{
-  "note": "Private reference allocation. It spends the same frozen parameter budget on more depth and on grouped-query attention instead of on the recalled aspect ratio, and it pays for both by narrowing the feed-forward block.",
-  "full": {"n_layer": 10, "d_model": 384, "head_dim": 64, "n_head": 6, "n_kv_head": 2, "d_ff": 680},
-  "smoke": {"n_layer": 3, "d_model": 64, "head_dim": 32, "n_head": 2, "n_kv_head": 1, "d_ff": 312}
-}
