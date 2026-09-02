@@ -1,0 +1,11 @@
+{
+  "_generated": "GENERATED SECTION. DO NOT HAND-EDIT.",
+  "_source": "solution/grounding.yaml",
+  "mode": "constant",
+  "schema": "oer08.plan/v1",
+  "weights": {
+    "reference-a": 0.3134166666666667,
+    "technical": 0.29925,
+    "web-crawl": 0.3873333333333333
+  }
+}

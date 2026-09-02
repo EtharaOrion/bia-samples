@@ -1,0 +1,11 @@
+{
+  "_generated": "GENERATED SECTION. DO NOT HAND-EDIT.",
+  "_source": "solution/grounding.yaml",
+  "budget_tokens": 12000,
+  "budget_unit": "tokens",
+  "doc_tokens": 100,
+  "graded_by": "frozen_token_budget_is_the_graded_budget",
+  "read_back_from": "/logs/harness/feed.json budget and tokens_fed, written by tests/runner.py inside the verifier's own process from the corpus it fed.",
+  "schema": "oer08.budget/v1",
+  "why_it_is_load_bearing": "Before this row the graded path only ever compared tokens_fed against whatever budget the pool bytes happened to declare, so the value was self-referential and the environment was not load-bearing for it. tests/budget_spec.json is generated here from substrate.budget_tokens and is verifier-side, so the gate now depends on the number itself: a feed ledger graded against any other budget scores zero, and the bound evaluation point is budget exhaustion measured against the frozen figure rather than against a drifting one."
+}

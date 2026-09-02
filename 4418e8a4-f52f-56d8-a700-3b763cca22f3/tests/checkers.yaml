@@ -1,0 +1,243 @@
+schema: forge.checkers/v1
+reduction_kinds: [VALUE, EFFECT, ABSENCE, INVARIANT, ORDERING, DIVERGENCE]
+
+# The live verifier binds the reward carrier to reward.txt, carrying the bare
+# float. The machine-readable reason and the metric block live beside it in the
+# score document, and tests/emit_reward.py writes both from the same EXIT trap
+# so the instrument's binding and the reason carrier can never disagree.
+reward_path: /logs/verifier/reward.txt
+score_document_path: /logs/verifier/score.json
+session_telemetry_path: /logs/verifier/session.jsonl
+
+live_state_rule: >-
+  Every checker reads one telemetry document that the verifier's own process
+  wrote from tests/lab.py while driving the submission out of process. No
+  checker reads a number the submission printed, a planted answer file, an
+  environment secret, a clock, a random source or the network. Every bound value
+  a checker compares against arrives in that document's header, so no threshold
+  is authored inside a checker.
+
+purity_rule: >-
+  tests/checkers.py imports json, math, pathlib, dataclasses and typing only,
+  which is inside the AST allowlist. It never imports the submission, and
+  tests/grade.py never imports it either: tests/runner.py copies the submission
+  alone into a fresh temporary directory, launches it as a new session leader
+  under a small environment allowlist, and kills the whole process group in a
+  finally block.
+
+aggregation:
+  mode: required_pass
+  rationale: >-
+    grade.py runs every declared checker as a gate. A failed required gate makes
+    the reward exactly 0.0 carrying that gate's machine-readable reason, which is
+    what required_pass names. The magnitude when every gate holds is not produced
+    by the aggregation: it is the bound lower-is-better formula over the
+    multi-seed mean, clipped to the closed interval and tapered continuously
+    below the separation margin, so the reward is continuous rather than binary
+    even though the gate chain is all-or-nothing.
+
+reward_model:
+  formula_lower_is_better: raw = (baseline_metric - agent_metric) / (baseline_metric - target_metric)
+  clip: score = min(max(raw, 0.0), 1.0)
+  separation_margin: 0.05
+  sub_margin_taper: score = score * (score / 0.05) when score < 0.05
+  taper_continuity: at score == 0.05 the taper factor is exactly 1, so the two branches agree and the reward has no cliff at the margin
+  anchors_state: absent
+  anchors_gap: gap-oer-per-family-anchors-unmeasured
+  baseline_metric: null
+  target_metric: null
+  operating_point_controls: >-
+    baseline_metric and target_metric are absent for this family and are not
+    invented here. The formula is evaluated against two operating-point controls
+    the verifier measures from the frozen surrogate surface on every run, which
+    are carried in the telemetry header as baseline_control_mean and
+    target_control_mean. They are in-run measurements of a synthetic surface and
+    never this family's published anchors.
+
+readout_obligation:
+  crossing_recomputed_by_verifier: true
+  crossing_source: tests/lab.py sustained_crossing, evaluated by the verifier's own process
+  smoothing_on_graded_path: forbidden, graded by graded_readout_unsmoothed
+  sustained_points: 3, scheduled by the verifier and never by the submission
+  early_stop_is_not_a_crossing: graded by early_stop_is_not_a_crossing, scored zero with a reason rather than reported absent
+  weights_provenance: graded by graded_weights_are_run_weights
+
+checkers:
+  - id: attempt_sequence_contiguous
+    statement: "The recorded attempt indices ascend contiguously from zero across the whole session, so the graded sequence is the sequence the session actually ran."
+    reduction: ORDERING
+    reached_by: tests/grade.py
+    selector: check_attempt_sequence_contiguous
+    zero_reason: attempt-sequence-out-of-order
+    required: true
+    weight: 1
+    live_state_read: "the ordered attempt records in /logs/verifier/session.jsonl, written by tests/runner.py as it drove the submission"
+    compiled_test: "tests/test_output.py::test_attempt_sequence_contiguous"
+    drift_keys_read: []
+    adequacy_substitution: planted-telemetry-fixture
+    adequacy_substitution_reason: >-
+      No submission can fire this checker, because tests/runner.py assigns the
+      attempt index itself and the submission never writes one. The isolation
+      boundary holds, so the rejecting half is carried on a planted telemetry
+      fixture in tests/fixtures/ and the substitution is recorded here and in
+      seed/tasks/OER-06/feasibility.yaml rather than papered over.
+
+  - id: session_holds_attempt_budget
+    statement: "The session recorded an attempt for every slot of the bound attempt terminator instead of stopping short of it."
+    reduction: ORDERING
+    reached_by: tests/grade.py
+    selector: check_session_holds_attempt_budget
+    zero_reason: session-budget-not-held
+    required: true
+    weight: 1
+    live_state_read: "the attempt record count against header.terminator in /logs/verifier/session.jsonl"
+    compiled_test: "tests/test_output.py::test_session_holds_attempt_budget"
+    drift_keys_read: [terminator]
+
+  - id: carried_state_monotone
+    statement: "The session state carried across attempts is exactly the accumulation of the per-attempt applied deltas, with no coordinate reset, skipped or moved by anything but the attempt that moved it."
+    reduction: INVARIANT
+    reached_by: tests/grade.py
+    selector: check_carried_state_monotone
+    zero_reason: carried-state-not-accumulated
+    required: true
+    weight: 1
+    live_state_read: "state_before, state_after and applied_delta_units on every attempt record in /logs/verifier/session.jsonl"
+    compiled_test: "tests/test_output.py::test_carried_state_monotone"
+    drift_keys_read: []
+    adequacy_substitution: planted-telemetry-fixture
+    adequacy_substitution_reason: >-
+      No submission can fire this checker, because the harness owns the carried
+      state and accumulates it itself; a submission only proposes a delta. The
+      isolation boundary holds, so the rejecting half is carried on a planted
+      telemetry fixture and the substitution is recorded here and in
+      seed/tasks/OER-06/feasibility.yaml.
+
+  - id: reallocation_follows_flattening
+    statement: "Once a direction reached its plateau, the session moved a different direction within the bound probe allowance, so the graded outcome depends on the session noticing that a direction stopped paying rather than on any one configuration."
+    reduction: ORDERING
+    reached_by: tests/grade.py
+    selector: check_reallocation_follows_flattening
+    zero_reason: flattened-direction-never-abandoned
+    required: true
+    weight: 1
+    live_state_read: "flattening_onset_attempt, post_flattening_attempts_on_flattened_axis and first_reallocation_attempt in the session footer of /logs/verifier/session.jsonl"
+    compiled_test: "tests/test_output.py::test_reallocation_follows_flattening"
+    drift_keys_read: [flattening_onset_attempt]
+
+  - id: graded_weights_are_run_weights
+    statement: "The weights evaluated at the graded step are the weights the run produced at that step, not a checkpoint the submission selected."
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: check_graded_weights_are_run_weights
+    zero_reason: checkpoint-substituted
+    required: true
+    weight: 1
+    live_state_read: "weights_digest against run_weights_digest on the graded attempt record in /logs/verifier/session.jsonl, both computed by tests/lab.py inside the verifier's process"
+    compiled_test: "tests/test_output.py::test_graded_weights_are_run_weights"
+    drift_keys_read: [weights_digest]
+
+  - id: graded_readout_unsmoothed
+    statement: "The graded readout is the verifier's raw evaluation at the graded step, with no filter, blend or average applied anywhere on the graded path."
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: check_graded_readout_unsmoothed
+    zero_reason: readout-smoothing-on-graded-path
+    required: true
+    weight: 1
+    live_state_read: "readout_filter on every attempt record and graded_loss_at_crossing on the graded record in /logs/verifier/session.jsonl"
+    compiled_test: "tests/test_output.py::test_graded_readout_unsmoothed"
+    drift_keys_read: [readout_filter]
+
+  - id: early_stop_is_not_a_crossing
+    statement: "No crossing is credited from a run halted inside the verifier's sustain window; a halt there is graded as not having crossed, with a reason, rather than reported as an absent result."
+    reduction: ABSENCE
+    reached_by: tests/grade.py
+    selector: check_early_stop_is_not_a_crossing
+    zero_reason: early-stop-not-a-crossing
+    required: true
+    weight: 1
+    live_state_read: "halted_at against graded_crossing_step, header.eval_every and header.sustain_points in /logs/verifier/session.jsonl"
+    compiled_test: "tests/test_output.py::test_early_stop_is_not_a_crossing"
+    drift_keys_read: [sustain_points]
+
+  - id: crossing_sustained
+    statement: "The graded crossing holds below the target at the graded step and at every one of the bound further evaluation points the verifier itself schedules, so a single favourable evaluation cannot be harvested."
+    reduction: INVARIANT
+    reached_by: tests/grade.py
+    selector: check_crossing_sustained
+    zero_reason: crossing-not-sustained
+    required: true
+    weight: 1
+    live_state_read: "graded_crossing_step, graded_crossing_sustained, claimed_crossing_step and claimed_step_sustained on the graded attempt record in /logs/verifier/session.jsonl"
+    compiled_test: "tests/test_output.py::test_crossing_sustained"
+    drift_keys_read: [graded_crossing_sustained]
+
+  - id: target_band_reached_by_session
+    statement: "The session's best multi-seed mean improves on the verifier's in-run zero-progress control, so the session had a measurable effect on the graded quantity."
+    reduction: EFFECT
+    reached_by: tests/grade.py
+    selector: check_target_band_reached_by_session
+    zero_reason: no-measured-improvement
+    required: true
+    weight: 1
+    live_state_read: "footer.best_mean_steps against header.baseline_control_mean in /logs/verifier/session.jsonl"
+    compiled_test: "tests/test_output.py::test_target_band_reached_by_session"
+    drift_keys_read: []
+
+  - id: multi_seed_separation_established
+    statement: "Every seed on the bound ladder separates from its own control and no single seed carries the mean, so the multi-seed mean is a property of the session and not an artifact of one draw."
+    reduction: DIVERGENCE
+    reached_by: tests/grade.py
+    selector: check_multi_seed_separation_established
+    zero_reason: separation-not-established
+    required: true
+    weight: 1
+    live_state_read: "footer.best_per_seed_steps against header.baseline_control_per_seed and header.target_control_per_seed, inside header.seed_artifact_band, in /logs/verifier/session.jsonl"
+    compiled_test: "tests/test_output.py::test_multi_seed_separation_established"
+    drift_keys_read: [seed_ladder]
+
+  - id: reference_operating_point_matches_final_state
+    statement: "The reference-operating-point control the reward formula divides by is the operating point the reference session's own final carried state produces on the verifier's surface, and the session's recorded final state is the state its last attempt closed on, so the graded scale is a state a session actually holds and never a number authored beside it."
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: check_reference_operating_point_matches_final_state
+    zero_reason: reference-operating-point-unheld
+    required: true
+    weight: 1
+    live_state_read: "header.reference_final_state_control_mean and header.reference_final_state_control_per_seed against header.target_control_mean and header.target_control_per_seed, and footer.final_state against the last attempt's state_after, in /logs/verifier/session.jsonl; every one of them measured by tests/lab.py inside the verifier's process at grading time"
+    compiled_test: "tests/test_output.py::test_reference_operating_point_matches_final_state"
+    drift_keys_read: [reference_final_state, target_control_mean]
+    adequacy_substitution: planted-telemetry-fixture
+    adequacy_substitution_reason: >-
+      No submission can fire this checker, because both operating points are
+      measured by the verifier from tests/lab.py and the submission never writes
+      either. The isolation boundary holds, so the rejecting half is carried on a
+      planted telemetry fixture whose header names a different final state, and
+      the substitution is recorded here rather than papered over.
+    grades_discovery_value: >-
+      reference_policy.expected_final_state in solution/grounding.yaml, which
+      tests/lab.py carries as REFERENCE_FINAL_STATE and solution/recompute.py
+      asserts equal to the grounding value on every run. A wrong value moves
+      reference_final_state_control_mean off target_control_mean and this gate
+      scores the session zero, so the graded path depends on it.
+
+stale_controls:
+  - id: ctl-verdict-from-pre-flattening-surface
+    binds: reallocation_follows_flattening
+    statement: "A verdict computed from the surface as it stood before the direction went flat still credits movement along that direction, so a session that keeps feeding it reads as improving."
+  - id: ctl-session-planned-against-forty-eight-attempt-terminator
+    binds: session_holds_attempt_budget
+    statement: "A session planned against the pre-mutation terminator answers forty-eight turns and stops, leaving the last attempts unspent while its own plan reads complete."
+  - id: ctl-crossing-scored-under-three-point-window
+    binds: crossing_sustained
+    statement: "A crossing scored under the pre-mutation sustain window credits a dip that the current window rejects."
+  - id: ctl-readout-blended-by-ema
+    binds: graded_readout_unsmoothed
+    statement: "A readout blended by an exponential moving average carries the noise dip past the target and reports a crossing the raw evaluation never made."
+  - id: ctl-weights-from-submission-selected-checkpoint
+    binds: graded_weights_are_run_weights
+    statement: "Weights taken from a submission-selected checkpoint score a step the run never held."
+  - id: ctl-reference-control-measured-at-a-state-no-session-holds
+    binds: reference_operating_point_matches_final_state
+    statement: "A reference-operating-point control measured at coordinates the reference session never ends on divides the reward by a bar nothing reached, so every session is scored against a scale its own carried state cannot be read back from."

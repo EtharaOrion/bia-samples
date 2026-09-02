@@ -1,0 +1,39 @@
+{
+  "banner": "GENERATED SECTION. DO NOT HAND-EDIT.",
+  "criteria": [
+    {
+      "criterion": "The reference session's best multi-seed mean equals the verifier's in-run reference-operating-point control, so the clipped formula returns exactly 1.0.",
+      "id": "reference-reaches-the-target-operating-point"
+    },
+    {
+      "criterion": "The reference answers all fifty turns and the telemetry records fifty attempts against a terminator of fifty.",
+      "id": "reference-holds-the-whole-attempt-budget"
+    },
+    {
+      "criterion": "The reference leaves the flattened direction at attempt 11, one attempt after the plateau is reached at attempt 9, spending exactly one confirming probe.",
+      "id": "reference-reallocates-after-the-flat"
+    },
+    {
+      "criterion": "The reference requests no blended readout, no halt, no checkpoint and no claimed crossing, so every readout-integrity checker passes on its accepting half.",
+      "id": "reference-requests-no-readout-directive"
+    },
+    {
+      "criterion": "Every seed on the bound ladder separates from its own control with a spread of zero, well inside the bound artifact band.",
+      "id": "reference-separates-on-every-seed"
+    },
+    {
+      "criterion": "The reference session ends carrying expected_final_state, and the reference-operating-point control the reward divides by is the operating point tests/lab.py measures at exactly that state, so the graded scale is read back from live state rather than authored beside it.",
+      "id": "reference-final-state-is-the-graded-operating-point"
+    },
+    {
+      "criterion": "The sha256 of solution/reference.py recorded in the golden trajectory equals the digest the telemetry header carries, so the accepting half proves the checkers accept this reference and not merely some file.",
+      "id": "reference-is-the-bytes-the-checkers-accepted"
+    }
+  ],
+  "expected_reason": "graded-crossing-sustained-across-held-budget",
+  "expected_reward": 1.0,
+  "judged": "the solution against its reference answer",
+  "not_this_file": "tests/rubrics.jsonl judges the trajectory and is never generated from here",
+  "reference_sha256": "b4ece0398a451a6333e0e39d3b3875349119ebcd8aeb608df520d29e625b66b9",
+  "source": "solution/grounding.yaml"
+}

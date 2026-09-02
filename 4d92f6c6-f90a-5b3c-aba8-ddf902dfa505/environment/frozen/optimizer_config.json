@@ -1,0 +1,8 @@
+{
+  "schema": "oer16.optimizer/v1",
+  "kind": "add-lambda-count-mle",
+  "lambda": 0.25,
+  "update_unit": "one token consumed from the frozen training stream",
+  "frozen": true,
+  "note": "The optimizer is frozen. One update is one token consumed. The verifier counts updates on its own counter; a number the submission reports about its own spend is never consulted."
+}

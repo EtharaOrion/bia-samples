@@ -1,0 +1,40 @@
+{"id": "dev-music-0-0", "label": "music", "text": "drop a jazz number for evening"}
+{"id": "dev-music-0-1", "label": "music", "text": "drop a ambient number for the archive"}
+{"id": "dev-music-0-2", "label": "music", "text": "drop a classical number for monday"}
+{"id": "dev-music-0-3", "label": "music", "text": "drop a folk number for the kitchen"}
+{"id": "dev-music-0-4", "label": "music", "text": "drop a bossa nova number for the loft"}
+{"id": "dev-music-1-0", "label": "music", "text": "i fancy jazz sounds around evening"}
+{"id": "dev-music-1-1", "label": "music", "text": "i fancy ambient sounds around the archive"}
+{"id": "dev-music-1-2", "label": "music", "text": "i fancy classical sounds around monday"}
+{"id": "dev-music-1-3", "label": "music", "text": "i fancy folk sounds around the kitchen"}
+{"id": "dev-music-1-4", "label": "music", "text": "i fancy bossa nova sounds around the loft"}
+{"id": "dev-timer-0-0", "label": "timer", "text": "nudge me after ten minutes while i bake bread"}
+{"id": "dev-timer-0-1", "label": "timer", "text": "nudge me after an hour while i stretch"}
+{"id": "dev-timer-0-2", "label": "timer", "text": "nudge me after two hours while i review notes"}
+{"id": "dev-timer-0-3", "label": "timer", "text": "nudge me after forty seconds while i water plants"}
+{"id": "dev-timer-0-4", "label": "timer", "text": "nudge me after ninety seconds while i fold laundry"}
+{"id": "dev-timer-1-0", "label": "timer", "text": "run ten minutes down so i can bake bread"}
+{"id": "dev-timer-1-1", "label": "timer", "text": "run an hour down so i can stretch"}
+{"id": "dev-timer-1-2", "label": "timer", "text": "run two hours down so i can review notes"}
+{"id": "dev-timer-1-3", "label": "timer", "text": "run forty seconds down so i can water plants"}
+{"id": "dev-timer-1-4", "label": "timer", "text": "run ninety seconds down so i can fold laundry"}
+{"id": "dev-translate-0-0", "label": "translate", "text": "say good morning the portuguese way"}
+{"id": "dev-translate-0-1", "label": "translate", "text": "say the menu the hungarian way"}
+{"id": "dev-translate-0-2", "label": "translate", "text": "say this letter the swahili way"}
+{"id": "dev-translate-0-3", "label": "translate", "text": "say the address the korean way"}
+{"id": "dev-translate-0-4", "label": "translate", "text": "say the receipt the danish way"}
+{"id": "dev-translate-1-0", "label": "translate", "text": "swap good morning over into portuguese"}
+{"id": "dev-translate-1-1", "label": "translate", "text": "swap the menu over into hungarian"}
+{"id": "dev-translate-1-2", "label": "translate", "text": "swap this letter over into swahili"}
+{"id": "dev-translate-1-3", "label": "translate", "text": "swap the address over into korean"}
+{"id": "dev-translate-1-4", "label": "translate", "text": "swap the receipt over into danish"}
+{"id": "dev-weather-0-0", "label": "weather", "text": "what sky is due over lisbon tomorrow"}
+{"id": "dev-weather-0-1", "label": "weather", "text": "what sky is due over the coast this weekend"}
+{"id": "dev-weather-0-2", "label": "weather", "text": "what sky is due over narvik tonight"}
+{"id": "dev-weather-0-3", "label": "weather", "text": "what sky is due over kyoto on friday"}
+{"id": "dev-weather-0-4", "label": "weather", "text": "what sky is due over oslo next week"}
+{"id": "dev-weather-1-0", "label": "weather", "text": "pack a coat for lisbon tomorrow"}
+{"id": "dev-weather-1-1", "label": "weather", "text": "pack a coat for the coast this weekend"}
+{"id": "dev-weather-1-2", "label": "weather", "text": "pack a coat for narvik tonight"}
+{"id": "dev-weather-1-3", "label": "weather", "text": "pack a coat for kyoto on friday"}
+{"id": "dev-weather-1-4", "label": "weather", "text": "pack a coat for oslo next week"}

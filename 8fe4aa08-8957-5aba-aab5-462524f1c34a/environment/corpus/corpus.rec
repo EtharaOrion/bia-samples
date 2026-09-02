@@ -1,0 +1,90 @@
+# raw corpus snapshot, record format v1
+# Lines beginning with '#' are comments and are never part of a record.
+# Blank lines are ignored. A record is terminated by a bare '@end' directive.
+# This file is hand-authored task substrate. It is not generated.
+
+@id d001
+@lang en
+@title Tidal flats of the estuary
+@body The estuary drains twice a day.
++body Waders follow the retreating water.
+@end
+
+@id d002
+@lang en
+@url https://example.invalid/kiln
+@title Kiln firing schedule
+@body Bisque at low temperature first.
+@end
+
+@id d003
+@lang fr
+@title Le pont de pierre
+@body Le pont traverse la riviere.
++body Il fut construit en 1782.
+@end
+
+@id d004
+@lang en
+@body A note that never received a heading.
+@end
+
+@id d005
+@lang en
+@title Heading with nothing under it
+@end
+
+@id d006
+@lang en
+title: Malformed directive line
+@body Something follows the malformed line.
+@end
+
+@lang en
+@title Orphan record with no identifier
+@body No identifier appears anywhere in this record.
+@end
+
+@id d008
+@id d008b
+@lang en
+@title Two identifiers in one record
+@body Which of the two is canonical is not stated.
+@end
+
+@id d009
+@lang en
+@title Interrupted transcription
+@body The first half of the sentence survived
++body
+@end
+
+@id d010
+@lang en
+@title Salt marsh survey
+@body Counts were taken at dawn and again at dusk.
+@end
+
+@id d011
+@title Untagged language
+@body The language field never arrived with this record.
+@end
+
+@id d012
+@lang en
+@title Unknown key present
+@author Nobody in particular
+@body Text follows the unknown key.
+@end
+
+@id d013
+@lang en
+@title Held-out reading one
+@body This document belongs to the frozen evaluation split.
+@end
+
+@id d014
+@lang en
+@title Held-out reading two
+@body This document also belongs to the frozen evaluation split.
+@end

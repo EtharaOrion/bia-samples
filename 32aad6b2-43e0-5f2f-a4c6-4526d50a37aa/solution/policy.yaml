@@ -1,0 +1,98 @@
+# Capability intent manifest for slot OER-19, family F14.
+#
+# Emitted from the policy block of the SIGNED seed/contract.yaml, at
+# families.entries.F14.scope.policy, which binds these TEN channels by name. Phase 1
+# item 2d includes this file in the canonical content hash, so the policy can never
+# drift from the bytes it governs. Every channel value and every rationale line below is
+# READ from that block rather than restated here, and seed/staging/oer1/check_policy_parity.py
+# asserts the agreement and exits non-zero on any divergence.
+#
+# This file STATES INTENT AND NOTHING MORE. It carries no detector rule, no threshold,
+# no fixture, no canary material, no watched location and no audit outcome. Whether a
+# control was actually enforced is the operator attestation's claim alone, and this
+# file never makes it.
+#
+# Every channel appears exactly once, each holding exactly one of denied, restricted or
+# allowed. A channel absent, duplicated, or holding any other value is BLOCK:INVALID_TASK
+# and is never read as a permissive default.
+
+schema: forge.policy/v1
+slot: OER-19
+provisional_identifier: OER-19
+family: F14
+channel_vocabulary_authority: seed/contract.yaml families.entries.F14.scope.policy, bound at the Phase 0.5 gate
+graded_quantity: held-out benchmark score
+
+channels:
+  network_egress_solver: restricted
+  network_egress_verifier: denied
+  filesystem_write_outside_workdir: denied
+  filesystem_read_solution_tree: denied
+  filesystem_read_tests_tree: denied
+  subprocess_spawn: restricted
+  accelerator: restricted
+  clock_read: restricted
+  random_source: restricted
+  environment_variable_read: restricted
+
+rationale:
+  network_egress_solver: >-
+    Restricted, and deliberately neither denied nor allowed.
+    requirements/open-ended-research-optimisation-problems.md line 58 grants the solving model
+    full internet access, while line 122 of the same file answers that internet is needed only
+    for setup. requirements/bia-environment-spec.md line 247 rules that until the client
+    resolves that self-contradiction the STRICTER reading governs, which gives setup-only
+    egress: provisioning may reach the network, the scored run may not. Denied would break
+    provisioning and grade a task nobody can set up, and allowed would ignore the ruling.
+    Carried as gap-oer-solver-egress-ruled-stricter.
+  network_egress_verifier: >-
+    Denied. The verifier recomputes the graded quantity itself, so any egress on the verifying
+    side would let the measurement the reward rests on be influenced from outside the frozen
+    bytes.
+  filesystem_write_outside_workdir: >-
+    Denied. The agent writes its submission and its own scratch and nothing else. The
+    agent-visible lower layer is read-only and the verifier's log tree is not the agent's to
+    write.
+  filesystem_read_solution_tree: >-
+    Denied. solution/ carries the private oracle, the derivation source and the reference
+    answer, so it is never on the surface Harbor assembles for a non-oracle agent.
+  filesystem_read_tests_tree: >-
+    Denied. tests/ carries the held-out checkers, and an agent that can read the checkers
+    optimises the checkers rather than the objective.
+  subprocess_spawn: >-
+    Restricted. Solving this task means running experiments, so the agent spawns processes
+    freely inside its own tree, while the GRADED child is launched by tests/runner.py alone, as
+    a new session leader under a small environment allowlist, with its whole process group
+    killed in a finally block.
+  accelerator: >-
+    Restricted, and specifically not denied. The bound compute envelope is one H100, a single
+    accelerator with no multi-GPU scaling, transcribed from
+    requirements/bia-environment-spec.md. The graded run requires that accelerator, so denied
+    would contradict the compute envelope every slot in this batch binds, and allowed would
+    claim more than requirements/ grants.
+  clock_read: >-
+    Restricted. No checker reads a clock and the recomputation path is forbidden a clock, a
+    locale and a random source, so the derivation is reproducible. The agent may time its own
+    experiments, because no graded quantity moves with the clock.
+  random_source: >-
+    Restricted. Every source of randomness is seeded from the bound per-seed value and the seed
+    travels with the measurement, so a result is attributable to a seed rather than to luck, and
+    the recomputation path reads no random source at all.
+  environment_variable_read: >-
+    Restricted. The agent reads its own environment. The graded child sees a small allowlist
+    that names no bound value, no threshold and nothing about the grading tree.
+
+egress_asymmetry:
+  bound_value: setup-only
+  authority: requirements/bia-environment-spec.md line 247, which rules the stricter reading in force
+  provisioning: '[environment] network_mode = "public" so the image builds and dependencies resolve'
+  scored_run: '[agent] network_mode = "none", which narrows the graded run rather than blanket-denying the task'
+  verifier: egress denied, always
+  gap: gap-oer-solver-egress-ruled-stricter
+
+not_a: >-
+  This manifest establishes no enforcement. It declares intent per channel and nothing else: it
+  carries no detector rule, no threshold, no fixture, no canary material, no watched location
+  and no audit outcome. No line in it is evidence that a control exists, ran, or held, and a
+  reader must never read it as one. Whether a control was enforced is the operator attestation's
+  claim alone.

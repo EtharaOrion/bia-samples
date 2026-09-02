@@ -1,0 +1,40 @@
+{
+  "banner": "GENERATED SECTION. DO NOT HAND-EDIT.",
+  "criteria": [
+    {
+      "criterion": "solution/reference.py exposes build_update_rule(shape, hyper) returning an object with step(params, grads, state).",
+      "id": "entry-point-shape",
+      "weight": 1
+    },
+    {
+      "criterion": "The reference step is a pure function of its arguments: no clock, no random source, no environment read, no network.",
+      "id": "purity",
+      "weight": 2
+    },
+    {
+      "criterion": "The reference's probe signature clears every pinned corpus entry by more than the bound behavioural margin, on the probe set the admin plane names.",
+      "id": "behavioural-novelty",
+      "weight": 3
+    },
+    {
+      "criterion": "Two probe passes over the reference produce identical transcripts and identical digests.",
+      "id": "probe-reproducibility",
+      "weight": 2
+    },
+    {
+      "criterion": "The reference changes only the update rule, its schedule, its state initialization and its hyperparameters, and touches no frozen axis.",
+      "id": "frozen-axes-untouched",
+      "weight": 2
+    },
+    {
+      "criterion": "Driven through the real gate chain on the clean fixture, the reference reaches exactly 1.0.",
+      "id": "full-reward-on-the-clean-fixture",
+      "weight": 3
+    }
+  ],
+  "distinct_from": "tests/rubrics.jsonl, which judges the trajectory. Neither substitutes for the other.",
+  "judges": "the solution against its reference answer",
+  "slot": "OER-05",
+  "source": "Source: solution/grounding.yaml. Regenerate with: python3 solution/recompute.py",
+  "total_weight": 13
+}

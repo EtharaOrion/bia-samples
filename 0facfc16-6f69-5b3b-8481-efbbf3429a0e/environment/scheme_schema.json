@@ -1,0 +1,64 @@
+{
+  "_banner": "GENERATED SECTION. DO NOT HAND-EDIT. Source: solution/grounding.yaml, derived by solution/recompute.py.",
+  "artifact": "scheme.json, written into the directory named by OUT_DIR",
+  "bit_accounting": {
+    "accounted_by": "the harness, over the tensors as actually quantized",
+    "overhead_bits": "sum over groups of parameters * scale_bits",
+    "parameters_per_group": {
+      "affine": 2,
+      "kmeans": "2 ** bits",
+      "symmetric": 1
+    },
+    "payload_bits": "sum over groups of size * bits",
+    "total_must_satisfy": "payload_bits + overhead_bits <= bit_budget_total"
+  },
+  "free_axes": [
+    "the bit width of every group, independently",
+    "the number of scale groups inside a tensor, and where their boundaries fall",
+    "the codebook family of every group",
+    "the clip percentile of every group"
+  ],
+  "frozen_axes": [
+    "the model weights",
+    "the total bit budget",
+    "the evaluation corpus",
+    "the unquantized reference readings"
+  ],
+  "schema": "forge.oer21.scheme_schema/v1",
+  "shape": {
+    "graded_readout_filter": "must be none; any other value is graded zero",
+    "halt_after": "must be null; an integer requests an early stop and is graded zero",
+    "scheme_version": 1,
+    "tensors": [
+      {
+        "groups": [
+          {
+            "bits": [
+              2,
+              3,
+              4,
+              5,
+              6,
+              8
+            ],
+            "clip": [
+              1.0,
+              0.999,
+              0.99,
+              0.95,
+              0.9
+            ],
+            "codebook": [
+              "symmetric",
+              "affine",
+              "kmeans"
+            ],
+            "size": "int, group sizes within one tensor must sum to tensor_size"
+          }
+        ],
+        "name": "t00"
+      }
+    ]
+  },
+  "statement": "The FULL quantization scheme space this task admits. Every axis below is free."
+}

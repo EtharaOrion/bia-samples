@@ -1,0 +1,105 @@
+{
+  "_generated": "GENERATED SECTION. DO NOT HAND-EDIT. Source: solution/grounding.yaml",
+  "ambiguity_policy": null,
+  "records": [
+    {
+      "id": "d001",
+      "ordinal": "r01",
+      "policy_applied": null,
+      "reason": "record-complete",
+      "verdict": "parse-valid"
+    },
+    {
+      "id": "d002",
+      "ordinal": "r02",
+      "policy_applied": null,
+      "reason": "record-complete",
+      "verdict": "parse-valid"
+    },
+    {
+      "id": "d003",
+      "ordinal": "r03",
+      "policy_applied": null,
+      "reason": "record-complete",
+      "verdict": "parse-valid"
+    },
+    {
+      "id": "d004",
+      "ordinal": "r04",
+      "policy_applied": "partial-quarantined",
+      "reason": "required-field-absent",
+      "verdict": "parse-partial"
+    },
+    {
+      "id": "d005",
+      "ordinal": "r05",
+      "policy_applied": "partial-quarantined",
+      "reason": "required-field-absent",
+      "verdict": "parse-partial"
+    },
+    {
+      "id": "d006",
+      "ordinal": "r06",
+      "policy_applied": null,
+      "reason": "directive-malformed",
+      "verdict": "parse-failed"
+    },
+    {
+      "id": "",
+      "ordinal": "r07",
+      "policy_applied": null,
+      "reason": "record-id-absent",
+      "verdict": "parse-failed"
+    },
+    {
+      "id": "d008",
+      "ordinal": "r08",
+      "policy_applied": null,
+      "reason": "record-id-duplicated",
+      "verdict": "parse-failed"
+    },
+    {
+      "id": "d009",
+      "ordinal": "r09",
+      "policy_applied": "partial-quarantined",
+      "reason": "continuation-dangling",
+      "verdict": "parse-partial"
+    },
+    {
+      "id": "d010",
+      "ordinal": "r10",
+      "policy_applied": null,
+      "reason": "record-complete",
+      "verdict": "parse-valid"
+    },
+    {
+      "id": "d011",
+      "ordinal": "r11",
+      "policy_applied": "partial-quarantined",
+      "reason": "required-field-absent",
+      "verdict": "parse-partial"
+    },
+    {
+      "id": "d012",
+      "ordinal": "r12",
+      "policy_applied": null,
+      "reason": "field-key-unknown",
+      "verdict": "parse-failed"
+    },
+    {
+      "id": "d013",
+      "ordinal": "r13",
+      "policy_applied": null,
+      "reason": "record-complete",
+      "verdict": "parse-valid"
+    },
+    {
+      "id": "d014",
+      "ordinal": "r14",
+      "policy_applied": null,
+      "reason": "record-complete",
+      "verdict": "parse-valid"
+    }
+  ],
+  "writer": "submission"
+}

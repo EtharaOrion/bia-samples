@@ -1,0 +1,114 @@
+# Harbor delivery manifest, slot OER-08, family F12 data curation.
+#
+# schema_version is a TOP-LEVEL scalar pinned to the tested version and stays
+# above the first table header: TOML scopes every key to the most recent header,
+# so an assignment written after [task] becomes task.schema_version and the
+# top-level scalar goes absent while the file still reads correct to a human.
+schema_version = "1.4"
+
+artifacts = [
+  "/app/submission.py",
+  "/logs/agent/trajectory.jsonl",
+  "/logs/verifier/reward.txt",
+  "/logs/verifier/score.json",
+]
+
+[task]
+name = "bia/oer-08-mixture-search-breadth"
+version = "1.0.0"
+description = "Allocate a fixed token budget across sources so that the estimator trained on the resulting mixture reaches a lower validation loss on the frozen held-out split, where the handed mixture family is one option rather than the option set."
+authors = ["Bia"]
+keywords = ["optimization", "bounded-continuous", "data-curation"]
+
+[metadata]
+tags = ["optimization", "bounded-continuous"]
+category = "optimization"
+slot = "OER-08"
+provisional_identifier = "OER-08"
+identity_note = "This slot is staged under its slot id. No canonical_content_hash, no uuid5, no final uuid directory name, no canary token, no provenance carrier and no signature file is authored by this lane. Wave 2 does identity for every slot at once."
+title = "Data mixture search breadth under a fixed token budget"
+family = "F12"
+family_title = "data curation"
+archetype = "AR5"
+archetype_title = "Adversarial Option Expansion"
+archetype_load_bearing_category = "open-ended-search-breadth"
+
+[metadata.objective]
+metric = "validation loss of the trained estimator on the frozen held-out split"
+direction = "lower"
+frozen = ["the token budget", "the model", "the optimizer", "the evaluation split"]
+free = ["the data mixture, meaning the allocation of the fixed token budget across sources"]
+graded_quantity = "the verifier's own unsmoothed recomputation of validation loss from the harness-owned count table at budget exhaustion, on the frozen held-out split"
+
+[metadata.tier]
+target_tier = "Frontier-defeat"
+tier_exemption_granted = "none"
+anchorable_tier = "capped below Hard"
+anchorable_tier_basis = "This task family is text and code only, so the Perception axis carries no category. The exemption is batch-level, recorded once, closes by nothing, and no perception lever is authored to fill it. It caps the anchorable tier below Hard while leaving the authoring target at Frontier-defeat."
+
+[metadata.reward]
+carrier = "/logs/verifier/reward.txt"
+carrier_form = "one bare float"
+score_document = "/logs/verifier/score.json"
+interval = [0.0, 1.0]
+higher_is_better = true
+binary = false
+full_reward = 1.0
+formula = "raw = (baseline_metric - agent_metric) / (baseline_metric - target_metric)"
+clip = "score = min(max(raw, 0.0), 1.0)"
+target_is_a_bar = "reaching the target scores exactly 1.0 and beating it also scores 1.0"
+
+[metadata.anchors]
+state = "absent"
+basis = "This family's anchors are unmeasured and its scope is unresolved, so the reward schema above is bound in full and no number is invented for either anchor."
+
+# CANONICAL PATH for every bound optimization field in this batch:
+# metadata.optimization.<field>. One table, one deterministic lookup. Nothing
+# optimization-bound lives anywhere else in this manifest.
+#
+# max_timeout_hours bounds the refinement loop ACROSS attempts; budget_hours
+# bounds ONE attempt, being six hours over fifty attempts, 0.12 hours or 7.2
+# minutes. They are never aliases of each other.
+[metadata.optimization]
+max_timeout_hours = 6.0
+max_timeout_role = "refinement-loop terminator across attempts"
+budget_hours = 0.12
+budget_hours_minutes = 7.2
+budget_hours_role = "per-attempt completion bound"
+budget_hours_state = "provisional"
+max_attempts = 50
+final_selection = "best"
+budget_envelope = "one H100, single accelerator, no multi-GPU scaling"
+budget_margin = "10 percent"
+compute_envelope_accelerators = 1
+
+[metadata.build]
+dockerfile = "environment/Dockerfile"
+pin_form = "digest"
+pin_rule = "Harbor accepts any string and does not itself require a digest, so the digest requirement is this contract's and this bundle enforces it. A tag without a digest is a lane failure."
+
+[environment]
+docker_image = "pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407"
+gpus = 1
+gpu_types = ["H100"]
+# Provisioning egress. Denying it here would leave the task unable to install.
+network_mode = "public"
+
+[agent]
+solver_egress = "setup-only"
+solver_egress_deny = ["github.com", "raw.githubusercontent.com", "objects.githubusercontent.com"]
+deny_list_is_not_containment = "Mirrors, caches, paraphrased write-ups and released artifacts all carry a recipe past any deny-list. The deterministic checker, not the network policy, is the load-bearing control."
+network_mode = "none"
+
+[verifier]
+egress = "denied"
+network_mode = "none"
+entry_point = "tests/test.sh"
+never_imports_submission = true
+asymmetry = "The solving agent gets open egress inside the sandbox; the verifier keeps the bound network policy. The asymmetry is deliberate and is a bound byte here rather than an accident."
+
+[solution]
+entry_point = "solution/solve.sh"
+policy = "solution/policy.yaml"
+grounding = "solution/grounding.yaml"
+recompute = "solution/recompute.py"
