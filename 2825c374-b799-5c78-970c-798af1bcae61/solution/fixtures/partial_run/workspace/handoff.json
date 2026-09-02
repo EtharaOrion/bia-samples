@@ -1,0 +1,38 @@
+{
+  "carried_state": {
+    "accumulator": 1584938122,
+    "history": [
+      1992590,
+      1997551,
+      1822140,
+      1623045,
+      1928090,
+      1548747,
+      1306536,
+      1937665,
+      1148006,
+      1255399,
+      1624980,
+      1287741,
+      1248050,
+      1894211,
+      1282880,
+      1810233,
+      1076286,
+      1260703,
+      1858860,
+      1249013,
+      1332810,
+      1375675,
+      1626584,
+      1418673
+    ]
+  },
+  "carried_state_sha256": "dcba165d0dbcaaca71d595cc422798dec85e8d553e846c45b71d90d218b6abcd",
+  "journal_chain": "b966670d0f13274a7b5257c93eb6ed3e388d0c603b164fd57bf8de4eb869fe44",
+  "kernel_sha256": "3cf124aacbe57464a6ea55f8b0072020af775c21b7d0b0d64f0a89c7a184faec",
+  "reported_resume_charge": 28986,
+  "schema": "oer28.handoff/v1",
+  "splice_block_index": 20,
+  "splice_offset": 10078
+}

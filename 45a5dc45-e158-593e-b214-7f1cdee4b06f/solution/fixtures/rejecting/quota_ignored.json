@@ -1,0 +1,596 @@
+{
+  "admitted": 23,
+  "admitted_kinds": [
+    "delta-beta",
+    "frame-alpha",
+    "meta-beta",
+    "proof-delta"
+  ],
+  "crossings_observed": 96,
+  "refusals": {
+    "kind-not-admitted": 52,
+    "malformed-crossing": 10,
+    "quota-exhausted": 0,
+    "unattested-origin": 11
+  },
+  "refused": 73,
+  "schema": "oer26.submission/v1",
+  "verdicts": [
+    {
+      "decision": "admit",
+      "kind": "delta-beta",
+      "reason": "",
+      "seq": 1
+    },
+    {
+      "decision": "refuse",
+      "kind": "frame-gamma",
+      "reason": "malformed-crossing",
+      "seq": 2
+    },
+    {
+      "decision": "refuse",
+      "kind": "shard-alpha",
+      "reason": "kind-not-admitted",
+      "seq": 3
+    },
+    {
+      "decision": "refuse",
+      "kind": "frame-gamma",
+      "reason": "kind-not-admitted",
+      "seq": 4
+    },
+    {
+      "decision": "admit",
+      "kind": "frame-alpha",
+      "reason": "",
+      "seq": 5
+    },
+    {
+      "decision": "refuse",
+      "kind": "frame-gamma",
+      "reason": "kind-not-admitted",
+      "seq": 6
+    },
+    {
+      "decision": "refuse",
+      "kind": "shard-beta",
+      "reason": "kind-not-admitted",
+      "seq": 7
+    },
+    {
+      "decision": "admit",
+      "kind": "proof-delta",
+      "reason": "",
+      "seq": 8
+    },
+    {
+      "decision": "admit",
+      "kind": "frame-alpha",
+      "reason": "",
+      "seq": 9
+    },
+    {
+      "decision": "refuse",
+      "kind": "meta-gamma",
+      "reason": "kind-not-admitted",
+      "seq": 10
+    },
+    {
+      "decision": "refuse",
+      "kind": "meta-gamma",
+      "reason": "kind-not-admitted",
+      "seq": 11
+    },
+    {
+      "decision": "refuse",
+      "kind": "frame-delta",
+      "reason": "kind-not-admitted",
+      "seq": 12
+    },
+    {
+      "decision": "refuse",
+      "kind": "delta-delta",
+      "reason": "kind-not-admitted",
+      "seq": 13
+    },
+    {
+      "decision": "refuse",
+      "kind": "proof-gamma",
+      "reason": "kind-not-admitted",
+      "seq": 14
+    },
+    {
+      "decision": "admit",
+      "kind": "proof-delta",
+      "reason": "",
+      "seq": 15
+    },
+    {
+      "decision": "refuse",
+      "kind": "delta-delta",
+      "reason": "unattested-origin",
+      "seq": 16
+    },
+    {
+      "decision": "refuse",
+      "kind": "frame-gamma",
+      "reason": "kind-not-admitted",
+      "seq": 17
+    },
+    {
+      "decision": "refuse",
+      "kind": "shard-alpha",
+      "reason": "kind-not-admitted",
+      "seq": 18
+    },
+    {
+      "decision": "admit",
+      "kind": "proof-delta",
+      "reason": "",
+      "seq": 19
+    },
+    {
+      "decision": "refuse",
+      "kind": "delta-delta",
+      "reason": "kind-not-admitted",
+      "seq": 20
+    },
+    {
+      "decision": "refuse",
+      "kind": "delta-delta",
+      "reason": "unattested-origin",
+      "seq": 21
+    },
+    {
+      "decision": "admit",
+      "kind": "frame-alpha",
+      "reason": "",
+      "seq": 22
+    },
+    {
+      "decision": "refuse",
+      "kind": "proof-gamma",
+      "reason": "unattested-origin",
+      "seq": 23
+    },
+    {
+      "decision": "refuse",
+      "kind": "frame-delta",
+      "reason": "kind-not-admitted",
+      "seq": 24
+    },
+    {
+      "decision": "refuse",
+      "kind": "delta-beta",
+      "reason": "malformed-crossing",
+      "seq": 25
+    },
+    {
+      "decision": "refuse",
+      "kind": "blob-alpha",
+      "reason": "kind-not-admitted",
+      "seq": 26
+    },
+    {
+      "decision": "refuse",
+      "kind": "meta-gamma",
+      "reason": "kind-not-admitted",
+      "seq": 27
+    },
+    {
+      "decision": "admit",
+      "kind": "meta-beta",
+      "reason": "",
+      "seq": 28
+    },
+    {
+      "decision": "refuse",
+      "kind": "shard-alpha",
+      "reason": "kind-not-admitted",
+      "seq": 29
+    },
+    {
+      "decision": "refuse",
+      "kind": "meta-gamma",
+      "reason": "kind-not-admitted",
+      "seq": 30
+    },
+    {
+      "decision": "refuse",
+      "kind": "shard-beta",
+      "reason": "kind-not-admitted",
+      "seq": 31
+    },
+    {
+      "decision": "refuse",
+      "kind": "frame-delta",
+      "reason": "kind-not-admitted",
+      "seq": 32
+    },
+    {
+      "decision": "refuse",
+      "kind": null,
+      "reason": "malformed-crossing",
+      "seq": 33
+    },
+    {
+      "decision": "refuse",
+      "kind": "shard-beta",
+      "reason": "kind-not-admitted",
+      "seq": 34
+    },
+    {
+      "decision": "refuse",
+      "kind": "meta-gamma",
+      "reason": "kind-not-admitted",
+      "seq": 35
+    },
+    {
+      "decision": "refuse",
+      "kind": "codec-delta",
+      "reason": "malformed-crossing",
+      "seq": 36
+    },
+    {
+      "decision": "refuse",
+      "kind": "meta-gamma",
+      "reason": "kind-not-admitted",
+      "seq": 37
+    },
+    {
+      "decision": "refuse",
+      "kind": null,
+      "reason": "malformed-crossing",
+      "seq": 38
+    },
+    {
+      "decision": "refuse",
+      "kind": "codec-delta",
+      "reason": "kind-not-admitted",
+      "seq": 39
+    },
+    {
+      "decision": "refuse",
+      "kind": "delta-delta",
+      "reason": "kind-not-admitted",
+      "seq": 40
+    },
+    {
+      "decision": "refuse",
+      "kind": "delta-delta",
+      "reason": "unattested-origin",
+      "seq": 41
+    },
+    {
+      "decision": "refuse",
+      "kind": "proof-gamma",
+      "reason": "kind-not-admitted",
+      "seq": 42
+    },
+    {
+      "decision": "refuse",
+      "kind": "blob-alpha",
+      "reason": "kind-not-admitted",
+      "seq": 43
+    },
+    {
+      "decision": "refuse",
+      "kind": "codec-beta",
+      "reason": "kind-not-admitted",
+      "seq": 44
+    },
+    {
+      "decision": "admit",
+      "kind": "delta-beta",
+      "reason": "",
+      "seq": 45
+    },
+    {
+      "decision": "refuse",
+      "kind": "codec-beta",
+      "reason": "kind-not-admitted",
+      "seq": 46
+    },
+    {
+      "decision": "admit",
+      "kind": "proof-delta",
+      "reason": "",
+      "seq": 47
+    },
+    {
+      "decision": "refuse",
+      "kind": "meta-beta",
+      "reason": "malformed-crossing",
+      "seq": 48
+    },
+    {
+      "decision": "refuse",
+      "kind": "codec-delta",
+      "reason": "kind-not-admitted",
+      "seq": 49
+    },
+    {
+      "decision": "refuse",
+      "kind": "delta-delta",
+      "reason": "kind-not-admitted",
+      "seq": 50
+    },
+    {
+      "decision": "refuse",
+      "kind": "proof-gamma",
+      "reason": "kind-not-admitted",
+      "seq": 51
+    },
+    {
+      "decision": "refuse",
+      "kind": "delta-delta",
+      "reason": "kind-not-admitted",
+      "seq": 52
+    },
+    {
+      "decision": "refuse",
+      "kind": "codec-delta",
+      "reason": "unattested-origin",
+      "seq": 53
+    },
+    {
+      "decision": "refuse",
+      "kind": "delta-delta",
+      "reason": "kind-not-admitted",
+      "seq": 54
+    },
+    {
+      "decision": "refuse",
+      "kind": "delta-delta",
+      "reason": "kind-not-admitted",
+      "seq": 55
+    },
+    {
+      "decision": "admit",
+      "kind": "meta-beta",
+      "reason": "",
+      "seq": 56
+    },
+    {
+      "decision": "admit",
+      "kind": "proof-delta",
+      "reason": "",
+      "seq": 57
+    },
+    {
+      "decision": "refuse",
+      "kind": "codec-delta",
+      "reason": "malformed-crossing",
+      "seq": 58
+    },
+    {
+      "decision": "refuse",
+      "kind": "codec-beta",
+      "reason": "kind-not-admitted",
+      "seq": 59
+    },
+    {
+      "decision": "refuse",
+      "kind": "frame-gamma",
+      "reason": "kind-not-admitted",
+      "seq": 60
+    },
+    {
+      "decision": "refuse",
+      "kind": "frame-delta",
+      "reason": "kind-not-admitted",
+      "seq": 61
+    },
+    {
+      "decision": "refuse",
+      "kind": "frame-gamma",
+      "reason": "unattested-origin",
+      "seq": 62
+    },
+    {
+      "decision": "refuse",
+      "kind": "delta-delta",
+      "reason": "kind-not-admitted",
+      "seq": 63
+    },
+    {
+      "decision": "refuse",
+      "kind": "proof-gamma",
+      "reason": "unattested-origin",
+      "seq": 64
+    },
+    {
+      "decision": "admit",
+      "kind": "delta-beta",
+      "reason": "",
+      "seq": 65
+    },
+    {
+      "decision": "refuse",
+      "kind": null,
+      "reason": "malformed-crossing",
+      "seq": 66
+    },
+    {
+      "decision": "admit",
+      "kind": "delta-beta",
+      "reason": "",
+      "seq": 67
+    },
+    {
+      "decision": "refuse",
+      "kind": "delta-beta",
+      "reason": "unattested-origin",
+      "seq": 68
+    },
+    {
+      "decision": "admit",
+      "kind": "proof-delta",
+      "reason": "",
+      "seq": 69
+    },
+    {
+      "decision": "admit",
+      "kind": "proof-delta",
+      "reason": "",
+      "seq": 70
+    },
+    {
+      "decision": "refuse",
+      "kind": "frame-delta",
+      "reason": "kind-not-admitted",
+      "seq": 71
+    },
+    {
+      "decision": "refuse",
+      "kind": "delta-delta",
+      "reason": "kind-not-admitted",
+      "seq": 72
+    },
+    {
+      "decision": "refuse",
+      "kind": "codec-delta",
+      "reason": "kind-not-admitted",
+      "seq": 73
+    },
+    {
+      "decision": "admit",
+      "kind": "delta-beta",
+      "reason": "",
+      "seq": 74
+    },
+    {
+      "decision": "refuse",
+      "kind": "frame-delta",
+      "reason": "kind-not-admitted",
+      "seq": 75
+    },
+    {
+      "decision": "refuse",
+      "kind": "frame-delta",
+      "reason": "kind-not-admitted",
+      "seq": 76
+    },
+    {
+      "decision": "refuse",
+      "kind": "meta-gamma",
+      "reason": "kind-not-admitted",
+      "seq": 77
+    },
+    {
+      "decision": "refuse",
+      "kind": "shard-alpha",
+      "reason": "kind-not-admitted",
+      "seq": 78
+    },
+    {
+      "decision": "admit",
+      "kind": "delta-beta",
+      "reason": "",
+      "seq": 79
+    },
+    {
+      "decision": "admit",
+      "kind": "meta-beta",
+      "reason": "",
+      "seq": 80
+    },
+    {
+      "decision": "refuse",
+      "kind": "shard-alpha",
+      "reason": "kind-not-admitted",
+      "seq": 81
+    },
+    {
+      "decision": "refuse",
+      "kind": "blob-alpha",
+      "reason": "kind-not-admitted",
+      "seq": 82
+    },
+    {
+      "decision": "admit",
+      "kind": "delta-beta",
+      "reason": "",
+      "seq": 83
+    },
+    {
+      "decision": "refuse",
+      "kind": "codec-delta",
+      "reason": "unattested-origin",
+      "seq": 84
+    },
+    {
+      "decision": "refuse",
+      "kind": "shard-alpha",
+      "reason": "kind-not-admitted",
+      "seq": 85
+    },
+    {
+      "decision": "admit",
+      "kind": "delta-beta",
+      "reason": "",
+      "seq": 86
+    },
+    {
+      "decision": "admit",
+      "kind": "proof-delta",
+      "reason": "",
+      "seq": 87
+    },
+    {
+      "decision": "admit",
+      "kind": "delta-beta",
+      "reason": "",
+      "seq": 88
+    },
+    {
+      "decision": "refuse",
+      "kind": null,
+      "reason": "malformed-crossing",
+      "seq": 89
+    },
+    {
+      "decision": "refuse",
+      "kind": "shard-alpha",
+      "reason": "unattested-origin",
+      "seq": 90
+    },
+    {
+      "decision": "refuse",
+      "kind": "codec-delta",
+      "reason": "unattested-origin",
+      "seq": 91
+    },
+    {
+      "decision": "refuse",
+      "kind": "blob-alpha",
+      "reason": "kind-not-admitted",
+      "seq": 92
+    },
+    {
+      "decision": "refuse",
+      "kind": "blob-alpha",
+      "reason": "kind-not-admitted",
+      "seq": 93
+    },
+    {
+      "decision": "refuse",
+      "kind": "shard-alpha",
+      "reason": "kind-not-admitted",
+      "seq": 94
+    },
+    {
+      "decision": "refuse",
+      "kind": "meta-gamma",
+      "reason": "kind-not-admitted",
+      "seq": 95
+    },
+    {
+      "decision": "refuse",
+      "kind": "meta-beta",
+      "reason": "malformed-crossing",
+      "seq": 96
+    }
+  ]
+}
