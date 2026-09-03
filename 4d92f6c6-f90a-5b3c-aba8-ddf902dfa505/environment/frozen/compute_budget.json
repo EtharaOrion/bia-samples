@@ -1,0 +1,11 @@
+{
+  "schema": "oer16.compute_budget/v1",
+  "budget_token_updates": 18000,
+  "max_vocab_size": 8192,
+  "max_token_bytes": 16,
+  "evaluation_points": 3,
+  "frozen": true,
+  "vocabulary_ceiling_announced": true,
+  "vocabulary_ceiling_announcement": "The vocabulary ceiling was raised from 4096 to 8192 and the change was announced on the audit surface. See seed/tasks/OER-16/drift.yaml mutation announce-vocabulary-ceiling-raised.",
+  "note": "Fixed compute is a fixed number of optimizer updates, where one update is one token consumed from the frozen training stream. A coarser vocabulary covers more bytes per update; that trade is the whole of the free axis."
+}

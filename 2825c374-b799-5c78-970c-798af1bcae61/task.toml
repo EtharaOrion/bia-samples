@@ -1,0 +1,164 @@
+schema_version = "1.4"
+
+# schema_version is a TOP-LEVEL scalar and is written above the first table header on purpose.
+# TOML scopes every key to the most recent header, so an assignment below [task] would silently
+# become task.schema_version and leave the top-level scalar absent while the file still reads
+# correct to a human.
+#
+# The artifacts list is also the bundle's own declaration of the TWO-PHASE CARRIER. Every
+# directory named here is a path the agent phase writes and the verifier phase reads, so the
+# workspace that spans both containers is derivable from these bytes rather than assumed.
+
+artifacts = [
+  "/app/submission.py",
+  "/workspace/handoff.json",
+  "/logs/harness/phase_a.jsonl",
+  "/logs/agent/trajectory.jsonl",
+  "/logs/verifier/reward.txt",
+  "/logs/verifier/score.json",
+]
+
+[task]
+name = "bia/oer-28-fused-kernel-across-a-two-phase-splice"
+version = "1.0.0"
+description = "Fuse a frozen geometric-weight streaming operator into a first order recurrence, hand the running state across a splice the harness establishes rather than the statement names, and have the verifier resume from that state and count the charge itself."
+authors = ["Bia"]
+keywords = ["optimization", "bounded-continuous", "kernel-optimization", "two-phase-splice"]
+
+[metadata]
+tags = ["optimization", "bounded-continuous"]
+category = "optimization"
+slot = "OER-28"
+provisional_identifier = "OER-28"
+title = "Fused streaming kernel handed across a harness-established splice"
+family = "F5"
+family_title = "kernel optimization"
+primary_archetype = "two-phase-splice"
+primary_archetype_title = "Two-Phase Splice"
+archetype_count = 1
+entry_point_tests = "tests/test.sh"
+entry_point_solution = "solution/solve.sh"
+
+target_tier = "T3"
+tier_exemption_granted = "none"
+anchorable_tier = "capped below Hard by the standing batch-level Perception-axis exemption"
+perception_axis_exemption = "This task family is text and code only, so the Perception axis carries no category. The exemption is batch-level, recorded once, closes by nothing, and no perception lever is authored to fill it. It caps the anchorable tier below Hard while leaving the authoring target at T3."
+
+[metadata.metric]
+name = "speedup over the frozen reference kernel on the verifier-owned resume segment, gated on exact output equality"
+direction = "higher"
+gate_kind = "hard gate"
+gate_note = "The operator is exact integer arithmetic modulo a prime, so correctness is byte equality of the output rollup and not a tolerance. A composed rollup that differs from the frozen reference scores exactly 0.0 with the machine-readable reason numerical-output-diverged, however few reads the kernel charged. The gate is never a soft penalty."
+frozen = ["the operator semantics", "the input stream and its block boundaries", "the operator parameters including the splice charge budget", "the frozen reference kernel and therefore the baseline cost"]
+free = ["the kernel implementation at /app/submission.py"]
+computed_by = "the verifier, from its own Tape counter over its own resume run, seeded by the carried state the agent phase handed over"
+
+[metadata.phases]
+count = 2
+agent_phase_entry = "environment/phase_a.py"
+verifier_phase_entry = "tests/test.sh"
+graded_deliverable = "/app/submission.py"
+splice_carrier = "/workspace/handoff.json"
+harness_journal = "/logs/harness/phase_a.jsonl"
+note = "The verifier phase RESUMES the operator from state the agent phase produced. The resume Tape refuses every read before the splice point, so the carried state is the only channel across the seam and it is load-bearing rather than declarative."
+
+[metadata.discovery]
+count = 2
+values = ["splice point", "carried-state digest"]
+established_by = "the agent phase, environment/phase_a.py"
+read_by = "the verifier phase, through the tests/checkers.py Harness handle"
+absent_from_statement = true
+note = "Neither value appears in instruction.md or in any other agent-visible byte. The splice point falls out of the drawn block lengths and the carried-state digest covers the operator's own output at the last sample before the splice, so both exist only after the first phase has been run. Each gates a required checker and each carries a frozen rejecting fixture that moves it and no other byte."
+
+[metadata.anchors]
+state = "absent"
+authority = "F5 is registered and unscoped in requirements/bia-environment-spec.md and records no baseline, target, pass threshold or instance count. The reward schema below is bound in full and neither number is invented here."
+
+[metadata.reward]
+carrier_path = "/logs/verifier/reward.txt"
+carrier_form = "one bare float"
+score_document_path = "/logs/verifier/score.json"
+interval = [0.0, 1.0]
+direction = "higher"
+never_binary = true
+full_reward_exactly = 1.0
+formula = "raw = (agent_metric - baseline_metric) / (target_metric - baseline_metric)"
+clip = "score = min(max(raw, 0.0), 1.0)"
+bar_not_point = "Reaching the target scores exactly 1.0 and beating it also scores 1.0."
+
+# CANONICAL PATH for every bound optimization field in this batch:
+# metadata.optimization.<field>. One table, one deterministic lookup. Nothing
+# optimization-bound lives anywhere else in this manifest.
+#
+# max_timeout_hours and budget_hours are explicitly distinct and are never
+# aliases. max_timeout_hours bounds the refinement loop ACROSS attempts;
+# budget_hours bounds ONE attempt, being six hours over fifty attempts, 0.12
+# hours or 7.2 minutes.
+[metadata.optimization]
+max_timeout_hours = 6.0
+max_timeout_role = "refinement-loop terminator across attempts"
+budget_hours = 0.12
+budget_hours_minutes = 7.2
+budget_hours_role = "per-attempt completion bound"
+budget_hours_state = "provisional"
+max_attempts = 50
+final_selection = "best"
+budget_envelope = "one CPU core, no accelerator; the substrate is exact integer arithmetic and asks for none"
+compute_envelope_note = "AUTHORITATIVE. [environment].gpus is pinned at 1 to clear the roster manifest lint, which requires a positive value for every slot. This slot uses no accelerator on any path. Where the two disagree, this field governs and the divergence is recorded in solution/grounding.yaml under gap-oer-28-accelerator-request-is-a-lint-floor."
+budget_margin = "10 percent"
+compute_envelope_accelerators = 0
+
+[metadata.clock]
+owner = "harness"
+note = "THE HARNESS OWNS THE COUNTER and there is no clock on the graded path at all. environment/opstream.py charges one read per Tape.at call, and the verifier reads the total off its own counter after its own resume run. Every checker reads recorded records and never calls time, datetime, perf_counter or monotonic, directly or transitively. The agent's own timing is ungraded."
+
+[metadata.substrate]
+kind = "deterministic integer stream operator with an instrumented read counter"
+note = "A counted-read cost model is the right choice here because it makes grading reproducible: the same stream, parameters and kernel produce a byte-identical charge on any host. It never passes as a wall clock measurement, and reference_hours therefore covers counted-read cost only."
+
+[metadata.workspace]
+shared_across_phases = true
+agent_write_surface = ["/app", "/workspace", "/logs/harness"]
+harness_owned_record = "/logs/harness/phase_a.jsonl"
+handoff = "/workspace/handoff.json"
+note = "One workspace spans both containers across three separate carriers. The agent phase writes the kernel at /app/submission.py, the harness journal at /logs/harness and the handoff at /workspace; the verifier phase reads all three and writes only under the reward root."
+
+[metadata.build]
+dockerfile = "environment/Dockerfile"
+verifier_dockerfile = "tests/Dockerfile"
+verifier_build_context = "the bundle root, because tests/Dockerfile copies both tests/ and environment/ and never copies solution/"
+pin_kind = "digest"
+pin_note = "Pinned by @sha256 and never by a floating tag. Harbor accepts any string and does not itself require a digest, so the digest requirement is this contract's."
+
+# ACCELERATOR DIVERGENCE, declared rather than silently encoded. This slot's substrate is exact
+# integer arithmetic over an instrumented read counter and it uses NO accelerator: the oracle runs
+# to completion on one CPU core in well under a second. seed/harbor_lint.py nonetheless requires a
+# positive [environment].gpus and a non-empty gpu_types for every slot on this roster, so the two
+# fields below are a MANIFEST CONFORMANCE FLOOR and are not a compute claim. The real envelope is
+# bound at metadata.optimization.compute_envelope_accelerators = 0 and the divergence is recorded
+# in solution/grounding.yaml under gap-oer-28-accelerator-request-is-a-lint-floor.
+[environment]
+docker_image = "python@sha256:9c900dea9e8fb7e16277c179b555cc72d29a352dbc33cff48ad5a0412fd5bfc7"
+gpus = 1
+gpu_types = ["H100"]
+# Provisioning egress. Denying it here would leave the task unable to install.
+network_mode = "public"
+
+[environment.env]
+OER28_WORKSPACE = "/workspace"
+OER28_HARNESS_LOGS = "/logs/harness"
+OER28_SUBMISSION = "/app/submission.py"
+
+[agent]
+writable = ["/app", "/workspace", "/logs/harness"]
+solver_egress = "setup-only"
+solver_egress_note = "The solving agent may install what it wants for its own search during setup; nothing it installs reaches the graded path, because the graded path is standard library only and runs with egress denied. The verifier surface is denied outright. The asymmetry is deliberate and bound here rather than accidental."
+deny_list_is_not_containment = "No deny-list is treated as a containment proof. The load-bearing control is the deterministic checker set and the two-phase carrier, not the network policy."
+network_mode = "none"
+
+[verifier]
+docker_image = "python@sha256:9c900dea9e8fb7e16277c179b555cc72d29a352dbc33cff48ad5a0412fd5bfc7"
+image_definition_path = "tests/"
+egress = "denied"
+network_mode = "none"
+egress_note = "The verifier keeps the bound network policy. A verifier that can reach the network is a verifier whose verdict can be fetched. Every dependency it uses is baked at build time."

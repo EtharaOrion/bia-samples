@@ -1,0 +1,398 @@
+# GENERATED SECTION. DO NOT HAND-EDIT.
+# Derived from solution/grounding.yaml `screening` by solution/recompute.py.
+# canonical payload sha256 (binding_block excluded from the preimage): eab31b5fc156ab4170f22df742c8b5f47072c6916d3ba25cfa696d8a5292f534
+schema: forge.provenance/v1
+unit_uuid: 32aad6b2-43e0-5f2f-a4c6-4526d50a37aa
+screening_roots:
+  exclusion_list:
+    digest: 81764edb7df796c57d17007b1fa95c2fe693226c865e403e5adc1b0640f595da
+    identity: engram.screening-root.exclusion-list/v1
+    state: pinned
+  freeze_date_table:
+    digest: 16e5b169c33898be57492a0101644bedb6b3728624378a5c13910f8f417e7030
+    identity: engram.screening-root.freeze-date-table/v1
+    state: pinned
+  near_duplicate_index:
+    digest: c41ff457f262c295bd4d2f77d95a9eddc02aee2f9e7a4d6e6dc4036ab2677bc4
+    identity: engram.screening-root.near-duplicate-index/v1
+    state: pinned
+  source_attestation:
+    digest: 106c2180906abb0250a26152682a5352c3ab404ae2d9d2d8ecc8e7f0d071ce9d
+    identity: engram.screening-root.source-attestation/v1
+    state: pinned
+authority_mode: union
+source_identifiers:
+  applicability:
+    base-commit-sha:
+      reason: No independent attestation satisfies the closed generator-origin predicate for this source
+        (synthetic), so no relation is exempted and every one is screened.
+      value: applicable
+    canonical-repository-identity:
+      reason: No independent attestation satisfies the closed generator-origin predicate for this source
+        (synthetic), so no relation is exempted and every one is screened.
+      value: applicable
+    empty-submission-validation:
+      reason: This atom has no exempt route at all and is applicable to every unit.
+      value: applicable
+    fork-ancestry-closure-membership:
+      reason: No independent attestation satisfies the closed generator-origin predicate for this source
+        (synthetic), so no relation is exempted and every one is screened.
+      value: applicable
+    freeze-holdout:
+      reason: No independent attestation satisfies the closed generator-origin predicate for this source
+        (synthetic), so no relation is exempted and every one is screened.
+      value: applicable
+    near-duplicate-screening:
+      reason: This atom has no exempt route at all and is applicable to every unit.
+      value: applicable
+    per-unit-provenance-record:
+      reason: This atom has no exempt route at all and is applicable to every unit.
+      value: applicable
+    sanitization:
+      reason: This atom has no exempt route at all and is applicable to every unit.
+      value: applicable
+  canonical_repository_identity: null
+  generation_input_digest: 182fa6e570659f9628575ece21a6bc1955ad7bb79b3e2d73e77bef582f472bd5
+  generator_identity: dataset/3513774a-7ca2-56b1-be08-0d90c06ce429/solution/recompute.py
+  generator_version: sha256:420b6b0855d21d1b726936f3e83da40ad810cbf7497b15fbfe40cd1fbbed1e34
+  origin: original
+  provenance_attestation: null
+  record_source: seed/contract.yaml batch.records[OER-19].upstream_provenance
+  source_kind: synthetic
+fork_ancestry_snapshot: null
+base_commit_sha: null
+applicable_dates:
+  provenance_date: '2026-08-25'
+  screening_instant: '2026-08-27T07:35:42Z'
+  task_generating_event_timestamp: null
+instrument_versions:
+  empty-submission-validation:
+    declared: null
+    module: seed/forge/emptysub.py
+    module_sha256: 6cae608c8bfeb7dd77c2a1c69facfae7f4482eea312e6e02906c95ea96378d18
+  exclusion-matching:
+    declared: forge.exclusion/1.0.0
+    module: seed/forge/exclusion.py
+    module_sha256: 4a0bb583b96dcd2bd16582ab357a720450587af8369d16bf5cf2fdfebae183c7
+  freeze-holdout:
+    declared: forge.freeze/1.0.0
+    module: seed/forge/freeze.py
+    module_sha256: 34e2aea125e0dc0dfd4c3afcae7723c57cea17f135dbbe6c56f518fdaa85f687
+  near-duplicate-screening:
+    declared: null
+    module: seed/forge/neardup.py
+    module_sha256: 807221ac2695ea723636b50e5c233765ea0a324e6348cbfbb1dee3b577e8cbd0
+  per-unit-provenance-record:
+    declared: forge.provenance_atom/1.0.0
+    module: seed/forge/provenance_atom.py
+    module_sha256: 524c6724e0664ff5660073020c143160576572b628802fef611b044bcbd3e3e9
+  sanitization:
+    declared: forge.sanitization/1.0.0
+    module: seed/forge/sanitization.py
+    module_sha256: bd1593dc32180d1eeca5a135499939c866de7a98960d5a21239f19e0dfb22f21
+atom_result_digests:
+  empty-submission-validation: 25825f38dc862dec3464e866e8f2d121015a1273f2f17b99cd29ce2fd743335b
+  exclusion-matching: 5e26436aee4b7e2fa4d7cdfe646f1c512edd2b76c6ce504ebb83785c1bd2cc56
+  freeze-holdout: ''
+  near-duplicate-screening: cb96b9970e10312bc8f786bcfcd7305027c2a88d42421be5cefbd85147f907d4
+  sanitization: 7bdbd8fe64aaa5c8a50ade6598abeae23f2ac2b6402e554e04b2d45157d08a22
+applicability:
+  empty-submission-validation:
+    applicability_reason: This atom has no exempt route at all and is applicable to every unit.
+    cap: ''
+    clean_fixture_passed: true
+    control_accepting_half: 15
+    control_detail: 58 passed
+    control_passed: true
+    control_rejecting_half: 23
+    control_suite: tests/test_emptysub.py
+    defect: ''
+    determination: passed
+    planted_positive_present: true
+    planted_positive_rejected: true
+    ran: true
+    reason: empty submission scored exactly zero, reason=unattributed
+    result_digest: 25825f38dc862dec3464e866e8f2d121015a1273f2f17b99cd29ce2fd743335b
+    score: 0.0
+    screened_preimage: the unit's delivered bytes as they sit on disk, graded through the pinned image;
+      nothing this atom records is a function of the bytes this lane writes
+    status: clean
+    value: applicable
+  exclusion-matching:
+    applicability_reason: This atom is applicable to every unit.
+    cap: ''
+    clean_fixture_passed: true
+    control_accepting_half: 8
+    control_detail: 58 passed
+    control_passed: true
+    control_rejecting_half: 18
+    control_suite: tests/test_exclusion.py
+    defect: ''
+    determination: no-match
+    planted_positive_present: true
+    planted_positive_rejected: true
+    ran: true
+    reason: All three relations were evaluated against engram.screening-root.exclusion-list/v1 at 81764edb7df796c57d17007b1fa95c2fe693226c865e403e5adc1b0640f595da
+      and none matched.
+    relations:
+      base-commit-sha:
+        applicability: not_applicable
+        matched: false
+      canonical-repository-identity:
+        applicability: applicable
+        matched: false
+      fork-ancestry-closure-membership:
+        applicability: applicable
+        matched: false
+    result_digest: 5e26436aee4b7e2fa4d7cdfe646f1c512edd2b76c6ce504ebb83785c1bd2cc56
+    screened_preimage: the unit's bytes with this `screening` block removed from solution/grounding.yaml
+      and the carrier section removed from solution/recompute.py, because an output never enters its own
+      input
+    status: clean
+    value: applicable
+  freeze-holdout:
+    applicability_reason: No independent attestation satisfies the closed generator-origin predicate for
+      this source (synthetic), so no relation is exempted and every one is screened.
+    cap: screening-unverified
+    clean_fixture_passed: false
+    control_accepting_half: 15
+    control_detail: 51 failed, 46 passed, 4 errors
+    control_passed: false
+    control_rejecting_half: 31
+    control_suite: tests/test_freeze.py
+    defect: ''
+    determination: unresolved
+    planted_positive_present: false
+    planted_positive_rejected: false
+    ran: false
+    reason: 'RootResolutionError: screening root freeze_date_table at <screen-root>/memory/roots/freeze-date-table-v1.yaml
+      hashes 5cb51fe566a202a2c9cae232916badcf311f6b64eaef0ceacb9d5677b21f0c2a, and FORGE_VIEW pins 16e5b169c33898be57492a0101644bedb6b3728624378a5c13910f8f417e7030.
+      Refusing to screen against bytes ENGRAM did not pin. The atom returned no determination over this
+      unit, so nothing about this unit was observed by it. Recorded as unverified rather than as clean.'
+    result_digest: ''
+    screened_preimage: the unit's bytes with this `screening` block removed from solution/grounding.yaml
+      and the carrier section removed from solution/recompute.py, because an output never enters its own
+      input
+    status: inert-root-unresolved
+    value: applicable
+  near-duplicate-screening:
+    applicability_reason: This atom has no exempt route at all and is applicable to every unit.
+    cap: ''
+    clean_fixture_passed: true
+    control_accepting_half: 5
+    control_detail: 26 passed
+    control_passed: true
+    control_rejecting_half: 8
+    control_suite: tests/test_neardup.py
+    defect: ''
+    determination: pass
+    nearest: results/20260513_shampoo_1_4_power/distributed_shampoo/examples/cifar10_example.py
+    planted_positive_present: true
+    planted_positive_rejected: true
+    ran: true
+    reason: solution/reference.py scored 0.092486 against its nearest pinned corpus neighbour results/20260513_shampoo_1_4_power/distributed_shampoo/examples/cifar10_example.py
+      under threshold 0.63 and review threshold 0.56, classified pass.
+    result_digest: cb96b9970e10312bc8f786bcfcd7305027c2a88d42421be5cefbd85147f907d4
+    score: 0.09248554913294797
+    screened_preimage: the unit's solution/reference.py exactly as delivered, which this lane never writes
+    status: clean
+    value: applicable
+  per-unit-provenance-record:
+    applicability_reason: This atom has no exempt route at all and is applicable to every unit.
+    value: applicable
+  sanitization:
+    applicability_reason: This atom has no exempt route at all and is applicable to every unit.
+    cap: HOLD:PILOT_REQUIRED
+    clean_fixture_passed: true
+    control_accepting_half: 9
+    control_detail: 76 passed
+    control_passed: true
+    control_rejecting_half: 26
+    control_suite: tests/test_sanitization.py
+    defect: ''
+    detectors:
+      closure-identity: clean
+      fix-absence: clean
+      history-absence: clean
+      remote-absence: clean
+      thread-absence: clean
+    determination: clean
+    planted_positive_present: true
+    planted_positive_rejected: true
+    ran: true
+    reason: No named detector found a named fix-revealing representation in the delivery closure of 3513774a-7ca2-56b1-be08-0d90c06ce429.
+      history-absence=clean(18), remote-absence=clean(18), thread-absence=clean(18), fix-absence=clean(7),
+      closure-identity=clean(18). This is the bounded result invariant 25 permits and never the claim
+      that the image reveals nothing; coverage stops at base-image-unresolved, delivery-image-unbuilt,
+      post-base-fix-set-unbound, source-host-egress-partially-denied, verifier-surface-outside-fix-absence.
+    result_digest: 7bdbd8fe64aaa5c8a50ade6598abeae23f2ac2b6402e554e04b2d45157d08a22
+    screened_preimage: the unit's bytes with this `screening` block removed from solution/grounding.yaml
+      and the carrier section removed from solution/recompute.py, because an output never enters its own
+      input
+    status: clean
+    value: applicable
+sanitization_closure:
+  images:
+  - entry_count: 0
+    layer_count: 0
+    layer_digests: []
+    manifest_digest: ''
+    pinned: true
+    reason: layer-scan-not-requested
+    reference: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
+    resolved: false
+    role: agent-reachable
+    whiteout_count: 0
+    whiteouts: []
+  - entry_count: 0
+    layer_count: 0
+    layer_digests: []
+    manifest_digest: ''
+    pinned: true
+    reason: layer-scan-not-requested
+    reference: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
+    resolved: false
+    role: verifier-only
+    whiteout_count: 0
+    whiteouts: []
+  layer_entries_unpacked: 0
+  member_count: 18
+  members:
+  - bytes: 893
+    path: environment/Dockerfile
+    role: agent-reachable
+    sha256: 1157ce30ffd0967c860416466c7e8fce52e8b6ef4db4a1a92bf4c6f57d33c1bb
+  - bytes: 1690
+    path: environment/frozen/FROZEN_AXES.md
+    role: agent-reachable
+    sha256: ded0388a457f25ada17e50a2fc7a240214b67599a67e17dd802003b748ab711d
+  - bytes: 3745
+    path: environment/frozen/benchmark_dev.jsonl
+    role: agent-reachable
+    sha256: 4d9bf3a05ea666d5349978ab6c4c123347fe1cf093342fcd3843b2b9f6733a9a
+  - bytes: 7666
+    path: environment/frozen/trainer.py
+    role: agent-reachable
+    sha256: a387fdfbacac437f230521480d29ab299d5ff3f52c64dcd6187430d7f7f645db
+  - bytes: 10375
+    path: environment/tools/corpus_diversity.py
+    role: agent-reachable
+    sha256: e880b1296de8c0800981b1e13354bf448bb0c206ab3eef11c3ad1e310fc35e07
+  - bytes: 5873
+    path: instruction.md
+    role: agent-reachable
+    sha256: 23d18ece1341778ad8d40ec71abc059d9430353b555f6a078adae41fb63e5a20
+  - bytes: 4708
+    path: task.toml
+    role: agent-reachable
+    sha256: 158605a8f28f0b192e475cc508cebf9da87221e14286ea973a60832b5369b0c5
+  - bytes: 631
+    path: tests/Dockerfile
+    role: verifier-only
+    sha256: 17eb444068b4baabeade51d06fc536fb75618709ac7cd7cd3788fa601ce97f42
+  - bytes: 11870
+    path: tests/benchmark_held_out.jsonl
+    role: verifier-only
+    sha256: ee7c0778d1e06d01a82f1b1a89982cea7525305106c4376633f7bd253077205f
+  - bytes: 24482
+    path: tests/checkers.py
+    role: verifier-only
+    sha256: 2a2e0f73adfc7bddffa54c8e9d779e0925fe860fe1830f98591e3c7f1e6fe3ef
+  - bytes: 16706
+    path: tests/checkers.yaml
+    role: verifier-only
+    sha256: 9b90fd1b249f06d6fd4d9859c775ea7f23299f26a5e3b527b4edf06a38e0e8c4
+  - bytes: 10375
+    path: tests/diversity.py
+    role: verifier-only
+    sha256: e880b1296de8c0800981b1e13354bf448bb0c206ab3eef11c3ad1e310fc35e07
+  - bytes: 7215
+    path: tests/grade.py
+    role: verifier-only
+    sha256: 39fa6d4e2c6e7ab4782223147b7c52b44a7b2fffb290b13f267c85845f47b8ed
+  - bytes: 3066
+    path: tests/rubrics.jsonl
+    role: verifier-only
+    sha256: 41e01a79f010f86228f9f43e5a49e5860e294fb115136c8ea4677d367f1c6e4b
+  - bytes: 9914
+    path: tests/runner.py
+    role: verifier-only
+    sha256: 6db9c99dfb297dc57128ec39dd14e11564ed1880b02103c6fc2e06b1c96a2ee9
+  - bytes: 3229
+    path: tests/test.sh
+    role: verifier-only
+    sha256: 36f475bad4002ee7d68156969449eef2405bbb0a4bdd9ddeaa826cacf1f6b065
+  - bytes: 4133
+    path: tests/test_output.py
+    role: verifier-only
+    sha256: a804b999f90faedb01fd2bc775ae1347ec601b8d7b9eaa85b6b9b27aedd7c0e3
+  - bytes: 7666
+    path: tests/trainer.py
+    role: verifier-only
+    sha256: a387fdfbacac437f230521480d29ab299d5ff3f52c64dcd6187430d7f7f645db
+  stages:
+  - base: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
+    base_pinned: true
+    dockerfile: environment/Dockerfile
+    projected_copies:
+    - - frozen
+      - /task/environment/frozen
+    - - tools
+      - /task/environment/tools
+    projected_directories: []
+    resolved_build_context: environment
+    unprojectable_instructions: []
+  - base: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
+    base_pinned: true
+    dockerfile: tests/Dockerfile
+    projected_copies:
+    - - .
+      - /verifier/tests
+    projected_directories: []
+    resolved_build_context: tests
+    unprojectable_instructions: []
+  whiteouts_observed: 0
+empty_submission_result:
+  artifacts_disagree: false
+  atom: empty-submission-validation
+  detail: empty submission scored exactly zero, reason=unattributed
+  detail_engine_log_withheld: false
+  detail_engine_log_withheld_reason: ''
+  exit_code: 0
+  grader_fault: false
+  image: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
+  notes:
+  - reward taken from reward.txt; reward.json absent or unreadable
+  outcome: passed
+  reason: ''
+  reward: 0.0
+  reward_text: 0.0
+  uuid: 3513774a-7ca2-56b1-be08-0d90c06ce429
+attestations:
+  ancestry_attestation_digest: null
+  ancestry_attestation_signer: null
+  event_attestation_digest: null
+  event_attestation_signer: null
+binding_block:
+  canonical_bundle_hash: b5f1c047921548e1fa785932ee03ecbed63524398ec068a50f14528c48cdeab7
+  pinned_image_digest: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
+  binding_envelope: DSSE, payloadType application/vnd.in-toto+json, DSSEv1 pre-authentication encoding
+keyid: bia-provenance-2026-08b
+trust_root_public_key_hex: 87de350694dcbacc3829fa78591c13dc80cb0ab6323046cbbdac8b01e20e6fc9
+namespace:
+  bound_at: seed/contract.yaml repo.forge_task_namespace
+  forge_task_namespace: c53e8f3b-526f-52c0-a04e-89e2269b237d
+  normalization_domain_bound_at: seed/contract.yaml batch.normalization_domain, block at line 1327, method_id
+    at line 1328, version at line 1329, bound_on 2026-08-25 at line 1330
+  normalization_domain_method_id: forge.canonical_content_hash/v1
+  not_resolvable_from_this_unit: The definition of that domain. Its exclusion set, token slot designation,
+    digest line format, sort and join are recorded in seed/contract.yaml, which item 10i keeps out of
+    the delivered unit, so a reader can confirm which domain is named and cannot re-execute it from this
+    unit alone.
+  relation: uuid5(forge_task_namespace, binding_block.canonical_bundle_hash) == unit_uuid
+  resolvable_from_this_unit: The uuid relation above, recomputed from this unit's own bytes, and the identity
+    of the normalization domain that hash was computed under, which normalization_domain_version names.
+    Two units carrying the same domain version are hash-comparable and two carrying different versions
+    are not.
+normalization_domain_version: oer-canary-v1
+signer_identity: bia-producer-provenance

@@ -1,0 +1,27 @@
+{
+  "_banner": "GENERATED SECTION. DO NOT HAND-EDIT. Source: solution/grounding.yaml, derived by solution/recompute.py.",
+  "anchors_absent_reason": "seed/contract.yaml families.entries.F9 carries scope_state unscoped and records baseline_metric, target_metric and pass_threshold as null, on the authority of requirements/bia-environment-spec.md line 63 leaving this family's anchors unresolved. No number is invented here to fill them.",
+  "anchors_gap": "gap-oer-per-family-anchors-unmeasured",
+  "anchors_state": "absent",
+  "baseline_metric": null,
+  "bit_budget_total": 2496,
+  "family": "F9",
+  "frozen_digests": {
+    "corpus": "8ee1080ba515c5628562786bae9747f461c0745b5ec7515f013a059df6e74557",
+    "model": "2309474c08b04facb41b7c29535fc896f182efe4bc3594bfc95134660046e038",
+    "reference": "b230ff14d264ea3d063f088facd31f0a3f8d239fa55f5e6abac1a93395aa2adc"
+  },
+  "local_scaling": {
+    "default_optimum": 1.188591942,
+    "default_optimum_recomputed_at_grading_time": true,
+    "note": "measured endpoints of the bounded scaling, NOT the family anchors",
+    "reference_optimum": 0.107170959,
+    "separation_margin": 0.05,
+    "sustain_tolerance": 3.352804051
+  },
+  "reference_solution_path": "solution/reference.py",
+  "reference_solution_sha256": "669d894338a2097e464fe24ae18ef8e89cd47d4dede0c4c98b4c5bd9287053ad",
+  "schema": "forge.oer21.anchors/v1",
+  "slot": "OER-21",
+  "target_metric": null
+}
