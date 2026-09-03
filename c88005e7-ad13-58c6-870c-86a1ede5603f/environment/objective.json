@@ -1,9 +1,0 @@
-{
-  "banner": "GENERATED SECTION. DO NOT HAND-EDIT.",
-  "frozen": true,
-  "hard_constraint": true,
-  "p99_tpot_centiticks": 1800,
-  "schema": "oer23.objective/v1",
-  "source": "solution/grounding.yaml",
-  "statement": "The graded tail is the 99th percentile, over every request in the frozen trace, of the per-output-token decode latency measured in hundredths of a tick. It is a raw order statistic recomputed by the verifier and never a number a submission reported."
-}

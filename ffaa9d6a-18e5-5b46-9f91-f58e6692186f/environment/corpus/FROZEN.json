@@ -1,9 +1,0 @@
-{
-  "banner": "GENERATED SECTION. DO NOT HAND-EDIT.",
-  "denominator_note": "eval_bytes IS the graded denominator. It is the byte length of eval.txt and nothing else, and no construction may divide by any other number.",
-  "eval_bytes": 25826,
-  "eval_sha256": "453f44dd363ef285752360f4c5dda67b7e25fd2ec7171f784f7a6fe057522dd4",
-  "source": "solution/grounding.yaml",
-  "train_bytes": 92758,
-  "train_sha256": "abddff5d4e7a21bfe6d920244ee59165dd537811d227eb8d591cf68f863fb808"
-}

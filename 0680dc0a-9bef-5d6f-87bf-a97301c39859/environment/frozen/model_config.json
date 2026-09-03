@@ -1,8 +1,0 @@
-{
-  "schema": "oer16.model/v1",
-  "kind": "bigram-categorical",
-  "context_order": 1,
-  "bos_context_id": -1,
-  "frozen": true,
-  "note": "The model is frozen. Its shape is fingerprinted at run open and again at run close, and a run whose fingerprint moves is refused with reason frozen-axis-mutated."
-}
