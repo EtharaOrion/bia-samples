@@ -1,0 +1,17 @@
+{
+ "generated": "GENERATED SECTION. DO NOT HAND-EDIT. Source: solution/grounding.yaml",
+ "min_seeds": 3,
+ "points": [
+  700,
+  750,
+  800,
+  850,
+  900,
+  950,
+  1000
+ ],
+ "read_by": "tests/checkers.py::check_evaluation_schedule_as_scheduled",
+ "scheduled_by": "verifier",
+ "sustain_points_required": 3,
+ "target_loss": 3.28
+}

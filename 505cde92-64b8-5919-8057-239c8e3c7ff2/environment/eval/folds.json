@@ -1,0 +1,17 @@
+{
+  "schema": "oer13.folds/v2",
+  "source": "the verifier's own held-out FineWeb validation shards, data/fineweb10B/fineweb_val_*.bin",
+  "bytes_present_here": false,
+  "note": "Frozen partition of the verifier's held-out split into four disjoint folds by half-open token range over the concatenated validation stream. This file declares the partition so the sustain rule is legible from the agent surface; it carries none of the split's bytes and resolves no path to them. The order in which the verifier evaluates the folds is scheduled by the verifier and is not announced.",
+  "fold_tokens": 2097152,
+  "folds": [
+    {"id": "fold-0", "tokens": [0, 2097152]},
+    {"id": "fold-1", "tokens": [2097152, 4194304]},
+    {"id": "fold-2", "tokens": [4194304, 6291456]},
+    {"id": "fold-3", "tokens": [6291456, 8388608]}
+  ],
+  "schedules": {
+    "fold-order-a": ["fold-0", "fold-1", "fold-2", "fold-3"],
+    "fold-order-b": ["fold-2", "fold-0", "fold-3", "fold-1"]
+  }
+}

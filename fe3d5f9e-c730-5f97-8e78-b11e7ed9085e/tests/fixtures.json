@@ -1,0 +1,2847 @@
+{
+  "_banner": "GENERATED SECTION. DO NOT HAND-EDIT. Source: solution/grounding.yaml.",
+  "boundary": "Every telemetry record here is DERIVED from solution/grounding.yaml, not measured. The accepting cases prove the live checkers accept a trajectory of this shape produced by this reference. They prove nothing about what an accelerator would report.",
+  "cases": [
+    {
+      "admin_override": {},
+      "expect_reason": "crossing-sustained-and-recipe-displaced",
+      "expect_reward": 1.0,
+      "half": "accepting",
+      "id": "golden_reference_accepted",
+      "proves": "every checker's accepting half over the reference",
+      "screen": {
+        "corpus_revision": "r46",
+        "floor_applied": 0.15,
+        "hyper_vector": [
+          34,
+          39,
+          39,
+          -1,
+          33,
+          42,
+          40,
+          30
+        ],
+        "per_entry": {
+          "record-36": {
+            "proximity": 0.265625,
+            "structural_match": false
+          },
+          "record-40": {
+            "proximity": 0.15625,
+            "structural_match": false
+          },
+          "record-44": {
+            "proximity": 0.265625,
+            "structural_match": false
+          },
+          "record-46": {
+            "proximity": 0.125,
+            "structural_match": false
+          }
+        },
+        "recipe_readable": true,
+        "replays": [],
+        "structural_digest": "8ae1e92312bdd102b17b988f0741914e"
+      },
+      "telemetry": {
+        "checkpoint_custody": "harness-owned-at-every-scheduled-point",
+        "evaluations": [
+          {
+            "harness_checkpoint_digest": "bbbab160875fac3210493e0ecfd6ffd7ad80242f21fb81651f11d7328cc047db",
+            "seeds_contributing": 2,
+            "seq": 10,
+            "step": 2500,
+            "submission_reported_loss": 3.2905,
+            "verifier_raw_loss": 3.2941,
+            "weights_digest": "bbbab160875fac3210493e0ecfd6ffd7ad80242f21fb81651f11d7328cc047db",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "24077dc28d628071a23221d12e451c5b2bc1244082eab73c94ce7f622ef5be73",
+            "seeds_contributing": 2,
+            "seq": 11,
+            "step": 2550,
+            "submission_reported_loss": 3.2841,
+            "verifier_raw_loss": 3.2856,
+            "weights_digest": "24077dc28d628071a23221d12e451c5b2bc1244082eab73c94ce7f622ef5be73",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "59ce02691be1f610f77e94d66a9b1cc7150b656e7530edb35e2d04e4c778e695",
+            "seeds_contributing": 2,
+            "seq": 12,
+            "step": 2600,
+            "submission_reported_loss": 3.2812,
+            "verifier_raw_loss": 3.2794,
+            "weights_digest": "59ce02691be1f610f77e94d66a9b1cc7150b656e7530edb35e2d04e4c778e695",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "5d42a7a50526b8a937b262b4f72425d738126f0e5487ee8e0a3432cd7468b716",
+            "seeds_contributing": 2,
+            "seq": 13,
+            "step": 2650,
+            "submission_reported_loss": 3.2799,
+            "verifier_raw_loss": 3.2781,
+            "weights_digest": "5d42a7a50526b8a937b262b4f72425d738126f0e5487ee8e0a3432cd7468b716",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "398a6c2ae8bb3c3b335df35f060420627978aef389046d82fba6b7d3ada4fe91",
+            "seeds_contributing": 2,
+            "seq": 14,
+            "step": 2700,
+            "submission_reported_loss": 3.2788,
+            "verifier_raw_loss": 3.2772,
+            "weights_digest": "398a6c2ae8bb3c3b335df35f060420627978aef389046d82fba6b7d3ada4fe91",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "3c018c1566c0410cb7627ae67184db3503bf6b9853d04dfe87d057fd20dd8da2",
+            "seeds_contributing": 2,
+            "seq": 15,
+            "step": 2750,
+            "submission_reported_loss": 3.2779,
+            "verifier_raw_loss": 3.2768,
+            "weights_digest": "3c018c1566c0410cb7627ae67184db3503bf6b9853d04dfe87d057fd20dd8da2",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "c56ede1e2fa0afebca58858f50ecf88554f25755cd8cc4e911afde24c7950d9f",
+            "seeds_contributing": 2,
+            "seq": 16,
+            "step": 2800,
+            "submission_reported_loss": 3.2771,
+            "verifier_raw_loss": 3.2761,
+            "weights_digest": "c56ede1e2fa0afebca58858f50ecf88554f25755cd8cc4e911afde24c7950d9f",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "755e60cfecb3c5fecd59e70c5f60a704c69dd56af5fceb2e6569db0fb2a132be",
+            "seeds_contributing": 2,
+            "seq": 17,
+            "step": 2850,
+            "submission_reported_loss": 3.2764,
+            "verifier_raw_loss": 3.2757,
+            "weights_digest": "755e60cfecb3c5fecd59e70c5f60a704c69dd56af5fceb2e6569db0fb2a132be",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "ac604912f85a42ca93a276eb2a9ee0f12b2e61be8fb3a5ba07caf71ec977097b",
+            "seeds_contributing": 2,
+            "seq": 18,
+            "step": 2900,
+            "submission_reported_loss": 3.2758,
+            "verifier_raw_loss": 3.2753,
+            "weights_digest": "ac604912f85a42ca93a276eb2a9ee0f12b2e61be8fb3a5ba07caf71ec977097b",
+            "weights_origin": "harness-checkpoint"
+          }
+        ],
+        "evaluations_per_seed": {
+          "1101": 9,
+          "2917": 9
+        },
+        "events": [
+          {
+            "accelerator_seconds_spent_before": 0.0,
+            "corpus_revision": "r46",
+            "kind": "fingerprint-screen",
+            "seq": 0
+          },
+          {
+            "kind": "seed-launch",
+            "seed": 1101,
+            "seq": 1
+          },
+          {
+            "kind": "seed-launch",
+            "seed": 2917,
+            "seq": 2
+          }
+        ],
+        "frozen_axes": {
+          "arch_digest": "9f86d081884c7d659a2feaa0c55ad015",
+          "arch_id": "nanogpt-track3-124M",
+          "batch_size": 524288,
+          "dataset_digest": "e3b0c44298fc1c149afbf4c8996fb924",
+          "dataset_id": "fineweb-edu-10B-track3",
+          "fwd_bwd_per_step": 1
+        },
+        "graded_loss_provenance": "verifier-recompute-unsmoothed",
+        "graded_series": [
+          [
+            2500,
+            3.2941
+          ],
+          [
+            2550,
+            3.2856
+          ],
+          [
+            2600,
+            3.2794
+          ],
+          [
+            2650,
+            3.2781
+          ],
+          [
+            2700,
+            3.2772
+          ],
+          [
+            2750,
+            3.2768
+          ],
+          [
+            2800,
+            3.2761
+          ],
+          [
+            2850,
+            3.2757
+          ],
+          [
+            2900,
+            3.2753
+          ]
+        ],
+        "origin": "derived-fixture",
+        "origin_boundary": "Authored in solution/grounding.yaml as a derivation source. NOT a measurement. No accelerator run produced these numbers and no claim about an accelerator rests on them.",
+        "run": {
+          "halt_cause": "verifier-schedule-exhausted",
+          "halt_step": 2900,
+          "launched": true,
+          "run_directory_owner": "verifier",
+          "scheduled_grid": [
+            2500,
+            2550,
+            2600,
+            2650,
+            2700,
+            2750,
+            2800,
+            2850,
+            2900
+          ],
+          "seeds": [
+            1101,
+            2917
+          ]
+        },
+        "schema": "bia.oer01.telemetry/v1"
+      }
+    },
+    {
+      "admin_override": {},
+      "expect_reason": "crossing-sustained-and-recipe-displaced",
+      "expect_reward": 0.5357142857142857,
+      "half": "accepting",
+      "id": "partial_credit_is_a_graded_float",
+      "proves": "the reward is a graded float and never binary",
+      "screen": {
+        "corpus_revision": "r46",
+        "floor_applied": 0.15,
+        "hyper_vector": [
+          34,
+          39,
+          39,
+          -1,
+          33,
+          42,
+          40,
+          30
+        ],
+        "per_entry": {
+          "record-36": {
+            "proximity": 0.265625,
+            "structural_match": false
+          },
+          "record-40": {
+            "proximity": 0.15625,
+            "structural_match": false
+          },
+          "record-44": {
+            "proximity": 0.265625,
+            "structural_match": false
+          },
+          "record-46": {
+            "proximity": 0.125,
+            "structural_match": false
+          }
+        },
+        "recipe_readable": true,
+        "replays": [],
+        "structural_digest": "8ae1e92312bdd102b17b988f0741914e"
+      },
+      "telemetry": {
+        "checkpoint_custody": "harness-owned-at-every-scheduled-point",
+        "evaluations": [
+          {
+            "harness_checkpoint_digest": "755e60cfecb3c5fecd59e70c5f60a704c69dd56af5fceb2e6569db0fb2a132be",
+            "seeds_contributing": 2,
+            "seq": 10,
+            "step": 2850,
+            "submission_reported_loss": 3.2905,
+            "verifier_raw_loss": 3.2941,
+            "weights_digest": "755e60cfecb3c5fecd59e70c5f60a704c69dd56af5fceb2e6569db0fb2a132be",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "ac604912f85a42ca93a276eb2a9ee0f12b2e61be8fb3a5ba07caf71ec977097b",
+            "seeds_contributing": 2,
+            "seq": 11,
+            "step": 2900,
+            "submission_reported_loss": 3.2841,
+            "verifier_raw_loss": 3.2856,
+            "weights_digest": "ac604912f85a42ca93a276eb2a9ee0f12b2e61be8fb3a5ba07caf71ec977097b",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "733ad196d1ced9cfeb9a7a3646309437be160a62c1ca6a5f8c77eb67cd44ce60",
+            "seeds_contributing": 2,
+            "seq": 12,
+            "step": 2950,
+            "submission_reported_loss": 3.2812,
+            "verifier_raw_loss": 3.2794,
+            "weights_digest": "733ad196d1ced9cfeb9a7a3646309437be160a62c1ca6a5f8c77eb67cd44ce60",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "805615dcd2ead0b7b917e1314469c7359543e43247f1b52bc7cbfdae08ad7aea",
+            "seeds_contributing": 2,
+            "seq": 13,
+            "step": 3000,
+            "submission_reported_loss": 3.2799,
+            "verifier_raw_loss": 3.2781,
+            "weights_digest": "805615dcd2ead0b7b917e1314469c7359543e43247f1b52bc7cbfdae08ad7aea",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "23673a5c56710aca2c002246606bf7d3185d37c8492d86e04ed1ac7baa6ee92f",
+            "seeds_contributing": 2,
+            "seq": 14,
+            "step": 3050,
+            "submission_reported_loss": 3.2788,
+            "verifier_raw_loss": 3.2772,
+            "weights_digest": "23673a5c56710aca2c002246606bf7d3185d37c8492d86e04ed1ac7baa6ee92f",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "54739a2695b269bb98613ea043ec5f2a7553cbaf961280c83c18b54682a233bc",
+            "seeds_contributing": 2,
+            "seq": 15,
+            "step": 3100,
+            "submission_reported_loss": 3.2779,
+            "verifier_raw_loss": 3.2768,
+            "weights_digest": "54739a2695b269bb98613ea043ec5f2a7553cbaf961280c83c18b54682a233bc",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "7e0cfded242d4b02e6752366c78058550690e1893eb2a2feae502d1aa931dc71",
+            "seeds_contributing": 2,
+            "seq": 16,
+            "step": 3150,
+            "submission_reported_loss": 3.2771,
+            "verifier_raw_loss": 3.2761,
+            "weights_digest": "7e0cfded242d4b02e6752366c78058550690e1893eb2a2feae502d1aa931dc71",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "3d1745f40155d8c10d4822ee759d1c4468cda5f2882b4b83bce62968e91adb7f",
+            "seeds_contributing": 2,
+            "seq": 17,
+            "step": 3200,
+            "submission_reported_loss": 3.2764,
+            "verifier_raw_loss": 3.2757,
+            "weights_digest": "3d1745f40155d8c10d4822ee759d1c4468cda5f2882b4b83bce62968e91adb7f",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "2e4f1ebff4f6c01296ea2e93a5c69be72ab90b0fdc9797a14dec4949a6a34f3c",
+            "seeds_contributing": 2,
+            "seq": 18,
+            "step": 3250,
+            "submission_reported_loss": 3.2758,
+            "verifier_raw_loss": 3.2753,
+            "weights_digest": "2e4f1ebff4f6c01296ea2e93a5c69be72ab90b0fdc9797a14dec4949a6a34f3c",
+            "weights_origin": "harness-checkpoint"
+          }
+        ],
+        "evaluations_per_seed": {
+          "1101": 9,
+          "2917": 9
+        },
+        "events": [
+          {
+            "accelerator_seconds_spent_before": 0.0,
+            "corpus_revision": "r46",
+            "kind": "fingerprint-screen",
+            "seq": 0
+          },
+          {
+            "kind": "seed-launch",
+            "seed": 1101,
+            "seq": 1
+          },
+          {
+            "kind": "seed-launch",
+            "seed": 2917,
+            "seq": 2
+          }
+        ],
+        "frozen_axes": {
+          "arch_digest": "9f86d081884c7d659a2feaa0c55ad015",
+          "arch_id": "nanogpt-track3-124M",
+          "batch_size": 524288,
+          "dataset_digest": "e3b0c44298fc1c149afbf4c8996fb924",
+          "dataset_id": "fineweb-edu-10B-track3",
+          "fwd_bwd_per_step": 1
+        },
+        "graded_loss_provenance": "verifier-recompute-unsmoothed",
+        "graded_series": [
+          [
+            2850,
+            3.2941
+          ],
+          [
+            2900,
+            3.2856
+          ],
+          [
+            2950,
+            3.2794
+          ],
+          [
+            3000,
+            3.2781
+          ],
+          [
+            3050,
+            3.2772
+          ],
+          [
+            3100,
+            3.2768
+          ],
+          [
+            3150,
+            3.2761
+          ],
+          [
+            3200,
+            3.2757
+          ],
+          [
+            3250,
+            3.2753
+          ]
+        ],
+        "origin": "derived-fixture",
+        "origin_boundary": "Authored in solution/grounding.yaml as a derivation source. NOT a measurement. No accelerator run produced these numbers and no claim about an accelerator rests on them.",
+        "run": {
+          "halt_cause": "verifier-schedule-exhausted",
+          "halt_step": 3250,
+          "launched": true,
+          "run_directory_owner": "verifier",
+          "scheduled_grid": [
+            2850,
+            2900,
+            2950,
+            3000,
+            3050,
+            3100,
+            3150,
+            3200,
+            3250
+          ],
+          "seeds": [
+            1101,
+            2917
+          ]
+        },
+        "schema": "bia.oer01.telemetry/v1"
+      }
+    },
+    {
+      "admin_override": {},
+      "expect_reason": "recipe-replays-published-record",
+      "expect_reward": 0.0,
+      "fires": "recipe_diverges_from_the_pinned_record_corpus",
+      "half": "rejecting",
+      "id": "nc_no_op",
+      "screen": {
+        "corpus_revision": "r46",
+        "floor_applied": 0.15,
+        "hyper_vector": [
+          34,
+          39,
+          39,
+          -1,
+          -1,
+          42,
+          -1,
+          31
+        ],
+        "per_entry": {
+          "record-36": {
+            "proximity": 0.0,
+            "structural_match": true
+          },
+          "record-40": {
+            "proximity": 0.125,
+            "structural_match": false
+          },
+          "record-44": {
+            "proximity": 0.28125,
+            "structural_match": false
+          },
+          "record-46": {
+            "proximity": 0.140625,
+            "structural_match": false
+          }
+        },
+        "recipe_readable": true,
+        "replays": [
+          "record-36"
+        ],
+        "structural_digest": "e7a3d4d253b326fb7a7e9fad92b5aecc"
+      },
+      "telemetry": {
+        "checkpoint_custody": "harness-owned-at-every-scheduled-point",
+        "evaluations": [
+          {
+            "harness_checkpoint_digest": "bbbab160875fac3210493e0ecfd6ffd7ad80242f21fb81651f11d7328cc047db",
+            "seeds_contributing": 2,
+            "seq": 10,
+            "step": 2500,
+            "submission_reported_loss": 3.2905,
+            "verifier_raw_loss": 3.2941,
+            "weights_digest": "bbbab160875fac3210493e0ecfd6ffd7ad80242f21fb81651f11d7328cc047db",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "24077dc28d628071a23221d12e451c5b2bc1244082eab73c94ce7f622ef5be73",
+            "seeds_contributing": 2,
+            "seq": 11,
+            "step": 2550,
+            "submission_reported_loss": 3.2841,
+            "verifier_raw_loss": 3.2856,
+            "weights_digest": "24077dc28d628071a23221d12e451c5b2bc1244082eab73c94ce7f622ef5be73",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "59ce02691be1f610f77e94d66a9b1cc7150b656e7530edb35e2d04e4c778e695",
+            "seeds_contributing": 2,
+            "seq": 12,
+            "step": 2600,
+            "submission_reported_loss": 3.2812,
+            "verifier_raw_loss": 3.2794,
+            "weights_digest": "59ce02691be1f610f77e94d66a9b1cc7150b656e7530edb35e2d04e4c778e695",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "5d42a7a50526b8a937b262b4f72425d738126f0e5487ee8e0a3432cd7468b716",
+            "seeds_contributing": 2,
+            "seq": 13,
+            "step": 2650,
+            "submission_reported_loss": 3.2799,
+            "verifier_raw_loss": 3.2781,
+            "weights_digest": "5d42a7a50526b8a937b262b4f72425d738126f0e5487ee8e0a3432cd7468b716",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "398a6c2ae8bb3c3b335df35f060420627978aef389046d82fba6b7d3ada4fe91",
+            "seeds_contributing": 2,
+            "seq": 14,
+            "step": 2700,
+            "submission_reported_loss": 3.2788,
+            "verifier_raw_loss": 3.2772,
+            "weights_digest": "398a6c2ae8bb3c3b335df35f060420627978aef389046d82fba6b7d3ada4fe91",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "3c018c1566c0410cb7627ae67184db3503bf6b9853d04dfe87d057fd20dd8da2",
+            "seeds_contributing": 2,
+            "seq": 15,
+            "step": 2750,
+            "submission_reported_loss": 3.2779,
+            "verifier_raw_loss": 3.2768,
+            "weights_digest": "3c018c1566c0410cb7627ae67184db3503bf6b9853d04dfe87d057fd20dd8da2",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "c56ede1e2fa0afebca58858f50ecf88554f25755cd8cc4e911afde24c7950d9f",
+            "seeds_contributing": 2,
+            "seq": 16,
+            "step": 2800,
+            "submission_reported_loss": 3.2771,
+            "verifier_raw_loss": 3.2761,
+            "weights_digest": "c56ede1e2fa0afebca58858f50ecf88554f25755cd8cc4e911afde24c7950d9f",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "755e60cfecb3c5fecd59e70c5f60a704c69dd56af5fceb2e6569db0fb2a132be",
+            "seeds_contributing": 2,
+            "seq": 17,
+            "step": 2850,
+            "submission_reported_loss": 3.2764,
+            "verifier_raw_loss": 3.2757,
+            "weights_digest": "755e60cfecb3c5fecd59e70c5f60a704c69dd56af5fceb2e6569db0fb2a132be",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "ac604912f85a42ca93a276eb2a9ee0f12b2e61be8fb3a5ba07caf71ec977097b",
+            "seeds_contributing": 2,
+            "seq": 18,
+            "step": 2900,
+            "submission_reported_loss": 3.2758,
+            "verifier_raw_loss": 3.2753,
+            "weights_digest": "ac604912f85a42ca93a276eb2a9ee0f12b2e61be8fb3a5ba07caf71ec977097b",
+            "weights_origin": "harness-checkpoint"
+          }
+        ],
+        "evaluations_per_seed": {
+          "1101": 9,
+          "2917": 9
+        },
+        "events": [
+          {
+            "accelerator_seconds_spent_before": 0.0,
+            "corpus_revision": "r46",
+            "kind": "fingerprint-screen",
+            "seq": 0
+          },
+          {
+            "kind": "seed-launch",
+            "seed": 1101,
+            "seq": 1
+          },
+          {
+            "kind": "seed-launch",
+            "seed": 2917,
+            "seq": 2
+          }
+        ],
+        "frozen_axes": {
+          "arch_digest": "9f86d081884c7d659a2feaa0c55ad015",
+          "arch_id": "nanogpt-track3-124M",
+          "batch_size": 524288,
+          "dataset_digest": "e3b0c44298fc1c149afbf4c8996fb924",
+          "dataset_id": "fineweb-edu-10B-track3",
+          "fwd_bwd_per_step": 1
+        },
+        "graded_loss_provenance": "verifier-recompute-unsmoothed",
+        "graded_series": [
+          [
+            2500,
+            3.2941
+          ],
+          [
+            2550,
+            3.2856
+          ],
+          [
+            2600,
+            3.2794
+          ],
+          [
+            2650,
+            3.2781
+          ],
+          [
+            2700,
+            3.2772
+          ],
+          [
+            2750,
+            3.2768
+          ],
+          [
+            2800,
+            3.2761
+          ],
+          [
+            2850,
+            3.2757
+          ],
+          [
+            2900,
+            3.2753
+          ]
+        ],
+        "origin": "derived-fixture",
+        "origin_boundary": "Authored in solution/grounding.yaml as a derivation source. NOT a measurement. No accelerator run produced these numbers and no claim about an accelerator rests on them.",
+        "run": {
+          "halt_cause": "verifier-schedule-exhausted",
+          "halt_step": 2900,
+          "launched": true,
+          "run_directory_owner": "verifier",
+          "scheduled_grid": [
+            2500,
+            2550,
+            2600,
+            2650,
+            2700,
+            2750,
+            2800,
+            2850,
+            2900
+          ],
+          "seeds": [
+            1101,
+            2917
+          ]
+        },
+        "schema": "bia.oer01.telemetry/v1"
+      }
+    },
+    {
+      "admin_override": {},
+      "expect_reason": "recipe-replays-published-record",
+      "expect_reward": 0.0,
+      "fires": "recipe_diverges_from_the_pinned_record_corpus",
+      "half": "rejecting",
+      "id": "nc_replay_record_46",
+      "screen": {
+        "corpus_revision": "r46",
+        "floor_applied": 0.15,
+        "hyper_vector": [
+          34,
+          39,
+          39,
+          -1,
+          33,
+          42,
+          -1,
+          30
+        ],
+        "per_entry": {
+          "record-36": {
+            "proximity": 0.140625,
+            "structural_match": false
+          },
+          "record-40": {
+            "proximity": 0.03125,
+            "structural_match": false
+          },
+          "record-44": {
+            "proximity": 0.140625,
+            "structural_match": false
+          },
+          "record-46": {
+            "proximity": 0.0,
+            "structural_match": true
+          }
+        },
+        "recipe_readable": true,
+        "replays": [
+          "record-46"
+        ],
+        "structural_digest": "b7cfe1006f5f94405913685a4fd32874"
+      },
+      "telemetry": {
+        "checkpoint_custody": "harness-owned-at-every-scheduled-point",
+        "evaluations": [
+          {
+            "harness_checkpoint_digest": "bbbab160875fac3210493e0ecfd6ffd7ad80242f21fb81651f11d7328cc047db",
+            "seeds_contributing": 2,
+            "seq": 10,
+            "step": 2500,
+            "submission_reported_loss": 3.2905,
+            "verifier_raw_loss": 3.2941,
+            "weights_digest": "bbbab160875fac3210493e0ecfd6ffd7ad80242f21fb81651f11d7328cc047db",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "24077dc28d628071a23221d12e451c5b2bc1244082eab73c94ce7f622ef5be73",
+            "seeds_contributing": 2,
+            "seq": 11,
+            "step": 2550,
+            "submission_reported_loss": 3.2841,
+            "verifier_raw_loss": 3.2856,
+            "weights_digest": "24077dc28d628071a23221d12e451c5b2bc1244082eab73c94ce7f622ef5be73",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "59ce02691be1f610f77e94d66a9b1cc7150b656e7530edb35e2d04e4c778e695",
+            "seeds_contributing": 2,
+            "seq": 12,
+            "step": 2600,
+            "submission_reported_loss": 3.2812,
+            "verifier_raw_loss": 3.2794,
+            "weights_digest": "59ce02691be1f610f77e94d66a9b1cc7150b656e7530edb35e2d04e4c778e695",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "5d42a7a50526b8a937b262b4f72425d738126f0e5487ee8e0a3432cd7468b716",
+            "seeds_contributing": 2,
+            "seq": 13,
+            "step": 2650,
+            "submission_reported_loss": 3.2799,
+            "verifier_raw_loss": 3.2781,
+            "weights_digest": "5d42a7a50526b8a937b262b4f72425d738126f0e5487ee8e0a3432cd7468b716",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "398a6c2ae8bb3c3b335df35f060420627978aef389046d82fba6b7d3ada4fe91",
+            "seeds_contributing": 2,
+            "seq": 14,
+            "step": 2700,
+            "submission_reported_loss": 3.2788,
+            "verifier_raw_loss": 3.2772,
+            "weights_digest": "398a6c2ae8bb3c3b335df35f060420627978aef389046d82fba6b7d3ada4fe91",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "3c018c1566c0410cb7627ae67184db3503bf6b9853d04dfe87d057fd20dd8da2",
+            "seeds_contributing": 2,
+            "seq": 15,
+            "step": 2750,
+            "submission_reported_loss": 3.2779,
+            "verifier_raw_loss": 3.2768,
+            "weights_digest": "3c018c1566c0410cb7627ae67184db3503bf6b9853d04dfe87d057fd20dd8da2",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "c56ede1e2fa0afebca58858f50ecf88554f25755cd8cc4e911afde24c7950d9f",
+            "seeds_contributing": 2,
+            "seq": 16,
+            "step": 2800,
+            "submission_reported_loss": 3.2771,
+            "verifier_raw_loss": 3.2761,
+            "weights_digest": "c56ede1e2fa0afebca58858f50ecf88554f25755cd8cc4e911afde24c7950d9f",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "755e60cfecb3c5fecd59e70c5f60a704c69dd56af5fceb2e6569db0fb2a132be",
+            "seeds_contributing": 2,
+            "seq": 17,
+            "step": 2850,
+            "submission_reported_loss": 3.2764,
+            "verifier_raw_loss": 3.2757,
+            "weights_digest": "755e60cfecb3c5fecd59e70c5f60a704c69dd56af5fceb2e6569db0fb2a132be",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "ac604912f85a42ca93a276eb2a9ee0f12b2e61be8fb3a5ba07caf71ec977097b",
+            "seeds_contributing": 2,
+            "seq": 18,
+            "step": 2900,
+            "submission_reported_loss": 3.2758,
+            "verifier_raw_loss": 3.2753,
+            "weights_digest": "ac604912f85a42ca93a276eb2a9ee0f12b2e61be8fb3a5ba07caf71ec977097b",
+            "weights_origin": "harness-checkpoint"
+          }
+        ],
+        "evaluations_per_seed": {
+          "1101": 9,
+          "2917": 9
+        },
+        "events": [
+          {
+            "accelerator_seconds_spent_before": 0.0,
+            "corpus_revision": "r46",
+            "kind": "fingerprint-screen",
+            "seq": 0
+          },
+          {
+            "kind": "seed-launch",
+            "seed": 1101,
+            "seq": 1
+          },
+          {
+            "kind": "seed-launch",
+            "seed": 2917,
+            "seq": 2
+          }
+        ],
+        "frozen_axes": {
+          "arch_digest": "9f86d081884c7d659a2feaa0c55ad015",
+          "arch_id": "nanogpt-track3-124M",
+          "batch_size": 524288,
+          "dataset_digest": "e3b0c44298fc1c149afbf4c8996fb924",
+          "dataset_id": "fineweb-edu-10B-track3",
+          "fwd_bwd_per_step": 1
+        },
+        "graded_loss_provenance": "verifier-recompute-unsmoothed",
+        "graded_series": [
+          [
+            2500,
+            3.2941
+          ],
+          [
+            2550,
+            3.2856
+          ],
+          [
+            2600,
+            3.2794
+          ],
+          [
+            2650,
+            3.2781
+          ],
+          [
+            2700,
+            3.2772
+          ],
+          [
+            2750,
+            3.2768
+          ],
+          [
+            2800,
+            3.2761
+          ],
+          [
+            2850,
+            3.2757
+          ],
+          [
+            2900,
+            3.2753
+          ]
+        ],
+        "origin": "derived-fixture",
+        "origin_boundary": "Authored in solution/grounding.yaml as a derivation source. NOT a measurement. No accelerator run produced these numbers and no claim about an accelerator rests on them.",
+        "run": {
+          "halt_cause": "verifier-schedule-exhausted",
+          "halt_step": 2900,
+          "launched": true,
+          "run_directory_owner": "verifier",
+          "scheduled_grid": [
+            2500,
+            2550,
+            2600,
+            2650,
+            2700,
+            2750,
+            2800,
+            2850,
+            2900
+          ],
+          "seeds": [
+            1101,
+            2917
+          ]
+        },
+        "schema": "bia.oer01.telemetry/v1"
+      }
+    },
+    {
+      "admin_override": {},
+      "expect_reason": "recipe-replays-published-record",
+      "expect_reward": 0.0,
+      "fires": "recipe_diverges_from_the_pinned_record_corpus",
+      "half": "rejecting",
+      "id": "nc_jittered_replay_record_46",
+      "screen": {
+        "corpus_revision": "r46",
+        "floor_applied": 0.15,
+        "hyper_vector": [
+          34,
+          39,
+          39,
+          -1,
+          33,
+          42,
+          -1,
+          30
+        ],
+        "per_entry": {
+          "record-36": {
+            "proximity": 0.140625,
+            "structural_match": false
+          },
+          "record-40": {
+            "proximity": 0.03125,
+            "structural_match": false
+          },
+          "record-44": {
+            "proximity": 0.140625,
+            "structural_match": false
+          },
+          "record-46": {
+            "proximity": 0.0,
+            "structural_match": true
+          }
+        },
+        "recipe_readable": true,
+        "replays": [
+          "record-46"
+        ],
+        "structural_digest": "b7cfe1006f5f94405913685a4fd32874"
+      },
+      "telemetry": {
+        "checkpoint_custody": "harness-owned-at-every-scheduled-point",
+        "evaluations": [
+          {
+            "harness_checkpoint_digest": "bbbab160875fac3210493e0ecfd6ffd7ad80242f21fb81651f11d7328cc047db",
+            "seeds_contributing": 2,
+            "seq": 10,
+            "step": 2500,
+            "submission_reported_loss": 3.2905,
+            "verifier_raw_loss": 3.2941,
+            "weights_digest": "bbbab160875fac3210493e0ecfd6ffd7ad80242f21fb81651f11d7328cc047db",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "24077dc28d628071a23221d12e451c5b2bc1244082eab73c94ce7f622ef5be73",
+            "seeds_contributing": 2,
+            "seq": 11,
+            "step": 2550,
+            "submission_reported_loss": 3.2841,
+            "verifier_raw_loss": 3.2856,
+            "weights_digest": "24077dc28d628071a23221d12e451c5b2bc1244082eab73c94ce7f622ef5be73",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "59ce02691be1f610f77e94d66a9b1cc7150b656e7530edb35e2d04e4c778e695",
+            "seeds_contributing": 2,
+            "seq": 12,
+            "step": 2600,
+            "submission_reported_loss": 3.2812,
+            "verifier_raw_loss": 3.2794,
+            "weights_digest": "59ce02691be1f610f77e94d66a9b1cc7150b656e7530edb35e2d04e4c778e695",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "5d42a7a50526b8a937b262b4f72425d738126f0e5487ee8e0a3432cd7468b716",
+            "seeds_contributing": 2,
+            "seq": 13,
+            "step": 2650,
+            "submission_reported_loss": 3.2799,
+            "verifier_raw_loss": 3.2781,
+            "weights_digest": "5d42a7a50526b8a937b262b4f72425d738126f0e5487ee8e0a3432cd7468b716",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "398a6c2ae8bb3c3b335df35f060420627978aef389046d82fba6b7d3ada4fe91",
+            "seeds_contributing": 2,
+            "seq": 14,
+            "step": 2700,
+            "submission_reported_loss": 3.2788,
+            "verifier_raw_loss": 3.2772,
+            "weights_digest": "398a6c2ae8bb3c3b335df35f060420627978aef389046d82fba6b7d3ada4fe91",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "3c018c1566c0410cb7627ae67184db3503bf6b9853d04dfe87d057fd20dd8da2",
+            "seeds_contributing": 2,
+            "seq": 15,
+            "step": 2750,
+            "submission_reported_loss": 3.2779,
+            "verifier_raw_loss": 3.2768,
+            "weights_digest": "3c018c1566c0410cb7627ae67184db3503bf6b9853d04dfe87d057fd20dd8da2",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "c56ede1e2fa0afebca58858f50ecf88554f25755cd8cc4e911afde24c7950d9f",
+            "seeds_contributing": 2,
+            "seq": 16,
+            "step": 2800,
+            "submission_reported_loss": 3.2771,
+            "verifier_raw_loss": 3.2761,
+            "weights_digest": "c56ede1e2fa0afebca58858f50ecf88554f25755cd8cc4e911afde24c7950d9f",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "755e60cfecb3c5fecd59e70c5f60a704c69dd56af5fceb2e6569db0fb2a132be",
+            "seeds_contributing": 2,
+            "seq": 17,
+            "step": 2850,
+            "submission_reported_loss": 3.2764,
+            "verifier_raw_loss": 3.2757,
+            "weights_digest": "755e60cfecb3c5fecd59e70c5f60a704c69dd56af5fceb2e6569db0fb2a132be",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "ac604912f85a42ca93a276eb2a9ee0f12b2e61be8fb3a5ba07caf71ec977097b",
+            "seeds_contributing": 2,
+            "seq": 18,
+            "step": 2900,
+            "submission_reported_loss": 3.2758,
+            "verifier_raw_loss": 3.2753,
+            "weights_digest": "ac604912f85a42ca93a276eb2a9ee0f12b2e61be8fb3a5ba07caf71ec977097b",
+            "weights_origin": "harness-checkpoint"
+          }
+        ],
+        "evaluations_per_seed": {
+          "1101": 9,
+          "2917": 9
+        },
+        "events": [
+          {
+            "accelerator_seconds_spent_before": 0.0,
+            "corpus_revision": "r46",
+            "kind": "fingerprint-screen",
+            "seq": 0
+          },
+          {
+            "kind": "seed-launch",
+            "seed": 1101,
+            "seq": 1
+          },
+          {
+            "kind": "seed-launch",
+            "seed": 2917,
+            "seq": 2
+          }
+        ],
+        "frozen_axes": {
+          "arch_digest": "9f86d081884c7d659a2feaa0c55ad015",
+          "arch_id": "nanogpt-track3-124M",
+          "batch_size": 524288,
+          "dataset_digest": "e3b0c44298fc1c149afbf4c8996fb924",
+          "dataset_id": "fineweb-edu-10B-track3",
+          "fwd_bwd_per_step": 1
+        },
+        "graded_loss_provenance": "verifier-recompute-unsmoothed",
+        "graded_series": [
+          [
+            2500,
+            3.2941
+          ],
+          [
+            2550,
+            3.2856
+          ],
+          [
+            2600,
+            3.2794
+          ],
+          [
+            2650,
+            3.2781
+          ],
+          [
+            2700,
+            3.2772
+          ],
+          [
+            2750,
+            3.2768
+          ],
+          [
+            2800,
+            3.2761
+          ],
+          [
+            2850,
+            3.2757
+          ],
+          [
+            2900,
+            3.2753
+          ]
+        ],
+        "origin": "derived-fixture",
+        "origin_boundary": "Authored in solution/grounding.yaml as a derivation source. NOT a measurement. No accelerator run produced these numbers and no claim about an accelerator rests on them.",
+        "run": {
+          "halt_cause": "verifier-schedule-exhausted",
+          "halt_step": 2900,
+          "launched": true,
+          "run_directory_owner": "verifier",
+          "scheduled_grid": [
+            2500,
+            2550,
+            2600,
+            2650,
+            2700,
+            2750,
+            2800,
+            2850,
+            2900
+          ],
+          "seeds": [
+            1101,
+            2917
+          ]
+        },
+        "schema": "bia.oer01.telemetry/v1"
+      }
+    },
+    {
+      "admin_override": {
+        "record_corpus_revision": "r47"
+      },
+      "expect_reason": "recipe-replays-published-record",
+      "expect_reward": 0.0,
+      "fires": "recipe_diverges_from_the_pinned_record_corpus",
+      "half": "rejecting",
+      "id": "nc_stale_answer_pre_mutation",
+      "screen": {
+        "corpus_revision": "r46",
+        "floor_applied": 0.15,
+        "hyper_vector": [
+          34,
+          39,
+          39,
+          -1,
+          33,
+          42,
+          40,
+          30
+        ],
+        "per_entry": {
+          "record-36": {
+            "proximity": 0.265625,
+            "structural_match": false
+          },
+          "record-40": {
+            "proximity": 0.15625,
+            "structural_match": false
+          },
+          "record-44": {
+            "proximity": 0.265625,
+            "structural_match": false
+          },
+          "record-46": {
+            "proximity": 0.125,
+            "structural_match": false
+          }
+        },
+        "recipe_readable": true,
+        "replays": [],
+        "structural_digest": "8ae1e92312bdd102b17b988f0741914e"
+      },
+      "stale_control": "ctl-fingerprint-cleared-against-corpus-revision-r46",
+      "telemetry": {
+        "checkpoint_custody": "harness-owned-at-every-scheduled-point",
+        "evaluations": [
+          {
+            "harness_checkpoint_digest": "bbbab160875fac3210493e0ecfd6ffd7ad80242f21fb81651f11d7328cc047db",
+            "seeds_contributing": 2,
+            "seq": 10,
+            "step": 2500,
+            "submission_reported_loss": 3.2905,
+            "verifier_raw_loss": 3.2941,
+            "weights_digest": "bbbab160875fac3210493e0ecfd6ffd7ad80242f21fb81651f11d7328cc047db",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "24077dc28d628071a23221d12e451c5b2bc1244082eab73c94ce7f622ef5be73",
+            "seeds_contributing": 2,
+            "seq": 11,
+            "step": 2550,
+            "submission_reported_loss": 3.2841,
+            "verifier_raw_loss": 3.2856,
+            "weights_digest": "24077dc28d628071a23221d12e451c5b2bc1244082eab73c94ce7f622ef5be73",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "59ce02691be1f610f77e94d66a9b1cc7150b656e7530edb35e2d04e4c778e695",
+            "seeds_contributing": 2,
+            "seq": 12,
+            "step": 2600,
+            "submission_reported_loss": 3.2812,
+            "verifier_raw_loss": 3.2794,
+            "weights_digest": "59ce02691be1f610f77e94d66a9b1cc7150b656e7530edb35e2d04e4c778e695",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "5d42a7a50526b8a937b262b4f72425d738126f0e5487ee8e0a3432cd7468b716",
+            "seeds_contributing": 2,
+            "seq": 13,
+            "step": 2650,
+            "submission_reported_loss": 3.2799,
+            "verifier_raw_loss": 3.2781,
+            "weights_digest": "5d42a7a50526b8a937b262b4f72425d738126f0e5487ee8e0a3432cd7468b716",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "398a6c2ae8bb3c3b335df35f060420627978aef389046d82fba6b7d3ada4fe91",
+            "seeds_contributing": 2,
+            "seq": 14,
+            "step": 2700,
+            "submission_reported_loss": 3.2788,
+            "verifier_raw_loss": 3.2772,
+            "weights_digest": "398a6c2ae8bb3c3b335df35f060420627978aef389046d82fba6b7d3ada4fe91",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "3c018c1566c0410cb7627ae67184db3503bf6b9853d04dfe87d057fd20dd8da2",
+            "seeds_contributing": 2,
+            "seq": 15,
+            "step": 2750,
+            "submission_reported_loss": 3.2779,
+            "verifier_raw_loss": 3.2768,
+            "weights_digest": "3c018c1566c0410cb7627ae67184db3503bf6b9853d04dfe87d057fd20dd8da2",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "c56ede1e2fa0afebca58858f50ecf88554f25755cd8cc4e911afde24c7950d9f",
+            "seeds_contributing": 2,
+            "seq": 16,
+            "step": 2800,
+            "submission_reported_loss": 3.2771,
+            "verifier_raw_loss": 3.2761,
+            "weights_digest": "c56ede1e2fa0afebca58858f50ecf88554f25755cd8cc4e911afde24c7950d9f",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "755e60cfecb3c5fecd59e70c5f60a704c69dd56af5fceb2e6569db0fb2a132be",
+            "seeds_contributing": 2,
+            "seq": 17,
+            "step": 2850,
+            "submission_reported_loss": 3.2764,
+            "verifier_raw_loss": 3.2757,
+            "weights_digest": "755e60cfecb3c5fecd59e70c5f60a704c69dd56af5fceb2e6569db0fb2a132be",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "ac604912f85a42ca93a276eb2a9ee0f12b2e61be8fb3a5ba07caf71ec977097b",
+            "seeds_contributing": 2,
+            "seq": 18,
+            "step": 2900,
+            "submission_reported_loss": 3.2758,
+            "verifier_raw_loss": 3.2753,
+            "weights_digest": "ac604912f85a42ca93a276eb2a9ee0f12b2e61be8fb3a5ba07caf71ec977097b",
+            "weights_origin": "harness-checkpoint"
+          }
+        ],
+        "evaluations_per_seed": {
+          "1101": 9,
+          "2917": 9
+        },
+        "events": [
+          {
+            "accelerator_seconds_spent_before": 0.0,
+            "corpus_revision": "r46",
+            "kind": "fingerprint-screen",
+            "seq": 0
+          },
+          {
+            "kind": "seed-launch",
+            "seed": 1101,
+            "seq": 1
+          },
+          {
+            "kind": "seed-launch",
+            "seed": 2917,
+            "seq": 2
+          }
+        ],
+        "frozen_axes": {
+          "arch_digest": "9f86d081884c7d659a2feaa0c55ad015",
+          "arch_id": "nanogpt-track3-124M",
+          "batch_size": 524288,
+          "dataset_digest": "e3b0c44298fc1c149afbf4c8996fb924",
+          "dataset_id": "fineweb-edu-10B-track3",
+          "fwd_bwd_per_step": 1
+        },
+        "graded_loss_provenance": "verifier-recompute-unsmoothed",
+        "graded_series": [
+          [
+            2500,
+            3.2941
+          ],
+          [
+            2550,
+            3.2856
+          ],
+          [
+            2600,
+            3.2794
+          ],
+          [
+            2650,
+            3.2781
+          ],
+          [
+            2700,
+            3.2772
+          ],
+          [
+            2750,
+            3.2768
+          ],
+          [
+            2800,
+            3.2761
+          ],
+          [
+            2850,
+            3.2757
+          ],
+          [
+            2900,
+            3.2753
+          ]
+        ],
+        "origin": "derived-fixture",
+        "origin_boundary": "Authored in solution/grounding.yaml as a derivation source. NOT a measurement. No accelerator run produced these numbers and no claim about an accelerator rests on them.",
+        "run": {
+          "halt_cause": "verifier-schedule-exhausted",
+          "halt_step": 2900,
+          "launched": true,
+          "run_directory_owner": "verifier",
+          "scheduled_grid": [
+            2500,
+            2550,
+            2600,
+            2650,
+            2700,
+            2750,
+            2800,
+            2850,
+            2900
+          ],
+          "seeds": [
+            1101,
+            2917
+          ]
+        },
+        "schema": "bia.oer01.telemetry/v1"
+      }
+    },
+    {
+      "admin_override": {},
+      "expect_reason": "screen-ran-after-accelerator-time-was-spent",
+      "expect_reward": 0.0,
+      "fires": "fingerprint_screen_precedes_any_seed",
+      "half": "rejecting",
+      "id": "nc_screen_after_seeds",
+      "screen": {
+        "corpus_revision": "r46",
+        "floor_applied": 0.15,
+        "hyper_vector": [
+          34,
+          39,
+          39,
+          -1,
+          33,
+          42,
+          40,
+          30
+        ],
+        "per_entry": {
+          "record-36": {
+            "proximity": 0.265625,
+            "structural_match": false
+          },
+          "record-40": {
+            "proximity": 0.15625,
+            "structural_match": false
+          },
+          "record-44": {
+            "proximity": 0.265625,
+            "structural_match": false
+          },
+          "record-46": {
+            "proximity": 0.125,
+            "structural_match": false
+          }
+        },
+        "recipe_readable": true,
+        "replays": [],
+        "structural_digest": "8ae1e92312bdd102b17b988f0741914e"
+      },
+      "telemetry": {
+        "checkpoint_custody": "harness-owned-at-every-scheduled-point",
+        "evaluations": [
+          {
+            "harness_checkpoint_digest": "bbbab160875fac3210493e0ecfd6ffd7ad80242f21fb81651f11d7328cc047db",
+            "seeds_contributing": 2,
+            "seq": 10,
+            "step": 2500,
+            "submission_reported_loss": 3.2905,
+            "verifier_raw_loss": 3.2941,
+            "weights_digest": "bbbab160875fac3210493e0ecfd6ffd7ad80242f21fb81651f11d7328cc047db",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "24077dc28d628071a23221d12e451c5b2bc1244082eab73c94ce7f622ef5be73",
+            "seeds_contributing": 2,
+            "seq": 11,
+            "step": 2550,
+            "submission_reported_loss": 3.2841,
+            "verifier_raw_loss": 3.2856,
+            "weights_digest": "24077dc28d628071a23221d12e451c5b2bc1244082eab73c94ce7f622ef5be73",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "59ce02691be1f610f77e94d66a9b1cc7150b656e7530edb35e2d04e4c778e695",
+            "seeds_contributing": 2,
+            "seq": 12,
+            "step": 2600,
+            "submission_reported_loss": 3.2812,
+            "verifier_raw_loss": 3.2794,
+            "weights_digest": "59ce02691be1f610f77e94d66a9b1cc7150b656e7530edb35e2d04e4c778e695",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "5d42a7a50526b8a937b262b4f72425d738126f0e5487ee8e0a3432cd7468b716",
+            "seeds_contributing": 2,
+            "seq": 13,
+            "step": 2650,
+            "submission_reported_loss": 3.2799,
+            "verifier_raw_loss": 3.2781,
+            "weights_digest": "5d42a7a50526b8a937b262b4f72425d738126f0e5487ee8e0a3432cd7468b716",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "398a6c2ae8bb3c3b335df35f060420627978aef389046d82fba6b7d3ada4fe91",
+            "seeds_contributing": 2,
+            "seq": 14,
+            "step": 2700,
+            "submission_reported_loss": 3.2788,
+            "verifier_raw_loss": 3.2772,
+            "weights_digest": "398a6c2ae8bb3c3b335df35f060420627978aef389046d82fba6b7d3ada4fe91",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "3c018c1566c0410cb7627ae67184db3503bf6b9853d04dfe87d057fd20dd8da2",
+            "seeds_contributing": 2,
+            "seq": 15,
+            "step": 2750,
+            "submission_reported_loss": 3.2779,
+            "verifier_raw_loss": 3.2768,
+            "weights_digest": "3c018c1566c0410cb7627ae67184db3503bf6b9853d04dfe87d057fd20dd8da2",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "c56ede1e2fa0afebca58858f50ecf88554f25755cd8cc4e911afde24c7950d9f",
+            "seeds_contributing": 2,
+            "seq": 16,
+            "step": 2800,
+            "submission_reported_loss": 3.2771,
+            "verifier_raw_loss": 3.2761,
+            "weights_digest": "c56ede1e2fa0afebca58858f50ecf88554f25755cd8cc4e911afde24c7950d9f",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "755e60cfecb3c5fecd59e70c5f60a704c69dd56af5fceb2e6569db0fb2a132be",
+            "seeds_contributing": 2,
+            "seq": 17,
+            "step": 2850,
+            "submission_reported_loss": 3.2764,
+            "verifier_raw_loss": 3.2757,
+            "weights_digest": "755e60cfecb3c5fecd59e70c5f60a704c69dd56af5fceb2e6569db0fb2a132be",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "ac604912f85a42ca93a276eb2a9ee0f12b2e61be8fb3a5ba07caf71ec977097b",
+            "seeds_contributing": 2,
+            "seq": 18,
+            "step": 2900,
+            "submission_reported_loss": 3.2758,
+            "verifier_raw_loss": 3.2753,
+            "weights_digest": "ac604912f85a42ca93a276eb2a9ee0f12b2e61be8fb3a5ba07caf71ec977097b",
+            "weights_origin": "harness-checkpoint"
+          }
+        ],
+        "evaluations_per_seed": {
+          "1101": 9,
+          "2917": 9
+        },
+        "events": [
+          {
+            "kind": "seed-launch",
+            "seed": 1101,
+            "seq": 0
+          },
+          {
+            "kind": "seed-launch",
+            "seed": 2917,
+            "seq": 1
+          },
+          {
+            "accelerator_seconds_spent_before": 412.5,
+            "corpus_revision": "r46",
+            "kind": "fingerprint-screen",
+            "seq": 2
+          }
+        ],
+        "frozen_axes": {
+          "arch_digest": "9f86d081884c7d659a2feaa0c55ad015",
+          "arch_id": "nanogpt-track3-124M",
+          "batch_size": 524288,
+          "dataset_digest": "e3b0c44298fc1c149afbf4c8996fb924",
+          "dataset_id": "fineweb-edu-10B-track3",
+          "fwd_bwd_per_step": 1
+        },
+        "graded_loss_provenance": "verifier-recompute-unsmoothed",
+        "graded_series": [
+          [
+            2500,
+            3.2941
+          ],
+          [
+            2550,
+            3.2856
+          ],
+          [
+            2600,
+            3.2794
+          ],
+          [
+            2650,
+            3.2781
+          ],
+          [
+            2700,
+            3.2772
+          ],
+          [
+            2750,
+            3.2768
+          ],
+          [
+            2800,
+            3.2761
+          ],
+          [
+            2850,
+            3.2757
+          ],
+          [
+            2900,
+            3.2753
+          ]
+        ],
+        "origin": "derived-fixture",
+        "origin_boundary": "Authored in solution/grounding.yaml as a derivation source. NOT a measurement. No accelerator run produced these numbers and no claim about an accelerator rests on them.",
+        "run": {
+          "halt_cause": "verifier-schedule-exhausted",
+          "halt_step": 2900,
+          "launched": true,
+          "run_directory_owner": "verifier",
+          "scheduled_grid": [
+            2500,
+            2550,
+            2600,
+            2650,
+            2700,
+            2750,
+            2800,
+            2850,
+            2900
+          ],
+          "seeds": [
+            1101,
+            2917
+          ]
+        },
+        "schema": "bia.oer01.telemetry/v1"
+      }
+    },
+    {
+      "admin_override": {},
+      "expect_reason": "graded-run-produced-no-telemetry",
+      "expect_reward": 0.0,
+      "fires": "graded_run_produced_verifier_owned_telemetry",
+      "half": "rejecting",
+      "id": "nc_no_telemetry",
+      "screen": {
+        "corpus_revision": "r46",
+        "floor_applied": 0.15,
+        "hyper_vector": [
+          34,
+          39,
+          39,
+          -1,
+          33,
+          42,
+          40,
+          30
+        ],
+        "per_entry": {
+          "record-36": {
+            "proximity": 0.265625,
+            "structural_match": false
+          },
+          "record-40": {
+            "proximity": 0.15625,
+            "structural_match": false
+          },
+          "record-44": {
+            "proximity": 0.265625,
+            "structural_match": false
+          },
+          "record-46": {
+            "proximity": 0.125,
+            "structural_match": false
+          }
+        },
+        "recipe_readable": true,
+        "replays": [],
+        "structural_digest": "8ae1e92312bdd102b17b988f0741914e"
+      },
+      "telemetry": {
+        "checkpoint_custody": "harness-owned-at-every-scheduled-point",
+        "evaluations": [],
+        "evaluations_per_seed": {},
+        "events": [
+          {
+            "accelerator_seconds_spent_before": 0.0,
+            "corpus_revision": "r46",
+            "kind": "fingerprint-screen",
+            "seq": 0
+          }
+        ],
+        "frozen_axes": {
+          "arch_digest": "9f86d081884c7d659a2feaa0c55ad015",
+          "arch_id": "nanogpt-track3-124M",
+          "batch_size": 524288,
+          "dataset_digest": "e3b0c44298fc1c149afbf4c8996fb924",
+          "dataset_id": "fineweb-edu-10B-track3",
+          "fwd_bwd_per_step": 1
+        },
+        "graded_loss_provenance": "verifier-recompute-unsmoothed",
+        "graded_series": [],
+        "origin": "derived-fixture",
+        "origin_boundary": "Authored in solution/grounding.yaml as a derivation source. NOT a measurement. No accelerator run produced these numbers and no claim about an accelerator rests on them.",
+        "run": {
+          "halt_cause": "",
+          "halt_step": null,
+          "launched": false,
+          "run_directory_owner": "verifier",
+          "scheduled_grid": [],
+          "seeds": []
+        },
+        "schema": "bia.oer01.telemetry/v1"
+      }
+    },
+    {
+      "admin_override": {},
+      "expect_reason": "frozen-axis-moved",
+      "expect_reward": 0.0,
+      "fires": "frozen_axes_unmoved_by_the_graded_run",
+      "half": "rejecting",
+      "id": "nc_frozen_axis_moved",
+      "screen": {
+        "corpus_revision": "r46",
+        "floor_applied": 0.15,
+        "hyper_vector": [
+          34,
+          39,
+          39,
+          -1,
+          33,
+          42,
+          40,
+          30
+        ],
+        "per_entry": {
+          "record-36": {
+            "proximity": 0.265625,
+            "structural_match": false
+          },
+          "record-40": {
+            "proximity": 0.15625,
+            "structural_match": false
+          },
+          "record-44": {
+            "proximity": 0.265625,
+            "structural_match": false
+          },
+          "record-46": {
+            "proximity": 0.125,
+            "structural_match": false
+          }
+        },
+        "recipe_readable": true,
+        "replays": [],
+        "structural_digest": "8ae1e92312bdd102b17b988f0741914e"
+      },
+      "telemetry": {
+        "checkpoint_custody": "harness-owned-at-every-scheduled-point",
+        "evaluations": [
+          {
+            "harness_checkpoint_digest": "bbbab160875fac3210493e0ecfd6ffd7ad80242f21fb81651f11d7328cc047db",
+            "seeds_contributing": 2,
+            "seq": 10,
+            "step": 2500,
+            "submission_reported_loss": 3.2905,
+            "verifier_raw_loss": 3.2941,
+            "weights_digest": "bbbab160875fac3210493e0ecfd6ffd7ad80242f21fb81651f11d7328cc047db",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "24077dc28d628071a23221d12e451c5b2bc1244082eab73c94ce7f622ef5be73",
+            "seeds_contributing": 2,
+            "seq": 11,
+            "step": 2550,
+            "submission_reported_loss": 3.2841,
+            "verifier_raw_loss": 3.2856,
+            "weights_digest": "24077dc28d628071a23221d12e451c5b2bc1244082eab73c94ce7f622ef5be73",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "59ce02691be1f610f77e94d66a9b1cc7150b656e7530edb35e2d04e4c778e695",
+            "seeds_contributing": 2,
+            "seq": 12,
+            "step": 2600,
+            "submission_reported_loss": 3.2812,
+            "verifier_raw_loss": 3.2794,
+            "weights_digest": "59ce02691be1f610f77e94d66a9b1cc7150b656e7530edb35e2d04e4c778e695",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "5d42a7a50526b8a937b262b4f72425d738126f0e5487ee8e0a3432cd7468b716",
+            "seeds_contributing": 2,
+            "seq": 13,
+            "step": 2650,
+            "submission_reported_loss": 3.2799,
+            "verifier_raw_loss": 3.2781,
+            "weights_digest": "5d42a7a50526b8a937b262b4f72425d738126f0e5487ee8e0a3432cd7468b716",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "398a6c2ae8bb3c3b335df35f060420627978aef389046d82fba6b7d3ada4fe91",
+            "seeds_contributing": 2,
+            "seq": 14,
+            "step": 2700,
+            "submission_reported_loss": 3.2788,
+            "verifier_raw_loss": 3.2772,
+            "weights_digest": "398a6c2ae8bb3c3b335df35f060420627978aef389046d82fba6b7d3ada4fe91",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "3c018c1566c0410cb7627ae67184db3503bf6b9853d04dfe87d057fd20dd8da2",
+            "seeds_contributing": 2,
+            "seq": 15,
+            "step": 2750,
+            "submission_reported_loss": 3.2779,
+            "verifier_raw_loss": 3.2768,
+            "weights_digest": "3c018c1566c0410cb7627ae67184db3503bf6b9853d04dfe87d057fd20dd8da2",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "c56ede1e2fa0afebca58858f50ecf88554f25755cd8cc4e911afde24c7950d9f",
+            "seeds_contributing": 2,
+            "seq": 16,
+            "step": 2800,
+            "submission_reported_loss": 3.2771,
+            "verifier_raw_loss": 3.2761,
+            "weights_digest": "c56ede1e2fa0afebca58858f50ecf88554f25755cd8cc4e911afde24c7950d9f",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "755e60cfecb3c5fecd59e70c5f60a704c69dd56af5fceb2e6569db0fb2a132be",
+            "seeds_contributing": 2,
+            "seq": 17,
+            "step": 2850,
+            "submission_reported_loss": 3.2764,
+            "verifier_raw_loss": 3.2757,
+            "weights_digest": "755e60cfecb3c5fecd59e70c5f60a704c69dd56af5fceb2e6569db0fb2a132be",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "ac604912f85a42ca93a276eb2a9ee0f12b2e61be8fb3a5ba07caf71ec977097b",
+            "seeds_contributing": 2,
+            "seq": 18,
+            "step": 2900,
+            "submission_reported_loss": 3.2758,
+            "verifier_raw_loss": 3.2753,
+            "weights_digest": "ac604912f85a42ca93a276eb2a9ee0f12b2e61be8fb3a5ba07caf71ec977097b",
+            "weights_origin": "harness-checkpoint"
+          }
+        ],
+        "evaluations_per_seed": {
+          "1101": 9,
+          "2917": 9
+        },
+        "events": [
+          {
+            "accelerator_seconds_spent_before": 0.0,
+            "corpus_revision": "r46",
+            "kind": "fingerprint-screen",
+            "seq": 0
+          },
+          {
+            "kind": "seed-launch",
+            "seed": 1101,
+            "seq": 1
+          },
+          {
+            "kind": "seed-launch",
+            "seed": 2917,
+            "seq": 2
+          }
+        ],
+        "frozen_axes": {
+          "arch_digest": "9f86d081884c7d659a2feaa0c55ad015",
+          "arch_id": "nanogpt-track3-124M",
+          "batch_size": 1048576,
+          "dataset_digest": "e3b0c44298fc1c149afbf4c8996fb924",
+          "dataset_id": "fineweb-edu-10B-track3",
+          "fwd_bwd_per_step": 1
+        },
+        "graded_loss_provenance": "verifier-recompute-unsmoothed",
+        "graded_series": [
+          [
+            2500,
+            3.2941
+          ],
+          [
+            2550,
+            3.2856
+          ],
+          [
+            2600,
+            3.2794
+          ],
+          [
+            2650,
+            3.2781
+          ],
+          [
+            2700,
+            3.2772
+          ],
+          [
+            2750,
+            3.2768
+          ],
+          [
+            2800,
+            3.2761
+          ],
+          [
+            2850,
+            3.2757
+          ],
+          [
+            2900,
+            3.2753
+          ]
+        ],
+        "origin": "derived-fixture",
+        "origin_boundary": "Authored in solution/grounding.yaml as a derivation source. NOT a measurement. No accelerator run produced these numbers and no claim about an accelerator rests on them.",
+        "run": {
+          "halt_cause": "verifier-schedule-exhausted",
+          "halt_step": 2900,
+          "launched": true,
+          "run_directory_owner": "verifier",
+          "scheduled_grid": [
+            2500,
+            2550,
+            2600,
+            2650,
+            2700,
+            2750,
+            2800,
+            2850,
+            2900
+          ],
+          "seeds": [
+            1101,
+            2917
+          ]
+        },
+        "schema": "bia.oer01.telemetry/v1"
+      }
+    },
+    {
+      "admin_override": {},
+      "expect_reason": "readout-smoothed-on-the-graded-path",
+      "expect_reward": 0.0,
+      "fires": "graded_loss_recomputed_unsmoothed_by_verifier",
+      "half": "rejecting",
+      "id": "nc_readout_smoothing",
+      "screen": {
+        "corpus_revision": "r46",
+        "floor_applied": 0.15,
+        "hyper_vector": [
+          34,
+          39,
+          39,
+          -1,
+          33,
+          42,
+          40,
+          30
+        ],
+        "per_entry": {
+          "record-36": {
+            "proximity": 0.265625,
+            "structural_match": false
+          },
+          "record-40": {
+            "proximity": 0.15625,
+            "structural_match": false
+          },
+          "record-44": {
+            "proximity": 0.265625,
+            "structural_match": false
+          },
+          "record-46": {
+            "proximity": 0.125,
+            "structural_match": false
+          }
+        },
+        "recipe_readable": true,
+        "replays": [],
+        "structural_digest": "8ae1e92312bdd102b17b988f0741914e"
+      },
+      "telemetry": {
+        "checkpoint_custody": "harness-owned-at-every-scheduled-point",
+        "evaluations": [
+          {
+            "harness_checkpoint_digest": "bbbab160875fac3210493e0ecfd6ffd7ad80242f21fb81651f11d7328cc047db",
+            "seeds_contributing": 2,
+            "seq": 10,
+            "step": 2500,
+            "submission_reported_loss": 3.2905,
+            "verifier_raw_loss": 3.2941,
+            "weights_digest": "bbbab160875fac3210493e0ecfd6ffd7ad80242f21fb81651f11d7328cc047db",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "24077dc28d628071a23221d12e451c5b2bc1244082eab73c94ce7f622ef5be73",
+            "seeds_contributing": 2,
+            "seq": 11,
+            "step": 2550,
+            "submission_reported_loss": 3.2841,
+            "verifier_raw_loss": 3.2856,
+            "weights_digest": "24077dc28d628071a23221d12e451c5b2bc1244082eab73c94ce7f622ef5be73",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "59ce02691be1f610f77e94d66a9b1cc7150b656e7530edb35e2d04e4c778e695",
+            "seeds_contributing": 2,
+            "seq": 12,
+            "step": 2600,
+            "submission_reported_loss": 3.2812,
+            "verifier_raw_loss": 3.2794,
+            "weights_digest": "59ce02691be1f610f77e94d66a9b1cc7150b656e7530edb35e2d04e4c778e695",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "5d42a7a50526b8a937b262b4f72425d738126f0e5487ee8e0a3432cd7468b716",
+            "seeds_contributing": 2,
+            "seq": 13,
+            "step": 2650,
+            "submission_reported_loss": 3.2799,
+            "verifier_raw_loss": 3.2781,
+            "weights_digest": "5d42a7a50526b8a937b262b4f72425d738126f0e5487ee8e0a3432cd7468b716",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "398a6c2ae8bb3c3b335df35f060420627978aef389046d82fba6b7d3ada4fe91",
+            "seeds_contributing": 2,
+            "seq": 14,
+            "step": 2700,
+            "submission_reported_loss": 3.2788,
+            "verifier_raw_loss": 3.2772,
+            "weights_digest": "398a6c2ae8bb3c3b335df35f060420627978aef389046d82fba6b7d3ada4fe91",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "3c018c1566c0410cb7627ae67184db3503bf6b9853d04dfe87d057fd20dd8da2",
+            "seeds_contributing": 2,
+            "seq": 15,
+            "step": 2750,
+            "submission_reported_loss": 3.2779,
+            "verifier_raw_loss": 3.2768,
+            "weights_digest": "3c018c1566c0410cb7627ae67184db3503bf6b9853d04dfe87d057fd20dd8da2",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "c56ede1e2fa0afebca58858f50ecf88554f25755cd8cc4e911afde24c7950d9f",
+            "seeds_contributing": 2,
+            "seq": 16,
+            "step": 2800,
+            "submission_reported_loss": 3.2771,
+            "verifier_raw_loss": 3.2761,
+            "weights_digest": "c56ede1e2fa0afebca58858f50ecf88554f25755cd8cc4e911afde24c7950d9f",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "755e60cfecb3c5fecd59e70c5f60a704c69dd56af5fceb2e6569db0fb2a132be",
+            "seeds_contributing": 2,
+            "seq": 17,
+            "step": 2850,
+            "submission_reported_loss": 3.2764,
+            "verifier_raw_loss": 3.2757,
+            "weights_digest": "755e60cfecb3c5fecd59e70c5f60a704c69dd56af5fceb2e6569db0fb2a132be",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "ac604912f85a42ca93a276eb2a9ee0f12b2e61be8fb3a5ba07caf71ec977097b",
+            "seeds_contributing": 2,
+            "seq": 18,
+            "step": 2900,
+            "submission_reported_loss": 3.2758,
+            "verifier_raw_loss": 3.2753,
+            "weights_digest": "ac604912f85a42ca93a276eb2a9ee0f12b2e61be8fb3a5ba07caf71ec977097b",
+            "weights_origin": "harness-checkpoint"
+          }
+        ],
+        "evaluations_per_seed": {
+          "1101": 9,
+          "2917": 9
+        },
+        "events": [
+          {
+            "accelerator_seconds_spent_before": 0.0,
+            "corpus_revision": "r46",
+            "kind": "fingerprint-screen",
+            "seq": 0
+          },
+          {
+            "kind": "seed-launch",
+            "seed": 1101,
+            "seq": 1
+          },
+          {
+            "kind": "seed-launch",
+            "seed": 2917,
+            "seq": 2
+          }
+        ],
+        "frozen_axes": {
+          "arch_digest": "9f86d081884c7d659a2feaa0c55ad015",
+          "arch_id": "nanogpt-track3-124M",
+          "batch_size": 524288,
+          "dataset_digest": "e3b0c44298fc1c149afbf4c8996fb924",
+          "dataset_id": "fineweb-edu-10B-track3",
+          "fwd_bwd_per_step": 1
+        },
+        "graded_loss_provenance": "verifier-recompute-unsmoothed",
+        "graded_series": [
+          [
+            2500,
+            3.2905
+          ],
+          [
+            2550,
+            3.2841
+          ],
+          [
+            2600,
+            3.2812
+          ],
+          [
+            2650,
+            3.2799
+          ],
+          [
+            2700,
+            3.2788
+          ],
+          [
+            2750,
+            3.2779
+          ],
+          [
+            2800,
+            3.2771
+          ],
+          [
+            2850,
+            3.2764
+          ],
+          [
+            2900,
+            3.2758
+          ]
+        ],
+        "origin": "derived-fixture",
+        "origin_boundary": "Authored in solution/grounding.yaml as a derivation source. NOT a measurement. No accelerator run produced these numbers and no claim about an accelerator rests on them.",
+        "run": {
+          "halt_cause": "verifier-schedule-exhausted",
+          "halt_step": 2900,
+          "launched": true,
+          "run_directory_owner": "verifier",
+          "scheduled_grid": [
+            2500,
+            2550,
+            2600,
+            2650,
+            2700,
+            2750,
+            2800,
+            2850,
+            2900
+          ],
+          "seeds": [
+            1101,
+            2917
+          ]
+        },
+        "schema": "bia.oer01.telemetry/v1"
+      }
+    },
+    {
+      "admin_override": {},
+      "expect_reason": "graded-weights-not-harness-owned",
+      "expect_reward": 0.0,
+      "fires": "graded_weights_are_harness_owned_at_the_graded_step",
+      "half": "rejecting",
+      "id": "nc_submission_selected_checkpoint",
+      "screen": {
+        "corpus_revision": "r46",
+        "floor_applied": 0.15,
+        "hyper_vector": [
+          34,
+          39,
+          39,
+          -1,
+          33,
+          42,
+          40,
+          30
+        ],
+        "per_entry": {
+          "record-36": {
+            "proximity": 0.265625,
+            "structural_match": false
+          },
+          "record-40": {
+            "proximity": 0.15625,
+            "structural_match": false
+          },
+          "record-44": {
+            "proximity": 0.265625,
+            "structural_match": false
+          },
+          "record-46": {
+            "proximity": 0.125,
+            "structural_match": false
+          }
+        },
+        "recipe_readable": true,
+        "replays": [],
+        "structural_digest": "8ae1e92312bdd102b17b988f0741914e"
+      },
+      "telemetry": {
+        "checkpoint_custody": "harness-owned-at-every-scheduled-point",
+        "evaluations": [
+          {
+            "harness_checkpoint_digest": "bbbab160875fac3210493e0ecfd6ffd7ad80242f21fb81651f11d7328cc047db",
+            "seeds_contributing": 2,
+            "seq": 10,
+            "step": 2500,
+            "submission_reported_loss": 3.2905,
+            "verifier_raw_loss": 3.2941,
+            "weights_digest": "bbbab160875fac3210493e0ecfd6ffd7ad80242f21fb81651f11d7328cc047db",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "24077dc28d628071a23221d12e451c5b2bc1244082eab73c94ce7f622ef5be73",
+            "seeds_contributing": 2,
+            "seq": 11,
+            "step": 2550,
+            "submission_reported_loss": 3.2841,
+            "verifier_raw_loss": 3.2856,
+            "weights_digest": "24077dc28d628071a23221d12e451c5b2bc1244082eab73c94ce7f622ef5be73",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "59ce02691be1f610f77e94d66a9b1cc7150b656e7530edb35e2d04e4c778e695",
+            "seeds_contributing": 2,
+            "seq": 12,
+            "step": 2600,
+            "submission_reported_loss": 3.2812,
+            "verifier_raw_loss": 3.2794,
+            "weights_digest": "339c450e77ed8925b3677062b3854355c7a260357e11abe785e20024dc98c190",
+            "weights_origin": "submission-selected"
+          },
+          {
+            "harness_checkpoint_digest": "5d42a7a50526b8a937b262b4f72425d738126f0e5487ee8e0a3432cd7468b716",
+            "seeds_contributing": 2,
+            "seq": 13,
+            "step": 2650,
+            "submission_reported_loss": 3.2799,
+            "verifier_raw_loss": 3.2781,
+            "weights_digest": "5d42a7a50526b8a937b262b4f72425d738126f0e5487ee8e0a3432cd7468b716",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "398a6c2ae8bb3c3b335df35f060420627978aef389046d82fba6b7d3ada4fe91",
+            "seeds_contributing": 2,
+            "seq": 14,
+            "step": 2700,
+            "submission_reported_loss": 3.2788,
+            "verifier_raw_loss": 3.2772,
+            "weights_digest": "398a6c2ae8bb3c3b335df35f060420627978aef389046d82fba6b7d3ada4fe91",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "3c018c1566c0410cb7627ae67184db3503bf6b9853d04dfe87d057fd20dd8da2",
+            "seeds_contributing": 2,
+            "seq": 15,
+            "step": 2750,
+            "submission_reported_loss": 3.2779,
+            "verifier_raw_loss": 3.2768,
+            "weights_digest": "3c018c1566c0410cb7627ae67184db3503bf6b9853d04dfe87d057fd20dd8da2",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "c56ede1e2fa0afebca58858f50ecf88554f25755cd8cc4e911afde24c7950d9f",
+            "seeds_contributing": 2,
+            "seq": 16,
+            "step": 2800,
+            "submission_reported_loss": 3.2771,
+            "verifier_raw_loss": 3.2761,
+            "weights_digest": "c56ede1e2fa0afebca58858f50ecf88554f25755cd8cc4e911afde24c7950d9f",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "755e60cfecb3c5fecd59e70c5f60a704c69dd56af5fceb2e6569db0fb2a132be",
+            "seeds_contributing": 2,
+            "seq": 17,
+            "step": 2850,
+            "submission_reported_loss": 3.2764,
+            "verifier_raw_loss": 3.2757,
+            "weights_digest": "755e60cfecb3c5fecd59e70c5f60a704c69dd56af5fceb2e6569db0fb2a132be",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "ac604912f85a42ca93a276eb2a9ee0f12b2e61be8fb3a5ba07caf71ec977097b",
+            "seeds_contributing": 2,
+            "seq": 18,
+            "step": 2900,
+            "submission_reported_loss": 3.2758,
+            "verifier_raw_loss": 3.2753,
+            "weights_digest": "ac604912f85a42ca93a276eb2a9ee0f12b2e61be8fb3a5ba07caf71ec977097b",
+            "weights_origin": "harness-checkpoint"
+          }
+        ],
+        "evaluations_per_seed": {
+          "1101": 9,
+          "2917": 9
+        },
+        "events": [
+          {
+            "accelerator_seconds_spent_before": 0.0,
+            "corpus_revision": "r46",
+            "kind": "fingerprint-screen",
+            "seq": 0
+          },
+          {
+            "kind": "seed-launch",
+            "seed": 1101,
+            "seq": 1
+          },
+          {
+            "kind": "seed-launch",
+            "seed": 2917,
+            "seq": 2
+          }
+        ],
+        "frozen_axes": {
+          "arch_digest": "9f86d081884c7d659a2feaa0c55ad015",
+          "arch_id": "nanogpt-track3-124M",
+          "batch_size": 524288,
+          "dataset_digest": "e3b0c44298fc1c149afbf4c8996fb924",
+          "dataset_id": "fineweb-edu-10B-track3",
+          "fwd_bwd_per_step": 1
+        },
+        "graded_loss_provenance": "verifier-recompute-unsmoothed",
+        "graded_series": [
+          [
+            2500,
+            3.2941
+          ],
+          [
+            2550,
+            3.2856
+          ],
+          [
+            2600,
+            3.2794
+          ],
+          [
+            2650,
+            3.2781
+          ],
+          [
+            2700,
+            3.2772
+          ],
+          [
+            2750,
+            3.2768
+          ],
+          [
+            2800,
+            3.2761
+          ],
+          [
+            2850,
+            3.2757
+          ],
+          [
+            2900,
+            3.2753
+          ]
+        ],
+        "origin": "derived-fixture",
+        "origin_boundary": "Authored in solution/grounding.yaml as a derivation source. NOT a measurement. No accelerator run produced these numbers and no claim about an accelerator rests on them.",
+        "run": {
+          "halt_cause": "verifier-schedule-exhausted",
+          "halt_step": 2900,
+          "launched": true,
+          "run_directory_owner": "verifier",
+          "scheduled_grid": [
+            2500,
+            2550,
+            2600,
+            2650,
+            2700,
+            2750,
+            2800,
+            2850,
+            2900
+          ],
+          "seeds": [
+            1101,
+            2917
+          ]
+        },
+        "schema": "bia.oer01.telemetry/v1"
+      }
+    },
+    {
+      "admin_override": {},
+      "expect_reason": "run-halted-before-sustain-window-closed",
+      "expect_reward": 0.0,
+      "fires": "no_early_stop_before_the_sustain_window_closed",
+      "half": "rejecting",
+      "id": "nc_early_stop",
+      "screen": {
+        "corpus_revision": "r46",
+        "floor_applied": 0.15,
+        "hyper_vector": [
+          34,
+          39,
+          39,
+          -1,
+          33,
+          42,
+          40,
+          30
+        ],
+        "per_entry": {
+          "record-36": {
+            "proximity": 0.265625,
+            "structural_match": false
+          },
+          "record-40": {
+            "proximity": 0.15625,
+            "structural_match": false
+          },
+          "record-44": {
+            "proximity": 0.265625,
+            "structural_match": false
+          },
+          "record-46": {
+            "proximity": 0.125,
+            "structural_match": false
+          }
+        },
+        "recipe_readable": true,
+        "replays": [],
+        "structural_digest": "8ae1e92312bdd102b17b988f0741914e"
+      },
+      "telemetry": {
+        "checkpoint_custody": "harness-owned-at-every-scheduled-point",
+        "evaluations": [
+          {
+            "harness_checkpoint_digest": "bbbab160875fac3210493e0ecfd6ffd7ad80242f21fb81651f11d7328cc047db",
+            "seeds_contributing": 2,
+            "seq": 10,
+            "step": 2500,
+            "submission_reported_loss": 3.2905,
+            "verifier_raw_loss": 3.2941,
+            "weights_digest": "bbbab160875fac3210493e0ecfd6ffd7ad80242f21fb81651f11d7328cc047db",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "24077dc28d628071a23221d12e451c5b2bc1244082eab73c94ce7f622ef5be73",
+            "seeds_contributing": 2,
+            "seq": 11,
+            "step": 2550,
+            "submission_reported_loss": 3.2841,
+            "verifier_raw_loss": 3.2856,
+            "weights_digest": "24077dc28d628071a23221d12e451c5b2bc1244082eab73c94ce7f622ef5be73",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "59ce02691be1f610f77e94d66a9b1cc7150b656e7530edb35e2d04e4c778e695",
+            "seeds_contributing": 2,
+            "seq": 12,
+            "step": 2600,
+            "submission_reported_loss": 3.2812,
+            "verifier_raw_loss": 3.2794,
+            "weights_digest": "59ce02691be1f610f77e94d66a9b1cc7150b656e7530edb35e2d04e4c778e695",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "5d42a7a50526b8a937b262b4f72425d738126f0e5487ee8e0a3432cd7468b716",
+            "seeds_contributing": 2,
+            "seq": 13,
+            "step": 2650,
+            "submission_reported_loss": 3.2799,
+            "verifier_raw_loss": 3.2781,
+            "weights_digest": "5d42a7a50526b8a937b262b4f72425d738126f0e5487ee8e0a3432cd7468b716",
+            "weights_origin": "harness-checkpoint"
+          }
+        ],
+        "evaluations_per_seed": {
+          "1101": 4,
+          "2917": 4
+        },
+        "events": [
+          {
+            "accelerator_seconds_spent_before": 0.0,
+            "corpus_revision": "r46",
+            "kind": "fingerprint-screen",
+            "seq": 0
+          },
+          {
+            "kind": "seed-launch",
+            "seed": 1101,
+            "seq": 1
+          },
+          {
+            "kind": "seed-launch",
+            "seed": 2917,
+            "seq": 2
+          }
+        ],
+        "frozen_axes": {
+          "arch_digest": "9f86d081884c7d659a2feaa0c55ad015",
+          "arch_id": "nanogpt-track3-124M",
+          "batch_size": 524288,
+          "dataset_digest": "e3b0c44298fc1c149afbf4c8996fb924",
+          "dataset_id": "fineweb-edu-10B-track3",
+          "fwd_bwd_per_step": 1
+        },
+        "graded_loss_provenance": "verifier-recompute-unsmoothed",
+        "graded_series": [
+          [
+            2500,
+            3.2941
+          ],
+          [
+            2550,
+            3.2856
+          ],
+          [
+            2600,
+            3.2794
+          ],
+          [
+            2650,
+            3.2781
+          ]
+        ],
+        "origin": "derived-fixture",
+        "origin_boundary": "Authored in solution/grounding.yaml as a derivation source. NOT a measurement. No accelerator run produced these numbers and no claim about an accelerator rests on them.",
+        "run": {
+          "halt_cause": "submission-early-stop-on-favourable-eval",
+          "halt_step": 2650,
+          "launched": true,
+          "run_directory_owner": "verifier",
+          "scheduled_grid": [
+            2500,
+            2550,
+            2600,
+            2650,
+            2700,
+            2750,
+            2800,
+            2850,
+            2900
+          ],
+          "seeds": [
+            1101,
+            2917
+          ]
+        },
+        "schema": "bia.oer01.telemetry/v1"
+      }
+    },
+    {
+      "admin_override": {},
+      "expect_reason": "crossing-not-sustained",
+      "expect_reward": 0.0,
+      "fires": "crossing_sustained_across_verifier_scheduled_points",
+      "half": "rejecting",
+      "id": "nc_unsustained_crossing",
+      "screen": {
+        "corpus_revision": "r46",
+        "floor_applied": 0.15,
+        "hyper_vector": [
+          34,
+          39,
+          39,
+          -1,
+          33,
+          42,
+          40,
+          30
+        ],
+        "per_entry": {
+          "record-36": {
+            "proximity": 0.265625,
+            "structural_match": false
+          },
+          "record-40": {
+            "proximity": 0.15625,
+            "structural_match": false
+          },
+          "record-44": {
+            "proximity": 0.265625,
+            "structural_match": false
+          },
+          "record-46": {
+            "proximity": 0.125,
+            "structural_match": false
+          }
+        },
+        "recipe_readable": true,
+        "replays": [],
+        "structural_digest": "8ae1e92312bdd102b17b988f0741914e"
+      },
+      "telemetry": {
+        "checkpoint_custody": "harness-owned-at-every-scheduled-point",
+        "evaluations": [
+          {
+            "harness_checkpoint_digest": "bbbab160875fac3210493e0ecfd6ffd7ad80242f21fb81651f11d7328cc047db",
+            "seeds_contributing": 2,
+            "seq": 10,
+            "step": 2500,
+            "submission_reported_loss": 3.2905,
+            "verifier_raw_loss": 3.2941,
+            "weights_digest": "bbbab160875fac3210493e0ecfd6ffd7ad80242f21fb81651f11d7328cc047db",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "24077dc28d628071a23221d12e451c5b2bc1244082eab73c94ce7f622ef5be73",
+            "seeds_contributing": 2,
+            "seq": 11,
+            "step": 2550,
+            "submission_reported_loss": 3.2841,
+            "verifier_raw_loss": 3.2856,
+            "weights_digest": "24077dc28d628071a23221d12e451c5b2bc1244082eab73c94ce7f622ef5be73",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "59ce02691be1f610f77e94d66a9b1cc7150b656e7530edb35e2d04e4c778e695",
+            "seeds_contributing": 2,
+            "seq": 12,
+            "step": 2600,
+            "submission_reported_loss": 3.2812,
+            "verifier_raw_loss": 3.2794,
+            "weights_digest": "59ce02691be1f610f77e94d66a9b1cc7150b656e7530edb35e2d04e4c778e695",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "5d42a7a50526b8a937b262b4f72425d738126f0e5487ee8e0a3432cd7468b716",
+            "seeds_contributing": 2,
+            "seq": 13,
+            "step": 2650,
+            "submission_reported_loss": 3.2799,
+            "verifier_raw_loss": 3.2903,
+            "weights_digest": "5d42a7a50526b8a937b262b4f72425d738126f0e5487ee8e0a3432cd7468b716",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "398a6c2ae8bb3c3b335df35f060420627978aef389046d82fba6b7d3ada4fe91",
+            "seeds_contributing": 2,
+            "seq": 14,
+            "step": 2700,
+            "submission_reported_loss": 3.2788,
+            "verifier_raw_loss": 3.2903,
+            "weights_digest": "398a6c2ae8bb3c3b335df35f060420627978aef389046d82fba6b7d3ada4fe91",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "3c018c1566c0410cb7627ae67184db3503bf6b9853d04dfe87d057fd20dd8da2",
+            "seeds_contributing": 2,
+            "seq": 15,
+            "step": 2750,
+            "submission_reported_loss": 3.2779,
+            "verifier_raw_loss": 3.2903,
+            "weights_digest": "3c018c1566c0410cb7627ae67184db3503bf6b9853d04dfe87d057fd20dd8da2",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "c56ede1e2fa0afebca58858f50ecf88554f25755cd8cc4e911afde24c7950d9f",
+            "seeds_contributing": 2,
+            "seq": 16,
+            "step": 2800,
+            "submission_reported_loss": 3.2771,
+            "verifier_raw_loss": 3.2903,
+            "weights_digest": "c56ede1e2fa0afebca58858f50ecf88554f25755cd8cc4e911afde24c7950d9f",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "755e60cfecb3c5fecd59e70c5f60a704c69dd56af5fceb2e6569db0fb2a132be",
+            "seeds_contributing": 2,
+            "seq": 17,
+            "step": 2850,
+            "submission_reported_loss": 3.2764,
+            "verifier_raw_loss": 3.2903,
+            "weights_digest": "755e60cfecb3c5fecd59e70c5f60a704c69dd56af5fceb2e6569db0fb2a132be",
+            "weights_origin": "harness-checkpoint"
+          },
+          {
+            "harness_checkpoint_digest": "ac604912f85a42ca93a276eb2a9ee0f12b2e61be8fb3a5ba07caf71ec977097b",
+            "seeds_contributing": 2,
+            "seq": 18,
+            "step": 2900,
+            "submission_reported_loss": 3.2758,
+            "verifier_raw_loss": 3.2903,
+            "weights_digest": "ac604912f85a42ca93a276eb2a9ee0f12b2e61be8fb3a5ba07caf71ec977097b",
+            "weights_origin": "harness-checkpoint"
+          }
+        ],
+        "evaluations_per_seed": {
+          "1101": 9,
+          "2917": 9
+        },
+        "events": [
+          {
+            "accelerator_seconds_spent_before": 0.0,
+            "corpus_revision": "r46",
+            "kind": "fingerprint-screen",
+            "seq": 0
+          },
+          {
+            "kind": "seed-launch",
+            "seed": 1101,
+            "seq": 1
+          },
+          {
+            "kind": "seed-launch",
+            "seed": 2917,
+            "seq": 2
+          }
+        ],
+        "frozen_axes": {
+          "arch_digest": "9f86d081884c7d659a2feaa0c55ad015",
+          "arch_id": "nanogpt-track3-124M",
+          "batch_size": 524288,
+          "dataset_digest": "e3b0c44298fc1c149afbf4c8996fb924",
+          "dataset_id": "fineweb-edu-10B-track3",
+          "fwd_bwd_per_step": 1
+        },
+        "graded_loss_provenance": "verifier-recompute-unsmoothed",
+        "graded_series": [
+          [
+            2500,
+            3.2941
+          ],
+          [
+            2550,
+            3.2856
+          ],
+          [
+            2600,
+            3.2794
+          ],
+          [
+            2650,
+            3.2903
+          ],
+          [
+            2700,
+            3.2903
+          ],
+          [
+            2750,
+            3.2903
+          ],
+          [
+            2800,
+            3.2903
+          ],
+          [
+            2850,
+            3.2903
+          ],
+          [
+            2900,
+            3.2903
+          ]
+        ],
+        "origin": "derived-fixture",
+        "origin_boundary": "Authored in solution/grounding.yaml as a derivation source. NOT a measurement. No accelerator run produced these numbers and no claim about an accelerator rests on them.",
+        "run": {
+          "halt_cause": "verifier-schedule-exhausted",
+          "halt_step": 2900,
+          "launched": true,
+          "run_directory_owner": "verifier",
+          "scheduled_grid": [
+            2500,
+            2550,
+            2600,
+            2650,
+            2700,
+            2750,
+            2800,
+            2850,
+            2900
+          ],
+          "seeds": [
+            1101,
+            2917
+          ]
+        },
+        "schema": "bia.oer01.telemetry/v1"
+      }
+    }
+  ],
+  "reference_recipe": {
+    "couplings": [
+      [
+        "hidden_matrices",
+        "aux_group",
+        "shared_second_moment"
+      ]
+    ],
+    "hyper": {
+      "aux_lr_ratio": 0.0045,
+      "lr_peak": 0.038,
+      "momentum": 0.945,
+      "orthogonalisation_steps": 5,
+      "second_moment_beta": 0.96,
+      "trust_region_rho": 1.35,
+      "warmup_frac": 0.02,
+      "weight_decay": 0.0
+    },
+    "init_family": "depth_scaled_orthogonal",
+    "schedule_families": [
+      [
+        "lr",
+        "cosine_then_linear"
+      ],
+      [
+        "momentum",
+        "linear_ramp"
+      ],
+      [
+        "trust_region_rho",
+        "two_phase"
+      ]
+    ],
+    "update_chain": [
+      {
+        "primitive": "heavy_ball_momentum",
+        "role": "hidden_matrices"
+      },
+      {
+        "primitive": "newton_schulz_orthogonalisation",
+        "role": "hidden_matrices"
+      },
+      {
+        "primitive": "spectral_trust_region",
+        "role": "hidden_matrices"
+      },
+      {
+        "primitive": "adamw",
+        "role": "aux_group"
+      }
+    ]
+  },
+  "schema": "bia.oer01.fixtures/v1"
+}

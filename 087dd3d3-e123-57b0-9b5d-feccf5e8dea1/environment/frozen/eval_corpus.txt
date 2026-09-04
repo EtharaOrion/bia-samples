@@ -1,0 +1,5 @@
+WITHDRAWN. This file carries no corpus bytes and is not read by anything.
+
+The graded evaluation split is held out. It is a 1048576 byte slice of the FineWeb10B validation shards, resolved by the verifier from its own copy at /verifier/data/fineweb10B, and declared in data_config.json under "validation". It is absent from environment/, absent from the agent container, and cannot be resolved from anything a submission can reach.
+
+This path previously held 1631574 bytes of decoded fineweb_val_000000.bin text, which is the held-out split itself. That was a delivery defect, not a design choice: it put the graded split on the solver surface. The bytes are removed. See CORPUS_PROVENANCE.md.

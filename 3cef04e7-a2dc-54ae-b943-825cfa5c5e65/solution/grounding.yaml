@@ -1,0 +1,1159 @@
+# FORGE-CANARY-BEGIN
+# 0: d4b3f6dbefd6ddd70356a5eca81afd7300dff1512e847a6a860d9a6a95cfbfbc
+# 1: 107e5cfcde68331bb18ae3170b799b704ab65baf9bb32533973bf76e54781094
+# 2: 511a5c4cccd15cddd9c1a7aa987b813a06c3e6585a395eb9e5a5c74b7a10bfd4
+# 3: 04f4e6c814c7ad35882ed22f4c27d6190b0a89431981dffc9cbe93f2cbac5b9d
+# FORGE-CANARY-END
+schema: forge.grounding/v1
+
+# PRIVATE. The single derivation source for OER-12.
+#
+# solution/recompute.py derives, from THIS FILE ALONE plus the frozen bundle bytes it
+# names below: the golden trajectory, every checker fixture, solution/solve.sh,
+# solution/TRUTH.md, solution/rubrics.json and tests/test_output.py. It invokes no
+# model, no network, no clock, no locale and no random source, and running it twice over
+# frozen bytes produces byte-identical output.
+
+slot: OER-12
+provisional_identifier: OER-12
+identity_note: >-
+  The provisional identifier is the slot id. This lane computes no canonical content
+  hash, derives no uuid5, creates no dataset/<uuid>/ directory, plants no canary token,
+  writes no provenance carrier and writes no signature. Wave 2 does identity for every
+  slot at once, because adding solution/policy.yaml to already-committed bundles moves
+  their hashes too.
+family: F13
+family_title: parse and tokenize pipeline
+primary_archetype: AR7
+archetype_exclusivity: exactly one primary archetype. No buffet within the slot.
+title: Ambiguous partial-parse states that neither fail nor validate
+
+metric: validation loss of the trained model
+direction: lower
+frozen: the token budget, the model, the optimizer, and the evaluation split
+free: the parse and tokenize pipeline the agent builds over the raw corpus
+
+target_tier: Frontier-defeat
+tier_exemption_granted: none
+frontier_defeat_floor: 0.50
+separation_margin: 0.05
+anchorable_tier: capped below Hard by the standing batch-level Perception-axis exemption
+perception_axis_exemption: >-
+  This task family is text and code only, so the Perception axis carries no category.
+  The exemption is batch-level, recorded once, closes by nothing, and no perception
+  lever is authored to fill it. It caps the anchorable tier below Hard while leaving the
+  authoring target at Frontier-defeat.
+
+# ---------------------------------------------------------------------------------
+# The archetype, and what it obliges.
+# ---------------------------------------------------------------------------------
+archetype_binding:
+  ar7_statement: >-
+    A partial parse NEITHER fails NOR validates. It is a third state, and this design
+    makes it explicit and machine-readable rather than collapsing it into either
+    neighbour. A document that parses to a structurally incomplete record is not a parse
+    failure to be dropped, and it is not a valid record to be trained on; treating it as
+    either silently degrades the corpus in a way the loss will not attribute.
+  three_outcomes:
+    - outcome: parse-failed
+      meaning: a genuine parse failure, correctly rejected
+      reasons: [directive-malformed, field-key-unknown, record-id-absent, record-id-duplicated]
+    - outcome: parse-valid
+      meaning: a genuine valid parse, correctly admitted
+      reasons: [record-complete]
+    - outcome: parse-partial
+      meaning: an ambiguous partial parse, resolved by a DECLARED policy the grader can check
+      reasons: [required-field-absent, record-unterminated, continuation-dangling]
+  never_conflated: >-
+    The three reason spaces are disjoint and the checker parse_outcome_classes_partitioned
+    grades that disjointness directly. The AR7 checker's own zero reason,
+    ambiguous-class-coerced-silently, is deliberately NOT a parse-failure reason, because
+    a third-state record collapsed into a neighbour is a different defect from a record
+    correctly rejected.
+  metric_sensitivity: >-
+    The graded quantity is sensitive to how the ambiguous class is handled, because the
+    admitted corpus composition under a frozen token budget is a function of the policy
+    applied to the partial class, and the validation loss is a function of that
+    composition. A pipeline that silently coerces the ambiguous class one way is
+    measurably worse than one that resolves it deliberately, and the divergence checker
+    makes the silent coercion attributable rather than leaving it as an unexplained loss
+    difference.
+
+# ---------------------------------------------------------------------------------
+# Anchors. UNMEASURED for F13. The schema is bound; the numbers are absent.
+# ---------------------------------------------------------------------------------
+anchors:
+  anchors_state: absent
+  gap: gap-oer-per-family-anchors-unmeasured
+  baseline_metric: null
+  target_metric: null
+  pass_threshold: null
+  authority_for_absence: >-
+    seed/contract.yaml families.entries.F13 carries scope_state unscoped and the slot
+    record for OER-12 carries anchors_state unmeasured with baseline_metric,
+    target_metric and pass_threshold all null, under
+    gap-oer-per-family-anchors-unmeasured. requirements/bia-environment-spec.md line 63
+    leaves this family's baseline, target and instance count unresolved.
+  what_is_bound: >-
+    The reward SCHEMA in full: single float, closed interval 0.0 to 1.0, higher is
+    better, never binary, full reward exactly 1.0, formula
+    raw = (baseline_metric - agent_metric) / (baseline_metric - target_metric) for a
+    lower-is-better metric, clipped by score = min(max(raw, 0.0), 1.0), with the target
+    a bar rather than a point on a gradient.
+  what_is_not_bound: the two anchor NUMBERS, which are not invented here
+  runtime_effect: >-
+    Under absent anchors, tests/grade.py resolves the reward to 0.0 carrying the reason
+    anchors-absent-metric-unanchored. That is an evidence state of the family, not a
+    verdict on a submission, and instruction.md says so to the agent in plain words.
+
+# ---------------------------------------------------------------------------------
+# The solver egress divergence, recorded explicitly and never left silent.
+# ---------------------------------------------------------------------------------
+solver_egress_divergence:
+  bound_in_this_bundle: open
+  bound_where: task.toml [agent] solver_egress
+  batch_field_reads: setup-only
+  batch_field_location: seed/contract.yaml batch.optimization_bindings.solver_egress
+  gap: gap-oer-solver-egress-ruled-stricter
+  reading_one: >-
+    requirements/open-ended-research-optimisation-problems.md line 58 grants the solving
+    model full internet access.
+  reading_two: >-
+    line 122 of the same file answers that internet is needed only for setup, and
+    requirements/bia-environment-spec.md line 247 rules that the stricter reading governs
+    until the client resolves it.
+  why_open_is_bound_here: >-
+    The family delivery block in the same contract binds agent_environment as egress
+    allowed with the upstream deny-list, and the solving agent must be able to fetch its
+    own packages, datasets and models. The asymmetry is a bound byte rather than an
+    accident.
+  this_lane_does_not_amend_the_batch_field: true
+  verifier_surface: denied, bound in task.toml [verifier] egress
+  deny_list_is_not_a_containment_proof: >-
+    Mirrors, caches, paraphrased write-ups and model weights all carry a recipe past any
+    deny-list, which is exactly why the deterministic checker and not the network policy
+    is the load-bearing control in this slot.
+
+# ---------------------------------------------------------------------------------
+# Frozen bundle bytes recompute.py is allowed to read. Nothing else.
+# ---------------------------------------------------------------------------------
+derivation_inputs:
+  corpus: environment/corpus/corpus.rec
+  schema: environment/schema.json
+  split: environment/split.json
+  recipe: environment/frozen_recipe.json
+  harness_classifier: tests/runner.py
+  reference: solution/reference.py
+reference_binding_rule: >-
+  recompute.py digests solution/reference.py with sha256 and writes that digest into the
+  accepting fixture. The accepting half of adequacy recomputes the digest at run time and
+  refuses to proceed unless it matches, so the accepting half proves the live checkers
+  accept THIS reference and not merely some file.
+
+# ---------------------------------------------------------------------------------
+# The harness run shape. Every value below is bound, none is discovered at run time.
+# ---------------------------------------------------------------------------------
+harness_run:
+  bound_eval_step: 400
+  sustain_points: [450, 500, 550]
+  sustain_band: 0.05
+  halt_kind: bound-schedule-complete
+  halted_at_step: 550
+  smoothing_on_graded_path: none
+  eval_origin: verifier-recomputed
+  evaluated_by: verifier
+  weights_source: harness-owned
+  raw_batch_offsets: [-0.02, 0.0, 0.02]
+  raw_batch_offsets_note: >-
+    Three offsets summing to zero, so the mean of the raw batch losses is the graded loss
+    exactly. The unsmoothed-readout checker recomputes that mean rather than trusting the
+    recorded scalar.
+
+# The session state the harness has in force at grading time. These keys are exactly the
+# keys seed/tasks/OER-12/drift.yaml moves, and each is read by the checker its mutation
+# names.
+bound_state:
+  corpus_shard_id: shard-b
+  parse_schema_version: 2
+  ambiguous_class_width: wide
+  partial_field_threshold: 0.75
+  token_budget_accounting: as-fed
+  token_budget_tokens: 4096
+  eval_split_id: split-v2
+  eval_split_doc_count: 2
+
+frozen_axes_digested: [model, optimizer, token_budget, eval_split]
+
+# ---------------------------------------------------------------------------------
+# The graded checker set. THIS is the single source: tests/checkers.py REGISTRY,
+# tests/checkers.yaml and the generated tests/test_output.py must all agree with it,
+# and seed/tasks/OER-12/adequacy.py asserts all three agreements.
+#
+# Order is SEMANTIC, not cosmetic. tests/grade.py attributes the reward's zero reason
+# to the FIRST failing required checker, so this order decides which machine-readable
+# reason a defect is attributed to.
+# ---------------------------------------------------------------------------------
+graded_checkers:
+  - {id: graded_loss_from_verifier_evaluation, reduction: VALUE, zero_reason: graded-loss-not-verifier-computed, weight: 3, required: true, selector: check_graded_loss_from_verifier_evaluation}
+  - {id: graded_readout_unsmoothed, reduction: VALUE, zero_reason: graded-readout-smoothed, weight: 3, required: true, selector: check_graded_readout_unsmoothed}
+  - {id: graded_loss_sustained, reduction: INVARIANT, zero_reason: graded-loss-not-sustained, weight: 3, required: true, selector: check_graded_loss_sustained}
+  - {id: bound_evaluation_point_reached, reduction: ABSENCE, zero_reason: early-stop-loss-not-established, weight: 3, required: true, selector: check_bound_evaluation_point_reached}
+  - {id: evaluated_weights_harness_owned, reduction: VALUE, zero_reason: evaluated-weights-not-harness-owned, weight: 2, required: true, selector: check_evaluated_weights_harness_owned}
+  - {id: parse_outcome_classes_partitioned, reduction: INVARIANT, zero_reason: parse-outcome-classes-conflated, weight: 4, required: true, selector: check_parse_outcome_classes_partitioned}
+  - {id: parse_outcome_three_way_resolved, reduction: DIVERGENCE, zero_reason: ambiguous-class-coerced-silently, weight: 4, required: true, selector: check_parse_outcome_three_way_resolved}
+  - {id: ambiguity_policy_declared_before_classification, reduction: ORDERING, zero_reason: ambiguity-policy-declared-after-classification, weight: 3, required: true, selector: check_ambiguity_policy_declared_before_classification}
+  - {id: token_budget_respected_as_fed, reduction: VALUE, zero_reason: token-budget-overspent, weight: 3, required: true, selector: check_token_budget_respected_as_fed}
+  - {id: evaluation_split_not_trained_on, reduction: ABSENCE, zero_reason: evaluation-split-leaked-into-training, weight: 3, required: true, selector: check_evaluation_split_not_trained_on}
+  - {id: frozen_axes_unmoved_across_run, reduction: EFFECT, zero_reason: frozen-axis-mutated, weight: 2, required: true, selector: check_frozen_axes_unmoved_across_run}
+  # The two discovery-value checkers. Registered LAST so that a run which produced no
+  # telemetry at all is still attributed to the checker that names that absence, and the
+  # attribution of every pre-existing negative fixture is unchanged.
+  - {id: graded_readout_at_frozen_bound_eval_step, reduction: VALUE, zero_reason: graded-readout-off-the-bound-evaluation-step, weight: 3, required: true, selector: check_graded_readout_at_frozen_bound_eval_step}
+  - {id: sustain_schedule_matches_frozen_recipe, reduction: ORDERING, zero_reason: sustain-schedule-not-the-frozen-schedule, weight: 3, required: true, selector: check_sustain_schedule_matches_frozen_recipe}
+
+# ---------------------------------------------------------------------------------
+# Discovery values. Each one is established in the ENVIRONMENT, is absent from every
+# agent-visible byte of the statement, and carries graded weight through the checker
+# named below: change the value in environment/frozen_recipe.json and that checker's
+# outcome changes with it.
+# ---------------------------------------------------------------------------------
+discovery_values:
+  - name: bound_eval_step
+    value: 400
+    established_in: environment/frozen_recipe.json at frozen_axes.evaluation.bound_eval_step
+    read_back_by: >-
+      tests/runner.py recipe_ledger(), which transcribes the frozen evaluation block into
+      the harness-written document recipe_ledger.json at run open.
+    absent_from_the_statement: >-
+      instruction.md names the file and the key path under "How the loss is actually
+      measured" and never states the number, so a solver obtains it only by reading the
+      environment.
+    graded_by: graded_readout_at_frozen_bound_eval_step
+    accepting_half: ref-accepted, ref-partial-credit and ref-anchors-absent
+    rejecting_half: neg-graded-readout-off-the-bound-eval-step
+    also_load_bearing_on_the_metric: >-
+      tests/grade.py graded_loss() reads the eval ledger row whose step is the run's
+      bound evaluation step, so the graded NUMBER is the number at this step.
+  - name: sustain_points
+    value: [450, 500, 550]
+    established_in: environment/frozen_recipe.json at frozen_axes.evaluation.sustain_points
+    read_back_by: >-
+      tests/runner.py recipe_ledger(), same document, same run-open read.
+    absent_from_the_statement: >-
+      instruction.md names frozen_recipe.json:frozen_axes.evaluation.sustain_points and
+      never lists the points.
+    graded_by: sustain_schedule_matches_frozen_recipe
+    accepting_half: ref-accepted, ref-partial-credit and ref-anchors-absent
+    rejecting_half: neg-sustain-schedule-truncated
+
+# ---------------------------------------------------------------------------------
+# Fixture-local anchors. These are FIXTURE INPUTS, not task anchors.
+# ---------------------------------------------------------------------------------
+fixture_anchors:
+  anchors_state: measured
+  baseline_metric: 3.60
+  target_metric: 3.40
+  authority: >-
+    FIXTURE-LOCAL. These two numbers are inputs of the adequacy fixture and nothing else.
+    They are NOT this family's anchors, they are not transcribed from published evidence,
+    and no part of the bundle presents them as measured quantities. They exist so the
+    accepting half can drive the real reward function through the real gate chain to full
+    reward, which is impossible against a null anchor pair. The task's own anchors stay
+    absent under gap-oer-per-family-anchors-unmeasured.
+
+# The recorded loss curves for each fixture. Declared values, not measurements.
+loss_curves_are_fixtures_not_measurements: >-
+  No model was trained to produce the numbers below. They are declared fixture inputs
+  whose only job is to drive the live checkers and the live reward function through both
+  halves. This absence is carried as gap-oer-12-loss-curves-are-declared-fixtures.
+loss_curves:
+  accepted: [[400, 3.38], [450, 3.39], [500, 3.40], [550, 3.41]]
+  partial_credit: [[400, 3.50], [450, 3.51], [500, 3.52], [550, 3.52]]
+  unsustained: [[400, 3.38], [450, 3.39], [500, 3.55], [550, 3.41]]
+
+# ---------------------------------------------------------------------------------
+# Scenarios. One accepting, one partial-credit, and one rejecting fixture per checker,
+# plus the three stale controls the drift schedule names.
+# ---------------------------------------------------------------------------------
+scenarios:
+  - id: ref-accepted
+    role: accepting
+    expect_reward: 1.0
+    expect_reason: scored
+    expect_failed_checker: null
+    curve: accepted
+    note: the reference solution driven end to end through the real gate chain
+
+  - id: ref-partial-credit
+    role: accepting-partial
+    expect_reward: 0.5
+    expect_reason: scored
+    expect_failed_checker: null
+    curve: partial_credit
+    note: >-
+      proves the reward is NOT binary. Every gate passes and the graded loss lands
+      halfway between the fixture baseline and the fixture target, so the carrier holds
+      0.5 rather than 1.0 or 0.0.
+
+  - id: ref-anchors-absent
+    role: accepting-unanchored
+    expect_reward: 0.0
+    expect_reason: anchors-absent-metric-unanchored
+    expect_failed_checker: null
+    curve: accepted
+    anchors: absent
+    note: >-
+      the live delivery state. Every gate passes and the reward still resolves to 0.0,
+      because this family's anchors are unmeasured. The reason names the evidence state
+      rather than blaming the submission.
+
+  - id: neg-no-op
+    role: rejecting
+    targets: graded_loss_from_verifier_evaluation
+    expect_reward: 0.0
+    expect_reason: graded-loss-not-verifier-computed
+    curve: accepted
+    defect: {kind: drop_documents, documents: [run, eval_ledger, weight_ledger, corpus_ledger, feed_ledger, split_ledger, event_log, freeze_ledger, policy_state], submission_ledger: false}
+    note: a submission that did nothing produces no feed, so the harness trains nothing and establishes no loss
+
+  - id: neg-submission-reported-loss
+    role: rejecting
+    targets: graded_loss_from_verifier_evaluation
+    expect_reward: 0.0
+    expect_reason: graded-loss-not-verifier-computed
+    curve: accepted
+    defect: {kind: eval_origin, origin: submission-reported, reported_by_submission: true}
+
+  - id: neg-smoothed-readout
+    role: rejecting
+    targets: graded_readout_unsmoothed
+    expect_reward: 0.0
+    expect_reason: graded-readout-smoothed
+    curve: accepted
+    defect: {kind: smooth_readout, smoothing: ema-0.9, graded_loss_override: 3.30}
+
+  - id: neg-unsustained-dip
+    role: rejecting
+    targets: graded_loss_sustained
+    expect_reward: 0.0
+    expect_reason: graded-loss-not-sustained
+    curve: unsustained
+
+  - id: neg-early-stop
+    role: rejecting
+    targets: bound_evaluation_point_reached
+    expect_reward: 0.0
+    expect_reason: early-stop-loss-not-established
+    curve: accepted
+    defect: {kind: early_stop, halt_kind: submission-early-stop, halted_at_step: 400}
+
+  - id: neg-selected-checkpoint
+    role: rejecting
+    targets: evaluated_weights_harness_owned
+    expect_reward: 0.0
+    expect_reason: evaluated-weights-not-harness-owned
+    curve: accepted
+    defect: {kind: selected_checkpoint, step: 400, weights_source: submission-selected}
+
+  - id: neg-conflated-reason-codes
+    role: rejecting
+    targets: parse_outcome_classes_partitioned
+    expect_reward: 0.0
+    expect_reason: parse-outcome-classes-conflated
+    curve: accepted
+    defect: {kind: ledger_rows, rows: [{ordinal: r04, verdict: parse-partial, reason: directive-malformed, policy_applied: partial-quarantined}]}
+    note: >-
+      the three-way classification kept nominally and made cosmetic by emitting a
+      parse-failure reason for an ambiguous record
+
+  - id: neg-coerce-partial-to-failed
+    role: rejecting
+    targets: parse_outcome_three_way_resolved
+    expect_reward: 0.0
+    expect_reason: ambiguous-class-coerced-silently
+    curve: accepted
+    defect: {kind: ledger_rows, rows: [{ordinal: r04, verdict: parse-failed, reason: directive-malformed, policy_applied: null}]}
+    note: THE central negative control. A pipeline that silently drops the ambiguous class into the failure bucket.
+
+  - id: neg-coerce-partial-to-valid
+    role: rejecting
+    targets: parse_outcome_three_way_resolved
+    expect_reward: 0.0
+    expect_reason: ambiguous-class-coerced-silently
+    curve: accepted
+    defect: {kind: ledger_rows, rows: [{ordinal: r05, verdict: parse-valid, reason: record-complete, policy_applied: null}]}
+    note: the mirror negative control. A pipeline that silently trains on structurally incomplete records.
+
+  - id: neg-undeclared-policy
+    role: rejecting
+    targets: parse_outcome_three_way_resolved
+    expect_reward: 0.0
+    expect_reason: ambiguous-class-coerced-silently
+    curve: accepted
+    defect: {kind: ledger_policy, ambiguity_policy: null}
+    note: no policy declared at all, which is not a neutral choice but a silent coercion
+
+  - id: ctl-classification-under-narrow-schema
+    role: stale-control
+    targets: parse_outcome_three_way_resolved
+    expect_reward: 0.0
+    expect_reason: ambiguous-class-coerced-silently
+    curve: accepted
+    defect: {kind: stale_schema, schema_version: 1}
+    bound_to_mutation: widen-ambiguous-class-schema
+    note: >-
+      the pre-mutation answer carried forward. The classification was computed under
+      parse schema version 1, where a dangling continuation is not ambiguous, while the
+      harness has version 2 in force.
+
+  - id: neg-policy-backfit
+    role: rejecting
+    targets: ambiguity_policy_declared_before_classification
+    expect_reward: 0.0
+    expect_reason: ambiguity-policy-declared-after-classification
+    curve: accepted
+    defect: {kind: reorder_events, declared_seq: 9, classified_seq: 2}
+
+  - id: neg-budget-overspend
+    role: rejecting
+    targets: token_budget_respected_as_fed
+    expect_reward: 0.0
+    expect_reason: token-budget-overspent
+    curve: accepted
+    defect: {kind: overspend, fed_tokens: 5200}
+
+  - id: ctl-budget-counted-as-declared
+    role: stale-control
+    targets: token_budget_respected_as_fed
+    expect_reward: 0.0
+    expect_reason: token-budget-overspent
+    curve: accepted
+    defect: {kind: feed_accounting, accounting: as-declared}
+    bound_to_mutation: retighten-token-budget-accounting
+    note: the pre-mutation accounting basis carried forward, so the budget was checked against a declared number
+
+  - id: neg-split-leak
+    role: rejecting
+    targets: evaluation_split_not_trained_on
+    expect_reward: 0.0
+    expect_reason: evaluation-split-leaked-into-training
+    curve: accepted
+    defect: {kind: leak_split, ordinals: [r13]}
+
+  - id: ctl-split-membership-pre-rotation
+    role: stale-control
+    targets: evaluation_split_not_trained_on
+    expect_reward: 0.0
+    expect_reason: evaluation-split-leaked-into-training
+    curve: accepted
+    defect: {kind: stale_split, split_id: split-v1, ordinals: [r14]}
+    bound_to_mutation: rotate-eval-split-partition
+    note: the pre-rotation split membership carried forward, so a record held out under the current split reached the feed
+
+  - id: neg-frozen-axis-mutated
+    role: rejecting
+    targets: frozen_axes_unmoved_across_run
+    expect_reward: 0.0
+    expect_reason: frozen-axis-mutated
+    curve: accepted
+    defect: {kind: move_axis, axis: token_budget}
+
+  - id: neg-graded-readout-off-the-bound-eval-step
+    role: rejecting
+    targets: graded_readout_at_frozen_bound_eval_step
+    expect_reward: 0.0
+    expect_reason: graded-readout-off-the-bound-evaluation-step
+    curve: accepted
+    defect: {kind: retime_eval_point, bound_eval_step: 450}
+    note: >-
+      The WRONG-VALUE half for the discovery value bound_eval_step. The readout is taken
+      at a step that is a real evaluation point of this run, so every earlier checker
+      still passes: the loss there is verifier-computed, unsmoothed, sustained, on
+      harness-owned weights, and the run still ran to the end of its schedule. Only the
+      comparison against the step the harness read out of environment/frozen_recipe.json
+      refuses it. A solver that never read the environment cannot tell 450 from the
+      bound point, and this is the fixture that says so.
+
+  - id: neg-sustain-schedule-truncated
+    role: rejecting
+    targets: sustain_schedule_matches_frozen_recipe
+    expect_reward: 0.0
+    expect_reason: sustain-schedule-not-the-frozen-schedule
+    curve: accepted
+    defect: {kind: retime_sustain_schedule, sustain_points: [450, 500]}
+    note: >-
+      The WRONG-VALUE half for the discovery value sustain_points. The level is held at
+      every point the run scheduled and the run halts after the last of them, so the
+      sustained-loss checker and the early-stop checker both pass; the schedule is simply
+      not the frozen one, because its last point was dropped. Only the comparison against
+      the schedule the harness read out of environment/frozen_recipe.json refuses it.
+
+  - id: neg-submission-written-reward
+    role: rejecting-by-isolation
+    targets: harness-document-reader
+    expect_reward: 0.0
+    expect_reason: graded-loss-not-verifier-computed
+    curve: accepted
+    defect: {kind: forge_writer, document: eval_ledger, writer: submission}
+    note: >-
+      the substitution recorded in tests/checkers.yaml. No submission can reach the
+      reward carrier, so the rejecting half is carried on a planted document whose writer
+      field is not verifier-harness, and the harness-document reader refuses it.
+
+# ---------------------------------------------------------------------------------
+# Statement ambiguity. Exactly one graded outcome.
+# ---------------------------------------------------------------------------------
+statement_ambiguity:
+  claim: instruction.md admits exactly ONE reading of what is optimized
+  reading_one_section: "## What you are optimizing"
+  reading_two_section: "## Scoring"
+  candidate_metrics: ["validation loss", "documents admitted", "vocabulary size", "pipeline speed", "token count"]
+  required_metric: validation loss
+  required_direction: lower
+  subject_matter_note: >-
+    This check is about the INSTRUCTION being unambiguous. That is entirely compatible
+    with the task's SUBJECT MATTER being ambiguous parse states, and the two must not be
+    confused. The agent is told without ambiguity that one quantity is graded, that it is
+    the validation loss of the trained model, and that lower is better. What is
+    deliberately ambiguous is a property of the corpus, namely that some documents parse
+    to a state that neither fails nor validates, and the instruction is explicit that the
+    agent must resolve that ambiguity by a declared policy. An unambiguous instruction
+    about an ambiguous subject is the design, not a contradiction in it.
+
+# ---------------------------------------------------------------------------------
+# The agent-visible lower layer, as Harbor assembles it for a NON-ORACLE agent.
+# ---------------------------------------------------------------------------------
+agent_surface:
+  roots: [task.toml, instruction.md, environment]
+  excluded_by_construction: [tests, solution, trajectories]
+  exclusion_note: >-
+    solution/ and tests/ are ABSENT from the assembly list rather than filtered out
+    after the fact, so no assembly step exists that could ever place the oracle or the
+    held-out checkers where an agent reads.
+  read_only_proof: >-
+    seed/tasks/OER-12/adequacy.py assembles the surface the way Harbor assembles one for
+    a non-oracle agent, strips every write bit, then ATTEMPTS A REAL WRITE to each
+    lower-layer path an agent can name and asserts every attempt is refused. Mounting
+    behaviour is never the proof: a lowerdir option describes an enforcement a kernel
+    would apply if a mount happened, no mount is performed, and a read-only claim resting
+    on a mount that was never performed would be a claim about nothing.
+  agent_writable_paths: ["/app/submission.py", "/app/pipeline.json", "/app/parse_ledger.json", "/app/feed.txt", "/logs/agent/trajectory.jsonl"]
+
+# ---------------------------------------------------------------------------------
+# The golden trajectory. Derived, not narrated.
+# ---------------------------------------------------------------------------------
+golden_trajectory:
+  steps:
+    - step: 1
+      action: read-the-bundle
+      detail: read instruction.md, environment/schema.json, environment/split.json and environment/frozen_recipe.json, and identify the frozen axes before writing any code
+    - step: 2
+      action: notice-the-third-state
+      detail: observe that environment/schema.json declares THREE outcome classes and that parse-partial is neither of the other two
+    - step: 3
+      action: read-the-bound-schema-version
+      detail: read the parse schema version in force from the harness state rather than hardcoding one, because the width of the ambiguous class can move during a session
+    - step: 4
+      action: declare-the-ambiguity-policy
+      detail: choose quarantine-partial, state why that one and not the other two, and emit the declaration BEFORE classifying any document
+    - step: 5
+      action: classify-three-ways
+      detail: classify every record into exactly one of the three outcomes, drawing each reason code from its own outcome's reason space
+    - step: 6
+      action: resolve-the-ambiguous-class
+      detail: apply the declared policy to every partial record and record the outcome code on that row, never on any other row
+    - step: 7
+      action: build-the-feed
+      detail: build the training feed from admitted records only, excluding every evaluation-split record under every outcome, and stay inside the frozen token budget as fed
+    - step: 8
+      action: hand-off
+      detail: write pipeline.json, parse_ledger.json and feed.txt, and let the harness train, evaluate and grade. Report no loss of your own.
+  what_the_agent_must_not_do:
+    - shape the readout by smoothing, averaging or cherry-picking a favourable evaluation
+    - halt on a favourable evaluation and present it as the result
+    - re-label an ambiguous record as a parse failure or as a valid record without a declared policy
+    - reuse a parse-failure reason code for an ambiguous record
+    - carry forward a classification computed under a parse schema version no longer in force
+    - feed more tokens than the frozen budget, or feed an evaluation-split record
+    - modify the model, the optimizer, the token budget or the evaluation split
+
+# ---------------------------------------------------------------------------------
+# solve.sh, generated from here.
+# ---------------------------------------------------------------------------------
+solve:
+  shell: "#!/usr/bin/env bash"
+  description: Run the reference pipeline over the frozen corpus and emit the graded deliverables.
+  steps:
+    - 'ENV_DIR="${1:-$(cd "$(dirname "${BASH_SOURCE[0]}")/../environment" && pwd)}"'
+    - 'OUT_DIR="${2:-/app}"'
+    - 'SCHEMA_VERSION="${OER12_PARSE_SCHEMA_VERSION:-2}"'
+    - 'mkdir -p "$OUT_DIR"'
+    - 'python3 "$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)/reference.py" "$ENV_DIR" "$OUT_DIR" "$SCHEMA_VERSION"'
+
+# ---------------------------------------------------------------------------------
+# rubrics.json, generated from here. This grades the SOLUTION against its reference
+# answer, which is a different job from tests/rubrics.jsonl grading the TRAJECTORY.
+# ---------------------------------------------------------------------------------
+solution_rubrics:
+  - id: three-way-ledger-emitted
+    criterion: The solution emits a parse ledger whose rows carry exactly one of parse-failed, parse-valid or parse-partial, over every record in the corpus.
+    reference_answer: 14 rows, 4 parse-failed, 6 parse-valid and 4 parse-partial under parse schema version 2.
+  - id: policy-declared-and-applied
+    criterion: The solution declares one ambiguity policy and applies its outcome code to every parse-partial row and to no other row.
+    reference_answer: quarantine-partial declared, partial-quarantined applied to all 4 partial rows and to none of the other 10.
+  - id: reason-spaces-disjoint
+    criterion: Every reason code belongs to the reason space of the outcome on the same row.
+    reference_answer: failure reasons on failure rows only, record-complete on valid rows only, partial reasons on partial rows only.
+  - id: bound-schema-version-honoured
+    criterion: The classification is computed under the parse schema version the harness has in force rather than a hardcoded one.
+    reference_answer: version 2 in force, so r09 is parse-partial with reason continuation-dangling rather than parse-valid.
+  - id: feed-excludes-held-out-and-quarantined
+    criterion: The training feed carries admitted records only and no evaluation-split record under any outcome.
+    reference_answer: 4 admitted ordinals, r01 r02 r03 r10, with r13 and r14 held out and all partial records quarantined.
+  - id: no-loss-reported-by-the-solution
+    criterion: The solution reports no validation loss of its own on any graded path.
+    reference_answer: the solution prints record, admitted and token counts only; the harness computes the graded loss.
+
+# ---------------------------------------------------------------------------------
+# TRUTH.md, generated from here.
+# ---------------------------------------------------------------------------------
+truth:
+  headline: What is actually true about OER-12, stated once, in the place the bundle derives it from.
+  sections:
+    - heading: The graded quantity
+      body: >-
+        One quantity is graded: the validation loss of the trained model, lower is
+        better. The verifier computes it itself on the frozen held-out split from the
+        weights the harness owns, unsmoothed, at the bound evaluation point, and it must
+        hold at every sustain point the verifier schedules. It is never a number the
+        submission reported, printed or wrote.
+    - heading: The third state
+      body: >-
+        The corpus carries records that neither fail to parse nor parse to a valid
+        record. That third state is machine-readable, it is graded, and it must be
+        resolved by a policy the pipeline declares before it classifies anything. There
+        is no correct policy among the three declarable ones; there is a correct way to
+        hold one.
+    - heading: What a silent coercion costs
+      body: >-
+        A pipeline that drops the ambiguous class into the failure bucket, or admits it
+        as valid, diverges from the harness's own independent classification of the same
+        bytes and scores zero with the reason ambiguous-class-coerced-silently. That
+        reason is not a parse-failure reason, because collapsing a third state into a
+        neighbour is a different defect from correctly rejecting a broken record.
+    - heading: What the anchors are
+      body: >-
+        Absent. This family's baseline and target are unmeasured and this bundle declares
+        them absent under gap-oer-per-family-anchors-unmeasured rather than inventing
+        them. The reward schema is bound in full. A live grading run therefore resolves to
+        0.0 with the reason anchors-absent-metric-unanchored, which is an evidence state
+        and not a verdict on any submission.
+    - heading: What was and was not executed
+      body: >-
+        seed/tasks/OER-12/adequacy.py drives the LIVE checkers in tests/ over fixtures and
+        its observed exit code is recorded in seed/tasks/OER-12/feasibility.yaml. No model
+        was trained anywhere in this lane, and the loss curves in this file are declared
+        fixture inputs rather than measurements, carried as
+        gap-oer-12-loss-curves-are-declared-fixtures.
+
+# ---------------------------------------------------------------------------------
+# Declared gaps.
+# ---------------------------------------------------------------------------------
+gaps:
+  - id: gap-oer-per-family-anchors-unmeasured
+    statement: F13 has no measured baseline or target, so this slot binds the reward schema and declares the anchor numbers absent.
+    closes_by: a measured anchor pair for F13 recorded in seed/contract.yaml from published evidence
+  - id: gap-oer-budget-field-name-collides-with-its-role
+    statement: budget_hours is bound to 0.12 as provisional because the requirements file names the field with a value whose stated role is the across-attempts terminator.
+    closes_by: the contract owner correcting requirements/ and Phase 0.5 re-approving
+  - id: gap-oer-solver-egress-ruled-stricter
+    statement: the batch field reads setup-only under the stricter reading while this bundle binds open at the agent surface; the divergence is recorded and the batch field is not amended by this lane.
+    closes_by: the client resolving the contradiction between the two requirements lines
+  - id: gap-oer-12-loss-curves-are-declared-fixtures
+    statement: no model was trained in this lane, so every validation loss in the fixtures is a declared input rather than a measurement, and no part of this bundle presents one as measured.
+    closes_by: a pilot run on the bound envelope producing measured curves
+  - id: gap-oer-12-fixture-anchors-are-fixture-local
+    statement: the accepting half needs a non-null anchor pair to drive the real reward function to full reward, so the fixture carries one that is explicitly fixture-local and is never presented as this family's anchors.
+    closes_by: the same measured anchor pair that closes gap-oer-per-family-anchors-unmeasured
+
+withheld_from_the_agent_manifest:
+  note: Moved out of task.toml on 2026-08-25 because Harbor mounts that manifest on the agent surface,
+    so anchors and internal record ids were readable by the solving agent. This file is private and is
+    never assembled onto that surface.
+  lines:
+  - budget_hours_gap = "gap-oer-budget-field-name-collides-with-its-role"
+  - budget_hours_gap_note = "requirements/bia-environment-spec.md line 143 names the field budget_hours
+    with value 6 while line 133 gives the per-attempt bound as 7.2 minutes and line 135 says 7.2 minutes
+    is what a conforming task is designed against. 0.12 is bound here because its stated role matches;
+    the literal 6 is not silently bound into a per-attempt field."
+  - anchors_state = "absent"
+  - anchors_gap = "gap-oer-per-family-anchors-unmeasured"
+  - anchors_absent_reason = "requirements/bia-environment-spec.md line 63 leaves this family's baseline,
+    target and instance count unresolved, and no value may be invented for them here."
+  - baseline_metric = "absent"
+  - target_metric = "absent"
+  - pass_threshold = "absent"
+  - frontier_defeat_floor = 0.50
+  - separation_margin = 0.05
+  - '# gap-oer-solver-egress-ruled-stricter. The divergence is recorded in'
+
+manifest_conformance_normalization_2026_08_25:
+  note: >-
+    task.toml was rewritten on 2026-08-25 to conform to seed/harbor_lint.py, the repository's
+    own authoritative manifest linter. Nothing here was deleted outright: every line the
+    agent-visible manifest no longer carries is transcribed below, in this private file.
+  canonical_optimization_path: metadata.optimization
+  canonical_path_rationale: >-
+    seed/harbor_lint.py rejects every unknown TOP-LEVEL key as one Harbor would silently drop,
+    so a top-level [optimization] table cannot be used. [metadata] is the one table Harbor
+    hands through as dict[str, Any], so [metadata.optimization] is the only path that is both
+    a single deterministic lookup and survives the linter. All 24 slots now use it.
+  previous_optimization_path_in_this_slot: 'metadata.*'
+  bound_values_preserved_verbatim:
+    max_timeout_hours: '6.0 (session bound across attempts)'
+    budget_hours: '0.12 (per-attempt bound, 7.2 minutes; never an alias of max_timeout_hours)'
+    max_attempts: '50'
+    final_selection: 'best'
+    budget_envelope: 'one H100, single accelerator, no multi-GPU scaling'
+    budget_margin: '10 percent'
+    tags: '["optimization", "bounded-continuous"], under the key `tags` at metadata.tags'
+    agent: 'solver_egress = "setup-only", network_mode = "none"'
+    environment: 'network_mode = "public" (provisioning; never blanket-denied)'
+    verifier: 'egress = "denied"'
+    docker_image: 'pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407'
+  withheld_from_the_agent_manifest_on_this_pass:
+    reason: >-
+      task.toml is mounted on the agent surface. Harness-internal paths, internal record ids
+      and reward-scale literals are readable there by the solving agent, so they are held here.
+    lines:
+    - '# ...it diverges from seed/contract.yaml batch.optimization_bindings.solver_egress, which reads setup-only under solution/grounding.yaml under solver_egress_divergence and is not amended here.'
+    - '[environment] allowed_hosts = ["*"]'
+
+# ---------------------------------------------------------------------------
+# APPENDED by the feasibility lane (seed/tasks/). Correction of record.
+# ---------------------------------------------------------------------------
+bound_state_correction:
+  observed_on: "live seed/tasks/OER-12/drift.yaml and live tests/checkers.py, re-read by seed/tasks/OER-12/adequacy.py"
+  what_changed: >-
+    The bound_state block above is stale against the live drift schedule. It names
+    ambiguous_class_width, partial_field_threshold and eval_split_doc_count. The drift
+    schedule renamed the first to ambiguity_policy and no longer carries the other two,
+    and the live checkers agree with the schedule rather than with bound_state.
+  grounded_in: >-
+    seed/staging/oer1/check_drift_causality.py parses the bound selectors in
+    tests/checkers.py. ambiguity_policy is in the read surface of the selector its
+    mutation binds. ambiguous_class_width, partial_field_threshold and
+    eval_split_doc_count appear in NO selector's read surface at all, so no checker can
+    read them and the stale names could never have graded anything.
+  bound_state_observed:
+    corpus_shard_id: shard-b
+    parse_schema_version: 2
+    ambiguity_policy: wide
+    token_budget_accounting: as-fed
+    token_budget_tokens: 4096
+    eval_split_id: split-v2
+  why_this_is_appended_rather_than_edited: >-
+    This lane owns seed/tasks/ and may only APPEND to solution/grounding.yaml. The stale
+    block above is left verbatim as the historical record; bound_state_observed is the
+    corrected one, transcribed from the live drift schedule's final state, and
+    seed/tasks/OER-12/adequacy.py asserts against it.
+
+# FORGE-SCREENING-BEGIN GENERATED SECTION. DO NOT HAND-EDIT.
+screening:
+  applicability:
+    empty-submission-validation:
+      applicability_reason: This atom has no exempt route at all and is applicable to every unit.
+      cap: ''
+      clean_fixture_passed: true
+      control_accepting_half: 15
+      control_detail: 58 passed
+      control_passed: true
+      control_rejecting_half: 23
+      control_suite: tests/test_emptysub.py
+      defect: ''
+      determination: passed
+      planted_positive_present: true
+      planted_positive_rejected: true
+      ran: true
+      reason: empty submission scored exactly zero, reason=unattributed
+      result_digest: 5edb3e299b30ca33519691d222dbc94c971a52809b4779a3e0fdafd9e887c1d7
+      score: 0.0
+      screened_preimage: the unit's delivered bytes as they sit on disk, graded through the pinned image;
+        nothing this atom records is a function of the bytes this lane writes
+      status: clean
+      value: applicable
+    exclusion-matching:
+      applicability_reason: This atom is applicable to every unit.
+      cap: ''
+      clean_fixture_passed: true
+      control_accepting_half: 8
+      control_detail: 58 passed
+      control_passed: true
+      control_rejecting_half: 18
+      control_suite: tests/test_exclusion.py
+      defect: ''
+      determination: no-match
+      planted_positive_present: true
+      planted_positive_rejected: true
+      ran: true
+      reason: All three relations were evaluated against engram.screening-root.exclusion-list/v1 at 81764edb7df796c57d17007b1fa95c2fe693226c865e403e5adc1b0640f595da
+        and none matched.
+      relations:
+        base-commit-sha:
+          applicability: not_applicable
+          matched: false
+        canonical-repository-identity:
+          applicability: applicable
+          matched: false
+        fork-ancestry-closure-membership:
+          applicability: applicable
+          matched: false
+      result_digest: 624c222defaf7e57ea25cb0c0e4ef3f20862cf837c716a2c59f4916097c81c4a
+      screened_preimage: the unit's bytes with this `screening` block removed from solution/grounding.yaml
+        and the carrier section removed from solution/recompute.py, because an output never enters its
+        own input
+      status: clean
+      value: applicable
+    freeze-holdout:
+      applicability_reason: No independent attestation satisfies the closed generator-origin predicate
+        for this source (synthetic), so no relation is exempted and every one is screened.
+      cap: screening-unverified
+      clean_fixture_passed: false
+      control_accepting_half: 15
+      control_detail: 51 failed, 46 passed, 4 errors
+      control_passed: false
+      control_rejecting_half: 31
+      control_suite: tests/test_freeze.py
+      defect: ''
+      determination: unresolved
+      planted_positive_present: false
+      planted_positive_rejected: false
+      ran: false
+      reason: 'RootResolutionError: screening root freeze_date_table at <screen-root>/memory/roots/freeze-date-table-v1.yaml
+        hashes 5cb51fe566a202a2c9cae232916badcf311f6b64eaef0ceacb9d5677b21f0c2a, and FORGE_VIEW pins 16e5b169c33898be57492a0101644bedb6b3728624378a5c13910f8f417e7030.
+        Refusing to screen against bytes ENGRAM did not pin. The atom returned no determination over this
+        unit, so nothing about this unit was observed by it. Recorded as unverified rather than as clean.'
+      result_digest: ''
+      screened_preimage: the unit's bytes with this `screening` block removed from solution/grounding.yaml
+        and the carrier section removed from solution/recompute.py, because an output never enters its
+        own input
+      status: inert-root-unresolved
+      value: applicable
+    near-duplicate-screening:
+      applicability_reason: This atom has no exempt route at all and is applicable to every unit.
+      cap: ''
+      clean_fixture_passed: true
+      control_accepting_half: 5
+      control_detail: 26 passed
+      control_passed: true
+      control_rejecting_half: 8
+      control_suite: tests/test_neardup.py
+      defect: ''
+      determination: pass
+      nearest: make_figures.py
+      planted_positive_present: true
+      planted_positive_rejected: true
+      ran: true
+      reason: solution/reference.py scored 0.087388 against its nearest pinned corpus neighbour make_figures.py
+        under threshold 0.63 and review threshold 0.56, classified pass.
+      result_digest: 589029f5879b186bd46481fb00faf28e24f51e6db2e7955b5065461352ff538a
+      score: 0.08738828202581926
+      screened_preimage: the unit's solution/reference.py exactly as delivered, which this lane never
+        writes
+      status: clean
+      value: applicable
+    per-unit-provenance-record:
+      applicability_reason: This atom has no exempt route at all and is applicable to every unit.
+      value: applicable
+    sanitization:
+      applicability_reason: This atom has no exempt route at all and is applicable to every unit.
+      cap: HOLD:PILOT_REQUIRED
+      clean_fixture_passed: true
+      control_accepting_half: 9
+      control_detail: 76 passed
+      control_passed: true
+      control_rejecting_half: 26
+      control_suite: tests/test_sanitization.py
+      defect: ''
+      detectors:
+        closure-identity: clean
+        fix-absence: clean
+        history-absence: clean
+        remote-absence: clean
+        thread-absence: clean
+      determination: clean
+      planted_positive_present: true
+      planted_positive_rejected: true
+      ran: true
+      reason: No named detector found a named fix-revealing representation in the delivery closure of
+        143225b3-b6b8-58d3-b569-414b1693f0a3. history-absence=clean(16), remote-absence=clean(16), thread-absence=clean(16),
+        fix-absence=clean(8), closure-identity=clean(16). This is the bounded result invariant 25 permits
+        and never the claim that the image reveals nothing; coverage stops at base-image-unresolved, delivery-image-unbuilt,
+        post-base-fix-set-unbound, source-host-egress-partially-denied, verifier-surface-outside-fix-absence.
+      result_digest: 225d0d847e10335c38cca82181744717a2309f2ed3a6dae32e7f1cca5000a21d
+      screened_preimage: the unit's bytes with this `screening` block removed from solution/grounding.yaml
+        and the carrier section removed from solution/recompute.py, because an output never enters its
+        own input
+      status: clean
+      value: applicable
+  applicable_dates:
+    provenance_date: '2026-08-25'
+    screening_instant: '2026-08-27T07:35:42Z'
+    task_generating_event_timestamp: null
+  atom_result_digests:
+    empty-submission-validation: 5edb3e299b30ca33519691d222dbc94c971a52809b4779a3e0fdafd9e887c1d7
+    exclusion-matching: 624c222defaf7e57ea25cb0c0e4ef3f20862cf837c716a2c59f4916097c81c4a
+    freeze-holdout: ''
+    near-duplicate-screening: 589029f5879b186bd46481fb00faf28e24f51e6db2e7955b5065461352ff538a
+    sanitization: 225d0d847e10335c38cca82181744717a2309f2ed3a6dae32e7f1cca5000a21d
+  attestations:
+    ancestry_attestation_digest: null
+    ancestry_attestation_signer: null
+    event_attestation_digest: null
+    event_attestation_signer: null
+  authority_mode: union
+  base_commit_sha: null
+  binding_block:
+    binding_envelope: DSSE, payloadType application/vnd.in-toto+json, DSSEv1 pre-authentication encoding
+    canonical_bundle_hash: 8092855365f913c4b5afa949ffbf24e83ef2197be5e491ba38a802b97baca7d3
+    pinned_image_digest: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
+  empty_submission_result:
+    artifacts_disagree: false
+    atom: empty-submission-validation
+    detail: empty submission scored exactly zero, reason=unattributed
+    detail_engine_log_withheld: false
+    detail_engine_log_withheld_reason: ''
+    exit_code: 1
+    grader_fault: false
+    image: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
+    notes:
+    - reward taken from reward.txt; reward.json absent or unreadable
+    outcome: passed
+    reason: ''
+    reward: 0.0
+    reward_text: 0.0
+    uuid: 143225b3-b6b8-58d3-b569-414b1693f0a3
+  fork_ancestry_snapshot: null
+  instrument_versions:
+    empty-submission-validation:
+      declared: null
+      module: seed/forge/emptysub.py
+      module_sha256: 6cae608c8bfeb7dd77c2a1c69facfae7f4482eea312e6e02906c95ea96378d18
+    exclusion-matching:
+      declared: forge.exclusion/1.0.0
+      module: seed/forge/exclusion.py
+      module_sha256: 4a0bb583b96dcd2bd16582ab357a720450587af8369d16bf5cf2fdfebae183c7
+    freeze-holdout:
+      declared: forge.freeze/1.0.0
+      module: seed/forge/freeze.py
+      module_sha256: 34e2aea125e0dc0dfd4c3afcae7723c57cea17f135dbbe6c56f518fdaa85f687
+    near-duplicate-screening:
+      declared: null
+      module: seed/forge/neardup.py
+      module_sha256: 807221ac2695ea723636b50e5c233765ea0a324e6348cbfbb1dee3b577e8cbd0
+    per-unit-provenance-record:
+      declared: forge.provenance_atom/1.0.0
+      module: seed/forge/provenance_atom.py
+      module_sha256: 524c6724e0664ff5660073020c143160576572b628802fef611b044bcbd3e3e9
+    sanitization:
+      declared: forge.sanitization/1.0.0
+      module: seed/forge/sanitization.py
+      module_sha256: bd1593dc32180d1eeca5a135499939c866de7a98960d5a21239f19e0dfb22f21
+  keyid: bia-provenance-2026-08b
+  namespace:
+    bound_at: seed/contract.yaml repo.forge_task_namespace
+    forge_task_namespace: c53e8f3b-526f-52c0-a04e-89e2269b237d
+    normalization_domain_bound_at: seed/contract.yaml batch.normalization_domain, block at line 1327,
+      method_id at line 1328, version at line 1329, bound_on 2026-08-25 at line 1330
+    normalization_domain_method_id: forge.canonical_content_hash/v1
+    not_resolvable_from_this_unit: The definition of that domain. Its exclusion set, token slot designation,
+      digest line format, sort and join are recorded in seed/contract.yaml, which item 10i keeps out of
+      the delivered unit, so a reader can confirm which domain is named and cannot re-execute it from
+      this unit alone.
+    relation: uuid5(forge_task_namespace, binding_block.canonical_bundle_hash) == unit_uuid
+    resolvable_from_this_unit: The uuid relation above, recomputed from this unit's own bytes, and the
+      identity of the normalization domain that hash was computed under, which normalization_domain_version
+      names. Two units carrying the same domain version are hash-comparable and two carrying different
+      versions are not.
+  normalization_domain_version: oer-canary-v1
+  sanitization_closure:
+    images:
+    - entry_count: 0
+      layer_count: 0
+      layer_digests: []
+      manifest_digest: ''
+      pinned: true
+      reason: layer-scan-not-requested
+      reference: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
+      resolved: false
+      role: agent-reachable
+      whiteout_count: 0
+      whiteouts: []
+    - entry_count: 0
+      layer_count: 0
+      layer_digests: []
+      manifest_digest: ''
+      pinned: true
+      reason: layer-scan-not-requested
+      reference: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
+      resolved: false
+      role: verifier-only
+      whiteout_count: 0
+      whiteouts: []
+    layer_entries_unpacked: 0
+    member_count: 16
+    members:
+    - bytes: 1178
+      path: environment/Dockerfile
+      role: agent-reachable
+      sha256: 9575c0be662b8bfd345207c83f3c0273c74db2b089c3e7f213b69ff97c99325d
+    - bytes: 1745
+      path: environment/corpus/corpus.rec
+      role: agent-reachable
+      sha256: 40f252a5a454742e2521a714fababde398020538c8d47e2b030af5974be94da5
+    - bytes: 1814
+      path: environment/frozen_recipe.json
+      role: agent-reachable
+      sha256: 0c3de9386d49b7857b887ed72bc286f38ca097c0ecd1b7fa095b71175c184387
+    - bytes: 3140
+      path: environment/schema.json
+      role: agent-reachable
+      sha256: 0d9b9197ff606d29aadcf90edfb4d86e9420afa3d0f8fedecc280edd7dbd2439
+    - bytes: 614
+      path: environment/split.json
+      role: agent-reachable
+      sha256: 256d81d84e77aff959a40c038221efd417e43ffb10a0388631b467c2e7ded9c4
+    - bytes: 2138
+      path: environment/train_frozen.py
+      role: agent-reachable
+      sha256: 9db39a448c7ee0f99db330c9b736a30f67ddfd36e3352ef4c3bd9ee6bd2955c9
+    - bytes: 7940
+      path: instruction.md
+      role: agent-reachable
+      sha256: 69a6a90e8bd900af33df516a4e136bad59f65fe30264577e19f559940b8be4df
+    - bytes: 5906
+      path: task.toml
+      role: agent-reachable
+      sha256: 39450e7a47a0d015a0af821be1aa757f2c17c774ca3d7491bf3f5bca71551bc6
+    - bytes: 906
+      path: tests/Dockerfile
+      role: verifier-only
+      sha256: 61f1ba89516254b987a596391061649f216a78f624a61ce194a57e4821a9ea27
+    - bytes: 28875
+      path: tests/checkers.py
+      role: verifier-only
+      sha256: 2fe8bc63963359d8b29ceb3611c73b1f310a09f5a4da0fc2dce4b6f321e22f55
+    - bytes: 12871
+      path: tests/checkers.yaml
+      role: verifier-only
+      sha256: 666bd9252f95e6e9d944f69d4b9e7b2fa796beefa6a1948e25ca6ff5de7ca55b
+    - bytes: 7706
+      path: tests/grade.py
+      role: verifier-only
+      sha256: cace1f5300cffe5a322bae9cc95b9701f1bbc7448d4ddc9bf2c3239d07ec5dec
+    - bytes: 4023
+      path: tests/rubrics.jsonl
+      role: verifier-only
+      sha256: c7bdcf990744856da07380e51b2496227441170ec81681aeeb45e795e001d2cd
+    - bytes: 9748
+      path: tests/runner.py
+      role: verifier-only
+      sha256: bad84c02b243eaaba1492d400b385884ff35cf8d72059be8497add3c6d0e43d3
+    - bytes: 3692
+      path: tests/test.sh
+      role: verifier-only
+      sha256: 3303a59f8552d39a1dd48636c8fd9303c672a29469c977f73f73c02b42dc90e4
+    - bytes: 4533
+      path: tests/test_output.py
+      role: verifier-only
+      sha256: bac9564e7422bdc28efe42df53592695e71702a9b52d105b2e80e5b6a3cc496a
+    stages:
+    - base: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
+      base_pinned: true
+      dockerfile: environment/Dockerfile
+      projected_copies:
+      - - corpus/
+        - /app/corpus/
+      - - schema.json
+        - /app/schema.json
+      - - split.json
+        - /app/split.json
+      - - frozen_recipe.json
+        - /app/frozen_recipe.json
+      - - train_frozen.py
+        - /app/train_frozen.py
+      projected_directories:
+      - /logs/agent
+      - /logs/verifier
+      resolved_build_context: environment
+      unprojectable_instructions: []
+    - base: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
+      base_pinned: true
+      dockerfile: tests/Dockerfile
+      projected_copies:
+      - - .
+        - /verifier/tests/
+      projected_directories: []
+      resolved_build_context: tests
+      unprojectable_instructions: []
+    whiteouts_observed: 0
+  schema: forge.provenance/v1
+  screening_roots:
+    exclusion_list:
+      digest: 81764edb7df796c57d17007b1fa95c2fe693226c865e403e5adc1b0640f595da
+      identity: engram.screening-root.exclusion-list/v1
+      state: pinned
+    freeze_date_table:
+      digest: 16e5b169c33898be57492a0101644bedb6b3728624378a5c13910f8f417e7030
+      identity: engram.screening-root.freeze-date-table/v1
+      state: pinned
+    near_duplicate_index:
+      digest: c41ff457f262c295bd4d2f77d95a9eddc02aee2f9e7a4d6e6dc4036ab2677bc4
+      identity: engram.screening-root.near-duplicate-index/v1
+      state: pinned
+    source_attestation:
+      digest: 106c2180906abb0250a26152682a5352c3ab404ae2d9d2d8ecc8e7f0d071ce9d
+      identity: engram.screening-root.source-attestation/v1
+      state: pinned
+  signer_identity: bia-producer-provenance
+  source_identifiers:
+    applicability:
+      base-commit-sha:
+        reason: No independent attestation satisfies the closed generator-origin predicate for this source
+          (synthetic), so no relation is exempted and every one is screened.
+        value: applicable
+      canonical-repository-identity:
+        reason: No independent attestation satisfies the closed generator-origin predicate for this source
+          (synthetic), so no relation is exempted and every one is screened.
+        value: applicable
+      empty-submission-validation:
+        reason: This atom has no exempt route at all and is applicable to every unit.
+        value: applicable
+      fork-ancestry-closure-membership:
+        reason: No independent attestation satisfies the closed generator-origin predicate for this source
+          (synthetic), so no relation is exempted and every one is screened.
+        value: applicable
+      freeze-holdout:
+        reason: No independent attestation satisfies the closed generator-origin predicate for this source
+          (synthetic), so no relation is exempted and every one is screened.
+        value: applicable
+      near-duplicate-screening:
+        reason: This atom has no exempt route at all and is applicable to every unit.
+        value: applicable
+      per-unit-provenance-record:
+        reason: This atom has no exempt route at all and is applicable to every unit.
+        value: applicable
+      sanitization:
+        reason: This atom has no exempt route at all and is applicable to every unit.
+        value: applicable
+    canonical_repository_identity: null
+    generation_input_digest: 3493060bb7e15aeaec761c936c061a787bd1d1f72ccdcc4218c3a74eb671ba82
+    generator_identity: dataset/143225b3-b6b8-58d3-b569-414b1693f0a3/solution/recompute.py
+    generator_version: sha256:a2b8cbd362c4a2cf94a2e347db8046ffc83fdbebc4c2bf82e8cb9a917c011e88
+    origin: original
+    provenance_attestation: null
+    record_source: seed/contract.yaml batch.records[OER-12].upstream_provenance
+    source_kind: synthetic
+  trust_root_public_key_hex: 87de350694dcbacc3829fa78591c13dc80cb0ab6323046cbbdac8b01e20e6fc9
+  unit_uuid: 3cef04e7-a2dc-54ae-b943-825cfa5c5e65
+# FORGE-SCREENING-END

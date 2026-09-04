@@ -1,0 +1,27 @@
+{
+  "schema": "oer20.evaluation_surface/v1",
+  "corpus_id": "fineweb10b-heldout-validation",
+  "frozen": true,
+  "payload_present": false,
+  "note": "This file is a DECLARATION of the evaluation surface and carries none of it. It holds no tokens, no shard bytes, no per-shard perplexity and no record lineage. The graded evaluation runs on a held-out FineWeb10B validation slice that is owned by the verifier, mounted only on the verifier surface, and absent from every agent-visible container. A solver cannot read it, cannot tune to it and cannot derive the order it is visited in.",
+  "held_out_split": {
+    "location": "verifier-owned, mounted at /verifier/heldout on the verifier surface only",
+    "manifest": "/verifier/heldout/manifest.json",
+    "absent_from_environment": true,
+    "source_glob": "data/fineweb10B/fineweb_val_*.bin",
+    "loader": "data/cached_fineweb10B.py",
+    "encoding": "raw little-endian uint16 GPT-2 BPE token ids, 1024-token header skipped",
+    "point_count": 5,
+    "sequences_per_point": 16,
+    "seq_len": 1024,
+    "point_ids": "verifier-owned; the verifier reads them from its own manifest and no agent-visible byte names them"
+  },
+  "evaluation_repeat_floor": 5,
+  "schedule_note": "The evaluation order is derived by the verifier from the sha256 of its own held-out manifest, so the order is fixed before any submission runs, is not the file order, and is not computable from any byte a solver can read.",
+  "train_corpus": {
+    "note": "The solver's own calibration and search run on the TRAIN shards, which are a different split and are the only corpus bytes an agent-visible container carries.",
+    "glob": "data/fineweb10B/fineweb_train_*.bin",
+    "container_path": "/workspace/data/fineweb10B"
+  },
+  "leak_note": "An earlier pass wrote a base64 held-out validation slice and the full 46-entry record lineage into this file on the agent surface. Both are removed here. The held-out tokens now live only with the verifier, and the record lineage is a screening surface that belongs to the screening roots and never to a solver-readable container."
+}

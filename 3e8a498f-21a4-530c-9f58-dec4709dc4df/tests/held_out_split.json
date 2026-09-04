@@ -1,0 +1,469 @@
+{
+  "_banner": "GENERATED SECTION. DO NOT HAND-EDIT.",
+  "_source": "solution/grounding.yaml",
+  "collection": "FineWeb10B, GPT-2 BPE token ids, uint16 little-endian",
+  "doc_ids": [
+    "v000",
+    "v001",
+    "v002",
+    "v003",
+    "v004",
+    "v005",
+    "v006",
+    "v007",
+    "v008",
+    "v009",
+    "v010",
+    "v011",
+    "v012",
+    "v013",
+    "v014",
+    "v015",
+    "v016",
+    "v017",
+    "v018",
+    "v019",
+    "v020",
+    "v021",
+    "v022",
+    "v023",
+    "v024",
+    "v025",
+    "v026",
+    "v027",
+    "v028",
+    "v029",
+    "v030",
+    "v031",
+    "v032",
+    "v033",
+    "v034",
+    "v035",
+    "v036",
+    "v037",
+    "v038",
+    "v039",
+    "v040",
+    "v041",
+    "v042",
+    "v043",
+    "v044",
+    "v045",
+    "v046",
+    "v047",
+    "v048",
+    "v049",
+    "v050",
+    "v051",
+    "v052",
+    "v053",
+    "v054",
+    "v055",
+    "v056",
+    "v057",
+    "v058",
+    "v059",
+    "v060",
+    "v061",
+    "v062",
+    "v063"
+  ],
+  "external_source": "https://huggingface.co/datasets/HuggingFaceFW/fineweb",
+  "id": "val-split-b",
+  "owner": "verifier",
+  "payload_is_not_carried": "The token bytes are not a bundle byte on either surface. The verifier resolves them from its own staged validation shard and checks them against slice_sha256 before it evaluates, so a substituted split is a refused run rather than a different grade.",
+  "pipeline": "https://github.com/KellerJordan/modded-nanogpt data/cached_fineweb10B.py",
+  "segment_tokens": 16384,
+  "segments": [
+    {
+      "id": "v000",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 3600000
+    },
+    {
+      "id": "v001",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 3616384
+    },
+    {
+      "id": "v002",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 3632768
+    },
+    {
+      "id": "v003",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 3649152
+    },
+    {
+      "id": "v004",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 3665536
+    },
+    {
+      "id": "v005",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 3681920
+    },
+    {
+      "id": "v006",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 3698304
+    },
+    {
+      "id": "v007",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 3714688
+    },
+    {
+      "id": "v008",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 3731072
+    },
+    {
+      "id": "v009",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 3747456
+    },
+    {
+      "id": "v010",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 3763840
+    },
+    {
+      "id": "v011",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 3780224
+    },
+    {
+      "id": "v012",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 3796608
+    },
+    {
+      "id": "v013",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 3812992
+    },
+    {
+      "id": "v014",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 3829376
+    },
+    {
+      "id": "v015",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 3845760
+    },
+    {
+      "id": "v016",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 3862144
+    },
+    {
+      "id": "v017",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 3878528
+    },
+    {
+      "id": "v018",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 3894912
+    },
+    {
+      "id": "v019",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 3911296
+    },
+    {
+      "id": "v020",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 3927680
+    },
+    {
+      "id": "v021",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 3944064
+    },
+    {
+      "id": "v022",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 3960448
+    },
+    {
+      "id": "v023",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 3976832
+    },
+    {
+      "id": "v024",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 3993216
+    },
+    {
+      "id": "v025",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 4009600
+    },
+    {
+      "id": "v026",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 4025984
+    },
+    {
+      "id": "v027",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 4042368
+    },
+    {
+      "id": "v028",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 4058752
+    },
+    {
+      "id": "v029",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 4075136
+    },
+    {
+      "id": "v030",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 4091520
+    },
+    {
+      "id": "v031",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 4107904
+    },
+    {
+      "id": "v032",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 4124288
+    },
+    {
+      "id": "v033",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 4140672
+    },
+    {
+      "id": "v034",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 4157056
+    },
+    {
+      "id": "v035",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 4173440
+    },
+    {
+      "id": "v036",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 4189824
+    },
+    {
+      "id": "v037",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 4206208
+    },
+    {
+      "id": "v038",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 4222592
+    },
+    {
+      "id": "v039",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 4238976
+    },
+    {
+      "id": "v040",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 4255360
+    },
+    {
+      "id": "v041",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 4271744
+    },
+    {
+      "id": "v042",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 4288128
+    },
+    {
+      "id": "v043",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 4304512
+    },
+    {
+      "id": "v044",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 4320896
+    },
+    {
+      "id": "v045",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 4337280
+    },
+    {
+      "id": "v046",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 4353664
+    },
+    {
+      "id": "v047",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 4370048
+    },
+    {
+      "id": "v048",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 4386432
+    },
+    {
+      "id": "v049",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 4402816
+    },
+    {
+      "id": "v050",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 4419200
+    },
+    {
+      "id": "v051",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 4435584
+    },
+    {
+      "id": "v052",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 4451968
+    },
+    {
+      "id": "v053",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 4468352
+    },
+    {
+      "id": "v054",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 4484736
+    },
+    {
+      "id": "v055",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 4501120
+    },
+    {
+      "id": "v056",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 4517504
+    },
+    {
+      "id": "v057",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 4533888
+    },
+    {
+      "id": "v058",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 4550272
+    },
+    {
+      "id": "v059",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 4566656
+    },
+    {
+      "id": "v060",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 4583040
+    },
+    {
+      "id": "v061",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 4599424
+    },
+    {
+      "id": "v062",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 4615808
+    },
+    {
+      "id": "v063",
+      "shard": "fineweb_val_000000.bin",
+      "token_count": 16384,
+      "token_offset": 4632192
+    }
+  ],
+  "shard": "fineweb_val_000000.bin",
+  "shard_glob": "data/fineweb10B/fineweb_val_*.bin",
+  "shard_sha256_prefix_1mib": "0d894b48b1f0f8aa3b8709c6950c0ba3d8051e90f70a22a7725a35e98610b04f",
+  "slice_sha256": "83d25a635cf411d13a66acb4e4473fcced667f0bafb7f9f832880a373d2ba901",
+  "token_count": 1048576,
+  "token_offset": 3600000
+}

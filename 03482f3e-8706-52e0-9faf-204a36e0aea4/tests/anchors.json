@@ -1,0 +1,46 @@
+{
+  "schema": "bia.oer15.anchors/v2",
+  "_banner": "VERIFIER-SIDE ONLY. tests/ is never assembled onto the agent surface.",
+  "note": "The endpoints of the OER-15 reward scale, the pin on the held-out slice, and the verifier's own copy of the frozen architecture. None of these may be resolved from environment/, which Harbor mounts into the SOLVING container. The FLOOR of the scale is not here either, because it is not a literal anywhere: the verifier measures it in the same grading pass by training a second decoder on the handed construction at the same seed, shards, step budget and held-out slice.",
+  "anchor_authority": "solution/grounding.yaml, the single derivation source for this slot",
+  "anchors_state": "absent",
+  "anchors_gap": "gap-oer-per-family-anchors-unmeasured",
+  "baseline_metric": null,
+  "target_metric": null,
+  "direction": "lower is better",
+  "reward_formula": "floor = the paired default-construction reading measured in this pass; raw = (floor - agent_metric) / full_credit_separation_bpb; score = min(max(raw, 0.0), 1.0)",
+  "reward_clip": "score = min(max(raw, 0.0), 1.0)",
+  "floor_carrier": "measured live in the grading pass by tests/runner.py, carried as run_record.paired_baseline",
+  "ceiling_carrier": "tests/anchors.json verifier_operating_points.full_credit_separation_bpb, subtracted from the live floor",
+  "separations_note": "Both separations are DECLARED constants of this slot and neither is a measurement. The acceptance separation is the bound separation the slot carried before the re-base. The full-credit separation is the separation margin the slot's tier declares. Both are uncalibrated on the nanoGPT substrate, which is recorded under separations_gap rather than papered over with a figure nobody measured.",
+  "separations_gap": "gap-oer-15-separations-uncalibrated-on-nanogpt-substrate",
+  "held_out_note": "The slice that produces the grade. It is staged into the VERIFIER image only, by tests/Dockerfile, and it is absent from environment/ and from every agent-visible path. tests/runner.py resolves it here and nowhere else, so the evaluation surface cannot be moved by anything a submission or a tampered delivery unit does.",
+  "verifier_operating_points": {
+    "acceptance_separation_bpb": 0.02,
+    "full_credit_separation_bpb": 0.05,
+    "paired_baseline_row": {
+      "top_k": 1024,
+      "min_frequency": 1,
+      "lowercase": false,
+      "attach_leading_space": true
+    },
+    "paired_baseline_construction": "environment/default_tokenizer.py at its grid maximum, run by the verifier at the same seed, shards and step budget as the graded run",
+    "held_out_shard": "fineweb_val_000000.bin",
+    "held_out_token_offset": 0,
+    "held_out_token_count": 524288,
+    "held_out_shard_sha256": null,
+    "held_out_shard_sha256_state": "unmeasured; the digest is pinned by the orchestrator when the validation shard is staged into the verifier image, and until then check_denominator_is_held_out_slice_bytes enforces the structural pin and records the absent digest pin rather than accepting a fabricated one",
+    "held_out_shard_sha256_gap": "gap-oer-15-held-out-shard-digest-unpinned",
+    "architecture": {
+      "vocab_size": 50304,
+      "num_layers": 12,
+      "model_dim": 768,
+      "head_dim": 128,
+      "num_heads": 6,
+      "seq_len": 1024
+    },
+    "architecture_authority": "environment/nanogpt_substrate.json, replicated here so a tampered delivery unit cannot move the shape the graded snapshot is checked against",
+    "expected_parameter_count": 162201600,
+    "expected_parameter_count_state": "derived arithmetically from the architecture above and not measured: 50304 x 768 embedding, 50304 x 768 head, and 12 blocks of a 768 x 2304 qkv, a 768 x 768 projection, a 768 x 3072 up and a 3072 x 768 down"
+  }
+}

@@ -1,0 +1,896 @@
+# FORGE-CANARY-BEGIN
+# 0: f8ab6c1677adce0290fabfd9e011fe7a08782ad7358e3f4f56ca100772166b4b
+# 1: de286068e92ceab9332597f9d152c3283e6389c68e85836ce60349026aa5195f
+# 2: f1ea65cab8716bcba3fde3808a1286af09284001c42af5e0d85937f1bd2cb3d8
+# 3: 6d1c58f3abb02f48fe3970fe8c10f61c44c3b4c3ecf605ff2b1b179c1fcad336
+# FORGE-CANARY-END
+schema: forge.grounding/v1
+slot: OER-21
+provisional_identifier: OER-21
+family: F9
+family_title: quantization
+primary_archetype: AR5
+archetype_title: Adversarial Option Expansion
+archetype_exclusivity: >-
+  Exactly one primary archetype, fixed at scope time. AR5 is the only archetype this slot
+  claims. No second archetype is carried, projected or implied anywhere in this bundle.
+title: Quantization scheme search breadth at a fixed bit budget
+
+visibility: >-
+  PRIVATE. This file is the single derivation source for every generated artifact in this
+  bundle. It is never assembled onto the agent surface: solution/ is absent from
+  launcher.AGENT_ROOTS by construction, so no filter has to hold for it to stay private.
+
+rebase:
+  pass: OER-2026-08-20
+  what_moved: >-
+    The model and the evaluation path were REPLACED, not repinned. The predecessor bundle
+    graded a formula-generated weight table of twelve tensors of forty-eight weights over a
+    vocabulary of eight, whose value at a position was
+    (context * stride_context + word + tensor * stride_tensor) modulo tensor_size, read by
+    an arithmetic row builder that no language model produced. There is no declaration edit
+    that turns that into a nanoGPT run, so the substrate, the forward pass, the evaluation
+    corpus, the reference readings, the toolkit, the schema, the checkers that read them and
+    every generated artifact downstream of them were rewritten.
+  what_survived: >-
+    The statement, the archetype and the reward schema. A solver still designs a per-shard
+    bit allocation and quantization scheme under a fixed total bit budget, and is still
+    graded on the worst per-shard relative perplexity degradation against the unquantized
+    reference, lower better, on a bounded continuous reward with every zero carrying a
+    machine-readable reason.
+  substrate_replication: >-
+    environment/nanogpt_substrate.json is a byte-for-byte replication of the canonical
+    operating point. Replication rather than reference, because a bundle's name is a hash
+    over its own tree and no slot may depend on a sibling's bytes.
+
+# ---------------------------------------------------------------------------
+# What is graded, stated once, so instruction.md and TRUTH.md cannot drift apart
+# ---------------------------------------------------------------------------
+graded_quantity:
+  statement: >-
+    The worst per-slice RELATIVE perplexity degradation of the quantized nanoGPT checkpoint
+    against the unquantized reference, in percent of that slice's unquantized reference
+    perplexity, measured by the verifier running real forward passes of the frozen
+    twelve-layer decoder over held-out FineWeb slices the solver cannot see, at a fixed
+    total bit budget.
+  direction: lower
+  units: percent of the unquantized reference perplexity
+  units_rationale: >-
+    Relative rather than absolute, because the held-out slices do not share a reference
+    perplexity. An absolute difference would let the slice with the largest reference
+    perplexity dominate the worst-slice maximum for a reason that has nothing to do with
+    the quantization scheme.
+  definition: >-
+    For one held-out slice the verifier runs two real forward passes of the canonical
+    decoder, one at full precision and one over the parameters as the harness quantized
+    them. The reference reading is the exponentiated mean entropy of the full-precision
+    next-token distribution on that slice and the quantized reading is the exponentiated
+    mean cross entropy of that distribution under the quantized one. Gibbs' inequality
+    makes the second at least the first, with equality only when the two distributions
+    coincide, so no scheme can buy a better-than-reference reading out of quantization
+    noise. The true-token perplexity of both parameter states is carried alongside as
+    telemetry so a reader can see the checkpoint is a language model on real text.
+  computed_by: tests/evaluate.py, inside the verifier process
+  computed_from: >-
+    the verifier's own copy of the frozen checkpoint, quantized by the harness, evaluated on
+    the verifier's own held-out FineWeb slices
+  never_from:
+    - a number the submission printed on stdout
+    - a field the submission wrote into its scheme artifact
+    - a filtered, smoothed or averaged reading of any kind
+    - anything reachable from the agent container
+  worst_case_rationale: >-
+    The graded reading is the maximum degradation across the scheduled slices rather than
+    the mean, so a favourable slice cannot be harvested by averaging it against the rest.
+
+frozen:
+  - the checkpoint parameters, the verifier's own copy of the frozen nanoGPT snapshot
+  - the architecture, environment/nanogpt_substrate.json
+  - the total bit budget, checkpoint.bit_budget_total
+  - the held-out evaluation split, verifier-owned and absent from the agent container
+  - the unquantized reference readings, recomputed by the verifier on that split
+free:
+  - >-
+    the quantization scheme, meaning per-shard and per-group bit widths, the number of
+    scale groups inside a shard, the codebook family, and the clip percentile
+
+# ---------------------------------------------------------------------------
+# AR5: the handed option set is the trap, and the gap is MEASURED not asserted
+# ---------------------------------------------------------------------------
+adversarial_option_expansion:
+  handed_option_set:
+    carrier: environment/quantize.py
+    shape: >-
+      one uniform bit width applied to every parameter shard, exactly one scale group per
+      shard, a symmetric or affine codebook, and one clip percentile knob.
+    completeness: >-
+      The handed toolkit is complete and correct within its own space. It runs, it loads
+      the real checkpoint, it accounts its bits, it measures on the calibration split, and
+      it reaches the budget exactly at its shipped setting. Nothing about it is broken,
+      which is why its optimum reads as the task optimum.
+  wider_construction:
+    shape: >-
+      per-shard bit widths, per-GROUP bit widths inside a shard, group counts above one,
+      and a kmeans codebook whose centroid table is paid for out of the same budget.
+    derivable_from_the_objective: >-
+      The objective states that the budget is a TOTAL over the checkpoint and that
+      degradation is measured over the whole held-out split. Nothing in the objective
+      requires one width for every shard. The instruction states the accounting rule in
+      full, states that per-shard and per-group allocation are admitted, and states that
+      the graded bar is the handed toolkit's own optimum. The widening is therefore an
+      inference from the stated objective, not a hidden affordance behind a puzzle.
+    not_a_puzzle: >-
+      No search is needed to LEARN that the space is wider. The scheme schema is published
+      at environment/scheme_schema.json and the instruction names every free axis. What
+      the agent has to do is measure, allocate and iterate, which is optimization work.
+    why_it_pays_on_this_substrate: >-
+      The embedding matrix and the untied output projection are 77266944 of the 162201600
+      quantizable parameters, and they carry a different sensitivity to width than the
+      attention and MLP matrices do. A uniform width spends the same bits per parameter on
+      both. That asymmetry is a property of the frozen architecture rather than of a hint,
+      and it is the whole of the AR5 pressure.
+  pressure_is_measured:
+    default_optimum_source: >-
+      exhaustive search over the handed option space, run by the verifier at grading time
+      in tests/evaluate.py default_optimum, never read from a stored constant
+    wider_probe_source: >-
+      a fixed, ordered, budget-checked list of role-keyed allocations declared in
+      tests/anchors.json and evaluated by the verifier at grading time in
+      tests/evaluate.py wider_probe_optimum. It is a BAR and not a claim about the true
+      optimum of the wider space, and it is named a probe everywhere it appears so no
+      reader can take it for a measured optimum.
+
+# ---------------------------------------------------------------------------
+# Substrate parameters. Every generated byte of environment/ comes from these.
+# ---------------------------------------------------------------------------
+substrate:
+  kind: nanogpt-checkpoint
+  declaration: environment/nanogpt_substrate.json
+  declaration_version: nanogpt-substrate-v1
+  upstream: modded-nanogpt, records/track_3_optimization/
+  architecture_source: >-
+    Read from environment/nanogpt_substrate.json at build time and at grading time. No
+    architecture constant is written into any other file in this bundle.
+  module: environment/model/nanogpt.py
+  module_source: >-
+    Transcribed from the vendored record set at
+    harness/records/track_3_optimization/train_gpt_simple.py: RMSNorm on the gains
+    parameter, half-truncated RoPE at base 1024, causal attention at scale 0.12 with
+    per-head RMS normalisation of the query and key, a squared-relu MLP at four times the
+    model dimension, pre-norm residual blocks, an untied output projection and the logit
+    softcap at 15.
+  shard_definition: >-
+    A shard is one two-dimensional weight matrix of the frozen decoder. Biases and RMSNorm
+    gains are not shards: they are the residue, they are carried at the checkpoint's own
+    width, and they sit outside the bit budget.
+  scale_bits: 16
+  default_bits: 4
+  budget_derivation: >-
+    162201600 quantizable parameters at 4 bits is 648806400 payload bits, plus one 16-bit
+    scale per shard over 74 shards is 1184 overhead bits, total 648807584. The handed
+    default configuration therefore lands exactly on the budget, which is what makes it
+    look final. Every value in this derivation is a function of the architecture and none
+    of them is written down anywhere a reader would have to trust.
+  checkpoint:
+    role: the graded artifact, a real parameter snapshot of the frozen decoder
+    provisioning: >-
+      Staged into the agent container at build time and mounted into the verifier
+      separately from the verifier's own copy. The agent container carries the parameters
+      it is allocating bits over; it does not carry the split those parameters are graded
+      on.
+    sha256_state: absent
+    sha256: null
+    gap: gap-oer21-checkpoint-digest-unmeasured
+  holdout:
+    corpus: FineWeb10B, GPT-2 BPE token ids, uint16 little-endian
+    external_source: https://huggingface.co/datasets/HuggingFaceFW/fineweb
+    pipeline: https://github.com/KellerJordan/modded-nanogpt data/cached_fineweb10B.py
+    shard: fineweb_val_000000.bin
+    sequence_length: 1024
+    slice_count: 5
+    slice_tokens: 32768
+    slice_offsets: [0, 1048576, 2097152, 3145728, 4194304]
+    absent_from_environment: >-
+      The held-out split is mounted only into the verifier and is named only in tests/. It
+      is not copied by environment/Dockerfile, it is not reachable from the agent
+      container, and tests/runner.py launches the submission under a four-name environment
+      allowlist that cannot name the verifier mount.
+    disjointness: >-
+      Five disjoint 32768-token windows of the same held-out shard at offsets a megatoken
+      apart. Different windows are different documents, so a scheme that protects the
+      parameter ranges one window exercises and starves another is excellent on one slice
+      and poor on the next. That is what makes the sustained-reading invariant bite on a
+      real submission rather than only on a planted fixture.
+  calibration:
+    role: >-
+      the agent-visible split, so a solver can measure locally. It is NOT the graded split
+      and no reading taken on it reaches the grade.
+    shard: fineweb_train_000001.bin
+    token_offset: 0
+    token_count: 32768
+    sequence_length: 1024
+    staged_by: environment/Dockerfile, from the pinned upstream loader at provisioning time
+
+search:
+  reference_strategy: >-
+    Per-shard sensitivity measured on the calibration split by widening one shard role at a
+    time from the uniform default, then a fixed greedy coordinate pass that spends the
+    freed budget on the roles whose readings moved most. Fixed candidate order, fixed pass
+    count, no random restarts, so the result is a function of the frozen bytes and the
+    calibration split alone. It is computed at solve time by solution/reference.py rather
+    than frozen as a table, because a frozen table would be a number this lane did not
+    measure.
+  passes: 2
+  round_digits: 9
+
+# ---------------------------------------------------------------------------
+# Reward schema, bound in full. Family anchors are ABSENT and stay absent.
+# ---------------------------------------------------------------------------
+reward:
+  carrier: /logs/verifier/reward.txt
+  carrier_shape: one bare float
+  score_document: /logs/verifier/score.json
+  interval: [0.0, 1.0]
+  direction: higher-is-better
+  binary: false
+  full_reward: 1.0
+  formula: "raw = (baseline - agent) / (baseline - target); score = min(max(raw, 0.0), 1.0)"
+  formula_family: lower-is-better
+  target_is_a_bar: >-
+    Reaching the target scores exactly 1.0 and beating it also scores 1.0. The target is a
+    bar, not a point on a gradient.
+  anchors_state: absent
+  baseline_metric: null
+  target_metric: null
+  anchors_gap: gap-oer-per-family-anchors-unmeasured
+  anchors_absent_reason: >-
+    seed/contract.yaml families.entries.F9 carries scope_state unscoped and records
+    baseline_metric, target_metric and pass_threshold as null, on the authority of
+    requirements/bia-environment-spec.md line 63 leaving this family's anchors unresolved.
+    No number is invented here to fill them.
+  local_scaling_endpoints:
+    what_they_are: >-
+      Two quantities MEASURED by the verifier at grading time and used as the endpoints of
+      the bounded scaling so the reward is continuous rather than binary while the family
+      anchors are absent. They are not the family anchors, they are not published evidence,
+      and they are not a substitute for either.
+    baseline_endpoint: >-
+      the measured optimum of the handed option set, recomputed by the verifier's own
+      exhaustive sweep at grading time
+    target_endpoint: >-
+      the measured optimum of the verifier's fixed widening probe, recomputed at grading
+      time. No stored endpoint survives the re-base, because every number the predecessor
+      stored was measured on the formula-generated table and none of them means anything
+      on this substrate.
+    replacement_rule: >-
+      When gap-oer-per-family-anchors-unmeasured closes and F9 carries measured anchors,
+      baseline_metric and target_metric take these two positions and the schema above does
+      not change. Nothing else in the bundle moves.
+  separation_margin: 0.05
+  separation_margin_use: >-
+    A submission whose scaled improvement over the handed optimum is below the separation
+    margin is graded as sitting inside the handed option set's own band, scores zero, and
+    carries the reason default-scheme-plateau.
+  frontier_defeat_floor: 0.5
+  sustain_tolerance_rule: >-
+    one and a half times the widest slice-to-slice spread the verifier itself observed
+    across the handed option-set sweep, plus one hundredth of a point. Measured at grading
+    time from the sweep the verifier ran, never a stored constant.
+
+# ---------------------------------------------------------------------------
+# MEASURED block. Nothing is measured on this substrate yet and nothing is invented.
+# ---------------------------------------------------------------------------
+measured:
+  state: unmeasured
+  gap: gap-oer21-endpoints-unmeasured-on-the-nanogpt-substrate
+  reason: >-
+    Every constant the predecessor carried under this key was measured on the
+    formula-generated table this pass deleted, so none of them describes this substrate.
+    Re-measuring them needs the frozen checkpoint and one accelerator, which is a
+    measurement pass and not an authoring pass. They are published as unmeasured rather
+    than carried across, and the two scaling endpoints the reward needs are recomputed by
+    the verifier at grading time so the slot grades without them.
+  default_shipped_metric: null
+  default_optimum: null
+  wider_probe_optimum: null
+  gap_default_minus_probe: null
+  reference_scheme_allocated_bits: null
+  sustain_tolerance: null
+
+# ---------------------------------------------------------------------------
+# Bound grants, transcribed from seed/contract.yaml batch.optimization_bindings
+# ---------------------------------------------------------------------------
+bindings:
+  max_timeout_hours: 6.0
+  max_timeout_role: refinement-loop terminator across attempts
+  budget_hours: 0.12
+  budget_hours_role: per-attempt completion bound, 7.2 minutes
+  budget_hours_state: provisional
+  budget_hours_gap: gap-oer-budget-field-name-collides-with-its-role
+  max_attempts: 50
+  final_selection: best
+  budget_envelope: one H100, single accelerator, no multi-GPU scaling
+  budget_margin: 10 percent
+  compute_envelope_accelerators: 1
+  tags: [optimization, bounded-continuous]
+  image: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
+  target_tier: Frontier-defeat
+  tier_exemption_granted: none
+  anchorable_tier: capped below Hard
+  perception_exemption: >-
+    This task family is text and code only, so the Perception axis carries no category.
+    The exemption is batch-level, recorded once, closes by nothing, and no perception lever
+    is authored to fill it. It caps the anchorable tier below Hard while leaving the
+    authoring target at Frontier-defeat.
+
+solver_egress_divergence:
+  bound_here: open
+  contract_field: setup-only
+  contract_path: seed/contract.yaml batch.optimization_bindings.solver_egress
+  gap: gap-oer-solver-egress-ruled-stricter
+  reading_a: >-
+    requirements/open-ended-research-optimisation-problems.md line 58 grants the solving
+    agent full internet access.
+  reading_b: >-
+    the same document at line 122 says internet access is needed only for setup, and
+    requirements/bia-environment-spec.md line 247 takes the stricter reading, which is what
+    the contract field records as setup-only.
+  resolution_here: >-
+    task.toml binds solver_egress open at the agent surface and egress denied at the
+    verifier surface, because the solving agent must be able to fetch its own packages.
+    The batch-level contract field is NOT amended by this lane. The divergence is recorded
+    rather than silently reconciled.
+  deny_list_is_not_containment: >-
+    The deny list names three hosts. Mirrors, caches, paraphrased write-ups and released
+    model weights all carry a recipe past any deny list, so the deny list is not a
+    containment proof and is not treated as one. The deterministic checker chain is the
+    load-bearing control: the graded quantity is recomputed by the verifier from its own
+    parameters on a split the solver never sees, so a submission that arrives with a
+    perfect remembered recipe still has to pay for its bits and still has to sustain its
+    reading on slices it could not have measured.
+
+gaps_declared:
+  - id: gap-oer-per-family-anchors-unmeasured
+    scope: batch
+    statement: F9 carries no measured baseline or target, so this slot binds the reward schema and declares the anchors absent.
+  - id: gap-oer-budget-field-name-collides-with-its-role
+    scope: batch
+    statement: budget_hours 0.12 is bound provisionally because the upstream field name carries a value that belongs to the session-level role.
+  - id: gap-oer-solver-egress-ruled-stricter
+    scope: batch
+    statement: the contract field reads setup-only and this slot binds open at the agent surface; the divergence is recorded and the field is not amended.
+  - id: gap-oer21-checkpoint-digest-unmeasured
+    scope: slot
+    statement: >-
+      The frozen checkpoint is pinned by architecture and by provisioning path but not yet
+      by digest, because this lane did not build the snapshot and will not write a sha256
+      it has not taken. tests/anchors.json records the pin as absent, and
+      frozen_checkpoint_and_holdout_unmodified still requires the verifier to digest the
+      parameters it actually graded, so an absent pin never becomes an absent observation.
+      The gap closes when the provisioning pass hands back the built snapshot and its
+      digest is written into the pin.
+  - id: gap-oer21-endpoints-unmeasured-on-the-nanogpt-substrate
+    scope: slot
+    statement: >-
+      No endpoint in this slot has been measured on the replaced substrate. The reward does
+      not depend on one, because both scaling endpoints are recomputed by the verifier at
+      grading time, but the private measured block carries nulls rather than the numbers
+      the predecessor measured on the formula-generated table. What this leaves unproven is
+      named rather than glossed: that the verifier's widening probe reads strictly below the
+      handed option set's optimum on the frozen checkpoint, which is the AR5 separation this
+      slot exists to create. The machinery was exercised end to end on an untrained smoke
+      snapshot, where the separation is zero because an untrained decoder has no per-role
+      structure for an allocation to exploit, and the run correctly reported
+      scaling-span-nonpositive rather than inventing a gap. The gap closes when the frozen
+      checkpoint is provisioned and solution/recompute.py --measure records a positive span.
+  - id: gap-oer21-ordering-checker-substituted
+    scope: slot
+    statement: >-
+      evaluation_follows_state_seal cannot be fired by any submission, because the phase log
+      is written by the verifier's own process and the submission runs as a separate process
+      group that never touches it. Its rejecting half is carried on a planted telemetry
+      fixture. The substitution is recorded in tests/checkers.yaml, in feasibility.yaml and
+      in seed/tasks/OER-21/shortcut_probes.yaml.
+
+retired_gaps:
+  - id: gap-oer21-surrogate-substrate
+    retired_by: this re-base
+    statement: >-
+      The gap recorded that the graded forward pass was a deterministic surrogate over
+      twelve tensors of forty-eight weights and a vocabulary of eight rather than a live
+      transformer forward pass. It is retired because the surrogate was deleted rather than
+      annotated: the graded forward pass is now the canonical twelve-layer decoder run over
+      held-out FineWeb tokens on the pinned image.
+
+withheld_from_the_agent_manifest:
+  note: Moved out of task.toml on 2026-08-25 because Harbor mounts that manifest on the agent surface,
+    so anchors and internal record ids were readable by the solving agent. This file is private and is
+    never assembled onto that surface.
+  lines:
+  - solver_egress_divergence = "seed/contract.yaml batch.optimization_bindings.solver_egress reads setup-only
+    under gap-oer-solver-egress-ruled-stricter. This slot binds open at the agent surface and does NOT
+    amend the batch-level field. The divergence is recorded in solution/grounding.yaml under solver_egress_divergence,
+    naming both readings."
+  - budget_hours_gap = "gap-oer-budget-field-name-collides-with-its-role"
+  - budget_hours_note = "requirements/bia-environment-spec.md line 143 names the field budget_hours with
+    value 6 while line 133 gives the per-attempt bound as 7.2 minutes and line 135 says 7.2 minutes is
+    the number a conforming task is designed against. 0.12 is bound here and marked provisional rather
+    than silently binding 6 into a per-attempt field."
+  - baseline_metric = "null"
+  - target_metric = "null"
+  - pass_threshold = "null"
+  - gap = "gap-oer-per-family-anchors-unmeasured"
+  - reason = "seed/contract.yaml families.entries.F9 carries scope_state unscoped with baseline, target
+    and pass threshold null, on the authority of requirements/bia-environment-spec.md line 63. The reward
+    schema above is bound in full; no number is invented to fill the anchors."
+  - frontier_defeat_floor = 0.50
+  - separation_margin = 0.05
+  - holdout_slice_offsets = "the five held-out FineWeb offsets are named in tests/anchors.json, which is
+    verifier-only, and never in task.toml"
+
+manifest_conformance_normalization_2026_08_25:
+  note: >-
+    task.toml was rewritten on 2026-08-25 to conform to seed/harbor_lint.py, the repository's
+    own authoritative manifest linter. Nothing here was deleted outright: every line the
+    agent-visible manifest no longer carries is transcribed below, in this private file.
+  canonical_optimization_path: metadata.optimization
+  canonical_path_rationale: >-
+    seed/harbor_lint.py rejects every unknown TOP-LEVEL key as one Harbor would silently drop,
+    so a top-level [optimization] table cannot be used. [metadata] is the one table Harbor
+    hands through as dict[str, Any], so [metadata.optimization] is the only path that is both
+    a single deterministic lookup and survives the linter. All 24 slots now use it.
+  previous_optimization_path_in_this_slot: 'optimization.*'
+  bound_values_preserved_verbatim:
+    max_timeout_hours: '6.0 (session bound across attempts)'
+    budget_hours: '0.12 (per-attempt bound, 7.2 minutes; never an alias of max_timeout_hours)'
+    max_attempts: '50'
+    final_selection: 'best'
+    budget_envelope: 'one H100, single accelerator, no multi-GPU scaling'
+    budget_margin: '10 percent'
+    tags: '["optimization", "bounded-continuous"], under the key `tags` at metadata.tags'
+    agent: 'solver_egress = "setup-only", network_mode = "none"'
+    environment: 'network_mode = "public" (provisioning; never blanket-denied)'
+    verifier: 'egress = "denied"'
+    docker_image: 'pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407'
+  withheld_from_the_agent_manifest_on_this_pass:
+    reason: >-
+      task.toml is mounted on the agent surface. Harness-internal paths, internal record ids
+      and reward-scale literals are readable there by the solving agent, so they are held here.
+    lines:
+    - '[gaps] declared = [gap-oer-per-family-anchors-unmeasured, gap-oer-budget-field-name-collides-with-its-role, gap-oer-solver-egress-ruled-stricter, gap-oer21-checkpoint-digest-unmeasured, gap-oer21-endpoints-unmeasured-on-the-nanogpt-substrate, gap-oer21-ordering-checker-substituted]'
+
+# FORGE-SCREENING-BEGIN GENERATED SECTION. DO NOT HAND-EDIT.
+screening:
+  applicability:
+    empty-submission-validation:
+      applicability_reason: This atom has no exempt route at all and is applicable to every unit.
+      cap: ''
+      clean_fixture_passed: true
+      control_accepting_half: 15
+      control_detail: 58 passed
+      control_passed: true
+      control_rejecting_half: 23
+      control_suite: tests/test_emptysub.py
+      defect: ''
+      determination: passed
+      planted_positive_present: true
+      planted_positive_rejected: true
+      ran: true
+      reason: empty submission scored exactly zero, reason=unattributed
+      result_digest: 995727ef418047afaaed657ac884e13da5ad341e9fc5402c4cd667d853044fbd
+      score: 0.0
+      screened_preimage: the unit's delivered bytes as they sit on disk, graded through the pinned image;
+        nothing this atom records is a function of the bytes this lane writes
+      status: clean
+      value: applicable
+    exclusion-matching:
+      applicability_reason: This atom is applicable to every unit.
+      cap: ''
+      clean_fixture_passed: true
+      control_accepting_half: 8
+      control_detail: 58 passed
+      control_passed: true
+      control_rejecting_half: 18
+      control_suite: tests/test_exclusion.py
+      defect: ''
+      determination: no-match
+      planted_positive_present: true
+      planted_positive_rejected: true
+      ran: true
+      reason: All three relations were evaluated against engram.screening-root.exclusion-list/v1 at 81764edb7df796c57d17007b1fa95c2fe693226c865e403e5adc1b0640f595da
+        and none matched.
+      relations:
+        base-commit-sha:
+          applicability: not_applicable
+          matched: false
+        canonical-repository-identity:
+          applicability: applicable
+          matched: false
+        fork-ancestry-closure-membership:
+          applicability: applicable
+          matched: false
+      result_digest: fc50bc2a6f6f2bc111f53be00feb6c1b781f53a037e19c1dd013051eeaac7111
+      screened_preimage: the unit's bytes with this `screening` block removed from solution/grounding.yaml
+        and the carrier section removed from solution/recompute.py, because an output never enters its
+        own input
+      status: clean
+      value: applicable
+    freeze-holdout:
+      applicability_reason: No independent attestation satisfies the closed generator-origin predicate
+        for this source (synthetic), so no relation is exempted and every one is screened.
+      cap: screening-unverified
+      clean_fixture_passed: false
+      control_accepting_half: 15
+      control_detail: 51 failed, 46 passed, 4 errors
+      control_passed: false
+      control_rejecting_half: 31
+      control_suite: tests/test_freeze.py
+      defect: ''
+      determination: unresolved
+      planted_positive_present: false
+      planted_positive_rejected: false
+      ran: false
+      reason: 'RootResolutionError: screening root freeze_date_table at <screen-root>/memory/roots/freeze-date-table-v1.yaml
+        hashes 5cb51fe566a202a2c9cae232916badcf311f6b64eaef0ceacb9d5677b21f0c2a, and FORGE_VIEW pins 16e5b169c33898be57492a0101644bedb6b3728624378a5c13910f8f417e7030.
+        Refusing to screen against bytes ENGRAM did not pin. The atom returned no determination over this
+        unit, so nothing about this unit was observed by it. Recorded as unverified rather than as clean.'
+      result_digest: ''
+      screened_preimage: the unit's bytes with this `screening` block removed from solution/grounding.yaml
+        and the carrier section removed from solution/recompute.py, because an output never enters its
+        own input
+      status: inert-root-unresolved
+      value: applicable
+    near-duplicate-screening:
+      applicability_reason: This atom has no exempt route at all and is applicable to every unit.
+      cap: ''
+      clean_fixture_passed: true
+      control_accepting_half: 5
+      control_detail: 26 passed
+      control_passed: true
+      control_rejecting_half: 8
+      control_suite: tests/test_neardup.py
+      defect: ''
+      determination: pass
+      nearest: results/20260513_shampoo_1_4_power/distributed_shampoo/distributor/gpu_tests/shampoo_dist_utils_test.py
+      planted_positive_present: true
+      planted_positive_rejected: true
+      ran: true
+      reason: solution/reference.py scored 0.071186 against its nearest pinned corpus neighbour results/20260513_shampoo_1_4_power/distributed_shampoo/distributor/gpu_tests/shampoo_dist_utils_test.py
+        under threshold 0.63 and review threshold 0.56, classified pass.
+      result_digest: 17a1ebd3aa1a3f5eef6548818f2c95d08651093867ab74072de4e17163b5f1be
+      score: 0.0711864406779661
+      screened_preimage: the unit's solution/reference.py exactly as delivered, which this lane never
+        writes
+      status: clean
+      value: applicable
+    per-unit-provenance-record:
+      applicability_reason: This atom has no exempt route at all and is applicable to every unit.
+      value: applicable
+    sanitization:
+      applicability_reason: This atom has no exempt route at all and is applicable to every unit.
+      cap: HOLD:PILOT_REQUIRED
+      clean_fixture_passed: true
+      control_accepting_half: 9
+      control_detail: 76 passed
+      control_passed: true
+      control_rejecting_half: 26
+      control_suite: tests/test_sanitization.py
+      defect: ''
+      detectors:
+        closure-identity: clean
+        fix-absence: clean
+        history-absence: clean
+        remote-absence: clean
+        thread-absence: clean
+      determination: clean
+      planted_positive_present: true
+      planted_positive_rejected: true
+      ran: true
+      reason: No named detector found a named fix-revealing representation in the delivery closure of
+        458022b9-aaf5-50aa-9a1c-6df3ea75236f. history-absence=clean(26), remote-absence=clean(26), thread-absence=clean(26),
+        fix-absence=clean(8), closure-identity=clean(26). This is the bounded result invariant 25 permits
+        and never the claim that the image reveals nothing; coverage stops at base-image-unresolved, delivery-image-unbuilt,
+        post-base-fix-set-unbound, source-host-egress-partially-denied, verifier-surface-outside-fix-absence.
+      result_digest: a609bdef0ee50bd6ebc6010238730e597d83ca58f1faa22edda805eefff41c55
+      screened_preimage: the unit's bytes with this `screening` block removed from solution/grounding.yaml
+        and the carrier section removed from solution/recompute.py, because an output never enters its
+        own input
+      status: clean
+      value: applicable
+  applicable_dates:
+    provenance_date: '2026-08-25'
+    screening_instant: '2026-08-27T07:35:42Z'
+    task_generating_event_timestamp: null
+  atom_result_digests:
+    empty-submission-validation: 995727ef418047afaaed657ac884e13da5ad341e9fc5402c4cd667d853044fbd
+    exclusion-matching: fc50bc2a6f6f2bc111f53be00feb6c1b781f53a037e19c1dd013051eeaac7111
+    freeze-holdout: ''
+    near-duplicate-screening: 17a1ebd3aa1a3f5eef6548818f2c95d08651093867ab74072de4e17163b5f1be
+    sanitization: a609bdef0ee50bd6ebc6010238730e597d83ca58f1faa22edda805eefff41c55
+  attestations:
+    ancestry_attestation_digest: null
+    ancestry_attestation_signer: null
+    event_attestation_digest: null
+    event_attestation_signer: null
+  authority_mode: union
+  base_commit_sha: null
+  binding_block:
+    binding_envelope: DSSE, payloadType application/vnd.in-toto+json, DSSEv1 pre-authentication encoding
+    canonical_bundle_hash: 88f5bd0a6a48cd7f992a822010e3d392f3e862f7775a65b0eae9830dbf18a199
+    pinned_image_digest: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
+  empty_submission_result:
+    artifacts_disagree: false
+    atom: empty-submission-validation
+    detail: empty submission scored exactly zero, reason=unattributed
+    detail_engine_log_withheld: false
+    detail_engine_log_withheld_reason: ''
+    exit_code: 0
+    grader_fault: false
+    image: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
+    notes:
+    - reward taken from reward.txt; reward.json absent or unreadable
+    outcome: passed
+    reason: ''
+    reward: 0.0
+    reward_text: 0.0
+    uuid: 458022b9-aaf5-50aa-9a1c-6df3ea75236f
+  fork_ancestry_snapshot: null
+  instrument_versions:
+    empty-submission-validation:
+      declared: null
+      module: seed/forge/emptysub.py
+      module_sha256: 6cae608c8bfeb7dd77c2a1c69facfae7f4482eea312e6e02906c95ea96378d18
+    exclusion-matching:
+      declared: forge.exclusion/1.0.0
+      module: seed/forge/exclusion.py
+      module_sha256: 4a0bb583b96dcd2bd16582ab357a720450587af8369d16bf5cf2fdfebae183c7
+    freeze-holdout:
+      declared: forge.freeze/1.0.0
+      module: seed/forge/freeze.py
+      module_sha256: 34e2aea125e0dc0dfd4c3afcae7723c57cea17f135dbbe6c56f518fdaa85f687
+    near-duplicate-screening:
+      declared: null
+      module: seed/forge/neardup.py
+      module_sha256: 807221ac2695ea723636b50e5c233765ea0a324e6348cbfbb1dee3b577e8cbd0
+    per-unit-provenance-record:
+      declared: forge.provenance_atom/1.0.0
+      module: seed/forge/provenance_atom.py
+      module_sha256: 524c6724e0664ff5660073020c143160576572b628802fef611b044bcbd3e3e9
+    sanitization:
+      declared: forge.sanitization/1.0.0
+      module: seed/forge/sanitization.py
+      module_sha256: bd1593dc32180d1eeca5a135499939c866de7a98960d5a21239f19e0dfb22f21
+  keyid: bia-provenance-2026-08b
+  namespace:
+    bound_at: seed/contract.yaml repo.forge_task_namespace
+    forge_task_namespace: c53e8f3b-526f-52c0-a04e-89e2269b237d
+    normalization_domain_bound_at: seed/contract.yaml batch.normalization_domain, block at line 1327,
+      method_id at line 1328, version at line 1329, bound_on 2026-08-25 at line 1330
+    normalization_domain_method_id: forge.canonical_content_hash/v1
+    not_resolvable_from_this_unit: The definition of that domain. Its exclusion set, token slot designation,
+      digest line format, sort and join are recorded in seed/contract.yaml, which item 10i keeps out of
+      the delivered unit, so a reader can confirm which domain is named and cannot re-execute it from
+      this unit alone.
+    relation: uuid5(forge_task_namespace, binding_block.canonical_bundle_hash) == unit_uuid
+    resolvable_from_this_unit: The uuid relation above, recomputed from this unit's own bytes, and the
+      identity of the normalization domain that hash was computed under, which normalization_domain_version
+      names. Two units carrying the same domain version are hash-comparable and two carrying different
+      versions are not.
+  normalization_domain_version: oer-canary-v1
+  sanitization_closure:
+    images:
+    - entry_count: 0
+      layer_count: 0
+      layer_digests: []
+      manifest_digest: ''
+      pinned: true
+      reason: layer-scan-not-requested
+      reference: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
+      resolved: false
+      role: agent-reachable
+      whiteout_count: 0
+      whiteouts: []
+    - entry_count: 0
+      layer_count: 0
+      layer_digests: []
+      manifest_digest: ''
+      pinned: true
+      reason: layer-scan-not-requested
+      reference: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
+      resolved: false
+      role: verifier-only
+      whiteout_count: 0
+      whiteouts: []
+    layer_entries_unpacked: 0
+    member_count: 26
+    members:
+    - bytes: 665
+      path: environment/Dockerfile
+      role: agent-reachable
+      sha256: 82d2764499e9cbeec4a25a657752d09216ff6f1876f176beee3f4fc67a493f00
+    - bytes: 2617
+      path: environment/corpus/eval_corpus.json
+      role: agent-reachable
+      sha256: 8ee1080ba515c5628562786bae9747f461c0745b5ec7515f013a059df6e74557
+    - bytes: 12234
+      path: environment/model/model.json
+      role: agent-reachable
+      sha256: 2309474c08b04facb41b7c29535fc896f182efe4bc3594bfc95134660046e038
+    - bytes: 436
+      path: environment/model/reference.json
+      role: agent-reachable
+      sha256: b230ff14d264ea3d063f088facd31f0a3f8d239fa55f5e6abac1a93395aa2adc
+    - bytes: 8488
+      path: environment/quantize.py
+      role: agent-reachable
+      sha256: da4bbaa8efd94cfc0fd661a771d0c07a77742948b6bc23c1dacfcd76644a1e4a
+    - bytes: 1923
+      path: environment/scheme_schema.json
+      role: agent-reachable
+      sha256: 49827e4d2ebd48a3a67424d979490cd57c59e2a15b74dabe68b1c69469ecc9a2
+    - bytes: 5242
+      path: instruction.md
+      role: agent-reachable
+      sha256: 0b7f9cdf5d499a5def0f34317f3764dcebf7ef9826bb67429e13f4c2344076f7
+    - bytes: 5927
+      path: task.toml
+      role: agent-reachable
+      sha256: 08e710a073c35fded0f737d59c0889d9e0effd22b7fa31524d374958661d0f71
+    - bytes: 550
+      path: tests/Dockerfile
+      role: verifier-only
+      sha256: 703271464e6f62d672c16c79d2d0f3d780b3fb2d55f8a44cedec9355add5d659
+    - bytes: 1415
+      path: tests/anchors.json
+      role: verifier-only
+      sha256: 77c2ba7b84af55490e3639b015cc63ae7fc76b31b77827eacf03df165c955a87
+    - bytes: 13949
+      path: tests/checkers.py
+      role: verifier-only
+      sha256: 80e4c746dab49ab730ef5e1bd69fcce1310cdd3a5f3a0441d7883efbaef73db1
+    - bytes: 10235
+      path: tests/checkers.yaml
+      role: verifier-only
+      sha256: 9a051d811753cd4b11a9013f4ad53ed6b3237bb26f2fbc06210ea45aedb092ea
+    - bytes: 20879
+      path: tests/evaluate.py
+      role: verifier-only
+      sha256: e8e2489cd8b87e0cfab69554e8a1638efa195aec804bbf86121c45b9c90b29ed
+    - bytes: 2869
+      path: tests/fixtures/early_stop.json
+      role: verifier-only
+      sha256: 611436f8754f1bfa66f47d40540869d245a28adc7a87cc1f5efd3f9bed5d9064
+    - bytes: 2404
+      path: tests/fixtures/noop.json
+      role: verifier-only
+      sha256: 61106f05a5e28921d7196f3faf1a7449df287896dcdb5b584a0f6403fea13738
+    - bytes: 2517
+      path: tests/fixtures/overspend.json
+      role: verifier-only
+      sha256: 5315af93ee181f92979fbb6b2c0daa4cd4c1a715e310ead4f3338a4de1250716
+    - bytes: 2371
+      path: tests/fixtures/plateau.json
+      role: verifier-only
+      sha256: dac1909d4436fafe06ef807055a436d414f6a7bbcd82413d415e81b226f11a8b
+    - bytes: 2871
+      path: tests/fixtures/reference.json
+      role: verifier-only
+      sha256: 56e3c160a7a82cfa7a75dfe37329ad7571b6cff3a304f92e05b8472502667e7b
+    - bytes: 2903
+      path: tests/fixtures/reported_metric.json
+      role: verifier-only
+      sha256: 5976da52c1444ea154dc1250756d3e4b0128be516753e1bd8c3de4244dc1d790
+    - bytes: 2869
+      path: tests/fixtures/smoothed.json
+      role: verifier-only
+      sha256: fa4822f6950bf85b26dd947b0ba0731b41cef73f6caa9cb2a00e434f266d2c88
+    - bytes: 3791
+      path: tests/fixtures/unsustained.json
+      role: verifier-only
+      sha256: 49c49778541b65ee8d20bf2a2a0688c74e5bde84ae308da6b5d8e798391c6df9
+    - bytes: 7833
+      path: tests/grade.py
+      role: verifier-only
+      sha256: 114f9170013eb409352e27890a996d3b443a77786fc0da1423618a9dcd0e3f15
+    - bytes: 1680
+      path: tests/rubrics.jsonl
+      role: verifier-only
+      sha256: 3960a79c0ea99f63958a303176fcc4f44fbad1a74abf8a3a5280f7a7d2636efc
+    - bytes: 3457
+      path: tests/runner.py
+      role: verifier-only
+      sha256: 23a71bf3c648cc5e209604531cf86aa8dc649c0d6619c3f4f68e7a2271f5f166
+    - bytes: 2161
+      path: tests/test.sh
+      role: verifier-only
+      sha256: fb9b8c04939f7e39b0b94222b2779be0791499e4dd137ab2c9a4690917222467
+    - bytes: 2973
+      path: tests/test_output.py
+      role: verifier-only
+      sha256: bf4e8c0f9e3f2c88d89b983970562d49676dbb0507dd417446c9a742f21f7bca
+    stages:
+    - base: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
+      base_pinned: true
+      dockerfile: environment/Dockerfile
+      projected_copies:
+      - - model
+        - /work/environment/model
+      - - corpus
+        - /work/environment/corpus
+      - - quantize.py
+        - /work/environment/quantize.py
+      - - scheme_schema.json
+        - /work/environment/scheme_schema.json
+      projected_directories: []
+      resolved_build_context: environment
+      unprojectable_instructions: []
+    - base: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
+      base_pinned: true
+      dockerfile: tests/Dockerfile
+      projected_copies:
+      - - .
+        - /verifier/tests
+      projected_directories: []
+      resolved_build_context: tests
+      unprojectable_instructions: []
+    whiteouts_observed: 0
+  schema: forge.provenance/v1
+  screening_roots:
+    exclusion_list:
+      digest: 81764edb7df796c57d17007b1fa95c2fe693226c865e403e5adc1b0640f595da
+      identity: engram.screening-root.exclusion-list/v1
+      state: pinned
+    freeze_date_table:
+      digest: 16e5b169c33898be57492a0101644bedb6b3728624378a5c13910f8f417e7030
+      identity: engram.screening-root.freeze-date-table/v1
+      state: pinned
+    near_duplicate_index:
+      digest: c41ff457f262c295bd4d2f77d95a9eddc02aee2f9e7a4d6e6dc4036ab2677bc4
+      identity: engram.screening-root.near-duplicate-index/v1
+      state: pinned
+    source_attestation:
+      digest: 106c2180906abb0250a26152682a5352c3ab404ae2d9d2d8ecc8e7f0d071ce9d
+      identity: engram.screening-root.source-attestation/v1
+      state: pinned
+  signer_identity: bia-producer-provenance
+  source_identifiers:
+    applicability:
+      base-commit-sha:
+        reason: No independent attestation satisfies the closed generator-origin predicate for this source
+          (synthetic), so no relation is exempted and every one is screened.
+        value: applicable
+      canonical-repository-identity:
+        reason: No independent attestation satisfies the closed generator-origin predicate for this source
+          (synthetic), so no relation is exempted and every one is screened.
+        value: applicable
+      empty-submission-validation:
+        reason: This atom has no exempt route at all and is applicable to every unit.
+        value: applicable
+      fork-ancestry-closure-membership:
+        reason: No independent attestation satisfies the closed generator-origin predicate for this source
+          (synthetic), so no relation is exempted and every one is screened.
+        value: applicable
+      freeze-holdout:
+        reason: No independent attestation satisfies the closed generator-origin predicate for this source
+          (synthetic), so no relation is exempted and every one is screened.
+        value: applicable
+      near-duplicate-screening:
+        reason: This atom has no exempt route at all and is applicable to every unit.
+        value: applicable
+      per-unit-provenance-record:
+        reason: This atom has no exempt route at all and is applicable to every unit.
+        value: applicable
+      sanitization:
+        reason: This atom has no exempt route at all and is applicable to every unit.
+        value: applicable
+    canonical_repository_identity: null
+    generation_input_digest: 83510f6750505cff656c6f424dc077523d8929e17b5578c552ecf97c6c4b202a
+    generator_identity: dataset/458022b9-aaf5-50aa-9a1c-6df3ea75236f/solution/recompute.py
+    generator_version: sha256:68075e2d5dcd64a673766e48303a67c7974dbc0410066b0411f6cac062c8169a
+    origin: original
+    provenance_attestation: null
+    record_source: seed/contract.yaml batch.records[OER-21].upstream_provenance
+    source_kind: synthetic
+  trust_root_public_key_hex: 87de350694dcbacc3829fa78591c13dc80cb0ab6323046cbbdac8b01e20e6fc9
+  unit_uuid: 6de242ad-22da-5c7a-aebf-f1043c1a48bc
+# FORGE-SCREENING-END

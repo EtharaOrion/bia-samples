@@ -1,0 +1,71 @@
+{
+  "schema": "oer08.corpus/v2",
+  "_comment": "The curation pool for OER-08, re-based onto the canonical nanoGPT substrate. Every architecture and run value below is replicated from environment/nanogpt_substrate.json, which is itself a byte-for-byte copy of the batch substrate record. This file names TRAIN shards only. The evaluation split is a slice of a FineWeb10B VALIDATION shard, it is held by the verifier at tests/heldout_spec.json, it is absent from this container by construction, and no slice id below resolves to it.",
+  "substrate": {
+    "declaration": "environment/nanogpt_substrate.json",
+    "declaration_version": "nanogpt-substrate-v1",
+    "upstream": "modded-nanogpt, records/track_3_optimization/",
+    "architecture": {
+      "vocab_size": 50304,
+      "num_layers": 12,
+      "model_dim": 768,
+      "head_dim": 128,
+      "num_heads": 6,
+      "seq_len": 1024
+    },
+    "_architecture_note": "This block is the frozen architecture. It is replicated here so the pool spec and the substrate declaration cannot drift apart, and tests/runner.py refuses to run when the two disagree. The graded parameter snapshot is shape-bound to these numbers."
+  },
+  "budget": {
+    "unit": "tokens",
+    "budget_tokens": 20971520,
+    "total_tokens": 20971520,
+    "tokens_per_step": 524288,
+    "steps": 40,
+    "forward_passes_per_step": 1,
+    "backward_passes_per_step": 1,
+    "_budget_note": "budget_tokens is canonical and total_tokens is the same quantity under its earlier name; environment/harness.py refuses to run when the pair disagrees. tokens_per_step is the substrate figure 524288 and is not a free axis. steps is this slot's own declaration and is provisional: it is sized to the per-attempt bound of 7.2 minutes on one H100 recorded in task.toml, and it is not an upstream record value.",
+    "_steps_state": "provisional"
+  },
+  "corpus": {
+    "name": "FineWeb10B",
+    "external_source": "https://huggingface.co/datasets/HuggingFaceFW/fineweb",
+    "loader": "data/cached_fineweb10B.py",
+    "encoding": "GPT-2 BPE token ids, uint16 little-endian, 1024-byte header skipped",
+    "train_glob": "data/fineweb10B/fineweb_train_*.bin",
+    "container_train_path": "/workspace/data/fineweb10B",
+    "shards": [
+      "fineweb_train_000001.bin",
+      "fineweb_train_000002.bin",
+      "fineweb_train_000003.bin",
+      "fineweb_train_000004.bin",
+      "fineweb_train_000005.bin"
+    ],
+    "val_glob": "data/fineweb10B/fineweb_val_*.bin",
+    "_val_note": "Named for completeness only. No validation shard is staged into this container and no slice in the pool below is drawn from one."
+  },
+  "pool": {
+    "slice_tokens": 65536,
+    "slices_per_shard": 128,
+    "header_bytes_skipped": 1024,
+    "slice_id": "<shard-stem>:<slice-index>",
+    "_enumeration": "Slice n of a shard is the contiguous token range [n * slice_tokens, (n + 1) * slice_tokens) of that shard, counted after the 1024-byte header. Five shards at 128 slices each give 640 pool slices totalling 41943040 tokens against a 20971520 token budget.",
+    "bands": {
+      "count": 5,
+      "ids": ["band-0", "band-1", "band-2", "band-3", "band-4"],
+      "statistic": "rare_fraction",
+      "statistic_rule": "For one slice, the fraction of its tokens whose GPT-2 BPE id is at or above 20000. It is computed from the shard bytes themselves and is not an authored label.",
+      "assignment_rule": "Sort all 640 pool slices by (rare_fraction, shard, slice-index) ascending and cut the sorted order into five contiguous groups of 128. Group k is band-k. The rule is total, deterministic and recomputed identically by environment/harness.py and by tests/runner.py, so no band membership is transcribed into this file.",
+      "_why_bands": "FineWeb10B is one web corpus, so a source label such as curated or technical would be authored provenance rather than a property of the bytes. A band is a measured property of the tokens it holds, so allocating across bands is a curation decision about the corpus rather than a decision about a label this bundle invented."
+    }
+  },
+  "dev_probe": {
+    "shard": "fineweb_train_000006.bin",
+    "token_offset": 0,
+    "token_count": 262144,
+    "_probe_note": "An agent-visible probe drawn from a TRAIN shard that carries no pool slice, so it is disjoint from everything a plan can feed and is not the graded split. It is a different, much smaller sample than the verifier's held-out validation slice and it is one sample rather than two folds, so it cannot show you a fold artifact."
+  },
+  "filter": {
+    "declared": "none",
+    "_filter_note": "What the pool publisher declares it filtered. tests/runner.py records the declared filter against the filter that actually held and never silently repairs the pool it is grading."
+  }
+}

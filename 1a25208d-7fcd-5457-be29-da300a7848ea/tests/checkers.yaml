@@ -1,0 +1,292 @@
+schema: forge.checkers/v1
+reduction_kinds: [VALUE, EFFECT, ABSENCE, INVARIANT, ORDERING, DIVERGENCE]
+
+# MEASURED CORRECTION, wave-1: the live seed/forge/verifier.py binds the reward
+# carrier to reward.txt, which carries the bare float. The machine-readable reason
+# and the metric block travel in the companion score document, written from the
+# same trap call so the two can never disagree.
+reward_path: /logs/verifier/reward.txt
+score_document_path: /logs/verifier/score.json
+
+aggregation:
+  mode: required_pass
+  rationale: >-
+    required_pass names what the GATE does, and the gate is only half of what
+    tests/grade.py does. Eleven reductions are marked required: allocation
+    resolution, the bit-budget accounting, the frozen-input digests, the
+    provenance of the graded number, the absence of smoothing on the graded path,
+    the verifier-derived evaluation order, the sustained single-state reading, the
+    completed evaluation ceiling, the absence of measurable degradation, and the
+    two calibration-probe readings that require the built environment to produce
+    the separation and the noise half width this bundle recorded for it. If
+    any of them is short of full, the reward is 0.0 and the score document carries
+    that reduction's own zero_reason. If all eleven hold, the reward is NOT the 1.0
+    the mode name implies: it is the value of separation_margin_cleared, which is
+    a continuous ramp on the closed interval and is deliberately not marked
+    required. That is why the mode is a description of the gate and never of the
+    result. The three outcomes stay distinct through it: a cleared margin gives
+    1.0 with reason separation-margin-cleared, a measured degradation gives 0.0
+    with reason degradation-past-bar through the required gate, and a band that
+    still contains the margin at the evaluation ceiling gives the ramp value with
+    reason significance-unestablished-at-ceiling, which is neither of the others.
+
+substitutions:
+  - checker: graded_perplexity_unsmoothed
+    why: >-
+      No submission can fire the rejecting half from inside the sandbox. The
+      graded readout is recomputed by tests/runner.py inside the verifier's own
+      process from the harness-owned quantized state, and the submission's
+      reported number is recorded beside it rather than on it, so the smoothing
+      window on the graded path is structurally zero. The rejecting half is
+      therefore carried on a planted telemetry fixture in
+      seed/tasks/OER-20/adequacy.py, which is the isolation boundary being
+      recorded rather than papered over.
+  - checker: no_early_stop_on_favourable_evaluation
+    why: >-
+      Same boundary. The evaluation schedule is derived by the verifier from the
+      frozen corpus digest and every scheduled point is evaluated before the
+      submission's requested stop_after field is even read, so a submission
+      cannot truncate the ceiling. The rejecting half is carried on a planted
+      telemetry fixture recording a truncated schedule.
+  - checker: frozen_corpus_and_reference_intact
+    why: >-
+      The submission runs in a copied sandbox that does not contain the frozen
+      environment tree, so it has no handle on the corpus or the unquantized
+      reference to move. The rejecting half is carried on a planted fixture whose
+      closing digest differs from its opening digest.
+  - checker: graded_metric_harness_sourced
+    why: >-
+      Same boundary. Every evaluation point is stamped source harness-recompute by
+      tests/runner.py inside the verifier's process, and the submission's own
+      artifact is recorded in a separate block, so no submission can put a point
+      on the graded path. The rejecting half is carried on a planted fixture whose
+      points carry a different source. Note that this reduction deliberately does
+      NOT compare graded values against a number the submission reported: an
+      honest submission that estimates the right number correctly must not be
+      punished for agreeing with the harness, so provenance is graded and
+      coincidence is not.
+  - checker: evaluation_points_verifier_ordered
+    why: >-
+      Same boundary. The order is derived from the frozen corpus digest before the
+      submission runs and the points are visited in that order by tests/runner.py.
+      The rejecting half is carried on a planted fixture whose recorded order is
+      not the order its own nonce derives.
+  - checker: reading_sustained_across_scheduled_points
+    why: >-
+      Same boundary. The quantized state is built once and its digest is stamped
+      onto every point by tests/runner.py, so a submission cannot re-make the
+      state between readings. The rejecting half is carried on a planted fixture
+      carrying two distinct state digests, and a second planted fixture carrying
+      fewer points than the repeat floor.
+  - checker: calibration_separation_within_band
+    why: >-
+      Same boundary, and here it is the point rather than a limitation. The
+      calibration probe is measured by tests/runner.py from the frozen checkpoint
+      and the verifier's held-out points alone, so no submission supplies an input
+      to it and none can move its reading. Both halves are therefore carried on
+      frozen fixtures generated into tests/calibration.py from
+      solution/grounding.yaml and exercised by tests/test_output.py:
+      accept_calibration_band_at_the_grounded_centre and
+      accept_calibration_band_on_the_inner_edge accept, and
+      reject_calibration_band_near_miss_outside_the_edge, which sits one offset
+      past that same edge, and reject_calibration_band_far_from_the_centre both
+      reject.
+  - checker: calibration_noise_band_width_held
+    why: >-
+      Same boundary. accept_calibration_width_at_the_grounded_value accepts,
+      reject_calibration_width_near_miss_outside_tolerance sits one 1.0e-06 offset
+      past the bound tolerance and rejects, and reject_calibration_width_doubled
+      rejects a band twice as wide.
+
+checkers:
+  - id: submission_allocation_wellformed
+    statement: "The harness resolved the submitted allocation against its own tensor list: one closed-set scheme, one closed-set bit width per tensor, no tensor the model does not carry."
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: check_allocation_wellformed
+    zero_reason: allocation-malformed
+    required: true
+    weight: 2
+    basis: telemetry
+    live_state_read: "telemetry.allocation, written by tests/runner.py after normalise_allocation walked the harness's own model_stats.json tensor list"
+    compiled_test: "tests/test_output.py::test_submission_allocation_wellformed"
+
+  - id: bit_budget_respected_as_allocated
+    statement: "The bits actually allocated, totalled by the harness's own walk over every model tensor, do not exceed the fixed bit budget."
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: check_bit_budget
+    zero_reason: bit-budget-overspent
+    required: true
+    weight: 4
+    basis: telemetry
+    live_state_read: "telemetry.accounting, produced by tests/runner.py accounting() walking model_stats.json tensor by tensor; the submission asserts no total and none is read"
+    compiled_test: "tests/test_output.py::test_bit_budget_respected_as_allocated"
+    note: >-
+      This is the headline shortcut. Buying perplexity with bits the budget does
+      not carry is the one move that makes every other number look good, so the
+      total is measured over the tensors the harness quantized rather than read
+      from anything the submission stated. A tensor the submission omitted is
+      filled at the control width and still counted, so omission is not a way out
+      of the accounting either.
+
+  - id: frozen_corpus_and_reference_intact
+    statement: "The frozen substrate declaration, the checkpoint tensor manifest, the evaluation-surface declaration and the unquantized-reference declaration are byte-identical at the close of the evaluation window to what they were at its open."
+    reduction: INVARIANT
+    reached_by: tests/grade.py
+    selector: check_frozen_inputs_intact
+    zero_reason: frozen-inputs-modified
+    required: true
+    weight: 4
+    basis: telemetry
+    live_state_read: "telemetry.opening_digests and telemetry.closing_digests, both sha256 over the environment/ declarations taken by tests/runner.py before and after evaluation; the graded parameters and the graded tokens are not in that tree, so this reduction grades the declarations and telemetry.checkpoint.sha256 grades the artifact"
+    compiled_test: "tests/test_output.py::test_frozen_corpus_and_reference_intact"
+
+  - id: graded_metric_harness_sourced
+    statement: "Every graded perplexity was recomputed by the verifier from real forward passes of the frozen checkpoint carrying the harness-quantized weights, and no graded point was adopted from a value the submission reported."
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: check_graded_metric_harness_sourced
+    zero_reason: graded-metric-submission-sourced
+    required: true
+    weight: 3
+    basis: telemetry
+    live_state_read: "telemetry.graded_provenance and telemetry.points[*].graded_ppl_quant against telemetry.submission.reported_ppl, which runner.py records beside the graded path and never on it"
+    compiled_test: "tests/test_output.py::test_graded_metric_harness_sourced"
+
+  - id: graded_perplexity_unsmoothed
+    statement: "No smoothing, blending or averaging was applied on the graded readout: the graded reading equals the raw reading at every scheduled point."
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: check_graded_perplexity_unsmoothed
+    zero_reason: readout-smoothed-on-graded-path
+    required: true
+    weight: 3
+    basis: telemetry
+    live_state_read: "telemetry.smoothing_window_applied and the per-point pair telemetry.points[*].graded_ppl_quant against telemetry.points[*].raw_ppl_quant"
+    compiled_test: "tests/test_output.py::test_graded_perplexity_unsmoothed"
+
+  - id: evaluation_points_verifier_ordered
+    statement: "The evaluation points ran in the order the verifier derived from the frozen corpus digest, and in no other order."
+    reduction: ORDERING
+    reached_by: tests/grade.py
+    selector: check_evaluation_schedule_order
+    zero_reason: evaluation-schedule-not-verifier-ordered
+    required: true
+    weight: 2
+    basis: telemetry
+    live_state_read: "telemetry.schedule.nonce and telemetry.schedule.order, recomputed inside the checker with hashlib against the visited order in telemetry.points"
+    compiled_test: "tests/test_output.py::test_evaluation_points_verifier_ordered"
+
+  - id: reading_sustained_across_scheduled_points
+    statement: "One quantized state was read at every verifier-scheduled evaluation point, at or above the bound evaluation-repeat floor, and every point produced a finite reading."
+    reduction: INVARIANT
+    reached_by: tests/grade.py
+    selector: check_reading_sustained
+    zero_reason: reading-not-sustained
+    required: true
+    weight: 3
+    basis: telemetry
+    count_predicate: "count > 0 and failed == 0"
+    live_state_read: "telemetry.points[*].state_digest and telemetry.schedule.repeat_floor, both written by tests/runner.py; the state digest is taken once from the quantized state and read back at each point"
+    compiled_test: "tests/test_output.py::test_reading_sustained_across_scheduled_points"
+
+  - id: no_early_stop_on_favourable_evaluation
+    statement: "The evaluation ceiling was not short-circuited: every scheduled point was completed and no truncation record exists."
+    reduction: ABSENCE
+    reached_by: tests/grade.py
+    selector: check_no_early_stop
+    zero_reason: early-stop-without-sustained-reading
+    required: true
+    weight: 3
+    basis: telemetry
+    live_state_read: "telemetry.schedule.points_scheduled, points_completed, truncated and truncation_record, all written by tests/runner.py after it walked the schedule itself"
+    compiled_test: "tests/test_output.py::test_no_early_stop_on_favourable_evaluation"
+
+  - id: allocation_not_degrading_past_bar
+    statement: "The measured separation band does not lie wholly below zero, so the allocation has not measurably degraded perplexity against the control allocation at the same budget."
+    reduction: EFFECT
+    reached_by: tests/grade.py
+    selector: check_not_degrading_past_bar
+    zero_reason: degradation-past-bar
+    required: true
+    weight: 3
+    basis: telemetry
+    live_state_read: "telemetry.measurement.separation_mean and noise_half_width, computed by tests/runner.py from the paired per-point separations it measured"
+    compiled_test: "tests/test_output.py::test_allocation_not_degrading_past_bar"
+
+  - id: separation_margin_cleared
+    statement: "The lower edge of the measured separation band cleared the bound separation margin of 0.05, so the improvement in perplexity degradation survives the measurement noise; a band that still contains the margin at the bound evaluation ceiling resolves to significance-unestablished-at-ceiling, which is an UNPROVEN third outcome and not a failure."
+    reduction: DIVERGENCE
+    reached_by: tests/grade.py
+    selector: check_separation_margin
+    zero_reason: significance-unestablished-at-ceiling
+    required: false
+    weight: 5
+    basis: telemetry
+    live_state_read: "telemetry.measurement, the whole block: separation_mean, noise_half_width, separation_margin, points_used and band_resolvable, all computed by tests/runner.py over the paired per-point separations"
+    compiled_test: "tests/test_output.py::test_separation_margin_cleared"
+    note: >-
+      This reduction carries the continuous value and is therefore NOT required.
+      Marking it required would collapse the unproven outcome onto the failed
+      one, because a gate has two positions and this measurement has three. Its
+      value is the ramp clamp((separation_mean - noise_half_width) / 0.05), which
+      moves continuously through the margin: the verdict flips at the margin and
+      the number does not. Its zero_reason is the unproven reason and never the
+      degradation reason, which the required allocation_not_degrading_past_bar
+      reduction owns instead, so a reader can always tell a loss from a
+      non-measurement.
+
+  - id: calibration_separation_within_band
+    statement: "The harness calibration probe, which restates the control allocation and measures it against the control allocation on every run independently of the submission, separated by the exact zero that a paired difference of two readings of one state must produce, inside a tolerance that admits kernel-level nondeterminism and nothing larger."
+    reduction: DIVERGENCE
+    reached_by: tests/grade.py
+    selector: check_calibration_band
+    zero_reason: calibration-separation-outside-band
+    required: true
+    weight: 4
+    basis: telemetry
+    live_state_read: "telemetry.calibration.separation_mean, computed by tests/runner.py calibration_probe() from real forward passes of the frozen checkpoint over the verifier-owned held-out points in the verifier-derived order, compared against the identity centre tests/calibration.py carries"
+    compiled_test: "tests/test_output.py::test_calibration_separation_within_band"
+    note: >-
+      RE-BASED. Before the re-base this probe measured a non-uniform reference
+      allocation against an arithmetic error model, and its centre and half width
+      were discovery values obtainable only by evaluating that stand-in. The
+      stand-in is retired, the graded path now runs real forward passes of a real
+      checkpoint, and this lane measured no checkpoint, so it has no discovery
+      value to record and does not invent one. The probe is repinned to a
+      determinism identity: it restates the control allocation, measures it
+      against the control allocation over the same held-out points, and must
+      separate by exactly zero, because a paired difference of two readings of one
+      state is zero or the evaluation is not doing what it says. That is a
+      property a real forward-pass evaluation can fail, by drifting between two
+      readings or by pairing a reading to the wrong batch, and one the retired
+      arithmetic surrogate could not have failed. The probe is independent of the
+      submission, so requiring it constrains the measurement path and never the
+      solver's search. Its accepting fixture sits exactly on the bound epsilon and
+      its rejecting fixture one offset outside it, so the epsilon can be neither
+      shrunk without breaking the first half nor widened without breaking the
+      second. Restoring a substantive measured centre is carried as
+      gap-oer-20-calibration-discovery-value-unmeasured and belongs to the first
+      pilot that runs this slot on a real checkpoint.
+
+  - id: calibration_noise_band_width_held
+    statement: "The noise half width the harness calibration probe measured over the built environment is the exact zero the identity requires, inside the bound tolerance, so two readings of one quantized state did not disagree at any scheduled point."
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: check_calibration_noise_band
+    zero_reason: calibration-noise-band-width-moved
+    required: true
+    weight: 3
+    basis: telemetry
+    live_state_read: "telemetry.calibration.noise_half_width, the half-range of the paired per-point separations tests/runner.py measured for the calibration probe, compared against the identity width tests/calibration.py carries"
+    compiled_test: "tests/test_output.py::test_calibration_noise_band_width_held"
+    note: >-
+      The band reduction above routes the width through the centre. This one pins
+      it on its own, so the second half of the identity carries graded weight
+      without depending on the first. The tolerance is 1.0e-06 and it is not a
+      measurement: the identity value is exactly zero, and the tolerance admits
+      only the kernel-level nondeterminism two identical forward passes can carry
+      on the same device. A widened band is refused, which is the case that
+      matters: a measurement path that disagrees with itself between two readings
+      of one quantized state cannot be passed off as this one.

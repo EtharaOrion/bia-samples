@@ -1,0 +1,30 @@
+{
+  "schema": "oer16.optimizer/v2",
+  "kind": "nanogpt-adamw-muon",
+  "substrate": "environment/nanogpt_substrate.json",
+  "update_unit": "one optimizer step over 524288 tokens, with exactly one forward pass and exactly one backward pass",
+  "batch_tokens_per_step": 524288,
+  "micro_batch_sequences": 64,
+  "seq_len": 1024,
+  "forward_passes_per_step": 1,
+  "backward_passes_per_step": 1,
+  "adamw": {
+    "embed_lr": 0.7,
+    "proj_lr": 0.004,
+    "scalar_lr": 0.015,
+    "betas": [0.8, 0.95],
+    "eps": 1e-10,
+    "weight_decay": 0.001
+  },
+  "muon": {
+    "lr": 0.025,
+    "weight_decay": 0.05,
+    "mu": 0.95,
+    "newton_schulz_steps": 12
+  },
+  "schedule": "stable then decay, as the vendored record set defines it",
+  "seed": 0,
+  "frozen": true,
+  "_repin_note": "Re-based from the add-lambda-count-mle stand-in to the optimizer pair the vendored record set uses. One update is now one optimizer step of 524288 tokens rather than one token consumed, so the fixed-compute axis is the nanoGPT step budget.",
+  "_note": "The optimizer is frozen. The verifier counts steps on its own counter inside its own process; a number the submission reports about its own spend is never consulted."
+}

@@ -1,0 +1,13 @@
+{
+  "_generated": "GENERATED SECTION. DO NOT HAND-EDIT. Source: solution/grounding.yaml",
+  "eval_ids": [
+    "d013",
+    "d014"
+  ],
+  "eval_ordinals": [
+    "r13",
+    "r14"
+  ],
+  "split_id": "split-v2",
+  "writer": "verifier-harness"
+}

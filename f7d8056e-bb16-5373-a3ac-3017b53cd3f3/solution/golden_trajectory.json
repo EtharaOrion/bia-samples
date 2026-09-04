@@ -1,0 +1,64 @@
+{
+  "_generated": "GENERATED SECTION. DO NOT HAND-EDIT. Source: solution/grounding.yaml",
+  "archetype": "AR9",
+  "iterations": [
+    {
+      "action": "resolve the corpus and read the field-key set off the live snapshot descriptor",
+      "holds": "field keys at snapshot 3 are title, section, retrieved_at_snapshot",
+      "iteration": 1,
+      "pivot": false,
+      "snapshot_asked": 3
+    },
+    {
+      "action": "fit a word vocabulary of 12 types over the training documents, char-fallback for the rest",
+      "holds": "vocabulary derived from the live corpus, not from a remembered recipe",
+      "iteration": 2,
+      "pivot": false,
+      "snapshot_asked": 3
+    },
+    {
+      "action": "build a candidate token stream and measure it against the snapshot-3 budget",
+      "holds": "3072 tokens available at snapshot 3",
+      "iteration": 3,
+      "pivot": false,
+      "snapshot_asked": 3
+    },
+    {
+      "action": "RE-ASK the snapshot version before reusing the iteration-3 parse verdict",
+      "holds": "the corpus moved from 3 to 7 and nothing announced it",
+      "iteration": 4,
+      "pivot": true,
+      "snapshot_asked": 7
+    },
+    {
+      "action": "re-resolve the corpus, re-derive the field-key set, discover snapshot and content_hash",
+      "holds": "the snapshot-3 field-key list would have dropped content_hash and mis-read snapshot",
+      "iteration": 5,
+      "pivot": false,
+      "snapshot_asked": 7
+    },
+    {
+      "action": "re-read the evaluation split id and exclude every split-b document from training",
+      "holds": "the split rotated from split-a to split-b when the corpus moved",
+      "iteration": 6,
+      "pivot": false,
+      "snapshot_asked": 7
+    },
+    {
+      "action": "re-read the token budget and truncate the stream to exactly 2048 tokens, one pass",
+      "holds": "the budget retightened from 3072 to 2048 when the corpus moved",
+      "iteration": 7,
+      "pivot": false,
+      "snapshot_asked": 7
+    },
+    {
+      "action": "hand the stream to the frozen recipe and let the whole scheduled sustain window close",
+      "holds": "the level held at step 520 and at 540, 560 and 580",
+      "iteration": 8,
+      "pivot": false,
+      "snapshot_asked": 7
+    }
+  ],
+  "pivot": "iteration 4, where the agent re-asks the snapshot version instead of reusing the iteration-3 parse verdict",
+  "slot": "OER-11"
+}
