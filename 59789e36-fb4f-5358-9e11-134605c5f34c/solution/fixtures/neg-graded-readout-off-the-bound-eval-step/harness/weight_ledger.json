@@ -1,0 +1,22 @@
+{
+  "_generated": "GENERATED SECTION. DO NOT HAND-EDIT. Source: solution/grounding.yaml",
+  "records": [
+    {
+      "digest": "ee7bce51fe156d516c71fbd9bf3afb858c13872c8777ea1860808941487e1c22",
+      "step": 400
+    },
+    {
+      "digest": "9092f812a85e606dd5e09a28e12d1ee3d90fa0a5fce73807cafb3234893d34f4",
+      "step": 450
+    },
+    {
+      "digest": "39fe2aa8441e375d965fc872fb0199b8c73baadb8b70bc1f2962ebb8a6a0dd64",
+      "step": 500
+    },
+    {
+      "digest": "18b83f5ed08385babd6361569f8eeb03701d118a55498a22cb98dbc4fec49ac3",
+      "step": 550
+    }
+  ],
+  "writer": "verifier-harness"
+}

@@ -1,0 +1,16 @@
+{
+  "schema": "oer16.model/v2",
+  "kind": "nanogpt-decoder",
+  "substrate": "environment/nanogpt_substrate.json",
+  "declaration_version": "nanogpt-substrate-v1",
+  "vocab_size": 50304,
+  "num_layers": 12,
+  "model_dim": 768,
+  "head_dim": 128,
+  "num_heads": 6,
+  "seq_len": 1024,
+  "frozen": true,
+  "_repin_note": "Re-based from the bigram-categorical stand-in to the canonical nanoGPT decoder. Every value above is read from environment/nanogpt_substrate.json, which is read in turn from the vendored record set at harness/records/track_3_optimization/train_gpt_simple.py. Nothing here is invented.",
+  "_vocab_note": "vocab_size 50304 is the frozen embedding and output-projection width. It is the ceiling on the submitted vocabulary, not a target: a submission may ship fewer entries and the unused rows stay allocated, so the parameter count does not move with the vocabulary and the compute per step is identical across submissions.",
+  "_note": "The model is frozen. Its shape is fingerprinted at run open and again at run close against the declared vocab_size, num_layers, model_dim and head_dim, and a run whose fingerprint moves is refused with reason frozen-axis-mutated."
+}

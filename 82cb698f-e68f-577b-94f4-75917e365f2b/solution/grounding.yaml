@@ -1,0 +1,955 @@
+# FORGE-CANARY-BEGIN
+# 0: 62964936de0c3515949dd5f26708957ea3309b5366802b76e4fadc853a595b4c
+# 1: 17d11c82f039b10f588cd5871a87620e3f4f794ab3033e584567d9bec6942309
+# 2: 0f60963d4e7099c732fb44d332820fbf57e8815036e6d2a2ac58fef6f53b1e49
+# 3: 570d775488d06f29a9d3a59436e26f234c8b88b9a9e91a6af014fdb749cd0061
+# FORGE-CANARY-END
+schema: forge.grounding/v1
+
+# PRIVATE. This file is the single derivation source for slot OER-14. `recompute.py` reads
+# this file and nothing else, and derives from it: the frozen corpus declaration, the harness
+# control table, the golden trajectory, the checker fixture plan, solve.sh, TRUTH.md,
+# rubrics.json and tests/test_output.py. It invokes no model, no network, no clock, no locale
+# and no random source, so running it twice over frozen bytes produces byte-identical output.
+
+identity:
+  slot: OER-14
+  provisional_identifier: OER-14
+  provisional_identifier_note: >-
+    The slot id IS the provisional identifier. No canonical_content_hash is computed here,
+    no uuid5 is derived, no uuid-named directory is created, no canary token is planted, no
+    provenance carrier is written and no signature file exists. Wave 2 does identity for
+    every slot at once, because adding solution/policy.yaml to an already-committed bundle
+    moves its hash too.
+  family: F10
+  family_title: tokenizer and vocabulary construction
+  title: Long-horizon vocabulary search under a fixed nanoGPT compute budget
+  primary_archetype: AR1
+  primary_archetype_name: Long-Horizon State Collapse
+  archetype_exclusivity: >-
+    Exactly one primary archetype, fixed at scope time. No buffet within the slot. Other
+    archetypes may be visible in the surface and are decorative; none is claimed.
+
+bindings:
+  # Transcribed from seed/contract.yaml batch.optimization_bindings. Never recomputed here.
+  tags: [optimization, bounded-continuous]
+  max_timeout_hours: 6.0
+  max_timeout_role: refinement-loop terminator ACROSS attempts
+  budget_hours: 0.12
+  budget_hours_minutes: 7.2
+  budget_hours_role: per-attempt completion bound, ONE attempt
+  budget_hours_provisional: true
+  budget_hours_gap: gap-oer-budget-field-name-collides-with-its-role
+  never_aliases: >-
+    max_timeout and budget_hours are never aliases. 6.0 h bounds the session across
+    attempts; 0.12 h bounds one attempt. Binding 6 into the per-attempt field would bind a
+    three-hundred-hour session that every well-formedness check would still pass.
+  max_attempts: 50
+  final_selection: best
+  compute_envelope: one H100, single accelerator, no multi-GPU scaling
+  compute_envelope_accelerators: 1
+  budget_margin: 10 percent
+  budget_margin_note: carried by name, never recomputed
+  image_digest: "pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407"
+  frontier_defeat_floor: 0.50
+  separation_margin: 0.05
+  target_tier: Frontier-defeat
+  tier_exemption_granted: none
+  anchorable_tier_note: >-
+    This task family is text and code only, so the Perception axis carries no category. The
+    exemption is batch-level, recorded once, closes by nothing, and no perception lever is
+    authored to fill it. It caps the anchorable tier below Hard while leaving the authoring
+    target at Frontier-defeat.
+
+# ---------------------------------------------------------------------------
+# The nanoGPT re-base, pass OER-2026-08-20.
+# ---------------------------------------------------------------------------
+
+rebase:
+  pass_id: OER-2026-08-20
+  kind: replacement of the training and evaluation path
+  kind_note: >-
+    This was not a declaration-level repin. The prior substrate modelled a back-off bigram
+    over token ids trained by count accumulation: no parameter tensor, no forward pass, no
+    backward pass, and an evaluation corpus sitting in the agent-visible environment. It
+    failed all three parts of the simulator test, so the graded path was replaced rather
+    than relabelled.
+  declaration: environment/nanogpt_substrate.json
+  declaration_note: >-
+    The canonical operating point is replicated into this slot's own environment/ byte for
+    byte. Replication rather than reference, because a slot never reads a sibling slot's
+    bundle bytes and a bundle's name is a hash over its own tree.
+  what_moved:
+    - the model became the canonical 12-layer 768-dimension nanoGPT decoder, transcribed
+      from the vendored record set, with the embedding and the output projection shaped to
+      the declared vocab_size 50304
+    - the optimizer became the vendored baseline record's AdamW and Muon pair on the
+      stable-then-decay schedule, with the distributed all-gather dropped because the bound
+      compute envelope is one accelerator
+    - the corpus became FineWeb10B, staged by the canonical loader, with a submitted
+      vocabulary retokenizing the training text before the decoder ever sees it
+    - the compute unit became one optimizer step, which is exactly one forward and one
+      backward pass over the canonical 524288-token batch, accumulated in 32 micro-batches
+      of 16 sequences because the bound envelope is one accelerator where the record set had
+      eight ranks, with the micro-batch count reported in the telemetry rather than implied
+    - the evaluation split moved OFF the agent surface entirely, into the verifier image, as
+      a pinned slice of a FineWeb validation shard
+  what_survived:
+    - the metric, bits per byte, and its direction
+    - the free axis, the vocabulary construction and its allocation across four families
+    - every checker id and every zero_reason, twelve rows unchanged
+    - the archetype, AR1 long-horizon state collapse, and the zero-sum slot budget that
+      carries it
+  vocab_size_interaction: >-
+    The canonical substrate pins vocab_size 50304 and architecture is a frozen axis, so the
+    embedding and the output projection are ALWAYS 50304 rows whatever a submission builds.
+    A submitted vocabulary smaller than that occupies the leading rows and leaves the rest
+    dead, exactly as the upstream GPT-2 vocabulary of 50257 leaves 47 dead rows inside the
+    padded 50304. It cannot be larger: the assembler truncates at the ceiling and reports
+    the count it turned away in the telemetry, so a spec that ran into the ceiling is
+    visible rather than silently clipped, and no refusal reason was added for it. Parameter
+    count, per-step FLOPs and the step budget are therefore identical across every
+    submission, which is what makes bits per byte at fixed compute a comparison of
+    tokenizers rather than of model sizes.
+  simulator_test:
+    weights_in_the_loop: >-
+      The graded artifact is a parameter snapshot of the frozen decoder. Every evaluation
+      point carries a sha256 over the actual parameter tensors and the shapes read off those
+      tensors, and evaluated_state_is_harness_owned refuses any snapshot whose vocab_size,
+      num_layers, model_dim or head_dim is not the declared architecture.
+    verifier_recomputes: >-
+      The graded scalar is the verifier's own forward pass over held-out FineWeb text that
+      is absent from environment/ and materialised only in the verifier image, from a shard
+      name, a token offset and a token count that are constants of tests/controls.json. No
+      solver-reachable call resolves the split.
+    no_forward_pass_no_score: >-
+      Delete the forward and backward pass and there is no loss, no parameter movement and
+      no nll_bits_total, so graded_bpb returns None and the reward resolves to 0.0 with a
+      reason. The meter tallies the passes separately from the steps, and
+      compute_spend_within_frozen_budget refuses a step count the passes do not match.
+
+reward_schema:
+  carrier: /logs/verifier/reward.txt
+  carrier_form: one bare float, no JSON wrapper
+  score_document: /logs/verifier/score.json
+  interval: [0.0, 1.0]
+  direction: higher is better
+  binary: false
+  full_reward: 1.0
+  metric: bits per byte at fixed compute
+  metric_direction: lower
+  formula: "raw = (baseline_metric - agent_metric) / (baseline_metric - target_metric)"
+  clip: "score = min(max(raw, 0.0), 1.0)"
+  bar_not_gradient: reaching the target scores exactly 1.0 and beating it also scores 1.0
+
+anchors:
+  anchors_state: absent
+  baseline_metric: null
+  target_metric: null
+  pass_threshold: null
+  gap: gap-oer-per-family-anchors-unmeasured
+  absent_reason: >-
+    seed/contract.yaml families.entries.F10 carries scope_state unscoped and
+    requirements/bia-environment-spec.md line 63 leaves this family's baseline, target and
+    instance count unresolved. No value may be invented for them here, so the schema is
+    bound in full and the two numbers are declared absent.
+  resolution_mechanism: run_local_harness_controls
+  resolution_mechanism_detail: >-
+    The reward formula's two anchors are RESOLVED AT GRADE TIME by control runs the verifier
+    performs itself, never by a number written into this bundle. baseline_metric is the best
+    bits per byte reachable by a SINGLE-DIRECTION sweep, measured by the harness by spending
+    the entire slot budget on each construction family in turn, training the frozen decoder
+    once per sweep, and taking the best. It is the exact score a greedy sweep of one
+    direction reaches, so a greedy sweep scores 0.0 by construction. target_metric is the
+    bits per byte of the harness's own reference reallocated construction, measured the same
+    way at the same frozen compute budget. Both are measurements the verifier's process
+    makes; neither is an authored constant, and this lane writes neither number into
+    task.toml.
+
+solver_egress_divergence:
+  bound_in_this_bundle: open
+  bound_where: task.toml [agent] solver_egress
+  batch_level_field: setup-only
+  batch_level_field_location: seed/contract.yaml batch.optimization_bindings.solver_egress
+  gap: gap-oer-solver-egress-ruled-stricter
+  reading_a: >-
+    requirements/open-ended-research-optimisation-problems.md line 58 grants the solving
+    model full internet access.
+  reading_b: >-
+    requirements/open-ended-research-optimisation-problems.md line 122 says internet is
+    needed only for setup, and requirements/bia-environment-spec.md line 247 rules that the
+    stricter reading governs until the client resolves it.
+  what_this_lane_does: >-
+    Binds `open` at the agent surface, as the lane brief requires, and records the divergence
+    here rather than amending the batch-level field. The batch-level field still reads
+    setup-only and is NOT amended by this lane. The divergence is never silent.
+  verifier_surface: egress denied, bound in task.toml [verifier] egress
+  deny_list: [github.com, raw.githubusercontent.com, objects.githubusercontent.com]
+  deny_list_is_not_containment: >-
+    The deny-list is not a containment proof. Mirrors, caches, paraphrased write-ups and
+    released model weights all carry a recipe past any deny-list. That is exactly why the
+    deterministic checker chain and not the network policy is the load-bearing control here.
+
+substrate:
+  module: environment/substrate.py
+  declaration: environment/nanogpt_substrate.json
+  frozen:
+    - the model, the canonical nanoGPT decoder at vocab_size 50304, num_layers 12,
+      model_dim 768, head_dim 128, num_heads 6 and seq_len 1024
+    - the optimizer, the vendored baseline record's AdamW and Muon pair on the frozen
+      stable-then-decay schedule, seeded from the frozen initialization seed
+    - the corpus, FineWeb10B, and the vocabulary construction window inside it
+    - the evaluation split, a pinned slice of a FineWeb validation shard held by the
+      verifier and absent from environment/
+    - the compute budget, 32 optimizer steps at the canonical 524288 tokens per step,
+      metered by a harness-owned counter that tallies the forward and backward passes apart
+      from the steps
+    - the slot budget, 50048 family slots, which is the declared vocab_size less the byte
+      alphabet, so allocation is genuinely zero-sum over the frozen embedding
+  free:
+    - the vocabulary construction, which byte-strings become tokens
+    - the size allocation across the four frozen construction families
+    - any extra tokens named directly by the submission
+  directions: [merge_depth, span_units, numeric_units, punct_units]
+  flattened_direction: merge_depth
+  flattening_mechanism: >-
+    A byte pair is an admissible merge only at or above MERGE_MIN_FREQUENCY, which is 50, so
+    the frozen construction window carries a FINITE number of admissible merges. That depth
+    is MEASURED on the staged window at grade time and is not authored anywhere in this
+    bundle, because the window is FineWeb text this lane cannot read. Past the depth an
+    extra merge slot buys exactly nothing and the marginal gain is exactly 0.0, since the
+    vocabulary, the retokenized stream, the seeded parameters and therefore the reading are
+    all identical. Nothing announces it. Because the slot budget is zero-sum, a slot spent
+    past the knee is a slot no other family gets. The golden trajectory drives merge_depth
+    to the whole slot budget precisely so that the knee is passed wherever it sits.
+  budget_rationale: >-
+    32 steps is far below the 3250 steps the vendored baseline record spends, and NO claim
+    is made or implied that a run at this budget reaches the record set's 3.28 validation
+    loss. The budget is fixed so that every tokenizer is compared at equal compute, and it
+    is sized by the verifier's own envelope: the verifier trains the frozen decoder once per
+    DISTINCT allocation the control table and the attempt record name, memoised on the
+    canonical allocation, which is sixteen training runs for the reference session.
+
+corpus:
+  # FineWeb10B, staged by the canonical loader named in the substrate declaration. This
+  # bundle ships no corpus bytes: it pins the shards it measures over and the loader stages
+  # them at image build time, when egress is still open. The verifier image stages its own
+  # copy of the validation shard, so the graded reading is computed inside an image whose
+  # egress is denied at run time.
+  source: FineWeb10B, GPT-2 BPE token ids, uint16 little-endian
+  external_source: https://huggingface.co/datasets/HuggingFaceFW/fineweb
+  pipeline: https://github.com/KellerJordan/modded-nanogpt data/cached_fineweb10B.py
+  train_glob: data/fineweb10B/fineweb_train_*.bin
+  val_glob: data/fineweb10B/fineweb_val_*.bin
+  agent_shard_root: /workspace/data/fineweb10B
+  verifier_shard_root: /verifier/data/fineweb10B
+  train_shards_staged: 1
+  val_shards_staged: 1
+  # How many GPT-2 tokens of training text are decoded and handed to the retokenizer. It is
+  # a count of GPT-2 tokens, not of submitted tokens, which is the whole mechanism: a
+  # vocabulary that codes text in fewer tokens covers more of this text under the same step
+  # budget.
+  train_text_gpt2_tokens: 25165824
+  # The frozen VOCABULARY CONSTRUCTION WINDOW, inside the first training shard. Agent-
+  # reachable, because a submission has to be able to construct a vocabulary from it.
+  vocab_window_shard: fineweb_train_000001.bin
+  vocab_window_token_offset: 1048576
+  vocab_window_token_count: 1048576
+  # The VERIFIER-ONLY held-out slice. `offset` is the construction phase and `stride` is the
+  # construction period, and the two graded corpus rows below isolate one each. Every value
+  # here is transcribed from the upstream provenance this bundle already carried; none is
+  # invented, and this lane computed no digest of bytes it cannot read.
+  shard: fineweb_val_000000.bin
+  offset: 5200000
+  stride: 1048576
+  slice_sha256: fa1efdb70b40ab288c8e2fcd6cfd91996a3d8e10d24d0378c8942bd7f5ed06ea
+  shard_sha256_prefix_1mib: 0d894b48b1f0f8aa3b8709c6950c0ba3d8051e90f70a22a7725a35e98610b04f
+  header_bytes_skipped: 1024
+  transcribed_from: >-
+    environment/corpus/FROZEN.json as delivered before this pass, which recorded the shard,
+    the token offset, the token count and the slice digest of a real FineWeb validation
+    slice copied without transformation. This pass moves that slice OFF the agent surface,
+    where it should never have been readable, and pins it in the verifier-only control table
+    instead.
+
+controls:
+  # The control table the verifier runs at grade time to RESOLVE the two anchors. The
+  # allocations are authored; the two numbers they produce are measured, never authored.
+  # Each entry costs one training run of the frozen decoder at the frozen budget.
+  single_direction_sweep:
+    merge_depth: {merge_depth: 50048}
+    span_units: {span_units: 50048}
+    numeric_units: {numeric_units: 50048}
+    punct_units: {punct_units: 50048}
+  reference_allocation: {merge_depth: 18000, span_units: 24000, numeric_units: 5000, punct_units: 0}
+  verifier_training_runs: 16
+  verifier_training_runs_note: >-
+    Sixteen DISTINCT allocations across the four sweeps and the twelve recorded attempts;
+    the reference allocation and the graded allocation are both attempt 11 and are served
+    from the memo rather than retrained.
+
+golden_trajectory:
+  # The reference session. Nine attempts sweep the one direction that pays until it stops
+  # paying, two attempts reallocate off it, one attempt probes a direction that turns out not
+  # to pay. Under final_selection `best` the graded submission is the best carried attempt.
+  # The sweep ends at the whole slot budget so the merge knee is passed wherever it sits.
+  flatten_epsilon_bits: 0.005
+  flatten_run_required: 2
+  graded_attempt: 11
+  attempts:
+    - {index: 1,  direction: merge_depth,   allocation: {merge_depth: 2500},  reallocated_from: null}
+    - {index: 2,  direction: merge_depth,   allocation: {merge_depth: 5000},  reallocated_from: null}
+    - {index: 3,  direction: merge_depth,   allocation: {merge_depth: 7500},  reallocated_from: null}
+    - {index: 4,  direction: merge_depth,   allocation: {merge_depth: 10000}, reallocated_from: null}
+    - {index: 5,  direction: merge_depth,   allocation: {merge_depth: 15000}, reallocated_from: null}
+    - {index: 6,  direction: merge_depth,   allocation: {merge_depth: 20000}, reallocated_from: null}
+    - {index: 7,  direction: merge_depth,   allocation: {merge_depth: 30000}, reallocated_from: null}
+    - {index: 8,  direction: merge_depth,   allocation: {merge_depth: 40000}, reallocated_from: null}
+    - {index: 9,  direction: merge_depth,   allocation: {merge_depth: 50048}, reallocated_from: null}
+    - {index: 10, direction: span_units,    allocation: {merge_depth: 18000, span_units: 24000}, reallocated_from: merge_depth}
+    - {index: 11, direction: numeric_units, allocation: {merge_depth: 18000, span_units: 24000, numeric_units: 5000}, reallocated_from: merge_depth}
+    - {index: 12, direction: punct_units,   allocation: {merge_depth: 18000, span_units: 24000, numeric_units: 5000, punct_units: 3000}, reallocated_from: merge_depth}
+
+drift_state:
+  # Mirrors seed/tasks/OER-14/drift.yaml. The harness records the CURRENT admin-plane state
+  # into its telemetry, and each silent mutation's bound checker reads the exact key it moved.
+  initial:
+    graded_denominator_key: submission_reported_bytes
+    graded_readout_filter: ema-0.9
+    compute_meter_source: training-loop-assertion
+    paying_direction: merge_depth
+    evaluation_points_scheduled: 1
+  final:
+    graded_denominator_key: heldout_fineweb_byte_count
+    graded_readout_filter: none
+    compute_meter_source: harness-counter
+    paying_direction: numeric_units
+    evaluation_points_scheduled: 3
+
+checkers:
+  # id -> the planted defect that fires it and the reason it must emit. recompute.py turns
+  # this into solution/fixtures/plan.json and into one compiled test per checker. Every id
+  # and every zero_reason below survived the re-base unchanged; what moved is what each row
+  # reads, which is now harness telemetry from a real training run.
+  - id: graded_bpb_recomputed_unsmoothed
+    reduction: VALUE
+    zero_reason: readout-smoothing-on-graded-path
+    firable_by_submission: false
+    substitution: >-
+      No submission can put a filter on the graded readout, because the harness owns the
+      readout and computes it from its own trained parameters. The rejecting half is carried
+      on a planted telemetry fixture and the substitution is recorded in tests/checkers.yaml.
+    defect: {kind: set_point_field, field: filter, value: "ema-0.9"}
+  - id: denominator_is_frozen_eval_byte_count
+    reduction: VALUE
+    zero_reason: denominator-not-frozen-eval-bytes
+    firable_by_submission: true
+    defect: {kind: set_point_field, field: denominator_bytes, value: 4096}
+  - id: compute_spend_within_frozen_budget
+    reduction: VALUE
+    zero_reason: compute-budget-overspent
+    firable_by_submission: true
+    defect: {kind: set_meter_field, field: spent_units, value: 999999}
+  - id: evaluated_state_is_harness_owned
+    reduction: VALUE
+    zero_reason: state-not-harness-owned
+    firable_by_submission: false
+    substitution: >-
+      A submission never runs inside the grading process, so it cannot substitute the
+      parameter snapshot that is evaluated. The rejecting half is carried on a planted
+      telemetry fixture.
+    defect: {kind: set_point_field, field: state_source, value: submission-selected-checkpoint}
+  - id: early_stop_does_not_establish_reading
+    reduction: EFFECT
+    zero_reason: early-stop-not-established
+    firable_by_submission: true
+    defect: {kind: unreach_point, point: 3}
+  - id: reading_sustained_across_scheduled_points
+    reduction: INVARIANT
+    zero_reason: reading-not-sustained
+    firable_by_submission: false
+    substitution: >-
+      A dip wide enough to break the band cannot be produced on demand by a spec, because the
+      readings are the harness's own and move smoothly in the flat tail of the training curve.
+      The rejecting half is carried on a planted telemetry fixture that widens one point.
+    defect: {kind: scale_point_bits, point: 1, factor: 4.0}
+  - id: no_submission_reported_number_on_graded_path
+    reduction: ABSENCE
+    zero_reason: submission-reported-metric-on-graded-path
+    firable_by_submission: false
+    substitution: >-
+      grade.py consumes a fixed key list that never includes a submission field, so no
+      submission can add itself to it. The rejecting half is carried on a planted fixture
+      that adds a submission-owned key to the consumed list.
+    defect: {kind: add_consumed_key, value: "submission.reported_bpb"}
+  - id: reallocation_follows_flattening
+    reduction: ORDERING
+    zero_reason: flattened-direction-not-reallocated
+    firable_by_submission: true
+    defect: {kind: truncate_attempts, keep: 9}
+  - id: carried_direction_frontier_never_collapses
+    reduction: INVARIANT
+    zero_reason: carried-state-collapsed
+    firable_by_submission: true
+    defect: {kind: drop_frontier_key, attempt: 11, key: merge_depth}
+  - id: graded_band_exceeds_single_direction_sweep
+    reduction: DIVERGENCE
+    zero_reason: single-direction-sweep-not-exceeded
+    firable_by_submission: true
+    defect: {kind: set_graded_allocation, allocation: {merge_depth: 50048}}
+  - id: corpus_phase_matches_frozen_offset
+    reduction: VALUE
+    zero_reason: frozen-corpus-phase-not-established
+    firable_by_submission: false
+    discovery_value: offset
+    discovery_value_note: >-
+      `corpus.offset` is established ONLY in the built verifier image: it is the token
+      position in the staged FineWeb validation shard at which the held-out slice opens, so
+      it is readable off the staged shard bytes and appears in no agent-visible byte at all.
+      The probe isolates it exactly: it hashes the raw token bytes it finds at that position
+      and reports the position only when the digest is the pinned one, holding the period
+      fixed, so the outcome is a function of the offset alone. A grading path pointed at any
+      other slice cannot produce that position, and the checker's outcome moves the moment
+      the phase moves.
+    substitution: >-
+      No submission can move the phase of the held-out slice, because the slice is absent
+      from the agent surface entirely and the harness reads it back off disk inside the
+      verifier process. The rejecting half is carried on a fixture that perturbs the frozen
+      construction phase this checker derives its expectation from, so the accepting half is
+      the grounding-derived phase and the rejecting half is a wrong one.
+    defect: {kind: perturb_corpus_param, param: offset, delta: 1}
+  - id: corpus_period_matches_frozen_stride
+    reduction: VALUE
+    zero_reason: frozen-corpus-period-not-established
+    firable_by_submission: false
+    discovery_value: stride
+    discovery_value_note: >-
+      `corpus.stride` is established ONLY in the built verifier image: it is the token count
+      the held-out slice spans, so it is readable off the staged shard bytes and appears in
+      no agent-visible byte. The probe isolates it exactly: it reports how many tokens the
+      shard actually yielded at that position, which is a property of what the shard carried
+      and not of where the read started, so the offset cancels identically and a shard too
+      short to carry the period is refused rather than silently truncated.
+    substitution: >-
+      No submission can move the period of the held-out slice, for the same reason. The
+      rejecting half is carried on a fixture that perturbs the frozen construction stride
+      this checker derives its expectation from, so the accepting half is the
+      grounding-derived stride and the rejecting half is a wrong one.
+    defect: {kind: perturb_corpus_param, param: stride, delta: 1}
+
+negative_controls:
+  - {id: neg-no-op, statement: "the submission changes nothing and returns the default byte-level construction", spec: {allocations: {}}, expect_reason: single-direction-sweep-not-exceeded}
+  - {id: neg-greedy-sweep, statement: "the whole attempt budget is spent sweeping one direction past its knee", spec: {allocations: {merge_depth: 50048}}, expect_reason: single-direction-sweep-not-exceeded}
+  - {id: neg-denominator-swap, statement: "the submission divides by a byte count of its own choosing", spec: {allocations: {merge_depth: 18000, span_units: 24000, numeric_units: 5000}, denominator_override: 4096}, expect_reason: denominator-not-frozen-eval-bytes}
+  - {id: neg-compute-overspend, statement: "the submission asks for more training compute than the frozen budget", spec: {allocations: {merge_depth: 18000, span_units: 24000, numeric_units: 5000}, train_units_requested: 60000}, expect_reason: compute-budget-overspent}
+  - {id: neg-smoothed-readout, statement: "the submission asks for an EMA-blended graded readout", spec: {allocations: {merge_depth: 18000, span_units: 24000, numeric_units: 5000}, graded_readout_filter: "ema-0.9"}, expect_reason: readout-smoothing-on-graded-path}
+  - {id: neg-early-stop, statement: "the run halts at the first favourable evaluation point", spec: {allocations: {merge_depth: 18000, span_units: 24000, numeric_units: 5000}, stop_after_point: 1}, expect_reason: early-stop-not-established}
+  - {id: neg-reported-metric, statement: "the submission reports its own bits per byte and expects it to be read", spec: {allocations: {merge_depth: 18000, span_units: 24000, numeric_units: 5000}, reported_bpb: 0.01}, expect_reason: submission-reported-metric-on-graded-path}
+  - {id: neg-stale-answer, statement: "a verdict carried forward from before the silent mutation, computed on the pre-flattening surface", trajectory_defect: {kind: truncate_attempts, keep: 9}, expect_reason: flattened-direction-not-reallocated}
+  - {id: neg-no-reallocation, statement: "flattening is observed and no allocation moves off the flattened direction", trajectory_defect: {kind: strip_reallocations}, expect_reason: flattened-direction-not-reallocated}
+  - {id: neg-carried-collapse, statement: "the carried per-direction frontier is truncated between attempts", trajectory_defect: {kind: drop_frontier_key, attempt: 11, key: merge_depth}, expect_reason: carried-state-collapsed}
+  - {id: neg-unsustained, statement: "the reading exists at one scheduled point and nowhere else", telemetry_defect: {kind: scale_point_bits, point: 1, factor: 4.0}, expect_reason: reading-not-sustained}
+  - {id: neg-selected-checkpoint, statement: "the evaluated state is a checkpoint the submission chose", telemetry_defect: {kind: set_point_field, field: state_source, value: submission-selected-checkpoint}, expect_reason: state-not-harness-owned}
+
+statement_ambiguity:
+  claim: exactly one graded outcome
+  reading_one:
+    source: instruction.md section "What is graded"
+    reduces_to: >-
+      the maximum, over the verifier-scheduled evaluation points, of the bits the harness's
+      own trained decoder needs to code the held-out FineWeb text divided by the UTF-8 byte
+      length of that same text, at a compute spend the harness counter measured at or below
+      the frozen step budget.
+  reading_two:
+    source: instruction.md section "What is frozen and what is free" read together with environment/substrate.py measure()
+    reduces_to: >-
+      the maximum, over the verifier-scheduled evaluation points, of the bits the harness's
+      own trained decoder needs to code the held-out FineWeb text divided by the UTF-8 byte
+      length of that same text, at a compute spend the harness counter measured at or below
+      the frozen step budget.
+  identical: true
+  how_checked: >-
+    adequacy.py drives both readings as two independent computations over the same reference
+    telemetry and asserts the two floats are bit-identical, so the instruction admits one
+    reading of what is optimized rather than two that happen to agree in the reference case.
+
+rubrics:
+  # tests/rubrics.jsonl is hand-authored and judged against the TRAJECTORY. This block is the
+  # source for solution/rubrics.json, which grades the SOLUTION against its reference answer.
+  # The two files are different files with different jobs and neither substitutes for the other.
+  solution_criteria:
+    - {id: sol-allocation-matches-reference, criterion: "the submitted allocation reallocates off merge_depth into span_units and numeric_units, as the reference does"}
+    - {id: sol-slot-budget-respected, criterion: "the submitted allocation spends no more than the frozen slot budget, which is the declared vocab_size less the byte alphabet"}
+    - {id: sol-no-request-fields, criterion: "the submitted spec carries no denominator override, no readout filter, no early stop and no reported metric"}
+    - {id: sol-compute-request-within-budget, criterion: "the submitted spec requests no more optimizer steps than the frozen budget"}
+    - {id: sol-reaches-target-band, criterion: "the harness reading for the submitted allocation reaches the target the reference control measured"}
+
+truth:
+  headline: The graded quantity is a fraction whose numerator and denominator the harness owns.
+  points:
+    - The metric is bits per byte at FIXED COMPUTE. The numerator is the bits a real 12-layer 768-dimension nanoGPT decoder needs to code the held-out FineWeb text after training on FineWeb text your vocabulary retokenized, and the denominator is a byte count no vocabulary can move. That is the only reading that compares tokenizers at all, because a token count is not comparable across tokenizations and a byte count is.
+    - The compute unit is one optimizer step, which is exactly one forward and one backward pass over the canonical 524288-token batch. A vocabulary that lowers bits per byte by spending more compute has not won, and the harness counter is what decides that, not the training loop's own claim. The counter tallies the passes apart from the steps, so a step that skipped a pass is refused.
+    - The evaluation split is absent from environment/ entirely. It is a slice of a FineWeb validation shard pinned by shard name, token offset and token count in the verifier-only control table and materialised only in the verifier image, so nothing the solver can read resolves it.
+    - The embedding and the output projection are always 50304 rows, whatever vocabulary is submitted. A smaller vocabulary leaves dead rows, exactly as the upstream GPT-2 vocabulary of 50257 does inside the padded 50304, and a larger one is impossible because the assembler truncates at the ceiling and reports what it turned away. Parameter count and per-step FLOPs are therefore identical across every submission.
+    - merge_depth stops paying at the number of byte pairs the construction window carries at or above the frozen frequency floor. That depth is measured on the staged window at grade time and is written nowhere in this bundle, and nothing announces it. The slot budget is zero-sum, so every slot spent past that point is a slot span_units and numeric_units do not get.
+    - The reward band is anchored on the harness's own single-direction sweep, each arm of which is a real training run at the same frozen budget, so a greedy sweep of one direction scores exactly 0.0 no matter how many of the fifty attempts it consumes.
+
+withheld_from_the_agent_manifest:
+  note: Moved out of task.toml on 2026-08-25 because Harbor mounts that manifest on the agent surface,
+    so anchors and internal record ids were readable by the solving agent. This file is private and is
+    never assembled onto that surface.
+  lines:
+  - anchors_state = "absent"
+  - gap = "gap-oer-per-family-anchors-unmeasured"
+  - budget_hours_gap = "gap-oer-budget-field-name-collides-with-its-role"
+  - frontier_defeat_floor = 0.50
+  - separation_margin = 0.05
+  - solver_egress_divergence = "seed/contract.yaml batch.optimization_bindings.solver_egress reads setup-only
+    under gap-oer-solver-egress-ruled-stricter; this bundle binds open at the agent surface and records
+    the divergence in solution/grounding.yaml rather than amending the batch-level field"
+  - solver_egress_gap = "gap-oer-solver-egress-ruled-stricter"
+  - corpus.slice_sha256 and corpus.offset and corpus.stride, which pin the held-out FineWeb slice and
+    are carried only in the verifier-only control table
+
+manifest_conformance_normalization_2026_08_25:
+  note: >-
+    task.toml was rewritten on 2026-08-25 to conform to seed/harbor_lint.py, the repository's
+    own authoritative manifest linter. Nothing here was deleted outright: every line the
+    agent-visible manifest no longer carries is transcribed below, in this private file.
+  canonical_optimization_path: metadata.optimization
+  canonical_path_rationale: >-
+    seed/harbor_lint.py rejects every unknown TOP-LEVEL key as one Harbor would silently drop,
+    so a top-level [optimization] table cannot be used. [metadata] is the one table Harbor
+    hands through as dict[str, Any], so [metadata.optimization] is the only path that is both
+    a single deterministic lookup and survives the linter. All 24 slots now use it.
+  previous_optimization_path_in_this_slot: 'optimization_bindings.*'
+  bound_values_preserved_verbatim:
+    max_timeout_hours: '6.0 (session bound across attempts)'
+    budget_hours: '0.12 (per-attempt bound, 7.2 minutes; never an alias of max_timeout_hours)'
+    max_attempts: '50'
+    final_selection: 'best'
+    budget_envelope: 'one H100, single accelerator, no multi-GPU scaling'
+    budget_margin: '10 percent'
+    tags: '["optimization", "bounded-continuous"], under the key `tags` at metadata.tags'
+    agent: 'solver_egress = "setup-only", network_mode = "none"'
+    environment: 'network_mode = "public" (provisioning; never blanket-denied)'
+    verifier: 'egress = "denied"'
+    docker_image: 'pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407'
+  withheld_from_the_agent_manifest_on_this_pass:
+    reason: >-
+      task.toml is mounted on the agent surface. Harness-internal paths, internal record ids
+      and reward-scale literals are readable there by the solving agent, so they are held here.
+    lines:
+    - '[anchors] absent_reason = "seed/contract.yaml families.entries.F10 carries scope_state unscoped, so no published baseline or target exists for this family"'
+    - '[anchors] resolution_detail named baseline_metric and target_metric directly; reworded to ''the baseline position'' and ''the target position'' on the agent surface'
+
+# FORGE-SCREENING-BEGIN GENERATED SECTION. DO NOT HAND-EDIT.
+screening:
+  applicability:
+    empty-submission-validation:
+      applicability_reason: This atom has no exempt route at all and is applicable to every unit.
+      cap: ''
+      clean_fixture_passed: true
+      control_accepting_half: 15
+      control_detail: 58 passed
+      control_passed: true
+      control_rejecting_half: 23
+      control_suite: tests/test_emptysub.py
+      defect: ''
+      determination: passed
+      planted_positive_present: true
+      planted_positive_rejected: true
+      ran: true
+      reason: empty submission scored exactly zero, reason=unattributed
+      result_digest: ac4b5e514bc475fbdf85adf07c54a9ea16ce0335a3e9198d0b879bd83895ca66
+      score: 0.0
+      screened_preimage: the unit's delivered bytes as they sit on disk, graded through the pinned image;
+        nothing this atom records is a function of the bytes this lane writes
+      status: clean
+      value: applicable
+    exclusion-matching:
+      applicability_reason: This atom is applicable to every unit.
+      cap: ''
+      clean_fixture_passed: true
+      control_accepting_half: 8
+      control_detail: 58 passed
+      control_passed: true
+      control_rejecting_half: 18
+      control_suite: tests/test_exclusion.py
+      defect: ''
+      determination: no-match
+      planted_positive_present: true
+      planted_positive_rejected: true
+      ran: true
+      reason: All three relations were evaluated against engram.screening-root.exclusion-list/v1 at 81764edb7df796c57d17007b1fa95c2fe693226c865e403e5adc1b0640f595da
+        and none matched.
+      relations:
+        base-commit-sha:
+          applicability: not_applicable
+          matched: false
+        canonical-repository-identity:
+          applicability: applicable
+          matched: false
+        fork-ancestry-closure-membership:
+          applicability: applicable
+          matched: false
+      result_digest: 1b3acf12205738c603e609b2b5b6f80c0d418ed15fe4474a402b05f0ff8f27b0
+      screened_preimage: the unit's bytes with this `screening` block removed from solution/grounding.yaml
+        and the carrier section removed from solution/recompute.py, because an output never enters its
+        own input
+      status: clean
+      value: applicable
+    freeze-holdout:
+      applicability_reason: No independent attestation satisfies the closed generator-origin predicate
+        for this source (synthetic), so no relation is exempted and every one is screened.
+      cap: screening-unverified
+      clean_fixture_passed: false
+      control_accepting_half: 15
+      control_detail: 51 failed, 46 passed, 4 errors
+      control_passed: false
+      control_rejecting_half: 31
+      control_suite: tests/test_freeze.py
+      defect: ''
+      determination: unresolved
+      planted_positive_present: false
+      planted_positive_rejected: false
+      ran: false
+      reason: 'RootResolutionError: screening root freeze_date_table at <screen-root>/memory/roots/freeze-date-table-v1.yaml
+        hashes 5cb51fe566a202a2c9cae232916badcf311f6b64eaef0ceacb9d5677b21f0c2a, and FORGE_VIEW pins 16e5b169c33898be57492a0101644bedb6b3728624378a5c13910f8f417e7030.
+        Refusing to screen against bytes ENGRAM did not pin. The atom returned no determination over this
+        unit, so nothing about this unit was observed by it. Recorded as unverified rather than as clean.'
+      result_digest: ''
+      screened_preimage: the unit's bytes with this `screening` block removed from solution/grounding.yaml
+        and the carrier section removed from solution/recompute.py, because an output never enters its
+        own input
+      status: inert-root-unresolved
+      value: applicable
+    near-duplicate-screening:
+      applicability_reason: This atom has no exempt route at all and is applicable to every unit.
+      cap: ''
+      clean_fixture_passed: true
+      control_accepting_half: 5
+      control_detail: 26 passed
+      control_passed: true
+      control_rejecting_half: 8
+      control_suite: tests/test_neardup.py
+      defect: ''
+      determination: pass
+      nearest: results/20260513_shampoo_1_4_power/distributed_shampoo/examples/tests/utils_test.py
+      planted_positive_present: true
+      planted_positive_rejected: true
+      ran: true
+      reason: solution/reference.py scored 0.096849 against its nearest pinned corpus neighbour results/20260513_shampoo_1_4_power/distributed_shampoo/examples/tests/utils_test.py
+        under threshold 0.63 and review threshold 0.56, classified pass.
+      result_digest: eaf8886285e4505c6bfb306e827332a8e25af1686bcec3f1926b1b21c2d1fcaf
+      score: 0.09684947491248541
+      screened_preimage: the unit's solution/reference.py exactly as delivered, which this lane never
+        writes
+      status: clean
+      value: applicable
+    per-unit-provenance-record:
+      applicability_reason: This atom has no exempt route at all and is applicable to every unit.
+      value: applicable
+    sanitization:
+      applicability_reason: This atom has no exempt route at all and is applicable to every unit.
+      cap: HOLD:PILOT_REQUIRED
+      clean_fixture_passed: true
+      control_accepting_half: 9
+      control_detail: 76 passed
+      control_passed: true
+      control_rejecting_half: 26
+      control_suite: tests/test_sanitization.py
+      defect: ''
+      detectors:
+        closure-identity: clean
+        fix-absence: clean
+        history-absence: clean
+        remote-absence: clean
+        thread-absence: clean
+      determination: clean
+      planted_positive_present: true
+      planted_positive_rejected: true
+      ran: true
+      reason: No named detector found a named fix-revealing representation in the delivery closure of
+        e7983224-5a6f-59a5-be40-f1170d029bd2. history-absence=clean(18), remote-absence=clean(18), thread-absence=clean(18),
+        fix-absence=clean(7), closure-identity=clean(18). This is the bounded result invariant 25 permits
+        and never the claim that the image reveals nothing; coverage stops at base-image-unresolved, delivery-image-unbuilt,
+        post-base-fix-set-unbound, source-host-egress-partially-denied, unprojectable-build-instruction,
+        verifier-surface-outside-fix-absence.
+      result_digest: f6e389ae1267ee552d1d9154b76072fdf3ad1ea2df111789a2dead85b77ac8f6
+      screened_preimage: the unit's bytes with this `screening` block removed from solution/grounding.yaml
+        and the carrier section removed from solution/recompute.py, because an output never enters its
+        own input
+      status: clean
+      value: applicable
+  applicable_dates:
+    provenance_date: '2026-08-25'
+    screening_instant: '2026-08-27T07:35:42Z'
+    task_generating_event_timestamp: null
+  atom_result_digests:
+    empty-submission-validation: ac4b5e514bc475fbdf85adf07c54a9ea16ce0335a3e9198d0b879bd83895ca66
+    exclusion-matching: 1b3acf12205738c603e609b2b5b6f80c0d418ed15fe4474a402b05f0ff8f27b0
+    freeze-holdout: ''
+    near-duplicate-screening: eaf8886285e4505c6bfb306e827332a8e25af1686bcec3f1926b1b21c2d1fcaf
+    sanitization: f6e389ae1267ee552d1d9154b76072fdf3ad1ea2df111789a2dead85b77ac8f6
+  attestations:
+    ancestry_attestation_digest: null
+    ancestry_attestation_signer: null
+    event_attestation_digest: null
+    event_attestation_signer: null
+  authority_mode: union
+  base_commit_sha: null
+  binding_block:
+    binding_envelope: DSSE, payloadType application/vnd.in-toto+json, DSSEv1 pre-authentication encoding
+    canonical_bundle_hash: 679cd03d5a63b44e7c32bef32e9cbfef0f6537104974c528b5171fb88eb9df87
+    pinned_image_digest: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
+  empty_submission_result:
+    artifacts_disagree: false
+    atom: empty-submission-validation
+    detail: empty submission scored exactly zero, reason=unattributed
+    detail_engine_log_withheld: false
+    detail_engine_log_withheld_reason: ''
+    exit_code: 0
+    grader_fault: false
+    image: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
+    notes:
+    - reward taken from reward.txt; reward.json absent or unreadable
+    outcome: passed
+    reason: ''
+    reward: 0.0
+    reward_text: 0.0
+    uuid: e7983224-5a6f-59a5-be40-f1170d029bd2
+  fork_ancestry_snapshot: null
+  instrument_versions:
+    empty-submission-validation:
+      declared: null
+      module: seed/forge/emptysub.py
+      module_sha256: 6cae608c8bfeb7dd77c2a1c69facfae7f4482eea312e6e02906c95ea96378d18
+    exclusion-matching:
+      declared: forge.exclusion/1.0.0
+      module: seed/forge/exclusion.py
+      module_sha256: 4a0bb583b96dcd2bd16582ab357a720450587af8369d16bf5cf2fdfebae183c7
+    freeze-holdout:
+      declared: forge.freeze/1.0.0
+      module: seed/forge/freeze.py
+      module_sha256: 34e2aea125e0dc0dfd4c3afcae7723c57cea17f135dbbe6c56f518fdaa85f687
+    near-duplicate-screening:
+      declared: null
+      module: seed/forge/neardup.py
+      module_sha256: 807221ac2695ea723636b50e5c233765ea0a324e6348cbfbb1dee3b577e8cbd0
+    per-unit-provenance-record:
+      declared: forge.provenance_atom/1.0.0
+      module: seed/forge/provenance_atom.py
+      module_sha256: 524c6724e0664ff5660073020c143160576572b628802fef611b044bcbd3e3e9
+    sanitization:
+      declared: forge.sanitization/1.0.0
+      module: seed/forge/sanitization.py
+      module_sha256: bd1593dc32180d1eeca5a135499939c866de7a98960d5a21239f19e0dfb22f21
+  keyid: bia-provenance-2026-08b
+  namespace:
+    bound_at: seed/contract.yaml repo.forge_task_namespace
+    forge_task_namespace: c53e8f3b-526f-52c0-a04e-89e2269b237d
+    normalization_domain_bound_at: seed/contract.yaml batch.normalization_domain, block at line 1327,
+      method_id at line 1328, version at line 1329, bound_on 2026-08-25 at line 1330
+    normalization_domain_method_id: forge.canonical_content_hash/v1
+    not_resolvable_from_this_unit: The definition of that domain. Its exclusion set, token slot designation,
+      digest line format, sort and join are recorded in seed/contract.yaml, which item 10i keeps out of
+      the delivered unit, so a reader can confirm which domain is named and cannot re-execute it from
+      this unit alone.
+    relation: uuid5(forge_task_namespace, binding_block.canonical_bundle_hash) == unit_uuid
+    resolvable_from_this_unit: The uuid relation above, recomputed from this unit's own bytes, and the
+      identity of the normalization domain that hash was computed under, which normalization_domain_version
+      names. Two units carrying the same domain version are hash-comparable and two carrying different
+      versions are not.
+  normalization_domain_version: oer-canary-v1
+  sanitization_closure:
+    images:
+    - entry_count: 0
+      layer_count: 0
+      layer_digests: []
+      manifest_digest: ''
+      pinned: true
+      reason: layer-scan-not-requested
+      reference: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
+      resolved: false
+      role: agent-reachable
+      whiteout_count: 0
+      whiteouts: []
+    - entry_count: 0
+      layer_count: 0
+      layer_digests: []
+      manifest_digest: ''
+      pinned: true
+      reason: layer-scan-not-requested
+      reference: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
+      resolved: false
+      role: verifier-only
+      whiteout_count: 0
+      whiteouts: []
+    layer_entries_unpacked: 0
+    member_count: 18
+    members:
+    - bytes: 1538
+      path: environment/Dockerfile
+      role: agent-reachable
+      sha256: cdc39833342b9417493359fe48cce3ad7d12f84863a1ddccc3056372b769b624
+    - bytes: 479
+      path: environment/corpus/FROZEN.json
+      role: agent-reachable
+      sha256: ad509e21c38ec6cbd0e867265c04c12572e0edc9c2e997a03f1724906d28d5ac
+    - bytes: 25826
+      path: environment/corpus/eval.txt
+      role: agent-reachable
+      sha256: 453f44dd363ef285752360f4c5dda67b7e25fd2ec7171f784f7a6fe057522dd4
+    - bytes: 92758
+      path: environment/corpus/train.txt
+      role: agent-reachable
+      sha256: abddff5d4e7a21bfe6d920244ee59165dd537811d227eb8d591cf68f863fb808
+    - bytes: 21177
+      path: environment/substrate.py
+      role: agent-reachable
+      sha256: ddc5cd08870051c5939899483e0c84ff8b767d0b4c526beeec614abfa445c7b2
+    - bytes: 5903
+      path: instruction.md
+      role: agent-reachable
+      sha256: 83748cc367e579424a2fdd1238c02c937c51e09b4de86feb3dcb068096409d72
+    - bytes: 5552
+      path: task.toml
+      role: agent-reachable
+      sha256: 33467dae452998dd0931cad026a0930e83080dd94f8f20e410879b82b086d844
+    - bytes: 1689
+      path: tests/Dockerfile
+      role: verifier-only
+      sha256: 5082d58c4f8c5fa0ea0981b4643d2226dc8a3d1ed29ac18e16fd106a64435283
+    - bytes: 19642
+      path: tests/checkers.py
+      role: verifier-only
+      sha256: 792edeb3092abe683f028ca7007eefbcb614317a7c8371f5154082295618832f
+    - bytes: 12421
+      path: tests/checkers.yaml
+      role: verifier-only
+      sha256: 01aaabb07b689c6262d8ac3c676ef945214c54739a55d774c170a2693619734e
+    - bytes: 952
+      path: tests/controls.json
+      role: verifier-only
+      sha256: 1a33aa7709d1228e2d47a6883ddd240a3b774051bc6f894e0f76557f60609d00
+    - bytes: 7421
+      path: tests/fixtures.py
+      role: verifier-only
+      sha256: 434fcd989f2fa24c6aaa3324a75e0d60536cb094d6f8820aa7fb1d2706fb627e
+    - bytes: 6949
+      path: tests/grade.py
+      role: verifier-only
+      sha256: c513d8e4ebbe1385ae125daf43f50bcb50bf3dca589e5e98e8c972eacd63cd92
+    - bytes: 8271
+      path: tests/harness.py
+      role: verifier-only
+      sha256: 0830e94c0756fe0322bc0948dfacb4d13772b3f04f1ea30813313c144e5194ff
+    - bytes: 3969
+      path: tests/rubrics.jsonl
+      role: verifier-only
+      sha256: 580c1b062451b2b64091510206b3120e38e6a38f95e5d08b4440ee820b468718
+    - bytes: 4810
+      path: tests/runner.py
+      role: verifier-only
+      sha256: 0d73defdbaf5757200ac65a015e4c054a542d3c94dbb24ae15584f9178bb6156
+    - bytes: 2875
+      path: tests/test.sh
+      role: verifier-only
+      sha256: c14bc9ce3c876a36fd3571e529ba68d7f19ca33e19aa11469d2e75aad25e3a04
+    - bytes: 4727
+      path: tests/test_output.py
+      role: verifier-only
+      sha256: 49b89551c941fb80087ecd3b4eaa5e45bc53195a1f13e191332376a82a218d65
+    stages:
+    - base: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
+      base_pinned: true
+      dockerfile: environment/Dockerfile
+      projected_copies:
+      - - environment/substrate.py
+        - /workspace/environment/substrate.py
+      - - environment/corpus
+        - /workspace/environment/corpus
+      - - instruction.md
+        - /workspace/instruction.md
+      - - task.toml
+        - /workspace/task.toml
+      projected_directories: []
+      resolved_build_context: .
+      unprojectable_instructions:
+      - RUN chmod -R a-w /workspace/environment && chmod a-w /workspace/instruction.md /workspace/task.toml
+    - base: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
+      base_pinned: true
+      dockerfile: tests/Dockerfile
+      projected_copies:
+      - - environment/substrate.py
+        - /verifier/environment/substrate.py
+      - - environment/corpus
+        - /verifier/environment/corpus
+      - - tests
+        - /verifier/tests
+      projected_directories:
+      - /logs/verifier
+      resolved_build_context: .
+      unprojectable_instructions: []
+    whiteouts_observed: 0
+  schema: forge.provenance/v1
+  screening_roots:
+    exclusion_list:
+      digest: 81764edb7df796c57d17007b1fa95c2fe693226c865e403e5adc1b0640f595da
+      identity: engram.screening-root.exclusion-list/v1
+      state: pinned
+    freeze_date_table:
+      digest: 16e5b169c33898be57492a0101644bedb6b3728624378a5c13910f8f417e7030
+      identity: engram.screening-root.freeze-date-table/v1
+      state: pinned
+    near_duplicate_index:
+      digest: c41ff457f262c295bd4d2f77d95a9eddc02aee2f9e7a4d6e6dc4036ab2677bc4
+      identity: engram.screening-root.near-duplicate-index/v1
+      state: pinned
+    source_attestation:
+      digest: 106c2180906abb0250a26152682a5352c3ab404ae2d9d2d8ecc8e7f0d071ce9d
+      identity: engram.screening-root.source-attestation/v1
+      state: pinned
+  signer_identity: bia-producer-provenance
+  source_identifiers:
+    applicability:
+      base-commit-sha:
+        reason: No independent attestation satisfies the closed generator-origin predicate for this source
+          (synthetic), so no relation is exempted and every one is screened.
+        value: applicable
+      canonical-repository-identity:
+        reason: No independent attestation satisfies the closed generator-origin predicate for this source
+          (synthetic), so no relation is exempted and every one is screened.
+        value: applicable
+      empty-submission-validation:
+        reason: This atom has no exempt route at all and is applicable to every unit.
+        value: applicable
+      fork-ancestry-closure-membership:
+        reason: No independent attestation satisfies the closed generator-origin predicate for this source
+          (synthetic), so no relation is exempted and every one is screened.
+        value: applicable
+      freeze-holdout:
+        reason: No independent attestation satisfies the closed generator-origin predicate for this source
+          (synthetic), so no relation is exempted and every one is screened.
+        value: applicable
+      near-duplicate-screening:
+        reason: This atom has no exempt route at all and is applicable to every unit.
+        value: applicable
+      per-unit-provenance-record:
+        reason: This atom has no exempt route at all and is applicable to every unit.
+        value: applicable
+      sanitization:
+        reason: This atom has no exempt route at all and is applicable to every unit.
+        value: applicable
+    canonical_repository_identity: null
+    generation_input_digest: 451e169346e98764e6cc7bcd974d2008327855c60b328084c14794588729ad9d
+    generator_identity: dataset/e7983224-5a6f-59a5-be40-f1170d029bd2/solution/recompute.py
+    generator_version: sha256:cfb8463c7d8598ebe9151e86896027e4e37d6c83b955a80204af8ccd845229c5
+    origin: original
+    provenance_attestation: null
+    record_source: seed/contract.yaml batch.records[OER-14].upstream_provenance
+    source_kind: synthetic
+  trust_root_public_key_hex: 87de350694dcbacc3829fa78591c13dc80cb0ab6323046cbbdac8b01e20e6fc9
+  unit_uuid: 82cb698f-e68f-577b-94f4-75917e365f2b
+# FORGE-SCREENING-END

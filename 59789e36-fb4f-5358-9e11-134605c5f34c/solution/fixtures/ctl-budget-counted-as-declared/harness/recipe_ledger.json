@@ -1,0 +1,15 @@
+{
+  "_generated": "GENERATED SECTION. DO NOT HAND-EDIT. Source: solution/grounding.yaml",
+  "bound_eval_step": 400,
+  "recipe_digest": "e4fb138e20116f1f1cb328ad905bddc19c08b2504f30d201d3226d8cd32f7b30",
+  "schedule_digest": "5b3e2f2a2d9bb384ef2b361d1d6fb4b152291a1adf2c66a9768a01e8f7f4d81a",
+  "smoothing_on_graded_path": "none",
+  "source": "environment/frozen_recipe.json",
+  "sustain_band": 0.05,
+  "sustain_points": [
+    450,
+    500,
+    550
+  ],
+  "writer": "verifier-harness"
+}

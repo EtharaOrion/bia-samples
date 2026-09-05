@@ -1,0 +1,138 @@
+schema_version = "1.4"
+
+# schema_version is a TOP-LEVEL scalar and is written above the first table header on purpose.
+# TOML scopes every key to the most recent header, so an assignment below [task] would silently
+# become task.schema_version and leave the top-level scalar absent while the file still reads
+# correct to a human.
+
+artifacts = [
+  "/app/submission.py",
+  "/logs/agent/trajectory.jsonl",
+  "/logs/verifier/reward.txt",
+  "/logs/verifier/score.json",
+]
+
+[task]
+name = "bia/oer-30-attested-cover-derivation"
+version = "1.0.0"
+description = "Reconstruct the provenance chain of a sealed store of heuristic covers, recovering the realised attestation order from the seal chain and folding every atom digest under it, then beat the attested heuristic on the one instance the realised order singles out."
+authors = ["Bia"]
+keywords = ["optimization", "bounded-continuous", "combinatorial-heuristics", "provenance-atom"]
+
+[metadata]
+tags = ["optimization", "bounded-continuous"]
+category = "optimization"
+slot = "OER-30"
+provisional_identifier = "OER-30"
+title = "Attested cover derivation under a sealed provenance chain"
+family = "F7"
+family_title = "combinatorial heuristics"
+primary_archetype = "provenance-atom"
+primary_archetype_title = "Provenance Atom"
+archetype_count = 1
+entry_point_tests = "tests/test.sh"
+entry_point_solution = "solution/solve.sh"
+
+target_tier = "T3"
+tier_exemption_granted = "none"
+anchorable_tier = "capped below Hard by the standing batch-level Perception-axis exemption"
+perception_axis_exemption = "This task family is text and code only, so the Perception axis carries no category. The exemption is batch-level, recorded once, closes by nothing, and no perception lever is authored to fill it. It caps the anchorable tier below Hard while leaving the authoring target at T3."
+
+[metadata.metric]
+name = "normalised gap to the exact optimum on the graded frozen set-cover instance"
+direction = "lower"
+definition = "normalised_gap = (submitted_cover_weight - optimum_weight) / optimum_weight"
+comparator = "an exact bitmask dynamic program over the frozen instance, recomputed by the verifier on every run"
+comparator_note = "The family metric is a normalised gap to a classical exact solver. The comparator here is exact rather than an LKH-class or MiniSat-class heuristic bound, because the instances are small enough to solve exactly and an exact comparator removes the question of whether the reference solver was tuned."
+frozen = ["the instance family", "the ledger source and its seal seed", "the minter", "the atom schema", "the attestation schema and the ordering predicate"]
+free = ["the cover submitted for the graded instance"]
+computed_by = "the verifier, from its own re-mint of the sealed store and its own exact solve"
+graded_instance_selection = "the instance attested by the LAST atom in the realised attestation order, which is not identifiable without recovering that order"
+
+[metadata.discovery]
+count = 2
+block = "one atom digest and one attestation ordering, established in built environment state, absent from the statement"
+statement_closure = "the statement fixes the atom schema and the ordering predicate and names neither the digest nor the realised order"
+value_one = "terminal_atom_digest"
+value_one_kind = "atom digest"
+value_two = "realised_attestation_order"
+value_two_kind = "attestation ordering"
+established_in = "built environment state, by environment/mint_store.py at image build time in the first stage of environment/Dockerfile"
+read_back_through = "environment/store_handle.py over /task/state/store"
+not_natural = "The realised order is a topological order of the derivation graph and is neither the lexicographic identifier order nor the ready-set-sorted topological order. solution/recompute.py asserts both inequalities and refuses to emit if either fails."
+required_checkers_depending_on_value_one = ["digest_recursion_holds", "terminal_atom_digest_matches"]
+required_checkers_depending_on_value_two = ["attestation_order_realised", "seal_chain_derived_from_state", "graded_cover_feasible"]
+
+[metadata.anchors]
+state = "absent"
+authority = "F7 is unscoped and records no baseline, target, pass threshold or instance count. The reward schema below is bound in full and neither number is invented here."
+
+[metadata.reward]
+carrier_path = "/logs/verifier/reward.txt"
+carrier_form = "one bare float"
+score_document_path = "/logs/verifier/score.json"
+interval = [0.0, 1.0]
+direction = "higher"
+never_binary = true
+full_reward_exactly = 1.0
+formula = "raw = (baseline_metric - agent_metric) / (baseline_metric - target_metric)"
+clip = "score = min(max(raw, 0.0), 1.0)"
+bar_not_point = "Reaching the target scores exactly 1.0. The target is the exact optimum, so it cannot be beaten."
+
+# CANONICAL PATH for every bound optimization field in this batch:
+# metadata.optimization.<field>. One table, one deterministic lookup. Nothing
+# optimization-bound lives anywhere else in this manifest.
+#
+# max_timeout_hours and budget_hours are explicitly distinct and are never
+# aliases. max_timeout_hours bounds the refinement loop ACROSS attempts;
+# budget_hours bounds ONE attempt, being six hours over fifty attempts, 0.12
+# hours or 7.2 minutes.
+[metadata.optimization]
+max_timeout_hours = 6.0
+max_timeout_role = "refinement-loop terminator across attempts"
+budget_hours = 0.3
+budget_hours_minutes = 18.0
+budget_hours_role = "per-attempt completion bound"
+budget_hours_state = "provisional"
+max_attempts = 20
+final_selection = "best"
+budget_envelope = "CPU only, no accelerator"
+budget_margin = "10 percent"
+compute_envelope_accelerators = 0
+
+[metadata.clock]
+owner = "harness"
+note = "NO CLOCK IS READ ANYWHERE ON THE GRADED PATH. The metric is a weight ratio and not a timing metric, the store is established by arithmetic over frozen inputs, and every checker is a pure function of the harness-minted store and the bound constants. No checker calls time, datetime, perf_counter, monotonic or any other clock, directly or transitively."
+
+[metadata.substrate]
+kind = "deterministic content-addressed store minted by arithmetic"
+note = "A minted store is the right choice here because it makes grading reproducible: the same frozen source produces a byte-identical store on any host. It never passes as the output of a live production build system, and reference_hours therefore covers mint-time cost only."
+
+[metadata.build]
+dockerfile = "environment/Dockerfile"
+verifier_dockerfile = "tests/Dockerfile"
+pin_kind = "digest"
+pin_note = "Pinned by @sha256 and never by a floating tag, on both surfaces. Harbor accepts any string and does not itself require a digest, so the digest requirement is this contract's."
+environment_stages = 2
+environment_stage_note = "The first stage RUNS the minter and materialises the store. The second stage copies the STORE and leaves the minter and the ledger source behind, so the shipped image carries the discovery values as built state rather than as a script that would recite them."
+
+[environment]
+docker_image = "python@sha256:9c900dea9e8fb7e16277c179b555cc72d29a352dbc33cff48ad5a0412fd5bfc7"
+gpus = 0
+# Provisioning egress. Denying it here would leave the task unable to install its one baked
+# dependency at build time.
+network_mode = "public"
+
+[verifier]
+docker_image = "python@sha256:9c900dea9e8fb7e16277c179b555cc72d29a352dbc33cff48ad5a0412fd5bfc7"
+image_definition_path = "tests/"
+egress = "denied"
+network_mode = "none"
+egress_note = "The verifier keeps the bound network policy and its one dependency is baked at build time. A verifier that can reach the network is a verifier whose verdict can be fetched."
+
+[agent]
+solver_egress = "setup-only"
+solver_egress_deny = ["github.com", "raw.githubusercontent.com", "objects.githubusercontent.com"]
+solver_egress_note = "The solving agent gets open internet egress inside the sandbox so it can fetch its own packages; the verifier surface is denied. The asymmetry is deliberate and bound here rather than accidental. The divergence from the stricter batch reading is recorded in solution/grounding.yaml under solver_egress_divergence."
+deny_list_is_not_containment = "The deny-list is not a containment proof. Mirrors, caches and paraphrased write-ups all carry a recipe past any deny-list, which is why the deterministic checker and not the network policy is the load-bearing control. Here the control is stronger than usual: both discovery values are properties of THIS image's built state and no external source carries them."
+network_mode = "none"

@@ -1,0 +1,127 @@
+# Harbor delivery manifest for slot OER-03.
+#
+# Provisional identifier: OER-03. This lane writes no identity artifact of any
+# kind: no content digest over the bundle, no derived directory name, no planted
+# marker token, no provenance carrier and no signature. Identity is done for the
+# whole batch in wave 2, because adding solution/policy.yaml to already-committed
+# bundles moves their digests too.
+#
+# schema_version and artifacts MUST sit above the first table header. TOML scopes
+# every key to the most recent header, so an assignment written after [task]
+# silently becomes task.artifacts and leaves the top-level list empty, which
+# Harbor would accept without complaint while snapshotting nothing.
+schema_version = "1.4"
+
+# Snapshotted out of the environment before teardown. A graded deliverable absent
+# from this list would have to be reconstructed after the fact instead of
+# captured.
+artifacts = [
+  "/app/submission.py",
+  "/logs/agent/trajectory.jsonl",
+  "/logs/verifier/reward.txt",
+  "/logs/verifier/reward.json",
+  "/logs/verifier/score.json",
+]
+
+[task]
+name = "bia/crossing-not-schedule"
+version = "1.0.0"
+description = "Reach the target validation loss in fewer optimizer steps, where the graded step is the crossing the verifier recomputes and sustains, not the schedule length."
+authors = ["Bia"]
+keywords = ["optimization", "language-model", "optimizer-speedrun", "silent-failure"]
+
+[metadata]
+tags = ["optimization", "bounded-continuous"]
+category = "optimization"
+slot = "OER-03"
+family = "F1"
+family_title = "nanogpt optimizer speedrun"
+primary_archetype = "AR6"
+primary_archetype_title = "Silent Execution Failures"
+archetype_exclusivity = "exactly one primary archetype, fixed at scope time; no buffet within the slot"
+
+# Tier is recorded, never argued. No difficulty claim appears in this bundle.
+target_tier = "Frontier-defeat"
+tier_exemption_granted = "none"
+anchorable_tier = "capped below Hard"
+perception_axis_exemption = "This task family is text and code only, so the Perception axis carries no category. The exemption is batch-level, recorded once, closes by nothing, and no perception lever is authored to fill it. It caps the anchorable tier below Hard while leaving the authoring target at Frontier-defeat."
+
+reward_schema = "single float on the closed interval 0.0 to 1.0, higher is better, never binary"
+reward_kind = "float"
+reward_range = [0.0, 1.0]
+reward_full = 1.0
+reward_clip = "min(max(raw, 0.0), 1.0)"
+reward_formula = "raw = (baseline_metric - agent_metric) / (baseline_metric - target_metric)"
+# The bare-float carrier and the attributed document are both written on every
+# exit path by tests/test.sh; the instrument's binding and the reason carrier can
+# never disagree.
+reward_path = "/logs/verifier/reward.txt"
+reward_document_path = "/logs/verifier/reward.json"
+score_document_path = "/logs/verifier/score.json"
+
+# CANONICAL PATH for every bound optimization field in this batch:
+# metadata.optimization.<field>. One table, one deterministic lookup. Nothing
+# optimization-bound lives anywhere else in this manifest.
+#
+# max_timeout_hours and budget_hours are DISTINCT fields with DISTINCT roles and
+# neither is ever an alias of the other:
+#   max_timeout_hours -> refinement-loop terminator ACROSS attempts, six hours.
+#   budget_hours      -> per-attempt completion bound, six hours over fifty
+#                        attempts, which is 0.12 hours or 7.2 minutes.
+# Writing the 6 into budget_hours would encode a 300-hour session that every
+# well-formedness check passes as valid, because both fields are positive floats
+# and no check compares them.
+[metadata.optimization]
+max_timeout_hours = 6.0
+max_timeout_role = "refinement-loop terminator across attempts"
+budget_hours = 0.3
+budget_hours_minutes = 18.0
+budget_hours_role = "per-attempt completion bound"
+budget_hours_state = "provisional"
+max_attempts = 20
+max_attempts_ceiling = 100
+max_attempts_symbol = "n, the sequential iteration count"
+final_selection = "best"
+budget_envelope = "one H100, single accelerator, no multi-GPU scaling"
+budget_margin = "10 percent"
+compute_envelope_accelerators = 1
+role_note = "budget_hours bounds one graded attempt; max_timeout_hours bounds one fifty-attempt session."
+
+[metadata.metric]
+name = "optimizer steps to reach target validation loss"
+direction = "lower"
+graded_quantity = "crossing_step"
+graded_quantity_note = "The first verifier-scheduled evaluation point whose verifier-computed unsmoothed loss falls below the target and stays below it at the bound number of subsequent verifier-scheduled points. Never the schedule length, never a submission-reported number, never a smoothed readout."
+
+[metadata.frozen]
+axes = ["dataset", "batch size", "architecture", "one forward-backward pass per step"]
+free = ["optimization algorithm", "hyperparameters and their schedules", "model initialization"]
+
+[agent]
+# The SOLVING agent gets open internet egress inside the sandbox so it can fetch
+# its own packages, datasets and models. The verifier does not. The asymmetry is
+# a bound byte, never an accident.
+solver_egress = "setup-only"
+solver_egress_deny = ["github.com", "raw.githubusercontent.com", "objects.githubusercontent.com"]
+solver_egress_deny_is_not_a_containment_proof = "Mirrors, caches, paraphrased write-ups and model weights all carry a recipe past any deny-list. The deterministic checker, not the network policy, is the load-bearing control."
+network_mode = "none"
+timeout_sec = 14400.0
+
+[verifier]
+# The verifier keeps the bound network policy. The asymmetry with [agent] above
+# is deliberate.
+egress = "denied"
+network_mode = "none"
+allowed_hosts = []
+environment_mode = "isolated"
+image_definition_path = "tests/"
+timeout_sec = 10800.0
+
+[environment]
+build_timeout_sec = 1800.0
+# Pinned by @sha256:, never by a floating tag.
+docker_image = "pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407"
+gpus = 1
+gpu_types = ["H100"]
+# Provisioning egress. Denying it here would leave the task unable to install.
+network_mode = "public"

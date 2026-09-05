@@ -1,0 +1,244 @@
+schema: forge.checkers/v1
+reduction_kinds: [VALUE, EFFECT, ABSENCE, INVARIANT, ORDERING, DIVERGENCE]
+reward_path: /logs/verifier/reward.txt
+score_document_path: /logs/verifier/score.json
+
+aggregation:
+  mode: required_pass
+  rationale: >-
+    Every declared checker is required and tests/grade.py runs them in the order
+    declared below, stopping at the first failure and emitting that checker's own
+    zero_reason. That is exactly what required_pass describes: a universal
+    quantifier over a non-empty required set, with no averaging that could dilute a
+    zero. The mode decides admission only. The number written on admission is the
+    bound reward formula over the graded bits-per-byte reading, so the reward is a
+    continuous float on [0.0, 1.0] and never a binary pass flag.
+
+graded_quantity:
+  statement: >-
+    bits per byte, computed by the verifier over a HELD-OUT FineWeb slice in
+    BYTES, from the parameters of the canonical nanoGPT decoder that the
+    verifier's own training run held at the bound optimizer step.
+  numerator: "raw bits the trained 12-layer 768-dimension decoder assigns to the held-out slice at 2200 optimizer steps"
+  denominator: "the byte count of the verifier-held FineWeb slice, absent from environment/ and from every agent-visible path"
+  never: >-
+    never a number the submission reported, printed or wrote; never a smoothed,
+    averaged or EMA-blended series; never a checkpoint the submission selected;
+    never a token count.
+
+substrate:
+  declaration: environment/nanogpt_substrate.json
+  note: >-
+    The architecture, the batch size, the one-forward-one-backward-pass-per-step
+    rule and the corpus are the canonical operating point. The verifier holds its
+    own copy of the architecture in tests/anchors.json and derives the expected
+    parameter shapes from it, so a tampered delivery unit cannot move the shape
+    the graded snapshot is checked against.
+
+reward_scale:
+  floor: >-
+    MEASURED LIVE. tests/runner.py trains a second decoder on the handed default
+    construction at its grid maximum, at the same seed, over the same shards, at
+    the same step budget, against the same held-out slice, and its bits per byte
+    is the floor. No reading of the graded metric appears as a literal anywhere in
+    this bundle, so there is nothing here to recall and no answer key to find.
+  span: tests/anchors.json verifier_operating_points.full_credit_separation_bpb
+  bar: the live floor less verifier_operating_points.acceptance_separation_bpb
+
+isolation_substitutions:
+  note: >-
+    Invariant 17 requires both halves of every checker. TEN of the twelve cannot be
+    fired by any submission, because tests/runner.py never lets a submission near the
+    step counter, the parameters, the denominator, the training shards, the held-out
+    slice or the schedule. Their rejecting halves are carried on planted telemetry
+    fixtures generated from solution/grounding.yaml, and the substitution is recorded
+    here rather than papered over.
+  live_rejecting_halves_in_the_compiled_suite:
+    - early_stop_not_an_established_metric
+    - beats_default_construction_optimum
+  additionally_fired_live_by_adequacy:
+    - submission_vocabulary_took_effect
+
+checkers:
+  - id: early_stop_not_an_established_metric
+    statement: "The run reached the bound evaluation point, so a reading exists that a halt did not harvest; a run that stopped earlier is graded as not having established the metric."
+    reduction: ABSENCE
+    reached_by: tests/grade.py
+    selector: check_early_stop_not_an_established_metric
+    zero_reason: early-stop-no-established-metric
+    required: true
+    weight: 1
+    live_state_read: "telemetry.compute.halted_before_bound_point and telemetry.compute.consumed_steps, both incremented by the training loop inside environment/harness.py during the verifier's own run"
+    compiled_test: "tests/test_output.py::test_early_stop_not_an_established_metric"
+    rejecting_half: live-submission
+
+  - id: frozen_axes_unmoved
+    statement: "The architecture, the compute budget, the batch size, the one-forward-one-backward-pass-per-step rule and the vocabulary budget recorded by the run equal the canonical substrate, and the delivered nanogpt_substrate.json still declares that architecture."
+    reduction: INVARIANT
+    reached_by: tests/grade.py
+    selector: check_frozen_axes_unmoved
+    zero_reason: frozen-axis-moved
+    required: true
+    weight: 1
+    live_state_read: "telemetry.frozen, written by environment/harness.py from the architecture it actually instantiated, against the verifier's own copy in tests/anchors.json and the delivered environment/nanogpt_substrate.json"
+    compiled_test: "tests/test_output.py::test_frozen_axes_unmoved"
+    rejecting_half: planted-telemetry-fixture
+
+  - id: snapshot_shapes_match_substrate
+    statement: "The graded reading came off a real parameter snapshot of the frozen decoder: every tensor carries the shape vocab_size 50304, num_layers 12, model_dim 768 and head_dim 128 imply, the count sums to 162201600, and a digest over the parameter bytes exists."
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: check_snapshot_shapes_match_substrate
+    zero_reason: snapshot-shape-off-substrate
+    required: true
+    weight: 1
+    live_state_read: "telemetry.model.parameter_shapes, telemetry.model.parameter_count and telemetry.model.snapshot_digest, all taken by environment/harness.py from the live torch module it trained, against the expected shapes tests/checkers.expected_shapes derives from the verifier's own architecture copy"
+    compiled_test: "tests/test_output.py::test_snapshot_shapes_match_substrate"
+    rejecting_half: planted-telemetry-fixture
+    simulator_test_note: >-
+      REPLACED BY THE RE-BASE. This row stands where train_corpus_merge_capacity
+      stood. That checker read a property of a locally generated 21599-byte corpus
+      that no longer exists, so it became incoherent rather than merely weaker. Its
+      replacement carries the first limb of the simulator test as a graded
+      criterion: weights in the loop. A vocab-8 weight table, an arithmetic cost
+      model and an integer tick counter each fail here, because none of them
+      carries 162201600 parameters in the exact tensor shapes the frozen
+      architecture implies. The rejecting half moves ONE tensor's shape by one
+      dimension, so the checker is proven to depend on the SHAPE and not on the
+      presence of a dictionary.
+
+  - id: eval_points_ordered_by_steps
+    statement: "The evaluation schedule ascends strictly in optimizer-step count, carries exactly one bound point, and places every sustain point after it."
+    reduction: ORDERING
+    reached_by: tests/grade.py
+    selector: check_eval_points_ordered_by_steps
+    zero_reason: eval-schedule-out-of-order
+    required: true
+    weight: 1
+    live_state_read: "telemetry.eval_points, appended by environment/harness.py in the order it actually evaluated"
+    compiled_test: "tests/test_output.py::test_eval_points_ordered_by_steps"
+    rejecting_half: planted-telemetry-fixture
+
+  - id: compute_budget_respected_as_spent
+    statement: "The optimizer steps the harness counter actually charged never exceed the frozen budget, the bound evaluation point sits exactly at that budget, and the run performed exactly one forward and one backward pass per step."
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: check_compute_budget_respected_as_spent
+    zero_reason: compute-budget-overspent
+    required: true
+    weight: 1
+    live_state_read: "telemetry.compute.charged_steps, telemetry.compute.forward_passes and telemetry.compute.backward_passes, all incremented by the training loop in environment/harness.py"
+    compiled_test: "tests/test_output.py::test_compute_budget_respected_as_spent"
+    rejecting_half: planted-telemetry-fixture
+
+  - id: denominator_is_held_out_slice_bytes
+    statement: "Every reading divides by the byte count of the verifier-held FineWeb slice, that slice was resolved from tests/anchors.json rather than from anywhere a solver can reach, and no reading divides by a token count."
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: check_denominator_is_held_out_slice_bytes
+    zero_reason: denominator-not-held-out-slice-bytes
+    required: true
+    weight: 1
+    live_state_read: "telemetry.denominator and the denominator_bytes of every telemetry.eval_points row, against the length and sha256 tests/runner.py took of the slice it decoded from the verifier-only validation shard"
+    compiled_test: "tests/test_output.py::test_denominator_is_held_out_slice_bytes"
+    rejecting_half: planted-telemetry-fixture
+    headline: >-
+      This is the readout attack a tokenizer slot exists to close, and it is also
+      the second limb of the simulator test. The free axis moves the token count
+      directly, so swapping the denominator to a token count is the obvious move
+      and this checker refuses it in both directions: it pins the denominator to
+      the byte count of the slice the VERIFIER resolved and to the digest the
+      verifier took of it, so no reading may divide by anything else. It refuses
+      one further thing that matters more after the re-base: a run whose
+      evaluation split was resolved by the harness itself rather than handed in by
+      the caller, which is how a solver-reachable split would get onto the graded
+      path.
+
+  - id: graded_state_is_harness_owned
+    statement: "The parameters evaluated at the graded point are the state the harness held at that step count, not a checkpoint the submission selected, and the parameters advanced past every progress point."
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: check_graded_state_is_harness_owned
+    zero_reason: graded-state-not-harness-owned
+    required: true
+    weight: 1
+    live_state_read: "telemetry.readout.weights_origin and the snapshot_digest environment/harness.py takes over the live parameter bytes at each scheduled point"
+    compiled_test: "tests/test_output.py::test_graded_state_is_harness_owned"
+    rejecting_half: planted-telemetry-fixture
+
+  - id: graded_readout_unsmoothed
+    statement: "The graded bits are the raw bits recorded at the bound point, with no filter, average or exponential blend on the graded path."
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: check_graded_readout_unsmoothed
+    zero_reason: graded-readout-smoothed
+    required: true
+    weight: 1
+    live_state_read: "telemetry.readout.filter and the raw bits field of the bound row of telemetry.eval_points, both written by environment/harness.py"
+    compiled_test: "tests/test_output.py::test_graded_readout_unsmoothed"
+    rejecting_half: planted-telemetry-fixture
+
+  - id: submission_vocabulary_took_effect
+    statement: "The graded run encoded with the vocabulary the submission returned, that vocabulary contributed entries beyond the 256 single bytes, and it changed the encoding of the held-out slice."
+    reduction: EFFECT
+    reached_by: tests/grade.py
+    selector: check_submission_vocabulary_took_effect
+    zero_reason: submission-vocabulary-inert
+    required: true
+    weight: 1
+    live_state_read: "telemetry.vocabulary.submitted_digest from environment/harness.submission_digest, against the digest tests/runner.py took of the list the isolated submission process handed back"
+    compiled_test: "tests/test_output.py::test_submission_vocabulary_took_effect"
+    rejecting_half: planted-telemetry-fixture
+
+  - id: metric_not_taken_from_submission_report
+    statement: "The graded value is the verifier's own raw bits over the held-out byte count, and it diverges in provenance from anything the submission reported about itself."
+    reduction: DIVERGENCE
+    reached_by: tests/grade.py
+    selector: check_metric_not_taken_from_submission_report
+    zero_reason: metric-sourced-from-submission
+    required: true
+    weight: 1
+    live_state_read: "telemetry.graded.bits and telemetry.graded.denominator_bytes recomputed by the checker, against telemetry.reported_by_submission carried untouched from the isolated submission process"
+    compiled_test: "tests/test_output.py::test_metric_not_taken_from_submission_report"
+    rejecting_half: planted-telemetry-fixture
+
+  - id: beats_default_construction_optimum
+    statement: "The graded bits-per-byte reading is at or below the paired default construction's own reading less the bound separation, where that paired reading was trained in the same grading pass at the same seed, shards, step budget and held-out slice."
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: check_beats_default_construction_optimum
+    zero_reason: default-construction-plateau-not-beaten
+    required: true
+    weight: 1
+    live_state_read: "telemetry.graded.bits_per_byte from the verifier's own training run, against run_record.paired_baseline.bits_per_byte from the verifier's second training run in the same pass"
+    compiled_test: "tests/test_output.py::test_beats_default_construction_optimum"
+    rejecting_half: live-submission
+    archetype_note: >-
+      AR5. The handed option grid spans four knobs and its largest top_k is 1024,
+      while the vocabulary budget leaves 50048 entries past the single bytes, so
+      every row of the grid leaves at least 49024 entries unspent and no option
+      value in the file reaches them. A submission that sweeps the handed knobs to
+      their best value lands on the plateau and scores exactly zero with this
+      reason. REPINNED BY THE RE-BASE: the plateau is no longer a literal read out
+      of a manifest, it is a second training run performed while the submission is
+      being graded.
+
+  - id: reading_sustained_across_scheduled_points
+    statement: "The graded reading holds at every verifier-scheduled evaluation point after the bound point, within the bound tolerance and under the acceptance bar, and none of those points was charged to the agent's budget."
+    reduction: INVARIANT
+    reached_by: tests/grade.py
+    selector: check_reading_sustained_across_scheduled_points
+    zero_reason: reading-not-sustained
+    required: true
+    weight: 1
+    live_state_read: "the sustain rows of telemetry.eval_points, scheduled by environment/harness._schedule from manifest evaluation_schedule.sustain_offsets and evaluated after the bound step"
+    compiled_test: "tests/test_output.py::test_reading_sustained_across_scheduled_points"
+    rejecting_half: planted-telemetry-fixture
+    ordering_note: >-
+      This checker re-tests the acceptance bar as part of what "sustained" means,
+      so while it stood ahead of submission_vocabulary_took_effect and
+      beats_default_construction_optimum it emitted reading-not-sustained for the
+      two submissions those checkers exist to name. It sits last so that the
+      sustain question is asked after the bound-point reading has been established
+      as real and as good enough, and each of the three reasons is emitted by the
+      submission it names.

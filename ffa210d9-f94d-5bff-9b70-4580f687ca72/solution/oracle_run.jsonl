@@ -1,0 +1,8 @@
+{"cost_steps": 57926, "rows_returned": 1577, "step": "cost-frozen-baseline-plan"}
+{"cost_steps": 20851, "rows_returned": 1, "step": "apply-exclusion-rule"}
+{"cost_steps": 9624, "rows_returned": 1594, "step": "load-parent-edges"}
+{"cost_steps": 2817, "rows_returned": 694, "step": "load-derives-edges"}
+{"edges": 2288, "sources": 1234, "step": "edge-relation-built"}
+{"cardinality": 30, "depth": 10, "layer_profile": [1, 5, 1, 4, 4, 4, 3, 2, 3, 2, 1], "step": "closure-walked-to-fixpoint"}
+{"cost_steps": 24043, "rows_returned": 1577, "step": "cost-folded-plan"}
+{"equal_to_baseline": true, "speedup": 2.409267, "step": "result-set-equality-self-check"}

@@ -1,0 +1,104 @@
+schema_version = "1.4"
+
+# Slot OER-23, staged under its PROVISIONAL IDENTIFIER, which is its slot id. No
+# canonical_content_hash, no uuid5, no final uuid directory name, no canary token, no
+# provenance carrier and no signature file is written by this lane. Wave 2 does identity for
+# every slot at once.
+
+artifacts = [
+  "/app/submission.py",
+  "/logs/agent/trajectory.jsonl",
+  "/logs/verifier/reward.txt",
+  "/logs/verifier/score.json",
+]
+
+[task]
+name = "bia/oer-23-sustained-throughput-under-a-p99-slo"
+version = "1.0.0"
+description = "Raise sustained tokens per second under a hard p99 per-output-token latency objective, holding the gain across the whole session rather than at one favourable window."
+authors = ["Bia"]
+keywords = ["optimization", "bounded-continuous", "serving-throughput", "long-horizon"]
+
+[metadata]
+tags = ["optimization", "bounded-continuous"]
+category = "optimization"
+slot = "OER-23"
+provisional_identifier = "OER-23"
+title = "Sustained throughput tuning under a p99 latency service level objective"
+family = "F11"
+family_title = "inference serving throughput"
+archetype = "AR1"
+archetype_title = "Long-Horizon State Collapse"
+entry_point_tests = "tests/test.sh"
+entry_point_solution = "solution/solve.sh"
+
+target_tier = "Frontier-defeat"
+tier_exemption_granted = "none"
+anchorable_tier = "capped below Hard"
+perception_axis_exemption = "This task family is text and code only, so the Perception axis carries no category; the exemption is batch-level, recorded once, closes by nothing, and no perception lever is authored to fill it. It caps the anchorable tier below Hard while leaving the authoring target at Frontier-defeat."
+
+[metadata.metric]
+reward_kind = "single float on the closed interval 0.0 to 1.0, higher is better, never binary"
+name = "tokens per second"
+direction = "higher"
+constraint = "p99 per-output-token latency at or below the frozen objective, a HARD constraint"
+reward_formula = "raw = (agent_metric - baseline_metric) / (target_metric - baseline_metric)"
+clip = "score = min(max(raw, 0.0), 1.0)"
+interval = [0.0, 1.0]
+binary = false
+full_reward = 1.0
+reward_path = "/logs/verifier/reward.txt"
+score_document_path = "/logs/verifier/score.json"
+
+[metadata.metric.anchors]
+state = "absent"
+note = "This family is unscoped, so no published baseline or target exists. The reward SCHEMA is bound in full and the anchors are declared absent rather than invented. The two calibration endpoints tests/grade.py uses are measured from frozen bytes at grade time and appear as a literal nowhere in this bundle."
+
+# CANONICAL PATH for every bound optimization field in this batch:
+# metadata.optimization.<field>. One table, one deterministic lookup. Nothing
+# optimization-bound lives anywhere else in this manifest.
+#
+# max_timeout_hours and budget_hours are NEVER aliases. The first bounds the
+# refinement loop ACROSS attempts; the second bounds ONE attempt, being six hours
+# over fifty attempts, 0.12 hours or 7.2 minutes.
+[metadata.optimization]
+max_timeout_hours = 6.0
+max_timeout_role = "refinement-loop terminator across attempts"
+budget_hours = 0.3
+budget_hours_minutes = 18.0
+budget_hours_role = "per-attempt completion bound, for one attempt"
+budget_hours_state = "provisional"
+max_attempts = 20
+final_selection = "best"
+budget_envelope = "one H100, single accelerator, no multi-GPU scaling"
+budget_margin = "10 percent"
+compute_envelope_accelerators = 1
+
+[metadata.build]
+dockerfile = "environment/Dockerfile"
+verifier_dockerfile = "tests/Dockerfile"
+substrate = "deterministic discrete-event serving simulator"
+frozen = ["the model", "the hardware envelope", "the request trace", "the p99 latency objective"]
+free = ["batching", "scheduling", "admission policy"]
+
+[environment]
+docker_image = "pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407"
+gpus = 1
+gpu_types = ["H100"]
+# Provisioning egress. Denying it here would leave the task unable to install.
+network_mode = "public"
+
+[agent]
+solver_egress = "setup-only"
+solver_egress_deny = ["github.com", "raw.githubusercontent.com", "objects.githubusercontent.com"]
+solver_egress_note = "The deny-list is not a containment proof. Mirrors, caches, paraphrased write-ups and released artifacts all carry a recipe past any deny-list, which is why the deterministic checker chain and not the network policy is the load-bearing control."
+network_mode = "none"
+
+[verifier]
+egress = "denied"
+network_mode = "none"
+docker_image = "pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407"
+image_definition_path = "tests/"
+imports_submission = false
+reads_a_clock = false
+clock_owner = "tests/harness_sim.py, the harness"

@@ -1,0 +1,40 @@
+{
+  "_banner": "GENERATED SECTION. DO NOT HAND-EDIT. Source: solution/grounding.yaml.",
+  "items": [
+    {
+      "criterion": "The submitted recipe clears the pinned corpus screen structurally, not by hyperparameter jitter.",
+      "id": "S1",
+      "reference_answer": "structural digest differs from every pinned entry",
+      "weight": 0.25
+    },
+    {
+      "criterion": "The graded step is strictly below the bound baseline of 3250.",
+      "id": "S2",
+      "reference_answer": "2600",
+      "weight": 0.25
+    },
+    {
+      "criterion": "The crossing holds across the full verifier-scheduled sustain window.",
+      "id": "S3",
+      "reference_answer": "3 subsequent points all below 3.28",
+      "weight": 0.2
+    },
+    {
+      "criterion": "Every frozen axis is unmoved.",
+      "id": "S4",
+      "reference_answer": "dataset, batch size, architecture and one pass per step all identical to the frozen record",
+      "weight": 0.15
+    },
+    {
+      "criterion": "The reward the live gate chain produces for the reference is exactly 1.0.",
+      "id": "S5",
+      "reference_answer": "1.0",
+      "weight": 0.15
+    }
+  ],
+  "judged": "the solution against its reference answer",
+  "not_judged": "the trajectory; that surface is tests/rubrics.jsonl and is a different file with a different job",
+  "reference": "solution/reference.py",
+  "schema": "bia.oer01.solution_rubrics/v1",
+  "total_weight": 1.0
+}

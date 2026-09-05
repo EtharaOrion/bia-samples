@@ -1,0 +1,64 @@
+{
+  "direction": "lower",
+  "generated": "GENERATED SECTION. DO NOT HAND-EDIT.",
+  "generator": "solution/recompute.py",
+  "metric": "bits per byte at fixed compute",
+  "schema": "oer15.golden_trajectory/v1",
+  "slot": "OER-15",
+  "source": "solution/grounding.yaml",
+  "steps": [
+    {
+      "action": "Read instruction.md, environment/manifest.json and environment/nanogpt_substrate.json; record that the graded reading comes off a real 2200-step run of the canonical 12-layer 768-dimension decoder and that the denominator is the byte count of a slice you never see.",
+      "establishes": "what is graded and what is frozen",
+      "step": 1
+    },
+    {
+      "action": "Read environment/default_tokenizer.py and enumerate DEFAULT_OPTION_GRID; note that every row produces whole whitespace-delimited words only, and that the largest top_k it offers is 1024.",
+      "establishes": "the handed option set, and its structural limit",
+      "step": 2
+    },
+    {
+      "action": "Count the room. The vocabulary budget is the decoder's own vocab_size of 50304, of which 50048 entries are yours past the single bytes, so the handed grid leaves at least 49024 of them unspent at any option value.",
+      "establishes": "the option set is exhausted long before the budget is",
+      "step": 3
+    },
+    {
+      "action": "Note that the plateau cannot be swept out by brute force here: the verifier measures the handed construction itself, in the same pass, and no reading of it is published for you to aim just under.",
+      "establishes": "there is no literal to recall and no bar to reverse-engineer",
+      "step": 4
+    },
+    {
+      "action": "Re-read the objective. The step budget buys a fixed number of training tokens and the denominator is a byte count, so a vocabulary that expresses the same bytes in fewer tokens covers more corpus inside the budget and costs fewer predictions on the held-out slice.",
+      "establishes": "the derivation of the wider construction",
+      "step": 5
+    },
+    {
+      "action": "Measure what you can measure for free: encode a known slice of bytes under a candidate vocabulary and read its bytes-per-token, which needs no training at all.",
+      "establishes": "a cheap proxy for the quantity under your control",
+      "step": 6
+    },
+    {
+      "action": "Build the wider construction: greedy merges of the most frequent adjacent symbol pair over the decoded FineWeb bytes, ties broken lexicographically, stopping when no pair occurs twice or the budget is spent.",
+      "establishes": "affixes, whole words and multi-word phrases competing for the same budget on equal terms",
+      "step": 7
+    },
+    {
+      "action": "Declare no HALT_AT_STEPS, so the run reaches the bound step and the reading is asked to hold at the two verifier-scheduled points after it.",
+      "establishes": "the reading is sustained, not a transient dip",
+      "step": 8
+    },
+    {
+      "action": "Write submission/tokenizer.py exporting build_vocab and let the verifier train the decoder and compute the number.",
+      "establishes": "a graded reading the submission never touched",
+      "step": 9
+    }
+  ],
+  "terminates_at": {
+    "graded_bits_per_byte": null,
+    "graded_bits_per_byte_state": "unmeasured-on-nanogpt-substrate",
+    "reason": "graded",
+    "reward": null,
+    "reward_gap": "gap-oer-15-reference-margin-unmeasured",
+    "reward_state": "unmeasured-on-nanogpt-substrate"
+  }
+}

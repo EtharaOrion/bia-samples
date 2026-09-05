@@ -1,0 +1,8 @@
+{
+  "_generated": "GENERATED SECTION. DO NOT HAND-EDIT. Source: solution/grounding.yaml",
+  "anchors_state": "absent",
+  "authority": "seed/contract.yaml families.entries.F13 carries scope_state unscoped and the slot record for OER-12 carries anchors_state unmeasured with baseline_metric, target_metric and pass_threshold all null, under gap-oer-per-family-anchors-unmeasured. requirements/bia-environment-spec.md line 63 leaves this family's baseline, target and instance count unresolved.",
+  "baseline_metric": null,
+  "target_metric": null,
+  "writer": "verifier-harness"
+}

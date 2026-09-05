@@ -1,0 +1,18 @@
+{
+  "anchors_gap": "gap-oer-per-family-anchors-unmeasured",
+  "anchors_state": "absent",
+  "atom_count": 24,
+  "banner": "GENERATED SECTION. DO NOT HAND-EDIT.",
+  "family_baseline_metric": null,
+  "family_target_metric": null,
+  "genesis_prev_seal": "0000000000000000000000000000000000000000000000000000000000000000",
+  "instance_anchor_gap": "gap-oer-30-instance-local-anchors-not-family-anchors",
+  "instance_baseline_gap": 0.333333333,
+  "instance_target_gap": 0.0,
+  "instances_sha256": "ea3039da6d3d1108426bd3c522e1256024f604563053af890d8442a701db02fc",
+  "ledger_source_sha256": "ea9cacfdea0a31ac0ae9185d633234a1b6db19c155b52bb51fdb35c86597736b",
+  "minter_sha256": "d8479688cfb40899d5572eb2de499b7af834c59ea274d8a03a1f72ceb2493f23",
+  "schema": "oer30.bound/v1",
+  "source": "solution/grounding.yaml",
+  "weight_tolerance": 0
+}

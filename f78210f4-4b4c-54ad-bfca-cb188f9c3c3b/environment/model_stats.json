@@ -1,0 +1,489 @@
+{
+  "schema": "oer20.checkpoint_manifest/v1",
+  "model_id": "nanogpt-12L-768d",
+  "frozen": true,
+  "substrate": "environment/nanogpt_substrate.json",
+  "note": "The per-tensor manifest of the FROZEN nanoGPT checkpoint this slot quantizes. It carries names, shapes and parameter counts and nothing else: it carries no perplexity, no curvature scale and no error-model coefficient, because nothing here is an input to an arithmetic stand-in for a forward pass. The quantized model IS the checkpoint at checkpoint_path, and the verifier loads that checkpoint and runs real forward passes to score. Shapes are determined by the architecture block of environment/nanogpt_substrate.json and this file is refused at load if any of them disagrees.",
+  "checkpoint_path": "/checkpoint/nanogpt_fp32.pt",
+  "checkpoint_format": "torch state_dict, float32, one entry per row below",
+  "checkpoint_sha256": null,
+  "checkpoint_sha256_note": "Absent here rather than invented. The pinned harness writes the checkpoint at freeze time and records its digest into /checkpoint/manifest.json, which the verifier reads and compares against its own copy. This lane measured no checkpoint and therefore publishes no digest.",
+  "architecture": {
+    "vocab_size": 50304,
+    "num_layers": 12,
+    "model_dim": 768,
+    "head_dim": 128,
+    "num_heads": 6,
+    "seq_len": 1024
+  },
+  "bit_widths_allowed": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    8
+  ],
+  "schemes_allowed": [
+    "rtn",
+    "affine-per-channel",
+    "error-feedback"
+  ],
+  "quantizable_tensor_count": 50,
+  "total_params": 162201600,
+  "bits_per_param_budget": 4,
+  "budget_bits": 648806400,
+  "unquantized_parameter_note": "Normalization is parameter-free root mean square normalization and the positional encoding is rotary, so the checkpoint carries no parameter outside the rows below. Every parameter of the model is therefore inside the bit budget and none is quantized for free.",
+  "tensors": [
+    {
+      "name": "wte.weight",
+      "shape": [
+        50304,
+        768
+      ],
+      "params": 38633472,
+      "role": "token embedding"
+    },
+    {
+      "name": "blocks.0.attn.qkv.weight",
+      "shape": [
+        2304,
+        768
+      ],
+      "params": 1769472,
+      "role": "fused query key value projection"
+    },
+    {
+      "name": "blocks.0.attn.proj.weight",
+      "shape": [
+        768,
+        768
+      ],
+      "params": 589824,
+      "role": "attention output projection"
+    },
+    {
+      "name": "blocks.0.mlp.fc.weight",
+      "shape": [
+        3072,
+        768
+      ],
+      "params": 2359296,
+      "role": "mlp input projection"
+    },
+    {
+      "name": "blocks.0.mlp.proj.weight",
+      "shape": [
+        768,
+        3072
+      ],
+      "params": 2359296,
+      "role": "mlp output projection"
+    },
+    {
+      "name": "blocks.1.attn.qkv.weight",
+      "shape": [
+        2304,
+        768
+      ],
+      "params": 1769472,
+      "role": "fused query key value projection"
+    },
+    {
+      "name": "blocks.1.attn.proj.weight",
+      "shape": [
+        768,
+        768
+      ],
+      "params": 589824,
+      "role": "attention output projection"
+    },
+    {
+      "name": "blocks.1.mlp.fc.weight",
+      "shape": [
+        3072,
+        768
+      ],
+      "params": 2359296,
+      "role": "mlp input projection"
+    },
+    {
+      "name": "blocks.1.mlp.proj.weight",
+      "shape": [
+        768,
+        3072
+      ],
+      "params": 2359296,
+      "role": "mlp output projection"
+    },
+    {
+      "name": "blocks.2.attn.qkv.weight",
+      "shape": [
+        2304,
+        768
+      ],
+      "params": 1769472,
+      "role": "fused query key value projection"
+    },
+    {
+      "name": "blocks.2.attn.proj.weight",
+      "shape": [
+        768,
+        768
+      ],
+      "params": 589824,
+      "role": "attention output projection"
+    },
+    {
+      "name": "blocks.2.mlp.fc.weight",
+      "shape": [
+        3072,
+        768
+      ],
+      "params": 2359296,
+      "role": "mlp input projection"
+    },
+    {
+      "name": "blocks.2.mlp.proj.weight",
+      "shape": [
+        768,
+        3072
+      ],
+      "params": 2359296,
+      "role": "mlp output projection"
+    },
+    {
+      "name": "blocks.3.attn.qkv.weight",
+      "shape": [
+        2304,
+        768
+      ],
+      "params": 1769472,
+      "role": "fused query key value projection"
+    },
+    {
+      "name": "blocks.3.attn.proj.weight",
+      "shape": [
+        768,
+        768
+      ],
+      "params": 589824,
+      "role": "attention output projection"
+    },
+    {
+      "name": "blocks.3.mlp.fc.weight",
+      "shape": [
+        3072,
+        768
+      ],
+      "params": 2359296,
+      "role": "mlp input projection"
+    },
+    {
+      "name": "blocks.3.mlp.proj.weight",
+      "shape": [
+        768,
+        3072
+      ],
+      "params": 2359296,
+      "role": "mlp output projection"
+    },
+    {
+      "name": "blocks.4.attn.qkv.weight",
+      "shape": [
+        2304,
+        768
+      ],
+      "params": 1769472,
+      "role": "fused query key value projection"
+    },
+    {
+      "name": "blocks.4.attn.proj.weight",
+      "shape": [
+        768,
+        768
+      ],
+      "params": 589824,
+      "role": "attention output projection"
+    },
+    {
+      "name": "blocks.4.mlp.fc.weight",
+      "shape": [
+        3072,
+        768
+      ],
+      "params": 2359296,
+      "role": "mlp input projection"
+    },
+    {
+      "name": "blocks.4.mlp.proj.weight",
+      "shape": [
+        768,
+        3072
+      ],
+      "params": 2359296,
+      "role": "mlp output projection"
+    },
+    {
+      "name": "blocks.5.attn.qkv.weight",
+      "shape": [
+        2304,
+        768
+      ],
+      "params": 1769472,
+      "role": "fused query key value projection"
+    },
+    {
+      "name": "blocks.5.attn.proj.weight",
+      "shape": [
+        768,
+        768
+      ],
+      "params": 589824,
+      "role": "attention output projection"
+    },
+    {
+      "name": "blocks.5.mlp.fc.weight",
+      "shape": [
+        3072,
+        768
+      ],
+      "params": 2359296,
+      "role": "mlp input projection"
+    },
+    {
+      "name": "blocks.5.mlp.proj.weight",
+      "shape": [
+        768,
+        3072
+      ],
+      "params": 2359296,
+      "role": "mlp output projection"
+    },
+    {
+      "name": "blocks.6.attn.qkv.weight",
+      "shape": [
+        2304,
+        768
+      ],
+      "params": 1769472,
+      "role": "fused query key value projection"
+    },
+    {
+      "name": "blocks.6.attn.proj.weight",
+      "shape": [
+        768,
+        768
+      ],
+      "params": 589824,
+      "role": "attention output projection"
+    },
+    {
+      "name": "blocks.6.mlp.fc.weight",
+      "shape": [
+        3072,
+        768
+      ],
+      "params": 2359296,
+      "role": "mlp input projection"
+    },
+    {
+      "name": "blocks.6.mlp.proj.weight",
+      "shape": [
+        768,
+        3072
+      ],
+      "params": 2359296,
+      "role": "mlp output projection"
+    },
+    {
+      "name": "blocks.7.attn.qkv.weight",
+      "shape": [
+        2304,
+        768
+      ],
+      "params": 1769472,
+      "role": "fused query key value projection"
+    },
+    {
+      "name": "blocks.7.attn.proj.weight",
+      "shape": [
+        768,
+        768
+      ],
+      "params": 589824,
+      "role": "attention output projection"
+    },
+    {
+      "name": "blocks.7.mlp.fc.weight",
+      "shape": [
+        3072,
+        768
+      ],
+      "params": 2359296,
+      "role": "mlp input projection"
+    },
+    {
+      "name": "blocks.7.mlp.proj.weight",
+      "shape": [
+        768,
+        3072
+      ],
+      "params": 2359296,
+      "role": "mlp output projection"
+    },
+    {
+      "name": "blocks.8.attn.qkv.weight",
+      "shape": [
+        2304,
+        768
+      ],
+      "params": 1769472,
+      "role": "fused query key value projection"
+    },
+    {
+      "name": "blocks.8.attn.proj.weight",
+      "shape": [
+        768,
+        768
+      ],
+      "params": 589824,
+      "role": "attention output projection"
+    },
+    {
+      "name": "blocks.8.mlp.fc.weight",
+      "shape": [
+        3072,
+        768
+      ],
+      "params": 2359296,
+      "role": "mlp input projection"
+    },
+    {
+      "name": "blocks.8.mlp.proj.weight",
+      "shape": [
+        768,
+        3072
+      ],
+      "params": 2359296,
+      "role": "mlp output projection"
+    },
+    {
+      "name": "blocks.9.attn.qkv.weight",
+      "shape": [
+        2304,
+        768
+      ],
+      "params": 1769472,
+      "role": "fused query key value projection"
+    },
+    {
+      "name": "blocks.9.attn.proj.weight",
+      "shape": [
+        768,
+        768
+      ],
+      "params": 589824,
+      "role": "attention output projection"
+    },
+    {
+      "name": "blocks.9.mlp.fc.weight",
+      "shape": [
+        3072,
+        768
+      ],
+      "params": 2359296,
+      "role": "mlp input projection"
+    },
+    {
+      "name": "blocks.9.mlp.proj.weight",
+      "shape": [
+        768,
+        3072
+      ],
+      "params": 2359296,
+      "role": "mlp output projection"
+    },
+    {
+      "name": "blocks.10.attn.qkv.weight",
+      "shape": [
+        2304,
+        768
+      ],
+      "params": 1769472,
+      "role": "fused query key value projection"
+    },
+    {
+      "name": "blocks.10.attn.proj.weight",
+      "shape": [
+        768,
+        768
+      ],
+      "params": 589824,
+      "role": "attention output projection"
+    },
+    {
+      "name": "blocks.10.mlp.fc.weight",
+      "shape": [
+        3072,
+        768
+      ],
+      "params": 2359296,
+      "role": "mlp input projection"
+    },
+    {
+      "name": "blocks.10.mlp.proj.weight",
+      "shape": [
+        768,
+        3072
+      ],
+      "params": 2359296,
+      "role": "mlp output projection"
+    },
+    {
+      "name": "blocks.11.attn.qkv.weight",
+      "shape": [
+        2304,
+        768
+      ],
+      "params": 1769472,
+      "role": "fused query key value projection"
+    },
+    {
+      "name": "blocks.11.attn.proj.weight",
+      "shape": [
+        768,
+        768
+      ],
+      "params": 589824,
+      "role": "attention output projection"
+    },
+    {
+      "name": "blocks.11.mlp.fc.weight",
+      "shape": [
+        3072,
+        768
+      ],
+      "params": 2359296,
+      "role": "mlp input projection"
+    },
+    {
+      "name": "blocks.11.mlp.proj.weight",
+      "shape": [
+        768,
+        3072
+      ],
+      "params": 2359296,
+      "role": "mlp output projection"
+    },
+    {
+      "name": "lm_head.weight",
+      "shape": [
+        50304,
+        768
+      ],
+      "params": 38633472,
+      "role": "output head"
+    }
+  ]
+}

@@ -1,0 +1,22 @@
+{
+  "_generated": "GENERATED SECTION. DO NOT HAND-EDIT.",
+  "_source": "solution/grounding.yaml",
+  "schema": "oer08.budget/v2",
+  "budget_tokens": 20971520,
+  "budget_unit": "tokens",
+  "tokens_per_step": 524288,
+  "steps": 40,
+  "slice_tokens": 65536,
+  "architecture": {
+    "vocab_size": 50304,
+    "num_layers": 12,
+    "model_dim": 768,
+    "head_dim": 128,
+    "num_heads": 6,
+    "seq_len": 1024
+  },
+  "architecture_source": "environment/nanogpt_substrate.json, replicated here because tests/Dockerfile assembles the verifier image from tests/ alone and a checker that reached into environment/ at grading time would be grading against bytes the agent surface also carries",
+  "graded_by": "frozen_token_budget_is_the_graded_budget and graded_weights_are_harness_owned",
+  "read_back_from": "/logs/harness/feed.json budget and tokens_fed, and /logs/harness/model.json parameter_shapes, both written by tests/runner.py inside the verifier's own process from the corpus it fed and the decoder it built.",
+  "why_it_is_load_bearing": "Before this row the graded path only ever compared tokens_fed against whatever budget the pool bytes happened to declare, so the value was self-referential and the environment was not load-bearing for it. This carrier is generated from solution/grounding.yaml and is verifier-side, so the gate depends on the numbers themselves: a feed ledger graded against any other budget scores zero, a parameter snapshot whose shape is not the frozen architecture scores zero, and the bound evaluation point is budget exhaustion measured against the frozen figure rather than against a drifting one."
+}

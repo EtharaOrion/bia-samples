@@ -1,0 +1,74 @@
+{
+  "schema": "oer15.frozen_manifest/v2",
+  "note": "Every value here is a FROZEN axis, a DERIVATION rule, or a declared separation. A submission may read it and may not move it. The verifier reads its own copy from the delivery unit. Nothing here is a value of the graded metric: the reward-scale floor is measured live by the verifier in the same grading pass, and the full-credit reading is held verifier-side and is not published on this surface.",
+  "substrate": {
+    "declaration": "environment/nanogpt_substrate.json",
+    "declaration_version": "nanogpt-substrate-v1",
+    "note": "The architecture, the batch size, the one-forward-one-backward-pass-per-step rule and the corpus below are transcribed from that file, which is the canonical operating point for this project. The verifier re-reads its own copy at grading time, so editing a local copy produces a refused run with reason frozen-axis-moved rather than a different grade."
+  },
+  "architecture": {
+    "vocab_size": 50304,
+    "num_layers": 12,
+    "model_dim": 768,
+    "head_dim": 128,
+    "num_heads": 6,
+    "seq_len": 1024
+  },
+  "run": {
+    "compute_budget_steps": 2200,
+    "batch_tokens_per_step": 524288,
+    "sequences_per_step": 512,
+    "forward_passes_per_step": 1,
+    "backward_passes_per_step": 1,
+    "init_seed": 0,
+    "optimizer": "adamw, betas 0.9 and 0.95, weight decay 0.1, peak learning rate 0.0018, linear warmup over 128 steps then linear decay to zero across the budget",
+    "_budget_note": "The compute budget is counted in OPTIMIZER STEPS, not in token positions. One step is one forward pass and one backward pass over 524288 tokens, which is the substrate's frozen batch size. The budget of 2200 steps is this slot's own frozen axis and it is the same integer the slot carried before the re-base; only its unit moved, from token updates on a count table to optimizer steps on the canonical decoder."
+  },
+  "corpus": {
+    "source": "FineWeb10B, the substrate's frozen dataset",
+    "train_glob": "data/fineweb10B/fineweb_train_*.bin",
+    "val_glob": "data/fineweb10B/fineweb_val_*.bin",
+    "container_train_path": "/workspace/data/fineweb10B",
+    "loader": "environment/build_corpus.py, which mirrors the substrate's data/cached_fineweb10B.py",
+    "shard_format": "uint16 GPT-2 token ids behind a 1024-int32 header, the upstream .bin layout",
+    "text_recovery": "The shards are decoded back to raw FineWeb bytes with the GPT-2 byte-pair encoding, which is exactly invertible. A tokenizer slot needs bytes rather than someone else's tokens, and decoding keeps the corpus identity pinned to the shards the substrate names.",
+    "_val_note": "The validation split is deliberately absent from this container. The number that scores a submission is computed by the verifier on a held-out FineWeb slice the solver cannot see, from the parameter snapshot the pinned harness wrote."
+  },
+  "tokenizer": {
+    "vocab_budget": 50304,
+    "_budget_note": "The budget equals the architecture's vocab_size because the embedding table has exactly that many rows. The 256 single bytes are prepended by the harness and occupy budget like anything else, so a submission chooses at most 50048 further entries.",
+    "fit_tokens": 524288,
+    "_fit_note": "The bytes handed to build_vocab are the first 524288 GPT-2 tokens of the first staged training shard, decoded to raw bytes. That token count is one step of the substrate's frozen batch, so the fitting slice is a substrate-derived quantity rather than an authored one.",
+    "encoder_spec": {
+      "kind": "greedy-longest-match",
+      "max_token_len": 16
+    }
+  },
+  "evaluation_schedule": {
+    "progress_fractions": [
+      0.25,
+      0.5,
+      0.75
+    ],
+    "sustain_offsets": [
+      110,
+      220
+    ],
+    "sustain_tolerance_bpb": 0.02,
+    "note": "The bound evaluation point is the schedule's last charged point, at the full step budget. The sustain points are scheduled by the verifier and are not charged to the agent's compute budget."
+  },
+  "reward_scale": {
+    "note": "This block carries NO value of the graded metric. The floor of the reward scale is the bits per byte of the handed default construction, measured by the verifier in the SAME grading pass, at the same seed, over the same shards, at the same step budget, against the same held-out slice. Nothing about it is a literal, so nothing about it is an answer key.",
+    "floor_source": "paired-default-construction-run, measured live by the verifier",
+    "acceptance_separation_bpb": 0.02,
+    "acceptance_bar_rule": "the paired floor less the acceptance separation; a graded reading above that bar scores zero with reason default-construction-plateau-not-beaten",
+    "full_credit_separation_bpb": "withheld, carried verifier-side in tests/anchors.json and never assembled onto this surface",
+    "separations_state": "declared, uncalibrated on the nanoGPT substrate",
+    "separations_gap": "gap-oer-15-separations-uncalibrated-on-nanogpt-substrate"
+  },
+  "measured_operating_points": {
+    "state": "unmeasured-on-nanogpt-substrate",
+    "note": "The operating points the retired substrate carried were measured on a locally generated sentence pool against a bigram count table. Both are gone, so those numbers describe nothing that still exists and are declared unmeasured rather than carried forward. The scoring path does not need them: the floor is measured live in the grading pass.",
+    "gap": "gap-oer-15-operating-points-unmeasured-on-nanogpt-substrate"
+  }
+}

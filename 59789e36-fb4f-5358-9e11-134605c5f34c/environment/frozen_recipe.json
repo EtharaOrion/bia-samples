@@ -1,0 +1,70 @@
+{
+  "schema": "oer12.frozen_recipe/v2",
+  "note": "The frozen axes. Hand-authored task substrate; not generated. Nothing under this file is free. The parse pipeline that produces the admitted feed is the only free surface in this slot.",
+  "substrate": {
+    "file": "environment/nanogpt_substrate.json",
+    "replication": "That file is the canonical nanoGPT operating point, replicated byte for byte into this slot so no slot reads a sibling's bytes. Every architecture, batch and corpus value in this recipe is read from it and none is invented here.",
+    "declaration_version": "nanogpt-substrate-v1",
+    "upstream_vendored_at": "harness/records/track_3_optimization/train_gpt_simple.py"
+  },
+  "frozen_axes": {
+    "model": {
+      "arch": "nanoGPT decoder-only transformer, modded-nanogpt records/track_3_optimization",
+      "vocab_size": 50304,
+      "num_layers": 12,
+      "model_dim": 768,
+      "head_dim": 128,
+      "num_heads": 6,
+      "seq_len": 1024,
+      "implementation": "environment/train_frozen.py, which instantiates this architecture and refuses to run when any value here disagrees with environment/nanogpt_substrate.json",
+      "tokenizer": "GPT-2 BPE, frozen with the model",
+      "vocab_source": "the frozen GPT-2 BPE vocabulary of the canonical substrate, 50304 entries. The pipeline does not author a vocabulary and does not cap one: the embedding matrix and the output projection are shape-bound to vocab_size, and the held-out shards the verifier grades on are encoded in that same vocabulary.",
+      "parameter_snapshot": "The frozen trainer writes a real parameter snapshot of this architecture at the bound evaluation point and at every sustain point. The verifier grades those snapshots and nothing else."
+    },
+    "optimizer": {
+      "name": "adamw",
+      "lr": 0.0006,
+      "betas": [0.9, 0.95],
+      "weight_decay": 0.1,
+      "warmup_steps": 50,
+      "schedule": "cosine to zero at max_steps"
+    },
+    "token_budget": {
+      "tokens": 288358400,
+      "tokens_derivation": "max_steps 550 multiplied by batch_tokens_per_step 524288, both read from this file and from the substrate. The number is computed, never chosen.",
+      "batch_tokens_per_step": 524288,
+      "forward_passes_per_step": 1,
+      "backward_passes_per_step": 1,
+      "pass_note": "One forward and one backward pass per step over the whole step batch. The trainer accumulates the batch across microbatches of 64 sequences exactly as the vendored record script does, and that accumulation is one pass over the step batch rather than several.",
+      "accounting": "as-fed",
+      "accounting_note": "The budget is counted on the tokens the harness data loader actually feeds the model, not on a number the pipeline declares. A pipeline that declares one number and feeds another is graded on the second."
+    },
+    "evaluation": {
+      "split_source": "the verifier's own copy of the FineWeb10B validation shards, data/fineweb10B/fineweb_val_*.bin",
+      "split_owner": "verifier",
+      "split_present_in_environment": false,
+      "split_absence_note": "The graded evaluation split is absent from environment/ and from every agent-visible container path. environment/split.json declares that the verifier owns it and carries none of its bytes. The split id in force is read from the harness at run time, so a verdict computed against a rotated id is a stale verdict.",
+      "bound_eval_step": 400,
+      "sustain_points": [450, 500, 550],
+      "sustain_band": 0.05,
+      "sustain_note": "The graded loss is the harness's own raw evaluation at bound_eval_step. It counts as established only if every sustain point stays within sustain_band above it. A single favourable evaluation is a dip, not a level.",
+      "smoothing_on_graded_path": "none",
+      "graded_readout": "the verifier's own token-mean cross-entropy over the held-out shards, computed from the parameter snapshot the frozen trainer wrote at that step. No number the in-container run prints is the grade.",
+      "substrate_target_note": "The substrate's target_val_loss of 3.28 is the upstream benchmark definition at the record step counts, where record 36 reaches it in 3250 steps. This slot runs a 550-step schedule and grades the loss level itself, and this family's own anchors stay absent under gap-oer-per-family-anchors-unmeasured. Nothing here claims the 3.28 bar is reached on this schedule."
+    },
+    "corpus": {
+      "collection": "FineWeb10B",
+      "train_glob": "data/fineweb10B/fineweb_train_*.bin",
+      "held_out_glob": "data/fineweb10B/fineweb_val_*.bin",
+      "container_train_path": "/workspace/data/fineweb10B",
+      "loader": "data/cached_fineweb10B.py",
+      "raw_records": "environment/corpus/, staged in the agent container at /app/corpus. corpus.rec is the record-format specimen the three-way parse classification is graded over. The graded run's raw records are the FineWeb10B document shards the harness stages at container_train_path in the record format environment/schema.json declares.",
+      "external_source": "https://huggingface.co/datasets/HuggingFaceFW/fineweb"
+    },
+    "max_steps": 550,
+    "seed": 1337
+  },
+  "who_runs_this": "The harness runs the frozen trainer. The submission never runs it and never reports its output. Any loss number a submission prints is ignored on the graded path.",
+  "budget_envelope": "one H100, single accelerator, no multi-GPU scaling",
+  "what_this_recipe_replaced": "The previous revision froze a six-layer 384-dimension decoder over a vocabulary the pipeline authored itself and capped at 8192, a 4096-token budget, and an evaluation split shipped inside environment/. That was a stand-in and its metric did not resolve against a nanoGPT run. This revision pins the architecture, the batch and the corpus to the canonical substrate and moves the graded evaluation onto the verifier-owned held-out FineWeb split."
+}

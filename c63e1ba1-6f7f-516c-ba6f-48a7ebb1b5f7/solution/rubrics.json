@@ -1,0 +1,53 @@
+{
+  "banner": "GENERATED SECTION. DO NOT HAND-EDIT.",
+  "criteria": [
+    {
+      "comparison": "integer equality against the rebuilt index's calibration",
+      "id": "threshold-read-off-the-built-index",
+      "reference_value": 702,
+      "statement": "The submitted adjudication threshold is the one the built index calibrated."
+    },
+    {
+      "comparison": "integer equality against the rebuilt index",
+      "id": "collision-census-complete",
+      "reference_value": 144,
+      "statement": "The submission counts every colliding pair the built index holds."
+    },
+    {
+      "comparison": "set equality against the verifier's own adjudication",
+      "id": "adjudication-closed-over-groups",
+      "reference_value": 96,
+      "statement": "The near-duplicate pair set is closed over duplicate groups and not a list of thresholded edges."
+    },
+    {
+      "comparison": "submitted pair count is greater than reference_value",
+      "id": "direct-edges-are-not-the-answer",
+      "reference_value": 86,
+      "statement": "The answer exceeds the thresholded edge set, because grouping adds within-group pairs the threshold alone never joins."
+    },
+    {
+      "comparison": "pair equality against the verifier's own derivation",
+      "id": "witness-is-the-maximal-refused-collision",
+      "reference_value": [
+        "r0325",
+        "r0440"
+      ],
+      "statement": "The collision witness is the refused collision maximal by band count, then similarity, then lexicographic order."
+    },
+    {
+      "comparison": "the unsupported pair count is zero",
+      "id": "precision-held",
+      "reference_value": 0,
+      "statement": "Not one submitted pair falls outside the verifier's own adjudication."
+    },
+    {
+      "comparison": "pairs_examined equals reference_value",
+      "id": "candidate-filter-not-mistaken-for-the-universe",
+      "reference_value": 130816,
+      "statement": "The adjudication covers every unordered pair of distinct records rather than only the index's candidates."
+    }
+  ],
+  "judged": "the solution against its reference answer",
+  "schema": "forge.solution_rubrics/v1",
+  "source": "solution/grounding.yaml"
+}

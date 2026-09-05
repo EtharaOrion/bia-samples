@@ -1,0 +1,16 @@
+{
+  "_generated": "GENERATED SECTION. DO NOT HAND-EDIT. Source: solution/grounding.yaml",
+  "events": [
+    {
+      "doc": "r01",
+      "event": "first-document-classified",
+      "seq": 2
+    },
+    {
+      "event": "ambiguity-policy-declared",
+      "policy": "quarantine-partial",
+      "seq": 9
+    }
+  ],
+  "writer": "verifier-harness"
+}

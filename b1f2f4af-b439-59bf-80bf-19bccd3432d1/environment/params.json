@@ -1,0 +1,9 @@
+{
+  "banner": "GENERATED SECTION. DO NOT HAND-EDIT.",
+  "modulus": 2147483647,
+  "ratio": 1103,
+  "schema": "oer28.params/v1",
+  "source": "solution/grounding.yaml",
+  "splice_charge_budget": 241000,
+  "window": 24
+}

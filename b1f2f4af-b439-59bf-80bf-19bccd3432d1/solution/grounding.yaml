@@ -1,0 +1,744 @@
+# FORGE-CANARY-BEGIN
+# 0: 7ae00d4a14ac3fc532faae73bcaa8191c073ac6013241d646340cb2d02d535fb
+# 1: 83c0a3d4955b21aa1d247faff721e88602a37c71bbb65c2b858aab0b0cd0024d
+# 2: f3fd1316efd674f6cc64a2baa6753143e6fa4da745c97a32e8201f2f76808bb3
+# 3: 2a3f3786060a0a4f341c09c740a7f143826305f66757b30447b2697073270479
+# FORGE-CANARY-END
+schema: forge.grounding/v1
+slot: OER-28
+provisional_identifier: OER-28
+note: >-
+  This file is the single private derivation source for the slot. `solution/recompute.py`
+  derives every generated artifact from these bytes alone: the frozen operator parameters,
+  the frozen input stream, the two discovery values, `tests/bound.json`,
+  `tests/test_output.py`, `solution/solve.sh`, `solution/TRUTH.md`, `solution/rubrics.json`,
+  the accepting reference-run fixture and every planted rejecting fixture. Nothing here is a
+  model output, a network fetch, a clock reading, a locale-dependent rendering or a draw from
+  a random source. Running `recompute.py` twice over frozen bytes produces byte-identical
+  output, and `recompute.py --check` reports drift without writing.
+
+identity:
+  family: F5
+  family_title: kernel optimization
+  primary_archetype: two-phase-splice
+  primary_archetype_title: Two-Phase Splice
+  archetype_count: 1
+  archetype_rule: >-
+    Exactly one primary archetype. The two-phase splice is the whole pressure of this slot and
+    no second archetype is claimed, borrowed or composed in.
+  title: Fused streaming kernel handed across a harness-established splice
+  tags: [optimization, bounded-continuous, kernel-optimization]
+  target_tier: T3
+  tier_exemption_granted: none
+
+perception_axis_exemption:
+  kind: standing batch-level exemption
+  statement: >-
+    This task family is text and code only, so the Perception axis carries no category. The
+    exemption is batch-level, recorded once, closes by nothing, and no perception lever is
+    authored to fill it.
+
+metric:
+  name: kernel speedup over the frozen reference on the verifier-owned resume segment, gated on exact output equality
+  direction: higher
+  gate_semantics: >-
+    Numerical correctness is a HARD GATE, never a term traded against speed. The operator is
+    exact integer arithmetic modulo a frozen prime, so correctness is byte equality of the
+    output rollup rather than a tolerance. A kernel whose composed rollup differs from the
+    frozen reference rollup scores exactly 0.0 with the machine-readable reason
+    `numerical-output-diverged`, however few reads it charged.
+  frozen_axes:
+    - the operator semantics, environment/params.json and the definition in environment/opstream.py
+    - the input stream, environment/stream.json
+    - the reference kernel and its per-output cost, environment/opstream.py reference_run_block
+    - the splice charge budget, params.splice_charge_budget
+  free_axes:
+    - the kernel implementation the agent installs at /workspace/submission/kernel.py
+  free_contract: the module must expose run_block(tape, params, carry, start, length)
+
+clock_ownership:
+  owner: harness
+  statement: >-
+    THE HARNESS OWNS THE COUNTER. The graded cost is not a wall-clock reading. The harness
+    hands every kernel a Tape, which is the ONLY route to an input sample, and the Tape charges
+    exactly one read per `at` call. The verifier re-runs the resume segment itself under its own
+    Tape and reads the charge off its own counter, so the graded number is one the verifier
+    counted rather than one the submission reported.
+  why: >-
+    A wall-clock speedup is not reproducible across hosts and cannot be recomputed by an outside
+    reader. An instrumented read counter is exact, portable and replayable, and it is the
+    quantity the algorithmic insight actually moves.
+  absolute_clock_ban: >-
+    No checker calls time, datetime, perf_counter or monotonic, directly or transitively.
+    recompute.py reads no clock either.
+
+substrate:
+  kind: deterministic integer stream operator with an instrumented read counter
+  module: environment/opstream.py
+  declared_gap: gap-oer-28-substrate-counts-reads-not-seconds
+  why_right_choice: >-
+    Counting instrumented reads makes the grading reproducible: the same stream, parameters and
+    kernel produce a byte-identical charge on any host. It is never allowed to pass as a wall
+    clock measurement, and reference_hours therefore covers counted-read cost only.
+
+phase_contract:
+  statement: >-
+    The unit runs in two phases over one shared workspace. The AGENT phase runs
+    environment/phase_a.py in the agent image. The driver feeds whole blocks of the frozen
+    stream to the agent's kernel in order, charges every read on its own Tape, appends one
+    chained journal row per block to the harness journal, and HALTS the moment the cumulative
+    harness work counter reaches the frozen splice charge budget. The absolute sample offset at
+    which it halts is the SPLICE POINT. The state the kernel holds at that offset is the CARRIED
+    STATE, and the harness digests it into the CARRIED-STATE DIGEST. The agent then writes
+    /workspace/handoff.json in the bound shape. The VERIFIER phase runs in a separate image, reads
+    the harness journal and the handoff through one harness handle, resumes the operator from the
+    handed-over carried state, and grades the remaining blocks under its own Tape.
+  harness_journal: /logs/harness/phase_a.jsonl
+  handoff: /workspace/handoff.json
+  kernel: /workspace/submission/kernel.py
+  journal_genesis: oer28.journal.genesis/v1
+  why_two_phases: >-
+    The verifier's own resume is SEEDED from the carried state the agent phase handed over. The
+    carried state is therefore load-bearing rather than decorative: a wrong accumulator produces
+    a wrong resume output and fails the correctness gate, and a splice point moved by one sample
+    resumes the operator over the wrong segment.
+
+discovery:
+  note: >-
+    Both values are established by the AGENT phase and read by the VERIFIER phase. Neither is
+    stated in instruction.md and neither appears in any agent-visible byte. Each is derived here
+    by recompute.py from the frozen stream and the frozen parameters, and each gates a REQUIRED
+    checker.
+  values:
+    - name: splice_offset
+      kind: splice point
+      established_by: >-
+        environment/phase_a.py, which halts the agent phase at the first block boundary at which
+        cumulative_outputs * window reaches splice_charge_budget, and records the absolute sample
+        offset of that boundary in the journal halt row.
+      read_by: >-
+        tests/checkers.py check_splice_point_harness_established, through Harness.halt_row and
+        Harness.handoff, and by tests/runner.py which resumes phase B at exactly that offset.
+      grounding_path: solution/grounding.yaml#derived (recomputed, never literal)
+      gates_required_checker: splice_point_harness_established
+      rejecting_fixture: solution/fixtures/planted/splice_offset_plus_one/
+    - name: carried_state_sha256
+      kind: carried-state digest
+      established_by: >-
+        environment/phase_a.py, which digests the canonical encoding of the kernel's carry at the
+        splice offset and records it in the journal halt row.
+      read_by: >-
+        tests/checkers.py check_carried_state_digest_matches, through Harness.halt_row and
+        Harness.handoff.
+      grounding_path: solution/grounding.yaml#derived (recomputed, never literal)
+      gates_required_checker: carried_state_digest_matches
+      rejecting_fixture: solution/fixtures/planted/carried_digest_one_nibble/
+
+stream:
+  schema: oer28.stream/v1
+  generator: >-
+    A fixed integer linear congruential recurrence x <- (1103515245 * x + 12345) mod 2**31,
+    seeded from the constant below. This is arithmetic, not a random source: the sequence is
+    fully determined by the seed recorded here and no module named `random` is imported. Block
+    lengths are drawn first, then samples, in one pass over the stream.
+  seed: 20260831
+  block_count: 40
+  block_length: {base: 380, modulus: 240}
+  sample: {base: 1000000, modulus: 1000000}
+  sample_width_rule: >-
+    Every sample is a seven digit integer by construction, and both discovery values are shorter
+    than seven digits, so no token of environment/stream.json can collide with a discovery value
+    under a word-boundary scan. That is why the sample base is a million rather than zero.
+
+params:
+  schema: oer28.params/v1
+  modulus: 2147483647
+  ratio: 1103
+  window: 24
+  splice_charge_budget: 241000
+  budget_rule: >-
+    The agent phase halts after the first whole block at which cumulative_outputs * window
+    reaches splice_charge_budget. The budget is frozen and agent-visible; the OFFSET it lands on
+    is not, because it depends on the drawn block lengths and is established only by running.
+
+operator:
+  definition: >-
+    For the concatenated stream x of length M, y[i] = ( sum over j in 0..window-1 of
+    (ratio ** j mod modulus) * x[i - j] ) mod modulus, with x[t] = 0 for t < 0.
+  reference_cost: >-
+    The reference kernel charges one Tape read per in-segment term, so an output at segment
+    offset u charges min(u + 1, window) reads.
+  fused_identity: >-
+    Because the weights are the geometric sequence ratio ** j, the finite impulse response
+    collapses to a first order recurrence: y[i] = ( ratio * y[i-1] + x[i] - (ratio ** window mod
+    modulus) * x[i - window] ) mod modulus. That charges one read for x[i] and, once the segment
+    is at least window samples deep, one more for x[i - window], so the fused kernel charges
+    length + max(0, length - window) reads on a segment of that length. The speedup is therefore
+    close to window / 2 and is measured rather than asserted.
+
+anchors:
+  anchors_state: absent
+  gap_id: gap-oer-per-family-anchors-unmeasured
+  family_baseline_metric: null
+  family_target_metric: null
+  statement: >-
+    F5 is registered and unscoped in requirements/bia-environment-spec.md and records no measured
+    baseline, target, pass threshold or instance count, so no family anchor number is invented
+    here. The two numbers tests/bound.json carries are instance-local, measured by
+    solution/recompute.py on this slot's own frozen substrate, and are declared under
+    gap-oer-28-instance-local-anchors-not-family-anchors as NOT family anchors.
+  instance_local_anchors:
+    gap_id: gap-oer-28-instance-local-anchors-not-family-anchors
+    baseline_kernel: the frozen reference kernel, which charges exactly the reference cost and therefore scores a speedup of one
+    target_kernel: the fused first order recurrence recorded under operator.fused_identity
+    measured_by: solution/recompute.py, over the frozen stream and parameters
+    both_are_instance_local: true
+
+reward:
+  carrier_path: /logs/verifier/reward.txt
+  carrier_form: one bare float
+  score_document_path: /logs/verifier/score.json
+  interval: [0.0, 1.0]
+  direction: higher is better
+  never_binary: true
+  full_reward_exactly: 1.0
+  formula: raw = (agent_metric - baseline_metric) / (target_metric - baseline_metric)
+  clip: score = min(max(raw, 0.0), 1.0)
+  bar_not_point: reaching the target scores exactly 1.0 and beating it also scores 1.0
+  gate: >-
+    Every required checker must pass before the continuous term is computed. The first failing
+    required checker owns the zero and its machine-readable reason.
+
+readout_manipulation_obligation:
+  speedup: >-
+    Computed BY THE VERIFIER from its own Tape counter over its own resume run. No number the
+    submission reported reaches the reward.
+  reported_field_role: >-
+    handoff.reported_resume_charge exists so a substitution is visible rather than ignorable. It
+    is compared and never used.
+  correctness: >-
+    Computed BY THE VERIFIER as the rollup over every block digest, the agent phase half read out
+    of the harness journal and the resume half computed live, against the frozen reference rollup.
+  no_partial_output: >-
+    Every block of the frozen stream must carry exactly one output digest across the two phases,
+    with no gap, no duplicate and no reordering.
+
+checker_fixture_substitution:
+  - checker: agent_phase_journal_present
+    substitution: planted workspace fixture
+    fixture: solution/fixtures/planted/agent_phase_skipped/
+    why: >-
+      The rejecting half is the case where no agent phase ran at all. That state cannot be
+      reached by any kernel a solver writes, because a solver that runs the driver gets a
+      journal and a solver that does not gets no run at all. It is carried on a planted
+      workspace whose harness journal is absent and whose handoff is otherwise complete, which
+      is exactly the shape of a synthesised handoff. Recorded here rather than papered over.
+  - checker: journal_chain_intact
+    substitution: planted workspace fixture
+    fixture: solution/fixtures/planted/journal_row_edited/
+    why: >-
+      An honest driver run always produces a chain that recomputes, so no kernel choice reaches
+      this checker's rejecting half. What reaches it is a hand-authored journal, and the fixture
+      is the reference journal with one block row's recorded output digest moved by one nibble
+      and every other byte held. Recorded here rather than papered over.
+  - checker: kernel_identity_stable_across_splice
+    substitution: planted workspace fixture
+    fixture: solution/fixtures/planted/kernel_swapped_after_splice/
+    why: >-
+      The rejecting half is a seam attack: run the agent phase under one kernel and present a
+      different one to the verifier. The fixture is the reference run with the installed kernel
+      replaced by the reference kernel after the journal was written, so the journal's recorded
+      kernel digest and the digest of the graded kernel disagree while nothing else moves.
+      Recorded here rather than papered over.
+
+gaps:
+  - id: gap-oer-per-family-anchors-unmeasured
+    reason: per-family-anchors
+    cap: HOLD:PILOT_REQUIRED
+    statement: F5 records no measured baseline or target, so the reward schema is bound while the two numbers it divides by are absent at family scope.
+    consequence: The slot carries instance-local anchors declared as not family anchors and caps at HOLD:PILOT_REQUIRED.
+  - id: gap-oer-28-instance-local-anchors-not-family-anchors
+    reason: anchors-are-instance-local
+    cap: HOLD:PILOT_REQUIRED
+    statement: The baseline and target in tests/bound.json are measured on this slot's own frozen substrate and are not family anchors.
+    consequence: Recorded beside the numbers rather than presented as a family measurement.
+  - id: gap-oer-28-substrate-counts-reads-not-seconds
+    reason: substrate-is-a-counter-not-a-clock
+    cap: HOLD:PILOT_REQUIRED
+    statement: The graded speedup is a ratio of instrumented read counts and not a ratio of wall clock durations.
+    consequence: Declared in instruction.md and in TRUTH.md, and never presented as a timing measurement.
+  - id: gap-oer-28-journal-forgeable-by-doing-the-work
+    reason: structural-binding-not-cryptographic
+    cap: HOLD:PILOT_REQUIRED
+    statement: >-
+      The harness journal is bound to the operator semantics, to the frozen stream and to the digest of
+      the graded kernel, but it carries no secret, so a solver who reimplements the driver exactly can
+      author a journal that recomputes. That solver has by construction executed the operator over the
+      whole agent-phase prefix under the graded kernel, which is the work the phase exists to require,
+      so the binding is structural rather than cryptographic and is recorded as such rather than
+      overstated.
+    consequence: TRUTH.md states the limit plainly and no checker claims unforgeability.
+  - id: gap-oer-28-accelerator-request-is-a-lint-floor
+    reason: manifest-field-and-role-disagree
+    cap: HOLD:PILOT_REQUIRED
+    statement: >-
+      task.toml binds [environment].gpus at 1 and gpu_types at H100 while this slot's substrate uses
+      no accelerator on any path, because seed/harbor_lint.py requires a positive gpus and a non-empty
+      gpu_types for every slot on this roster and refuses the manifest otherwise.
+    observed: >-
+      The graded path is exact integer arithmetic over an instrumented read counter and imports nothing
+      outside the standard library. The oracle's agent phase and the verifier's resume together complete
+      in well under a second on one CPU core, and both images are built from a slim Python base with no
+      accelerator runtime in them at all.
+    why_not_left_at_zero: >-
+      A slot whose manifest the roster lint refuses is BLOCK:INVALID_TASK, so leaving the field at zero
+      would fail the gate rather than record the truth. FORGE conforms to the gate and names the
+      divergence instead of encoding a compute claim it cannot support.
+    what_governs: >-
+      metadata.optimization.compute_envelope_accelerators is 0 and is declared authoritative in
+      task.toml under compute_envelope_note. A reader who needs the real envelope reads that field.
+    what_would_close_it: >-
+      One line in seed/harbor_lint.py admitting a zero-accelerator slot, or a requirements statement
+      that every slot on this roster must request an accelerator whether or not it uses one.
+    consequence: The slot caps at HOLD:PILOT_REQUIRED and the manifest never presents the request as a measurement.
+
+  - id: gap-oer-28-pilot-absent
+    reason: no-signed-pilot
+    cap: HOLD:PILOT_REQUIRED
+    statement: No signed pilot has run against this slot, so its tier is claimed by construction and not established.
+    consequence: target_tier is an authoring target and never a measured claim.
+
+# FORGE-SCREENING-BEGIN GENERATED SECTION. DO NOT HAND-EDIT.
+screening:
+  applicability:
+    empty-submission-validation:
+      applicability_reason: This atom has no exempt route at all and is applicable to every unit.
+      cap: ''
+      clean_fixture_passed: true
+      control_accepting_half: 15
+      control_detail: 58 passed
+      control_passed: true
+      control_rejecting_half: 23
+      control_suite: tests/test_emptysub.py
+      defect: ''
+      determination: passed
+      planted_positive_present: true
+      planted_positive_rejected: true
+      ran: true
+      reason: empty submission scored exactly zero, reason=unattributed
+      result_digest: 6cdd940433817aee776c626bf4cfce6392a382b8dc5d52f36d411b236917d1df
+      score: 0.0
+      screened_preimage: the unit's delivered bytes as they sit on disk, graded through the pinned image;
+        nothing this atom records is a function of the bytes this lane writes
+      status: clean
+      value: applicable
+    exclusion-matching:
+      applicability_reason: This atom is applicable to every unit.
+      cap: ''
+      clean_fixture_passed: true
+      control_accepting_half: 8
+      control_detail: 58 passed
+      control_passed: true
+      control_rejecting_half: 18
+      control_suite: tests/test_exclusion.py
+      defect: ''
+      determination: not_applicable
+      planted_positive_present: true
+      planted_positive_rejected: true
+      ran: true
+      reason: All three relations were evaluated against engram.screening-root.exclusion-list/v1 at 81764edb7df796c57d17007b1fa95c2fe693226c865e403e5adc1b0640f595da
+        and none matched.
+      relations:
+        base-commit-sha:
+          applicability: not_applicable
+          matched: false
+        canonical-repository-identity:
+          applicability: not_applicable
+          matched: false
+        fork-ancestry-closure-membership:
+          applicability: not_applicable
+          matched: false
+      result_digest: f054aaf74e59db92cb00b3d90af7f8eab3de0d4ac4f31758ff990ceb52d62866
+      screened_preimage: the unit's bytes with this `screening` block removed from solution/grounding.yaml
+        and the carrier section removed from solution/recompute.py, because an output never enters its
+        own input
+      status: clean
+      value: applicable
+    freeze-holdout:
+      applicability_reason: The approved contract binds no upstream provenance record to this slot, so
+        no source record exists to satisfy any part of the closed generator-origin predicate. No relation
+        is exempted and every one is screened.
+      cap: ''
+      clean_fixture_passed: true
+      control_accepting_half: 15
+      control_detail: 101 passed
+      control_passed: true
+      control_rejecting_half: 30
+      control_suite: tests/test_freeze.py
+      defect: ''
+      determination: not_applicable
+      planted_positive_present: true
+      planted_positive_rejected: true
+      ran: true
+      reason: 6 named set(s) were evaluated against engram.screening-root.freeze-date-table/v1 and none
+        left an applicable holdout unsatisfied.
+      result_digest: c4fe890aabe4182ca60cdab3cc3f6353aac26103d619c659077433fd88ad0368
+      screened_preimage: the unit's bytes with this `screening` block removed from solution/grounding.yaml
+        and the carrier section removed from solution/recompute.py, because an output never enters its
+        own input
+      status: clean
+      value: applicable
+    near-duplicate-screening:
+      applicability_reason: This atom has no exempt route at all and is applicable to every unit.
+      cap: ''
+      clean_fixture_passed: true
+      control_accepting_half: 5
+      control_detail: 26 passed
+      control_passed: true
+      control_rejecting_half: 8
+      control_suite: tests/test_neardup.py
+      defect: ''
+      determination: pass
+      nearest: results/20260513_shampoo_1_4_power/distributed_shampoo/examples/tests/convnet_test.py
+      planted_positive_present: true
+      planted_positive_rejected: true
+      ran: true
+      reason: solution/reference.py scored 0.094412 against its nearest pinned corpus neighbour results/20260513_shampoo_1_4_power/distributed_shampoo/examples/tests/convnet_test.py
+        under threshold 0.63 and review threshold 0.56, classified pass.
+      result_digest: 6c02027935e44aa9f74ff895023e8f7637b73b381390f1a567f4d1c7bb8e2c13
+      score: 0.09441233140655106
+      screened_preimage: the unit's solution/reference.py exactly as delivered, which this lane never
+        writes
+      status: clean
+      value: applicable
+    per-unit-provenance-record:
+      applicability_reason: This atom has no exempt route at all and is applicable to every unit.
+      value: applicable
+    sanitization:
+      applicability_reason: This atom has no exempt route at all and is applicable to every unit.
+      cap: HOLD:PILOT_REQUIRED
+      clean_fixture_passed: true
+      control_accepting_half: 9
+      control_detail: 76 passed
+      control_passed: true
+      control_rejecting_half: 26
+      control_suite: tests/test_sanitization.py
+      defect: ''
+      detectors:
+        closure-identity: clean
+        fix-absence: clean
+        history-absence: clean
+        remote-absence: clean
+        thread-absence: clean
+      determination: clean
+      planted_positive_present: true
+      planted_positive_rejected: true
+      ran: true
+      reason: No named detector found a named fix-revealing representation in the delivery closure of
+        6f8d7032-54d9-514e-b227-f6e5c86faad7. history-absence=clean(16), remote-absence=clean(16), thread-absence=clean(16),
+        fix-absence=clean(8), closure-identity=clean(16). This is the bounded result invariant 25 permits
+        and never the claim that the image reveals nothing; coverage stops at base-image-unresolved, delivery-image-unbuilt,
+        partial-private-overlap-unadjudicated, post-base-fix-set-unbound, source-host-egress-partially-denied,
+        unprojectable-build-instruction, verifier-surface-outside-fix-absence.
+      result_digest: bc4a8fba455d29bd0a9ee5a2db0bcacbc97231dd84d988554f19b4e80f4a8e3e
+      screened_preimage: the unit's bytes with this `screening` block removed from solution/grounding.yaml
+        and the carrier section removed from solution/recompute.py, because an output never enters its
+        own input
+      status: clean
+      value: applicable
+  applicable_dates:
+    provenance_date: null
+    screening_instant: ''
+    task_generating_event_timestamp: null
+  atom_result_digests:
+    empty-submission-validation: 6cdd940433817aee776c626bf4cfce6392a382b8dc5d52f36d411b236917d1df
+    exclusion-matching: f054aaf74e59db92cb00b3d90af7f8eab3de0d4ac4f31758ff990ceb52d62866
+    freeze-holdout: c4fe890aabe4182ca60cdab3cc3f6353aac26103d619c659077433fd88ad0368
+    near-duplicate-screening: 6c02027935e44aa9f74ff895023e8f7637b73b381390f1a567f4d1c7bb8e2c13
+    sanitization: bc4a8fba455d29bd0a9ee5a2db0bcacbc97231dd84d988554f19b4e80f4a8e3e
+  attestations:
+    ancestry_attestation_digest: null
+    ancestry_attestation_signer: null
+    event_attestation_digest: null
+    event_attestation_signer: null
+  authority_mode: union
+  base_commit_sha: null
+  binding_block:
+    binding_envelope: DSSE, payloadType application/vnd.in-toto+json, DSSEv1 pre-authentication encoding
+    canonical_bundle_hash: 57d8f1328adc20c2f14b9034fc5d1ce51c988de14a436a18e6709911b5baabab
+    pinned_image_digest: python@sha256:9c900dea9e8fb7e16277c179b555cc72d29a352dbc33cff48ad5a0412fd5bfc7
+  empty_submission_result:
+    artifacts_disagree: false
+    atom: empty-submission-validation
+    detail: empty submission scored exactly zero, reason=unattributed
+    detail_engine_log_withheld: false
+    detail_engine_log_withheld_reason: ''
+    exit_code: 0
+    grader_fault: false
+    image: python@sha256:9c900dea9e8fb7e16277c179b555cc72d29a352dbc33cff48ad5a0412fd5bfc7
+    notes:
+    - reward taken from reward.txt; reward.json absent or unreadable
+    outcome: passed
+    reason: ''
+    reward: 0.0
+    reward_text: 0.0
+    uuid: 6f8d7032-54d9-514e-b227-f6e5c86faad7
+  fork_ancestry_snapshot: null
+  instrument_versions:
+    empty-submission-validation:
+      declared: null
+      module: seed/forge/emptysub.py
+      module_sha256: 45d6e8b3d61afa2d4365a5f442c19f356488b601cd0e14fedb8199ac146de53f
+    exclusion-matching:
+      declared: forge.exclusion/1.0.0
+      module: seed/forge/exclusion.py
+      module_sha256: eff41c6ae2197d530cd1c7a71547010373cf3655b125c583042be8bb4021a9f4
+    freeze-holdout:
+      declared: forge.freeze/1.0.0
+      module: seed/forge/freeze.py
+      module_sha256: 9bbbd65fae654eb27cc5a04548bd4332344902ba8ad85b028c50955599cfcd41
+    near-duplicate-screening:
+      declared: null
+      module: seed/forge/neardup.py
+      module_sha256: 807221ac2695ea723636b50e5c233765ea0a324e6348cbfbb1dee3b577e8cbd0
+    per-unit-provenance-record:
+      declared: forge.provenance_atom/1.0.0
+      module: seed/forge/provenance_atom.py
+      module_sha256: b3ccbd231fb3fb879686547e705d3189c83ff45bfba0733ad2a62ffe99a38f7d
+    sanitization:
+      declared: forge.sanitization/1.0.0
+      module: seed/forge/sanitization.py
+      module_sha256: 41438f104c2c5f7a4006825c6572a3aa67d446a7af1b458cd67cb86d8631fa98
+  keyid: bia-provenance-2026-08b
+  namespace:
+    bound_at: seed/contract.yaml repo.forge_task_namespace
+    forge_task_namespace: c53e8f3b-526f-52c0-a04e-89e2269b237d
+    normalization_domain_bound_at: seed/contract.yaml batch.normalization_domain, block at line 1327,
+      method_id at line 1328, version at line 1329, bound_on 2026-08-25 at line 1330
+    normalization_domain_method_id: forge.canonical_content_hash/v1
+    not_resolvable_from_this_unit: The definition of that domain. Its exclusion set, token slot designation,
+      digest line format, sort and join are recorded in seed/contract.yaml, which item 10i keeps out of
+      the delivered unit, so a reader can confirm which domain is named and cannot re-execute it from
+      this unit alone.
+    relation: uuid5(forge_task_namespace, binding_block.canonical_bundle_hash) == unit_uuid
+    resolvable_from_this_unit: The uuid relation above, recomputed from this unit's own bytes, and the
+      identity of the normalization domain that hash was computed under, which normalization_domain_version
+      names. Two units carrying the same domain version are hash-comparable and two carrying different
+      versions are not.
+  normalization_domain_version: oer-canary-v1
+  sanitization_closure:
+    images:
+    - entry_count: 0
+      layer_count: 0
+      layer_digests: []
+      manifest_digest: ''
+      pinned: true
+      reason: layer-scan-not-requested
+      reference: python@sha256:9c900dea9e8fb7e16277c179b555cc72d29a352dbc33cff48ad5a0412fd5bfc7
+      resolved: false
+      role: agent-reachable
+      whiteout_count: 0
+      whiteouts: []
+    - entry_count: 0
+      layer_count: 0
+      layer_digests: []
+      manifest_digest: ''
+      pinned: true
+      reason: layer-scan-not-requested
+      reference: python@sha256:9c900dea9e8fb7e16277c179b555cc72d29a352dbc33cff48ad5a0412fd5bfc7
+      resolved: false
+      role: verifier-only
+      whiteout_count: 0
+      whiteouts: []
+    layer_entries_unpacked: 0
+    member_count: 16
+    members:
+    - bytes: 1821
+      path: environment/Dockerfile
+      role: agent-reachable
+      sha256: 9073772c4fa91658bebd0d45f4af724e836ae4bb075fd0c0a0ea87a09f3ec9d9
+    - bytes: 8189
+      path: environment/opstream.py
+      role: agent-reachable
+      sha256: 0b3c21ded824a98ad85ddcff24447662fe2423568264c02dcb1a61f5dbd09936
+    - bytes: 217
+      path: environment/params.json
+      role: agent-reachable
+      sha256: 9e75a6f92db5ef02fd6a95978d71e386303d767b9b0d54669e6605b9ff8e4e32
+    - bytes: 7716
+      path: environment/phase_a.py
+      role: agent-reachable
+      sha256: e4a8e528781e4ec1e9df5890ed40b6e2913b4194eafbbadc995a229e2c1f1fbb
+    - bytes: 5618
+      path: environment/phase_b.py
+      role: agent-reachable
+      sha256: d452b1c1e767f08485fbc9d2398edc0def592ce215cce9fa06d52bd3b8a9b889
+    - bytes: 299170
+      path: environment/stream.json
+      role: agent-reachable
+      sha256: 63087391169b1e373008688fd0ebc76c173b53b65e1ca7f9752806329feb967a
+    - bytes: 8298
+      path: instruction.md
+      role: agent-reachable
+      sha256: f62c950a1e048e9cbe405006bb9d2c1c5184a2da3022ea9aafb7511eabcca049
+    - bytes: 9989
+      path: task.toml
+      role: agent-reachable
+      sha256: 7f2fb80f19358ef256365e8b08dbdc9239296dee8b7cbf09210259e50146e602
+    - bytes: 1609
+      path: tests/Dockerfile
+      role: verifier-only
+      sha256: 4d9f604009af46736ed75fc246d78048c292f037eade568a10be9854e2b945cd
+    - bytes: 1463
+      path: tests/bound.json
+      role: verifier-only
+      sha256: a3c90363155d518d11bf4aa974ca7f4a13668013b22ec10849fee23be9c307b0
+    - bytes: 31164
+      path: tests/checkers.py
+      role: verifier-only
+      sha256: 706a85416cd48fd99952a5ac3cc541268f611171242a0307a1a3861104476aba
+    - bytes: 14396
+      path: tests/checkers.yaml
+      role: verifier-only
+      sha256: e400ceca29206841da867f2dee2173259daefc2f2e7fa512446e9571c00aea7b
+    - bytes: 10659
+      path: tests/grade.py
+      role: verifier-only
+      sha256: e35f0f5961ae4d4eaffbca5d65c2995aecdf723ec9f3ef9cf50bca192d6d661e
+    - bytes: 5119
+      path: tests/runner.py
+      role: verifier-only
+      sha256: 063c4627468b0e404f7899101500567fe2ba8c30a45e7121e642d33cd4572ed6
+    - bytes: 2766
+      path: tests/test.sh
+      role: verifier-only
+      sha256: bb8936a68165d949d7bc37996eee43db930dad430a1698a7a68db395d94bc257
+    - bytes: 6398
+      path: tests/test_output.py
+      role: verifier-only
+      sha256: 600d379c376c8b60e6fc5e778f47303ba684be5d933a20407d9202a310cbbfce
+    stages:
+    - base: python@sha256:9c900dea9e8fb7e16277c179b555cc72d29a352dbc33cff48ad5a0412fd5bfc7
+      base_pinned: true
+      dockerfile: environment/Dockerfile
+      projected_copies:
+      - - opstream.py
+        - /task/environment/opstream.py
+      - - phase_a.py
+        - /task/environment/phase_a.py
+      - - phase_b.py
+        - /task/environment/phase_b.py
+      - - stream.json
+        - /task/environment/stream.json
+      - - params.json
+        - /task/environment/params.json
+      projected_directories:
+      - /app
+      - /workspace
+      - /logs/harness
+      - /logs/verifier
+      resolved_build_context: environment
+      unprojectable_instructions: []
+    - base: python@sha256:9c900dea9e8fb7e16277c179b555cc72d29a352dbc33cff48ad5a0412fd5bfc7
+      base_pinned: true
+      dockerfile: tests/Dockerfile
+      projected_copies:
+      - - tests/
+        - /task/tests/
+      - - environment/
+        - /task/environment/
+      projected_directories: []
+      resolved_build_context: .
+      unprojectable_instructions:
+      - RUN pip install --no-cache-dir --disable-pip-version-check pytest==8.3.4
+    whiteouts_observed: 0
+  schema: forge.provenance/v1
+  screening_roots:
+    exclusion_list:
+      digest: 81764edb7df796c57d17007b1fa95c2fe693226c865e403e5adc1b0640f595da
+      identity: engram.screening-root.exclusion-list/v1
+      state: pinned
+    freeze_date_table:
+      digest: 16e5b169c33898be57492a0101644bedb6b3728624378a5c13910f8f417e7030
+      identity: engram.screening-root.freeze-date-table/v1
+      state: pinned
+    near_duplicate_index:
+      digest: c41ff457f262c295bd4d2f77d95a9eddc02aee2f9e7a4d6e6dc4036ab2677bc4
+      identity: engram.screening-root.near-duplicate-index/v1
+      state: pinned
+    source_attestation:
+      digest: 106c2180906abb0250a26152682a5352c3ab404ae2d9d2d8ecc8e7f0d071ce9d
+      identity: engram.screening-root.source-attestation/v1
+      state: pinned
+  signer_identity: bia-producer-provenance
+  source_identifiers:
+    applicability:
+      base-commit-sha:
+        reason: The approved contract binds no upstream provenance record to this slot, so no source record
+          exists to satisfy any part of the closed generator-origin predicate. No relation is exempted
+          and every one is screened.
+        value: applicable
+      canonical-repository-identity:
+        reason: The approved contract binds no upstream provenance record to this slot, so no source record
+          exists to satisfy any part of the closed generator-origin predicate. No relation is exempted
+          and every one is screened.
+        value: applicable
+      empty-submission-validation:
+        reason: This atom has no exempt route at all and is applicable to every unit.
+        value: applicable
+      fork-ancestry-closure-membership:
+        reason: The approved contract binds no upstream provenance record to this slot, so no source record
+          exists to satisfy any part of the closed generator-origin predicate. No relation is exempted
+          and every one is screened.
+        value: applicable
+      freeze-holdout:
+        reason: The approved contract binds no upstream provenance record to this slot, so no source record
+          exists to satisfy any part of the closed generator-origin predicate. No relation is exempted
+          and every one is screened.
+        value: applicable
+      near-duplicate-screening:
+        reason: This atom has no exempt route at all and is applicable to every unit.
+        value: applicable
+      per-unit-provenance-record:
+        reason: This atom has no exempt route at all and is applicable to every unit.
+        value: applicable
+      sanitization:
+        reason: This atom has no exempt route at all and is applicable to every unit.
+        value: applicable
+    canonical_repository_identity: null
+    generation_input_digest: null
+    generator_identity: null
+    generator_version: null
+    named_gaps:
+    - cap: HOLD:PILOT_REQUIRED
+      consequence: source_kind, origin, repository identity, the fork-ancestry digest, the base commit
+        SHA, provenance_date and the task-generating event timestamp are all null for this slot, and this
+        lane caps at HOLD:PILOT_REQUIRED.
+      id: upstream-provenance-record-absent:OER-28
+      observed: seed/contract.yaml batch.records[OER-28].upstream_provenance is absent.
+      reason: provenance-record-absent
+      remedy: A human at the Phase 0.5 gate records this slot's own upstream provenance in seed/contract.yaml,
+        which re-triggers the sign-off that binds it.
+      statement: The approved seed/contract.yaml carries 25 upstream_provenance record(s) for a 30-slot
+        batch and none of them is this slot's, so this slot's source facts are unbound and are recorded
+        as null rather than inferred from a sibling.
+    - cap: HOLD:PILOT_REQUIRED
+      consequence: Every uncovered slot's source facts stay null and unbound, and this lane caps at HOLD:PILOT_REQUIRED
+        rather than substituting a value.
+      id: contract-upstream-provenance-under-covers-batch
+      observed: 25 record(s) across seed/contract.yaml batch.records[<slot>].upstream_provenance and the
+        family scopes, against 30 slots in batch.records.
+      reason: provenance-record-absent
+      remedy: A human at the Phase 0.5 gate decides what each uncovered slot's source facts are and records
+        them in seed/contract.yaml, which re-triggers the sign-off that binds them.
+      statement: seed/contract.yaml carries 25 upstream_provenance record(s) for a 30-slot batch, and
+        FORGE.md item 9a requires one record per task.
+    origin: null
+    provenance_attestation: null
+    record_source: 'seed/contract.yaml batch.records[OER-28].upstream_provenance (absent: this slot carries
+      no upstream provenance record of its own, and no family-level or sibling record is substituted for
+      one)'
+    source_kind: null
+  trust_root_public_key_hex: 87de350694dcbacc3829fa78591c13dc80cb0ab6323046cbbdac8b01e20e6fc9
+  unit_uuid: b1f2f4af-b439-59bf-80bf-19bccd3432d1
+# FORGE-SCREENING-END

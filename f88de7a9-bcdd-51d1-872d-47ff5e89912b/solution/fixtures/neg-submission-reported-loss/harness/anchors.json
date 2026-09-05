@@ -1,0 +1,8 @@
+{
+  "_generated": "GENERATED SECTION. DO NOT HAND-EDIT. Source: solution/grounding.yaml",
+  "anchors_state": "measured",
+  "authority": "FIXTURE-LOCAL. These two numbers are inputs of the adequacy fixture and nothing else. They are NOT this family's anchors, they are not transcribed from published evidence, and no part of the bundle presents them as measured quantities. They exist so the accepting half can drive the real reward function through the real gate chain to full reward, which is impossible against a null anchor pair. The task's own anchors stay absent under gap-oer-per-family-anchors-unmeasured.",
+  "baseline_metric": 3.6,
+  "target_metric": 3.4,
+  "writer": "verifier-harness"
+}

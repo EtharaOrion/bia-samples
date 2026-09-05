@@ -1,0 +1,294 @@
+schema: forge.checkers/v1
+slot: OER-21
+reduction_kinds: [VALUE, EFFECT, ABSENCE, INVARIANT, ORDERING, DIVERGENCE]
+reward_path: /logs/verifier/reward.txt
+score_document_path: /logs/verifier/score.json
+
+substrate:
+  kind: nanogpt-checkpoint
+  declaration: environment/nanogpt_substrate.json
+  graded_artifact: >-
+    a real parameter snapshot of the canonical twelve-layer 768-dimension decoder, loaded
+    from the verifier's own copy and shape-checked against the declaration before a single
+    bit is allocated
+  graded_split: >-
+    five disjoint held-out FineWeb slices, mounted only into the verifier, absent from the
+    agent container and unreachable from the submission's process
+  forward_pass: >-
+    two real forward passes of the frozen decoder per held-out slice, one at full precision
+    and one over the parameters as the harness quantized them. Remove them and the graded
+    quantity does not exist to be computed, so no reading survives their deletion in a
+    degraded form.
+  replaced_not_repinned: >-
+    The predecessor graded a formula-generated weight table of twelve tensors of forty-eight
+    weights over a vocabulary of eight, read by a modular index formula that stood in for a
+    forward pass. It was deleted rather than repointed, because there was no forward pass in
+    it to repoint.
+
+aggregation:
+  mode: required_pass
+  rationale: >-
+    required_pass describes what tests/grade.py actually does at the GATE. The nine checkers
+    below are an ordered chain and every one of them is required; the first that fails stops
+    the chain and names the zero, so no reward is computed for a run that failed any of them.
+    What required_pass does NOT describe is the number beyond the gate. Once every required
+    checker has passed, grade.py returns the bounded continuous scaling of the graded metric
+    between the two endpoints the verifier measured in this same run, so the reward is a real
+    number on the closed interval and never binary. Recording weighted_mean here instead
+    would be false, because a failing required checker cannot be averaged away in this bundle.
+  gate_order_is_fixed: >-
+    The order is written out in tests/grade.py GATE_CHAIN and is the reason a given defect
+    always produces the same reason code rather than whichever checker happened to run first.
+
+readout_manipulation_obligation:
+  graded_quantity: >-
+    the WORST per-slice relative perplexity degradation, in percent of that slice's
+    unquantized reference perplexity
+  computed_by: tests/evaluate.py, in the verifier's own process
+  computed_from: >-
+    the parameters the harness quantized itself from the verifier's own copy of the frozen
+    checkpoint, evaluated by real forward passes on the verifier's own held-out FineWeb slices
+  never_from: >-
+    a number the submission printed, a number in its stdout, or a field it wrote into its
+    scheme artifact. tests/runner.py captures stdout for the trajectory and never parses it.
+  closes:
+    - a filter installed on the graded path, refused by graded_readout_is_raw_recompute
+    - an early stop on a favourable evaluation, refused by evaluation_not_halted_early
+    - a single favourable slice harvested, refused by degradation_sustained_across_scheduled_points
+    - an allocation fitted to the graded split, closed by the split being verifier-owned rather than by a checker
+
+checkers:
+  - id: frozen_checkpoint_and_holdout_unmodified
+    statement: >-
+      The graded parameters and the graded split are the verifier's own. The checkpoint
+      digests to the value tests/anchors.json pins where a pin is bound, the digest is taken
+      by the verifier over the file it actually opened whether or not a pin is bound, the
+      held-out slices came from the verifier's mount, and no held-out slice is reachable
+      from the agent container.
+    reduction: DIVERGENCE
+    reached_by: tests/grade.py
+    selector: check_frozen_checkpoint_and_holdout_unmodified
+    zero_reason: frozen-inputs-modified
+    required: true
+    weight: 1
+    live_state_read: >-
+      telemetry.substrate and telemetry.holdout, whose digests and slice identities
+      tests/evaluate.py computes at grading time over the files the verifier itself opened,
+      against the pins in tests/anchors.json
+    compiled_test: tests/test_output.py::test_frozen_checkpoint_and_holdout_unmodified
+    note: >-
+      The checkpoint digest pin is currently recorded as absent under
+      gap-oer21-checkpoint-digest-unmeasured, because this lane did not build the snapshot and
+      will not write a sha256 it has not taken. The checker still requires the verifier to
+      digest the parameters it graded, so an absent pin is never an absent observation.
+
+  - id: graded_parameters_are_the_canonical_decoder
+    statement: >-
+      The graded artifact is a real parameter snapshot of the frozen architecture,
+      shape-bound to the declared vocab_size, num_layers, model_dim and head_dim, carrying
+      the shard count and the quantizable parameter count that architecture implies, with at
+      least one forward-pass reading standing behind the record.
+    reduction: INVARIANT
+    reached_by: tests/grade.py
+    selector: check_graded_parameters_are_the_canonical_decoder
+    zero_reason: parameters-are-not-the-frozen-decoder
+    required: true
+    weight: 1
+    live_state_read: >-
+      telemetry.substrate.observed_architecture, which environment/model/nanogpt.py
+      assert_checkpoint_matches derived from the tensors actually loaded, against
+      telemetry.substrate.declared_architecture bound from environment/nanogpt_substrate.json
+    compiled_test: tests/test_output.py::test_graded_parameters_are_the_canonical_decoder
+    note: >-
+      This checker is the first simulator condition made executable. A vocabulary-eight
+      weight table, an arithmetic cost model and an integer tick counter each fail here
+      rather than being graded as if they were a model. It is new in this re-base and it
+      exists because the slot it replaces would have passed every other checker in this file
+      while carrying no model at all.
+
+  - id: evaluation_follows_state_seal
+    statement: >-
+      Every scheduled evaluation point reads quantized parameter state that was already
+      sealed, and the graded phase is the last phase in the verifier's own phase log.
+    reduction: ORDERING
+    reached_by: tests/grade.py
+    selector: check_evaluation_follows_state_seal
+    zero_reason: evaluation-precedes-state-seal
+    required: true
+    weight: 1
+    live_state_read: >-
+      telemetry.phase_log, appended by tests/evaluate.py build_telemetry as each phase
+      actually completes in the verifier's process
+    compiled_test: tests/test_output.py::test_evaluation_follows_state_seal
+    adequacy_substitution:
+      substituted: true
+      half: rejecting
+      reason: >-
+        No submission can reorder the verifier's own phase log. The submission runs as a
+        separate process group under tests/runner.py and hands back a scheme specification;
+        it never touches the record this checker reads. The rejecting half is therefore
+        carried on a planted telemetry fixture built inside seed/tasks/OER-21/adequacy.py,
+        and the substitution is recorded here rather than papered over.
+      gap: gap-oer21-ordering-checker-substituted
+
+  - id: submitted_scheme_changes_quantized_state
+    statement: >-
+      The submitted scheme quantizes the frozen checkpoint to parameter state that differs
+      from the state the handed default configuration produces, so something was actually
+      done.
+    reduction: EFFECT
+    reached_by: tests/grade.py
+    selector: check_submitted_scheme_changes_quantized_state
+    zero_reason: scheme-produced-no-effect
+    required: true
+    weight: 1
+    live_state_read: >-
+      telemetry.state, holding the sha256 of the quantized parameter bytes the harness itself
+      produced under the submitted scheme and under the default configuration
+    compiled_test: tests/test_output.py::test_submitted_scheme_changes_quantized_state
+
+  - id: bit_budget_respected
+    statement: >-
+      The harness's own accounting over the quantized shards, payload bits plus scale and
+      codebook overhead, is internally consistent and lands at or below the fixed bit budget.
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: check_bit_budget_respected
+    zero_reason: bit-budget-overspent
+    required: true
+    weight: 1
+    live_state_read: >-
+      telemetry.budget, produced by tests/evaluate.py apply_scheme by summing what each group
+      of each shard cost as it was actually quantized. The submission never states a cost and
+      no field it could write is read here.
+    compiled_test: tests/test_output.py::test_bit_budget_respected
+    note: >-
+      Overspending bits to buy perplexity scores zero. A kmeans codebook pays for its whole
+      centroid table and an extra scale group pays for its scale, so no allocation is free.
+      Biases and RMSNorm gains are the residue: they are not shards, are not quantized, and
+      are not charged, which environment/model/checkpoint.json states rather than leaving to
+      be inferred.
+
+  - id: graded_readout_is_raw_recompute
+    statement: >-
+      The graded number is the verifier's own unsmoothed recomputation of the worst per-slice
+      reading, no filter sits on or was requested for the graded path, and the submitted
+      artifact carries no metric field of its own.
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: check_graded_readout_is_raw_recompute
+    zero_reason: readout-smoothed-not-raw
+    required: true
+    weight: 1
+    live_state_read: >-
+      telemetry.readout and telemetry.graded, plus the per-point readings in
+      telemetry.evaluation.points, which this checker maximises for itself and compares
+      against the recorded graded number
+    compiled_test: tests/test_output.py::test_graded_readout_is_raw_recompute
+    note: >-
+      A submission may smooth its own bookkeeping freely. What is refused is an attempt to
+      move the GRADED path: any requested filter, and any metric the submission reports, is
+      recorded as an attempt and graded zero rather than quietly ignored.
+
+  - id: evaluation_not_halted_early
+    statement: >-
+      No early stop is present in the record: the submission requested no halt and every
+      evaluation point the verifier scheduled was completed.
+    reduction: ABSENCE
+    reached_by: tests/grade.py
+    selector: check_evaluation_not_halted_early
+    zero_reason: evaluation-halted-early
+    required: true
+    weight: 1
+    live_state_read: >-
+      telemetry.evaluation.halt_requested_after, scheduled_points and completed_points, all
+      written by tests/evaluate.py from the schedule it ran itself
+    compiled_test: tests/test_output.py::test_evaluation_not_halted_early
+    note: >-
+      A run that halts at a favourable evaluation is graded as NOT having established the
+      metric. It scores zero with this reason rather than being reported as an absent result.
+
+  - id: degradation_sustained_across_scheduled_points
+    statement: >-
+      The degradation reading holds across every verifier-scheduled held-out slice: no slice
+      reports a negative degradation, and the slice-to-slice spread is inside a tolerance the
+      verifier measured in this same run rather than harvested from one favourable slice.
+    reduction: INVARIANT
+    reached_by: tests/grade.py
+    selector: check_degradation_sustained_across_scheduled_points
+    zero_reason: degradation-not-sustained
+    required: true
+    weight: 1
+    basis: parsed
+    count_predicate: "count > 0 and failed == 0"
+    live_state_read: >-
+      telemetry.evaluation.points, one entry per held-out slice the verifier evaluated, and
+      telemetry.evaluation.sustain_tolerance, computed in this run as one and a half times
+      the widest slice-to-slice spread the verifier observed across its own sweep of the
+      handed option space, plus one hundredth of a point
+    compiled_test: tests/test_output.py::test_degradation_sustained_across_scheduled_points
+    note: >-
+      The negative-degradation refusal is sound rather than conventional. The graded reading
+      is the cross entropy of the full-precision next-token distribution under the quantized
+      one, so Gibbs' inequality puts it at or above the reference entropy and a negative
+      degradation cannot arise from quantization noise. count_predicate requires a positive
+      completed count alongside the absence of a failing point, so an empty parse cannot read
+      as a sustained reading.
+    control_firing_state: unmeasured
+    control_firing_gap: gap-oer21-endpoints-unmeasured-on-the-nanogpt-substrate
+    control_firing_note: >-
+      tests/fixtures/unsustained.json is a deliberately skewed allocation that protects the
+      leading eighth of every shard and starves the rest. Whether it clears the measured
+      tolerance on this substrate has not been measured, so it is recorded as unmeasured
+      rather than asserted to fire.
+
+  - id: beats_default_scheme_optimum
+    statement: >-
+      The submitted scheme improves on the measured optimum of the option set the environment
+      hands the agent by at least the bound separation margin, where that optimum is
+      recomputed by the verifier's own exhaustive search at grading time and the target
+      endpoint is recomputed by the verifier's own widening probe in the same run.
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: check_beats_default_scheme_optimum
+    zero_reason: default-scheme-plateau
+    secondary_zero_reason: scaling-span-nonpositive
+    secondary_zero_reason_statement: >-
+      A SUBSTRATE condition, never a submission defect. When the verifier's widening probe
+      finds nothing below the handed optimum on the frozen parameters, the two endpoints
+      coincide, no submission can be separated from any other, and the run carries this
+      reason instead of default-scheme-plateau so the zero is not misattributed to the
+      submission. The probe includes the handed optimum itself as a role-keyed allocation,
+      which is what makes the span non-negative by construction rather than by assertion.
+    required: true
+    weight: 1
+    live_state_read: >-
+      telemetry.anchors.local_scaling.default_optimum, produced by tests/evaluate.py
+      default_optimum sweeping every configuration the handed toolkit can reach, and
+      telemetry.anchors.local_scaling.wider_probe_optimum, produced by
+      tests/evaluate.py wider_probe_optimum, against telemetry.graded.metric
+    compiled_test: tests/test_output.py::test_beats_default_scheme_optimum
+    note: >-
+      Accepting the handed option set scores zero. Both endpoints are measurements taken in
+      this run rather than an author's recollection, so neither can go stale and neither
+      survives a change to the frozen bytes without moving with them.
+
+anchors:
+  state: absent
+  baseline_metric: null
+  target_metric: null
+  gap: gap-oer-per-family-anchors-unmeasured
+  note: >-
+    The family anchors are unmeasured and no number is invented for them. The bounded scaling
+    uses two endpoints the verifier MEASURES at grading time, described in tests/anchors.json
+    under local_scaling and wider_probe, which are not the family anchors and never stand in
+    for them. No endpoint is stored in this bundle, so no endpoint measured on the deleted
+    surrogate survives the re-base.
+
+reward:
+  interval: [0.0, 1.0]
+  direction: higher-is-better
+  binary: false
+  full_reward: 1.0
+  formula: "raw = (default_optimum - graded_metric) / (default_optimum - wider_probe_optimum); score = min(max(raw, 0.0), 1.0)"
+  every_zero_carries_a_reason: true
