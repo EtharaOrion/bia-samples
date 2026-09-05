@@ -1,0 +1,85 @@
+{
+  "_banner": "GENERATED SECTION. DO NOT HAND-EDIT.",
+  "_source": "solution/grounding.yaml",
+  "base": "clean-reference",
+  "collateral_failures": [],
+  "emitted_reason": "claim-contradicts-measurement",
+  "fires": "claim_matches_measurement",
+  "id": "def-claim-contradicts-measurement",
+  "reason": "claim-contradicts-measurement",
+  "record": {
+    "claim": {
+      "absence_recorded": false,
+      "claimed_bits_per_byte": 0.4123,
+      "graded_on": "measurement",
+      "present": true
+    },
+    "compute": {
+      "budget_token_updates": 18000,
+      "counter_source": "harness-counter",
+      "spent_token_updates": 18000
+    },
+    "corpus": {
+      "denominator_bytes": 6144,
+      "denominator_source": "harness-measured-frozen-eval-corpus",
+      "eval_corpus_bytes_measured": 6144
+    },
+    "frozen_axes": {
+      "closing": {
+        "budget": "2f343eef503377d9b005e19ae19f49981c7c20b329ab6a280e6fca84cd010178",
+        "eval_corpus": "8131123c36c61699b3891c48bf4ebdc3f35d8aa042942894d6e7c4fe478d1d6f",
+        "model": "52fcb8d2dd50351804d73069d30537ae52c148b81269dd1cdf933ebcfdcd917b",
+        "optimizer": "bc3fce797b7435431bc22e132ea16663f503b5727c1d1af40d8840d222b680ec",
+        "train_corpus": "328c896a5bc71f3dd38de313439d34d1633521b7695e3bd42d6cfbc63530fc96"
+      },
+      "expected": {
+        "budget": "2f343eef503377d9b005e19ae19f49981c7c20b329ab6a280e6fca84cd010178",
+        "eval_corpus": "8131123c36c61699b3891c48bf4ebdc3f35d8aa042942894d6e7c4fe478d1d6f",
+        "model": "52fcb8d2dd50351804d73069d30537ae52c148b81269dd1cdf933ebcfdcd917b",
+        "optimizer": "bc3fce797b7435431bc22e132ea16663f503b5727c1d1af40d8840d222b680ec",
+        "train_corpus": "328c896a5bc71f3dd38de313439d34d1633521b7695e3bd42d6cfbc63530fc96"
+      },
+      "opening": {
+        "budget": "2f343eef503377d9b005e19ae19f49981c7c20b329ab6a280e6fca84cd010178",
+        "eval_corpus": "8131123c36c61699b3891c48bf4ebdc3f35d8aa042942894d6e7c4fe478d1d6f",
+        "model": "52fcb8d2dd50351804d73069d30537ae52c148b81269dd1cdf933ebcfdcd917b",
+        "optimizer": "bc3fce797b7435431bc22e132ea16663f503b5727c1d1af40d8840d222b680ec",
+        "train_corpus": "328c896a5bc71f3dd38de313439d34d1633521b7695e3bd42d6cfbc63530fc96"
+      }
+    },
+    "model_state": {
+      "fingerprint_at_measurement": "6a94cccd5271c27c73acbbb9490ee34aacff1cb419b5ace56a9c17adfe4a735b",
+      "harness_recomputed_fingerprint": "6a94cccd5271c27c73acbbb9490ee34aacff1cb419b5ace56a9c17adfe4a735b",
+      "owner": "verifier-harness",
+      "produced_by": "harness-owned-model-state"
+    },
+    "readout": {
+      "graded_bits_per_byte": 1.2532905300907615,
+      "pipeline": "raw",
+      "raw_bits_per_byte": 1.2532905300907615,
+      "smoothing_applied": false
+    },
+    "schedule": {
+      "halted_early": false,
+      "point_bits_per_byte": [
+        1.2482587441592854,
+        1.2638931013359704,
+        1.263533159159922
+      ],
+      "points_completed": 3,
+      "points_scheduled": 3
+    },
+    "schema": "oer16.run_record/v1",
+    "sequence": {
+      "claim_recorded_seq": 1,
+      "measurement_computed_seq": 5
+    },
+    "vocabulary": {
+      "loaded_by": "verifier-harness",
+      "max_token_bytes": 16,
+      "size": 353,
+      "source": "submission-tokenizer-json-as-data"
+    },
+    "vocabulary_refusal": ""
+  }
+}

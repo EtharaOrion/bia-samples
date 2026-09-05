@@ -1,0 +1,37 @@
+{
+  "_source": "Re-based onto environment/nanogpt_substrate.json for batch OER-2026-08-20. solution/grounding.yaml and solution/recompute.py still describe the retired statistics surrogate and must be re-derived against these bytes before this slot is frozen.",
+  "content_digest_state": "established only in built environment state, being sha256 over the raw little-endian uint16 bytes of the pinned slice as the image staged them; it appears on no agent-visible byte in this bundle",
+  "corpus_root": "/workspace/data/fineweb10B",
+  "pin_digest_form": "sha256 over json.dumps(pin, sort_keys=True, separators=(\",\", \":\"), ensure_ascii=True), where pin is the object under the version's `pin` key exactly as it stands here",
+  "reader": "environment/model.py read_slice, and environment/model.py slice_content_sha256 for the content digest",
+  "schema": "oer22.calibration_stats/v2",
+  "statement": "Per-version calibration slices. A version is a PIN into the frozen FineWeb10B train shards, not a table of numbers somebody wrote down. There is no shipped per-tensor sensitivity vector in this slot any more: the statistics your allocation is fitted against are the ones you measure yourself, by running the real checkpoint over the slice the version in force names. A version that is not in force is retained for the record and is NOT the version an allocation is graded against.",
+  "versions": [
+    {
+      "label": "pre-drift calibration slice, the slice an allocation fitted at iteration three was fitted against",
+      "pin": {
+        "schema": "oer22.calibration_pin/v1",
+        "shard": "fineweb_train_000001.bin",
+        "token_count": 262144,
+        "token_offset": 1048576,
+        "version": 1
+      },
+      "pin_digest": "9e639e095abbd234c8f77b2c2442459e96a52f6208bb7b05f071fb1fe3c7274e",
+      "tick": 1,
+      "version": 1
+    },
+    {
+      "label": "post-drift calibration slice, the slice in force at the graded evaluation",
+      "pin": {
+        "schema": "oer22.calibration_pin/v1",
+        "shard": "fineweb_train_000004.bin",
+        "token_count": 262144,
+        "token_offset": 6291456,
+        "version": 2
+      },
+      "pin_digest": "47c626606f42c18ab017023aa13e60cd679612706d41347424bfb20f56b7c7fb",
+      "tick": 7,
+      "version": 2
+    }
+  ]
+}

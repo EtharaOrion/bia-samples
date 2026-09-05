@@ -1,0 +1,231 @@
+schema: forge.checkers/v1
+reduction_kinds: [VALUE, EFFECT, ABSENCE, INVARIANT, ORDERING, DIVERGENCE]
+reward_path: /logs/verifier/reward.txt
+score_document_path: /logs/verifier/score.json
+
+phase_contract: >-
+  THIS IS THE SECOND OF TWO PHASES. The AGENT phase ran environment/phase_a.py in the image
+  environment/Dockerfile builds, over the shared workspace, and left two things behind: the
+  chained harness journal at /logs/harness/phase_a.jsonl and the handoff at
+  /workspace/handoff.json. This phase runs in the image tests/Dockerfile builds, reads both
+  through the tests/checkers.py Harness handle, and RESUMES the operator from the carried state
+  that handoff carries by launching environment/phase_b.py through tests/runner.py in an
+  isolated subprocess. The resume is therefore seeded by state this phase did not produce, which
+  is what makes the splice load-bearing rather than declarative.
+
+clock_ownership: >-
+  THE HARNESS OWNS THE COUNTER, and there is no clock on the graded path at all. This slot's
+  metric is a cost metric and a checker is forbidden from reading a clock; ownership plus a
+  counted-read cost model is what resolves that. environment/opstream.py hands every kernel a
+  Tape and charges exactly one read per `at` call, and both phase drivers stamp the resulting
+  totals into recorded records. Every checker below reads those records through the Harness
+  handle. No checker calls time, datetime, perf_counter, monotonic or any other clock, directly
+  or transitively. That is what keeps every checker pure, deterministic and replayable over a
+  recorded run, and it is also what makes the grading reproducible on any host.
+
+purity: >-
+  Every checker is a pure function of the harness handle and the bound constants. Imports in
+  tests/checkers.py are confined to json, hashlib, pathlib, dataclasses and typing. No planted
+  answer file is read, no environment secret is read, no random source is consulted, no socket is
+  opened, and the grading process never imports the submission: tests/runner.py hands the kernel
+  to the bundle's own resume driver in a fresh temporary directory, as a new session leader under
+  a five-key environment allowlist, and kills the whole process group in a finally block.
+
+readout_manipulation: >-
+  The graded charge is counted by the verifier on its own Tape during its own resume run and is
+  never read from a number the submission reported. The graded metric is speedup over the frozen
+  reference kernel, direction: higher is better. Correctness is exact integer equality of the
+  composed output rollup across both phases, with no tolerance, so a kernel that trades an
+  integer for a read is caught by resume_output_exact rather than rewarded. The submission's own
+  reported_resume_charge is read for one purpose only, which is to make a substitution visible.
+
+discovery:
+  note: >-
+    Two values are established by the AGENT phase and read back by the VERIFIER phase. Neither is
+    stated in instruction.md and neither appears in any agent-visible byte. Each gates a REQUIRED
+    checker below, and each carries a frozen rejecting fixture that moves that value and no other
+    byte.
+  values:
+    - name: splice point
+      established_by: environment/phase_a.py, at the first whole block boundary at which cumulative outputs times the window reaches the frozen splice charge budget
+      read_by: check_splice_point_harness_established, through Harness.halt_row, Harness.handoff and the verifier's own re-derivation from the frozen stream
+      gates: splice_point_harness_established
+      near_miss_fixture: solution/fixtures/planted/splice_offset_plus_one/
+      near_miss_delta: the splice offset moved by exactly one sample, every other byte held
+    - name: carried-state digest
+      established_by: environment/phase_a.py, digesting the canonical encoding of the carry the kernel held at the splice point
+      read_by: check_carried_state_digest_matches, through Harness.halt_row, Harness.handoff and a recomputation over the state the handoff actually carries
+      gates: carried_state_digest_matches
+      near_miss_fixture: solution/fixtures/planted/carried_digest_one_nibble/
+      near_miss_delta: the digest moved by exactly one hexadecimal character, every other byte held
+
+aggregation:
+  mode: required_pass
+  rationale: >-
+    tests/grade.py walks the nine checkers below in the declared order and returns 0.0 with the
+    first failing checker's machine-readable reason. Only when every required checker passes does
+    it compute the continuous term, the clamped normalised speedup. That is exactly required_pass
+    over the required set, composed with a bounded-continuous score inside the passing region, so
+    the reward is never binary and every zero is attributed. The three graded fixtures under
+    solution/fixtures/ score 0.0, 0.630377 and 1.0 with the reason `graded`, which is the
+    continuity demonstrated rather than asserted.
+  reward_formula: raw = (agent_metric - baseline_metric) / (target_metric - baseline_metric)
+  clip: score = min(max(raw, 0.0), 1.0)
+  direction: higher is better
+  never_binary: true
+
+anchors:
+  anchors_state: absent
+  gap_id: gap-oer-per-family-anchors-unmeasured
+  family_baseline_metric: null
+  family_target_metric: null
+  note: >-
+    F5 anchors are unmeasured, so the reward SCHEMA is bound in full and no family baseline or
+    target number is invented. The two numbers tests/bound.json carries are instance-local,
+    measured by solution/recompute.py on this slot's own frozen substrate, and are declared under
+    gap-oer-28-instance-local-anchors-not-family-anchors as NOT family anchors.
+
+fixture_substitutions:
+  - checker: agent_phase_journal_present
+    substitution: planted workspace fixture
+    fixture: solution/fixtures/planted/agent_phase_skipped/
+    why: >-
+      The rejecting half is the case where no agent phase ran at all. No kernel a solver writes
+      reaches it, because a solver that runs the driver gets a journal and a solver that does not
+      gets no run. It is carried on a planted workspace whose harness journal is absent and whose
+      handoff is otherwise complete and internally consistent, which is exactly the shape of a
+      synthesised handoff. Recorded here rather than papered over.
+  - checker: journal_chain_intact
+    substitution: planted workspace fixture
+    fixture: solution/fixtures/planted/journal_row_edited/
+    why: >-
+      An honest driver run always produces a chain that recomputes, so no kernel choice reaches
+      this checker's rejecting half. What reaches it is a journal edited after the fact, and the
+      fixture is the accepting journal with one block row's recorded output digest moved by one
+      hexadecimal character and the chain link over it left as the driver wrote it. Recorded here
+      rather than papered over.
+  - checker: kernel_identity_stable_across_splice
+    substitution: planted workspace fixture
+    fixture: solution/fixtures/planted/kernel_swapped_after_splice/
+    why: >-
+      The rejecting half is a seam attack: run the agent phase under one kernel and present a
+      different one to the verifier. It cannot be reached by choosing a kernel, only by changing
+      one between the phases, so the fixture is the accepting run with the installed kernel
+      replaced after the journal was written and no other byte moved. Recorded here rather than
+      papered over.
+
+checkers:
+  - id: frozen_inputs_unmodified
+    statement: "The frozen input stream and the frozen operator parameters are byte-identical to the bound digests, both on disk and as the agent phase declared them when it opened the journal."
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: check_frozen_inputs_unmodified
+    zero_reason: frozen-inputs-modified
+    required: true
+    weight: 1
+    basis: computed
+    live_state_read: "sha256 over the bundle's environment/stream.json and environment/params.json as they stand on disk, and the digests the agent phase recorded in the journal open row."
+    compiled_test: "tests/test_output.py::test_frozen_inputs_unmodified"
+
+  - id: agent_phase_journal_present
+    statement: "An agent phase actually ran: the harness journal exists, carries an open row, at least one block row and a halt row, was driven under the frozen splice charge budget, and a handoff exists beside it."
+    reduction: ABSENCE
+    reached_by: tests/grade.py
+    selector: check_agent_phase_journal_present
+    zero_reason: agent-phase-absent
+    required: true
+    weight: 1
+    basis: computed
+    live_state_read: "the harness journal at the harness log root and the handoff in the shared workspace, both written by the agent phase."
+    compiled_test: "tests/test_output.py::test_agent_phase_journal_present"
+    rejecting_half: planted fixture, see fixture_substitutions
+
+  - id: journal_chain_intact
+    statement: "The harness journal recomputes link by link from its published genesis constant, and the final link is the one the handoff carries."
+    reduction: INVARIANT
+    reached_by: tests/grade.py
+    selector: check_journal_chain_intact
+    zero_reason: journal-chain-broken
+    required: true
+    weight: 1
+    basis: computed
+    live_state_read: "every row of the harness journal, rechained by the verifier over the rows' own canonical bytes, against the chain link each row records and the link the handoff declares."
+    compiled_test: "tests/test_output.py::test_journal_chain_intact"
+    rejecting_half: planted fixture, see fixture_substitutions
+
+  - id: splice_point_harness_established
+    statement: "The splice point is the one the agent phase established. The halt row, the handoff and the verifier's own re-derivation from the frozen stream all name the same absolute sample offset, the agent phase covered exactly the blocks that reaching it requires, and the work counter at the halt reaches the frozen splice charge budget."
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: check_splice_point_harness_established
+    zero_reason: splice-point-not-harness-established
+    required: true
+    weight: 1
+    basis: computed
+    live_state_read: "the splice offset in the journal halt row, the splice offset the handoff declares, the number of block rows the agent phase wrote, and the offset the verifier re-derives by walking the frozen stream's block lengths against the frozen budget."
+    compiled_test: "tests/test_output.py::test_splice_point_harness_established"
+    grades_discovery_value: splice point
+    near_miss_fixture: solution/fixtures/planted/splice_offset_plus_one/
+
+  - id: carried_state_digest_matches
+    statement: "The carried-state digest is the one the agent phase's own carry produced. The halt row, the handoff, the verifier's recomputation over the state the handoff actually carries, and the frozen operator's own carried state at the splice all agree."
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: check_carried_state_digest_matches
+    zero_reason: carried-state-digest-forged
+    required: true
+    weight: 1
+    basis: computed
+    live_state_read: "the carried-state digest in the journal halt row, the digest the handoff declares, the digest recomputed over the carried state the handoff carries, and the bound digest recompute.py derived from the frozen operator."
+    compiled_test: "tests/test_output.py::test_carried_state_digest_matches"
+    grades_discovery_value: carried-state digest
+    near_miss_fixture: solution/fixtures/planted/carried_digest_one_nibble/
+
+  - id: kernel_identity_stable_across_splice
+    statement: "The kernel the agent phase ran is the kernel the verifier grades: the digest the journal open row recorded, the digest the handoff names and the digest of the file on disk are one value."
+    reduction: DIVERGENCE
+    reached_by: tests/grade.py
+    selector: check_kernel_identity_stable_across_splice
+    zero_reason: kernel-swapped-across-splice
+    required: true
+    weight: 1
+    basis: computed
+    live_state_read: "the kernel digest the agent phase recorded, the digest the handoff names, and sha256 over the kernel file the verifier is about to hand to its own resume driver."
+    compiled_test: "tests/test_output.py::test_kernel_identity_stable_across_splice"
+    rejecting_half: planted fixture, see fixture_substitutions
+
+  - id: block_coverage_ordered
+    statement: "The agent phase and the verifier's resume together cover every block of the frozen stream exactly once, in ascending order, each at the sample offset the frozen stream places it, accounting for every sample."
+    reduction: ORDERING
+    reached_by: tests/grade.py
+    selector: check_block_coverage_ordered
+    zero_reason: blocks-unaccounted
+    required: true
+    weight: 1
+    basis: computed
+    live_state_read: "the block indices, starts and lengths in the harness journal, the same fields in the resume telemetry the verifier produced, and the block starts the verifier derived from the frozen stream."
+    compiled_test: "tests/test_output.py::test_block_coverage_ordered"
+
+  - id: resume_output_exact
+    statement: "The output rollup composed over both phases equals the frozen reference rollup exactly. Correctness is a hard gate: a single differing integer scores zero however low the charge."
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: check_resume_output_exact
+    zero_reason: numerical-output-diverged
+    required: true
+    weight: 1
+    basis: computed
+    live_state_read: "the per-block output digests the agent phase recorded, the per-block output digests the verifier's own resume produced, and the bound reference rollup."
+    compiled_test: "tests/test_output.py::test_resume_output_exact"
+
+  - id: charge_not_substituted
+    statement: "The graded charge is the count the verifier's own Tape took on its own resume run, it holds at or above the one-read-per-output floor the operator imposes, and the figure the handoff reported is the same number."
+    reduction: EFFECT
+    reached_by: tests/grade.py
+    selector: check_charge_not_substituted
+    zero_reason: charge-substituted
+    required: true
+    weight: 1
+    basis: computed
+    live_state_read: "the read total and the output total in the resume telemetry summary the verifier produced, against the handoff's reported_resume_charge."
+    compiled_test: "tests/test_output.py::test_charge_not_substituted"

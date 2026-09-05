@@ -1,0 +1,223 @@
+{
+  "_generated": "GENERATED SECTION. DO NOT HAND-EDIT. Source: solution/grounding.yaml",
+  "defects": [
+    {
+      "checker": "graded_loss_verifier_computed",
+      "edits": [
+        {
+          "op": "set",
+          "path": [
+            "eval_ledger",
+            "graded_point",
+            "origin"
+          ],
+          "value": "submission-reported"
+        }
+      ],
+      "id": "fixture_graded_loss_from_submission",
+      "narrative": "The graded number is one the submission's training loop reported. Its per-batch records still reproduce it, so only the provenance gate can catch it.",
+      "zero_reason": "graded-loss-not-verifier-computed"
+    },
+    {
+      "checker": "readout_unsmoothed",
+      "edits": [
+        {
+          "op": "set",
+          "path": [
+            "eval_ledger",
+            "graded_point",
+            "filter"
+          ],
+          "value": "ema-0.9"
+        }
+      ],
+      "id": "fixture_smoothed_readout",
+      "narrative": "The graded point declares an EMA filter. Provenance is intact, so only the smoothing gate can catch it.",
+      "zero_reason": "readout-smoothing-on-graded-path"
+    },
+    {
+      "checker": "loss_sustained_across_bound_points",
+      "edits": [
+        {
+          "op": "set",
+          "path": [
+            "eval_ledger",
+            "sustain_points",
+            1,
+            "loss"
+          ],
+          "value": 3.77
+        },
+        {
+          "op": "set",
+          "path": [
+            "eval_ledger",
+            "sustain_points",
+            1,
+            "per_batch_losses"
+          ],
+          "value": [
+            3.77,
+            3.77,
+            3.77,
+            3.77,
+            3.77,
+            3.77,
+            3.77,
+            3.77
+          ]
+        }
+      ],
+      "id": "fixture_unsustained_dip",
+      "narrative": "The second scheduled sustain point sits far above the level established at the bound step, so the dip was noise rather than a level.",
+      "zero_reason": "loss-not-sustained"
+    },
+    {
+      "checker": "early_stop_is_not_an_established_loss",
+      "edits": [
+        {
+          "op": "set",
+          "path": [
+            "eval_ledger",
+            "halted_early"
+          ],
+          "value": true
+        },
+        {
+          "op": "set",
+          "path": [
+            "eval_ledger",
+            "terminated_by"
+          ],
+          "value": "submission-halt"
+        },
+        {
+          "op": "set",
+          "path": [
+            "eval_ledger",
+            "final_step"
+          ],
+          "value": 520
+        }
+      ],
+      "id": "fixture_early_stop",
+      "narrative": "The run halted at the favourable evaluation at the bound step, before the sustain window closed. This is graded as not having established the loss.",
+      "zero_reason": "early-stop-loss-not-established"
+    },
+    {
+      "checker": "graded_weights_are_harness_owned",
+      "edits": [
+        {
+          "op": "set",
+          "path": [
+            "eval_ledger",
+            "graded_point",
+            "weights_source"
+          ],
+          "value": "submission-selected-checkpoint"
+        }
+      ],
+      "id": "fixture_submission_selected_checkpoint",
+      "narrative": "A checkpoint the submission chose was evaluated instead of the weights the run produced at the bound step.",
+      "zero_reason": "weights-not-harness-owned"
+    },
+    {
+      "checker": "snapshot_version_sequence_ordered",
+      "edits": [
+        {
+          "op": "set",
+          "path": [
+            "snapshot_ledger",
+            "entries",
+            4,
+            "snapshot_version"
+          ],
+          "value": 3
+        }
+      ],
+      "id": "fixture_snapshot_ledger_reordered",
+      "narrative": "A later ledger entry describes an earlier corpus, which is how a pre-move parse is made to look contemporaneous with the graded evaluation.",
+      "zero_reason": "snapshot-sequence-out-of-order"
+    },
+    {
+      "checker": "parse_snapshot_matches_graded_eval",
+      "edits": [
+        {
+          "op": "set",
+          "path": [
+            "parse_manifest",
+            "built_against_snapshot"
+          ],
+          "value": 3
+        }
+      ],
+      "id": "fixture_parser_frozen_against_pre_move_snapshot",
+      "narrative": "THE HEADLINE NEGATIVE CONTROL. The pipeline ran this run over the snapshot-7 corpus, so the EFFECT gate is satisfied, but the parse RULES were derived at snapshot 3 and never re-derived. A parse verdict was carried across a snapshot move. Only the DIVERGENCE gate catches it.",
+      "zero_reason": "parse-built-against-stale-snapshot"
+    },
+    {
+      "checker": "token_budget_respected_as_fed",
+      "edits": [
+        {
+          "op": "set",
+          "path": [
+            "token_budget",
+            "tokens_fed"
+          ],
+          "value": 3072
+        }
+      ],
+      "id": "fixture_token_budget_overspend",
+      "narrative": "The pipeline fed the snapshot-3 budget of 3072 tokens into a run whose snapshot-7 budget is 2048. The harness measures tokens AS FED, so the declaration does not help.",
+      "zero_reason": "token-budget-overspent"
+    },
+    {
+      "checker": "eval_split_not_trained_on",
+      "edits": [
+        {
+          "op": "append",
+          "path": [
+            "split_manifest",
+            "train_doc_ids"
+          ],
+          "value": "d-0011"
+        }
+      ],
+      "id": "fixture_split_leak",
+      "narrative": "One split-b held-out document reached the training stream, which is what happens when the snapshot-3 split is cached across the rotation.",
+      "zero_reason": "eval-split-leaked-into-training"
+    },
+    {
+      "checker": "pipeline_ran_over_graded_corpus",
+      "edits": [
+        {
+          "op": "set",
+          "path": [
+            "pipeline_effect",
+            "cache_hit"
+          ],
+          "value": true
+        }
+      ],
+      "id": "fixture_cached_token_stream",
+      "narrative": "The token stream was replayed from an earlier iteration's cache rather than produced this run.",
+      "zero_reason": "token-stream-not-produced-this-run"
+    },
+    {
+      "checker": "pipeline_ran_over_graded_corpus",
+      "edits": [
+        {
+          "op": "set",
+          "path": [
+            "pipeline_effect",
+            "produced"
+          ],
+          "value": false
+        }
+      ],
+      "id": "fixture_noop_submission",
+      "narrative": "The untouched stub pipeline produced no token stream at all. Same gate, same reason, different half of the same failure.",
+      "zero_reason": "token-stream-not-produced-this-run"
+    }
+  ]
+}

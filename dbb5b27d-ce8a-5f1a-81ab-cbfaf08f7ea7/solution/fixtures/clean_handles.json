@@ -1,0 +1,244 @@
+{
+  "_generated": "GENERATED SECTION. DO NOT HAND-EDIT. Source: solution/grounding.yaml",
+  "anchor_record": {
+    "anchors_state": "absent",
+    "baseline_metric": null,
+    "family": "F13",
+    "gap": "gap-oer-per-family-anchors-unmeasured",
+    "note": "This lane authors no baseline or target for F13. An absent record resolves to reward 0.0 with reason anchors-unresolved.",
+    "schema": "forge.anchor_record/v1",
+    "target_metric": null
+  },
+  "eval_ledger": {
+    "bound_evaluation_step": 520,
+    "final_step": 580,
+    "graded_point": {
+      "filter": "none",
+      "loss": 3.28,
+      "origin": "verifier-recompute",
+      "per_batch_losses": [
+        3.31,
+        3.26,
+        3.29,
+        3.27,
+        3.3,
+        3.25,
+        3.28,
+        3.28
+      ],
+      "step": 520,
+      "weights_digest": "9a3457add04ec6925e852bf1635c4e2e0f5a4946cee590d15ee2dedccd3b86d7",
+      "weights_source": "harness-run-produced"
+    },
+    "halted_early": false,
+    "producer": "verifier",
+    "scheduled_sustain_steps": [
+      540,
+      560,
+      580
+    ],
+    "schema": "forge.eval_ledger/v1",
+    "snapshot_version": 7,
+    "split_digest": "32b64e6583ba687c8fba906a66501c883e769cb3d152cb872bc95c75223dce92",
+    "split_id": "split-b",
+    "submission_reported_used": false,
+    "sustain_points": [
+      {
+        "filter": "none",
+        "loss": 3.28,
+        "origin": "verifier-recompute",
+        "per_batch_losses": [
+          3.29,
+          3.27,
+          3.3,
+          3.26,
+          3.31,
+          3.24,
+          3.29,
+          3.28
+        ],
+        "step": 540,
+        "weights_digest": "f2840834c13a519504dc3f0a7c3b84431caed5c6b4e67e51d39d2eb06716212a",
+        "weights_source": "harness-run-produced"
+      },
+      {
+        "filter": "none",
+        "loss": 3.28,
+        "origin": "verifier-recompute",
+        "per_batch_losses": [
+          3.3,
+          3.28,
+          3.27,
+          3.29,
+          3.26,
+          3.31,
+          3.25,
+          3.28
+        ],
+        "step": 560,
+        "weights_digest": "cc805aa201b44a592d42295c0ddf2049c00069481611ff1563a1afa2fb7b91fd",
+        "weights_source": "harness-run-produced"
+      },
+      {
+        "filter": "none",
+        "loss": 3.28,
+        "origin": "verifier-recompute",
+        "per_batch_losses": [
+          3.27,
+          3.29,
+          3.28,
+          3.3,
+          3.25,
+          3.32,
+          3.26,
+          3.27
+        ],
+        "step": 580,
+        "weights_digest": "c35243638a889dc3923d5be3de932e280ffd1f1bdc1235d590c0672b80a773d8",
+        "weights_source": "harness-run-produced"
+      }
+    ],
+    "sustain_points_required": 3,
+    "sustain_slack": 0.02,
+    "terminated_by": "schedule-exhausted"
+  },
+  "parse_manifest": {
+    "built_against_snapshot": 7,
+    "documents": 30,
+    "owner": "harness",
+    "recorded_at_seq": 3,
+    "schema": "forge.parse_manifest/v1"
+  },
+  "pipeline_effect": {
+    "cache_hit": false,
+    "owner": "harness",
+    "produced": true,
+    "produced_from_snapshot": 7,
+    "schema": "forge.pipeline_effect/v1",
+    "token_stream_digest": "bdd5044f1ee8f2b1401c8ea825e06b515f3e501a995b17892f5bdde8939095df"
+  },
+  "snapshot_ledger": {
+    "entries": [
+      {
+        "event": "session-open",
+        "seq": 0,
+        "snapshot_version": 3
+      },
+      {
+        "event": "parse-probe",
+        "seq": 1,
+        "snapshot_version": 3
+      },
+      {
+        "event": "corpus-resnapshot",
+        "seq": 2,
+        "snapshot_version": 7
+      },
+      {
+        "event": "pipeline-run",
+        "seq": 3,
+        "snapshot_version": 7
+      },
+      {
+        "event": "train-start",
+        "seq": 4,
+        "snapshot_version": 7
+      },
+      {
+        "event": "graded-eval",
+        "seq": 5,
+        "snapshot_version": 7
+      }
+    ],
+    "graded_eval_seq": 5,
+    "ordering_note": "seq is a monotone integer the harness owns; no wall clock is recorded or read",
+    "owner": "harness",
+    "schema": "forge.snapshot_ledger/v1"
+  },
+  "split_manifest": {
+    "eval_batches": 8,
+    "eval_doc_ids": [
+      "d-0005",
+      "d-0011",
+      "d-0017",
+      "d-0023",
+      "d-0029",
+      "d-0035"
+    ],
+    "owner": "harness",
+    "schema": "forge.split_manifest/v1",
+    "split_digest": "32b64e6583ba687c8fba906a66501c883e769cb3d152cb872bc95c75223dce92",
+    "split_id": "split-b",
+    "train_doc_ids": [
+      "d-0000",
+      "d-0001",
+      "d-0002",
+      "d-0003",
+      "d-0004",
+      "d-0006",
+      "d-0007",
+      "d-0008",
+      "d-0009",
+      "d-0010",
+      "d-0012",
+      "d-0013",
+      "d-0014",
+      "d-0015",
+      "d-0016",
+      "d-0018",
+      "d-0019",
+      "d-0020",
+      "d-0021",
+      "d-0022",
+      "d-0024",
+      "d-0025",
+      "d-0026",
+      "d-0027",
+      "d-0028",
+      "d-0030",
+      "d-0031",
+      "d-0032",
+      "d-0033",
+      "d-0034"
+    ]
+  },
+  "token_budget": {
+    "budget_at_graded_snapshot": 2048,
+    "budget_tokens": 2048,
+    "feed_passes": 1,
+    "measured_by": "harness",
+    "per_shard_tokens": [
+      342,
+      342,
+      341,
+      341,
+      341,
+      341
+    ],
+    "schema": "forge.token_budget/v1",
+    "token_stream_digest": "bdd5044f1ee8f2b1401c8ea825e06b515f3e501a995b17892f5bdde8939095df",
+    "tokens_fed": 2048
+  },
+  "weights_ledger": {
+    "owner": "harness",
+    "records": [
+      {
+        "digest": "9a3457add04ec6925e852bf1635c4e2e0f5a4946cee590d15ee2dedccd3b86d7",
+        "step": 520
+      },
+      {
+        "digest": "f2840834c13a519504dc3f0a7c3b84431caed5c6b4e67e51d39d2eb06716212a",
+        "step": 540
+      },
+      {
+        "digest": "cc805aa201b44a592d42295c0ddf2049c00069481611ff1563a1afa2fb7b91fd",
+        "step": 560
+      },
+      {
+        "digest": "c35243638a889dc3923d5be3de932e280ffd1f1bdc1235d590c0672b80a773d8",
+        "step": 580
+      }
+    ],
+    "schema": "forge.weights_ledger/v1"
+  }
+}

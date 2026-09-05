@@ -1,0 +1,119 @@
+{
+  "banner": "GENERATED SECTION. DO NOT HAND-EDIT.",
+  "by_checker": {
+    "bound_envelope_respected": {
+      "fixture": "reject_attempt_budget_exceeded",
+      "reason": "attempt-budget-exceeded",
+      "selector": "check_bound_envelope_respected"
+    },
+    "carried_summary_is_current": {
+      "fixture": "reject_stale_summary",
+      "reason": "stale-summary-carried",
+      "selector": "check_carried_summary_is_current"
+    },
+    "crossing_sustained_across_scheduled_evaluations": {
+      "fixture": "reject_crossing_not_sustained",
+      "reason": "crossing-not-sustained",
+      "selector": "check_crossing_sustained_across_scheduled_evaluations"
+    },
+    "early_halt_yields_no_crossing": {
+      "fixture": "reject_early_stop_claimed",
+      "reason": "early-stop-claimed-as-crossing",
+      "selector": "check_early_halt_yields_no_crossing"
+    },
+    "evaluated_weights_owned_by_the_harness": {
+      "fixture": "reject_weights_not_harness_owned",
+      "reason": "weights-not-harness-owned",
+      "selector": "check_evaluated_weights_owned_by_the_harness"
+    },
+    "frozen_axes_untouched": {
+      "fixture": "reject_frozen_axis_moved",
+      "reason": "frozen-axis-moved",
+      "selector": "check_frozen_axes_untouched"
+    },
+    "graded_crossing_recomputed_unsmoothed": {
+      "fixture": "reject_readout_smoothed",
+      "reason": "readout-smoothed-on-the-graded-path",
+      "selector": "check_graded_crossing_recomputed_unsmoothed"
+    },
+    "graded_metric_consolidated_over_distinct_recipes": {
+      "fixture": "reject_unconsolidated",
+      "reason": "single-attempt-metric-unconsolidated",
+      "selector": "check_graded_metric_consolidated_over_distinct_recipes"
+    },
+    "refinement_frontier_carried_across_iterations": {
+      "fixture": "reject_not_carried",
+      "reason": "graded-outcome-not-carried",
+      "selector": "check_refinement_frontier_carried_across_iterations"
+    },
+    "reported_crossing_reconciles_with_verifier_measurement": {
+      "fixture": "reject_report_diverges",
+      "reason": "reported-crossing-diverges-from-measurement",
+      "selector": "check_reported_crossing_reconciles_with_verifier_measurement"
+    }
+  },
+  "fixtures": {
+    "accept_reference_session": {
+      "checker": "",
+      "kind": "accept",
+      "reason": "consolidated-crossing-graded"
+    },
+    "accept_reported_within_tolerance": {
+      "checker": "",
+      "kind": "accept",
+      "reason": "consolidated-crossing-graded"
+    },
+    "reject_attempt_budget_exceeded": {
+      "checker": "bound_envelope_respected",
+      "kind": "reject",
+      "reason": "attempt-budget-exceeded"
+    },
+    "reject_crossing_not_sustained": {
+      "checker": "crossing_sustained_across_scheduled_evaluations",
+      "kind": "reject",
+      "reason": "crossing-not-sustained"
+    },
+    "reject_early_stop_claimed": {
+      "checker": "early_halt_yields_no_crossing",
+      "kind": "reject",
+      "reason": "early-stop-claimed-as-crossing"
+    },
+    "reject_frozen_axis_moved": {
+      "checker": "frozen_axes_untouched",
+      "kind": "reject",
+      "reason": "frozen-axis-moved"
+    },
+    "reject_not_carried": {
+      "checker": "refinement_frontier_carried_across_iterations",
+      "kind": "reject",
+      "reason": "graded-outcome-not-carried"
+    },
+    "reject_readout_smoothed": {
+      "checker": "graded_crossing_recomputed_unsmoothed",
+      "kind": "reject",
+      "reason": "readout-smoothed-on-the-graded-path"
+    },
+    "reject_report_diverges": {
+      "checker": "reported_crossing_reconciles_with_verifier_measurement",
+      "kind": "reject",
+      "reason": "reported-crossing-diverges-from-measurement"
+    },
+    "reject_stale_summary": {
+      "checker": "carried_summary_is_current",
+      "kind": "reject",
+      "reason": "stale-summary-carried"
+    },
+    "reject_unconsolidated": {
+      "checker": "graded_metric_consolidated_over_distinct_recipes",
+      "kind": "reject",
+      "reason": "single-attempt-metric-unconsolidated"
+    },
+    "reject_weights_not_harness_owned": {
+      "checker": "evaluated_weights_owned_by_the_harness",
+      "kind": "reject",
+      "reason": "weights-not-harness-owned"
+    }
+  },
+  "reference_sha256": "9ffae8250a27330d638dd1648e646c94e179e48ef0b09273864844cd3bf1e02f",
+  "source": "solution/grounding.yaml"
+}

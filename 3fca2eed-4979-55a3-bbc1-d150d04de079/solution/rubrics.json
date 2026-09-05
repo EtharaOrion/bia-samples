@@ -1,0 +1,39 @@
+{
+  "_generated": "GENERATED SECTION. DO NOT HAND-EDIT. Source: solution/grounding.yaml",
+  "distinct_from": "tests/rubrics.jsonl, which is judged against the trajectory",
+  "judged_against": "the solution's reference answer, not the trajectory",
+  "rubrics": [
+    {
+      "criterion": "The solution emits a parse ledger whose rows carry exactly one of parse-failed, parse-valid or parse-partial, over every record in the corpus.",
+      "id": "three-way-ledger-emitted",
+      "reference_answer": "14 rows, 4 parse-failed, 6 parse-valid and 4 parse-partial under parse schema version 2."
+    },
+    {
+      "criterion": "The solution declares one ambiguity policy and applies its outcome code to every parse-partial row and to no other row.",
+      "id": "policy-declared-and-applied",
+      "reference_answer": "quarantine-partial declared, partial-quarantined applied to all 4 partial rows and to none of the other 10."
+    },
+    {
+      "criterion": "Every reason code belongs to the reason space of the outcome on the same row.",
+      "id": "reason-spaces-disjoint",
+      "reference_answer": "failure reasons on failure rows only, record-complete on valid rows only, partial reasons on partial rows only."
+    },
+    {
+      "criterion": "The classification is computed under the parse schema version the harness has in force rather than a hardcoded one.",
+      "id": "bound-schema-version-honoured",
+      "reference_answer": "version 2 in force, so r09 is parse-partial with reason continuation-dangling rather than parse-valid."
+    },
+    {
+      "criterion": "The training feed carries admitted records only and no evaluation-split record under any outcome.",
+      "id": "feed-excludes-held-out-and-quarantined",
+      "reference_answer": "4 admitted ordinals, r01 r02 r03 r10, with r13 and r14 held out and all partial records quarantined."
+    },
+    {
+      "criterion": "The solution reports no validation loss of its own on any graded path.",
+      "id": "no-loss-reported-by-the-solution",
+      "reference_answer": "the solution prints record, admitted and token counts only; the harness computes the graded loss."
+    }
+  ],
+  "schema": "forge.solution_rubrics/v1",
+  "slot": "OER-12"
+}

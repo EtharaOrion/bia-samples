@@ -1,0 +1,41 @@
+{
+  "_generated": "GENERATED SECTION. DO NOT HAND-EDIT.",
+  "_source": "Source: solution/grounding.yaml. Regenerate with solution/recompute.py.",
+  "split": "development",
+  "note": "Agent-visible development sample. It shows the record shape your generator emits and the five capability strata the verifier's classifier recognises. It carries no held-out item and no byte of the validation shard: the held-out benchmark is 64 windows of the FineWeb validation split, it lives only under tests/, and it is never assembled into this container.",
+  "record_shape": {
+    "text": "The document text. The first whitespace token is the stratum marker, and everything after it is the prose the decoder trains on. This is what gets encoded with the GPT-2 BPE and written into the training shard.",
+    "label": "Your per-sample stratum claim. It is a claim: tests/strata.py measures the stratum from the text's first token, and the measurement is what counts."
+  },
+  "strata": ["calc", "cmp", "fact", "neg", "seq"],
+  "stratum_note": "A sample whose first token is not one of these five markers is measured as unclassified, and unclassified is counted rather than ignored.",
+  "items": [
+    {
+      "label": "calc",
+      "stratum": "calc",
+      "text": "calc The quarterly figures were added together before the audit closed, and the totals agreed with the ledger to within a single unit of account."
+    },
+    {
+      "label": "cmp",
+      "stratum": "cmp",
+      "text": "cmp Rainfall this season exceeded the thirty year average across the northern counties, while the southern stations trailed their own long run means."
+    },
+    {
+      "label": "fact",
+      "stratum": "fact",
+      "text": "fact The treaty stands as the earliest surviving agreement between the two cities, and the copy held in the municipal archive carries both seals."
+    },
+    {
+      "label": "neg",
+      "stratum": "neg",
+      "text": "neg The committee rejected the proposal without a recorded vote, and the minutes note that no member spoke in favour of reopening the question."
+    },
+    {
+      "label": "seq",
+      "stratum": "seq",
+      "text": "seq The second movement follows the opening without a pause, and the theme that precedes it returns in the closing bars in a slower tempo."
+    }
+  ],
+  "sizing_note": "These five records are an illustration of shape, not a target size. The frozen budget is 3145728 GPT-2 BPE tokens counted by environment/train_stack.py, which is 6 optimizer steps of 524288 tokens, and your corpus must offer that budget and no more.",
+  "token_accounting": "environment/train_stack.py token_count is the only counter that matters. It encodes the text with the GPT-2 BPE and adds one end-of-text delimiter per record, so a record costs its BPE length plus one."
+}

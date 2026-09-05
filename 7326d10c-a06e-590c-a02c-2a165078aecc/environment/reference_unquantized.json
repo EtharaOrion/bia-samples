@@ -1,0 +1,12 @@
+{
+  "schema": "oer20.unquantized_reference/v1",
+  "model_id": "nanogpt-12L-768d",
+  "corpus_id": "fineweb10b-heldout-validation",
+  "frozen": true,
+  "reference_present": false,
+  "note": "This file is a DECLARATION of the unquantized reference and carries none of its values. Perplexity degradation is measured against the unquantized checkpoint's own perplexity, and that number is recomputed by the verifier at grading time from the same checkpoint, on the same held-out points, in the same scheduled order, inside the same process that measures the quantized model. It is not a table an agent can read, and it is not a table this bundle carries.",
+  "reference_definition": "ppl_reference(point) = exp(mean token cross entropy of the unquantized checkpoint over that point), computed by tests/runner.py from real forward passes",
+  "reference_ppl": null,
+  "reference_ppl_note": "Absent rather than invented. The previous bytes here were a five-row table of surrogate perplexities attached to a three-block stand-in that was never run. No number replaces them, because this lane measured no checkpoint. The verifier needs no such table: it recomputes the reference on every run, which is strictly stronger than freezing one, since a frozen table cannot detect a checkpoint that moved.",
+  "pairing_note": "The agent reading, the control reading and the reference reading at one evaluation point come from three forward passes over the SAME token batch in the same process, so the degradation is a paired difference and the batch's own difficulty cancels out of it."
+}

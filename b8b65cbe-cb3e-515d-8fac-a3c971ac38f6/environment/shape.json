@@ -1,0 +1,20 @@
+{
+  "note": "The frozen axes for slot OER-03. These four values are re-read by the verifier from its own copy at grading time. Changing them here does not change what is graded; it only produces a run the grader refuses with the reason frozen-axis-moved.",
+  "family": "F1",
+  "upstream": "modded-nanogpt, records/track_3_optimization/",
+  "batch_size": 480,
+  "fwd_bwd_per_step": 1,
+  "dataset_digest": "d1a7e2b6f0c94d3a8e5b1c07f42d9a63b8e0c5147d2a9f3b6e8c04a17d5b29e3",
+  "architecture_digest": "a4c8f1d09b2e7635c0a91d84fe3b2705d6c9a83f1e40b7d259c6a3f08e12b4d7",
+  "free": [
+    "optimization algorithm",
+    "hyperparameters and their schedules",
+    "model initialization"
+  ],
+  "frozen": [
+    "dataset",
+    "batch size",
+    "architecture",
+    "one forward-backward pass per step"
+  ]
+}

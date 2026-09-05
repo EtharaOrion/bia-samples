@@ -1,0 +1,125 @@
+schema_version = "1.4"
+
+# schema_version is a top-level scalar and stays above the first table header. TOML
+# scopes every key to the most recent header, so an assignment written after [task]
+# becomes task.schema_version and the top-level scalar goes absent while the file
+# still reads correct to a human.
+
+artifacts = [
+  "/app/submission.py",
+  "/logs/agent/trajectory.jsonl",
+  "/workspace/submission/generator.py",
+  "/workspace/submission/logs",
+  "/logs/verifier/reward.txt",
+  "/logs/verifier/score.json",
+]
+
+[task]
+name = "bia/oer-17-synthetic-data-heldout-benchmark"
+version = "1.0.0"
+description = "Write a synthetic data generator. The canonical nanoGPT decoder is trained by the harness on shards mixing your generated documents with FineWeb10B, under a frozen budget with a frozen optimizer, then scored by the verifier on a held-out FineWeb validation split you never see and must not reproduce."
+authors = [{ name = "Bia" }]
+keywords = ["optimization", "bounded-continuous"]
+
+[metadata]
+# The bound client tags live under `tags`, never under `keywords`. `keywords` is
+# Harbor's free-text task field; `tags` is the field the conformance check reads.
+tags = ["optimization", "bounded-continuous"]
+category = "optimization"
+slot = "OER-17"
+# The provisional identifier is the slot id. No canonical_content_hash, no uuid5, no
+# final uuid directory name is derived by this lane; wave 2 does identity for every
+# slot at once.
+provisional_identifier = "OER-17"
+family = "F14"
+family_title = "synthetic data generation"
+archetype = "grader-integrity"
+metric = "held-out FineWeb benchmark score of the canonical nanoGPT decoder trained on shards mixing the agent's generated documents with FineWeb10B"
+metric_definition = "exp(-val_loss), where val_loss is the mean per-token cross entropy the harness-owned parameter snapshot assigns to the held-out FineWeb validation documents; the interval is (0.0, 1.0] and higher is better"
+metric_direction = "higher"
+frozen = "the architecture, the training budget, the corpus mix, the optimizer, the held-out benchmark"
+free = "the synthetic data generator the agent writes"
+target_tier = "Frontier-defeat"
+tier_exemption_granted = "none"
+anchorable_tier = "capped below Hard"
+anchorable_tier_exemption = "This task family is text and code only, so the Perception axis carries no category. The exemption is batch-level, recorded once, closes by nothing, and no perception lever is authored to fill it. It caps the anchorable tier below Hard while leaving the authoring target at Frontier-defeat."
+
+# The nanoGPT substrate this metric resolves against. requirements/bia-environment-spec.md,
+# under "The nanoGPT framework is mandatory", makes a family admissible only when its
+# metric resolves against a nanoGPT run. The declaration is replicated byte for byte into
+# environment/nanogpt_substrate.json for the solver and into tests/nanogpt_substrate.json
+# for the verifier, which reads its own copy and never the agent-visible one.
+substrate_declaration = "environment/nanogpt_substrate.json"
+substrate_verifier_copy = "tests/nanogpt_substrate.json"
+substrate_version = "nanogpt-substrate-v1"
+substrate_architecture = "vocab_size 50304, num_layers 12, model_dim 768, head_dim 128, num_heads 6, seq_len 1024"
+substrate_run = "3250 steps at 524288 tokens per step, one forward and one backward pass per step"
+substrate_corpus_mix = "131072 tokens per step from the submitted generator's shard, 393216 tokens per step from the FineWeb10B train shards"
+substrate_optimizer = "AdamW on the embedding, the output projection and the one-dimensional parameters; Muon on the hidden block matrices"
+
+# Anchors. This family is registered and unscoped, and authoring against an
+# unmeasured baseline is forbidden. The schema is bound; the numbers are absent,
+# not invented.
+anchors_state = "absent"
+reward_formula = "raw = (agent_metric - baseline_metric) / (target_metric - baseline_metric); score = min(max(raw, 0.0), 1.0)"
+reward_kind = "one bare float"
+reward_never_binary = true
+reward_direction_note = "HIGHER is better, so the higher-is-better formula is bound. Reaching the target scores exactly 1.0 and beating it also scores 1.0."
+reward_path = "/logs/verifier/reward.txt"
+score_document_path = "/logs/verifier/score.json"
+
+# CANONICAL PATH for every bound optimization field in this batch:
+# metadata.optimization.<field>. One table, one deterministic lookup. Nothing
+# optimization-bound lives anywhere else in this manifest.
+#
+# max_timeout_hours bounds the session across attempts. budget_hours bounds one
+# attempt, being six hours over fifty attempts, 0.12 hours or 7.2 minutes. They
+# are explicitly distinct and never aliases. Both bound the SOLVER's attempt, which
+# authors and locally exercises a generator. The graded nanoGPT run is executed by the
+# verifier under [verifier] timeout_sec and never inside a solver attempt.
+[metadata.optimization]
+max_timeout_hours = 6.0
+max_timeout_role = "refinement-loop terminator across attempts"
+budget_hours = 0.3
+budget_hours_minutes = 18.0
+budget_hours_role = "per-attempt completion bound"
+budget_hours_state = "provisional"
+max_attempts = 20
+final_selection = "best"
+budget_envelope = "one H100, single accelerator, no multi-GPU scaling"
+budget_margin = "10 percent"
+compute_envelope_accelerators = 1
+
+[agent]
+timeout_sec = 432.0
+# Solver egress is OPEN inside the sandbox so the agent can fetch its own packages,
+# datasets and models. The deny-list is not a containment proof; the deterministic
+# similarity screen is the load-bearing control. The divergence from the stricter
+# batch reading is recorded in solution/grounding.yaml under
+# solver_egress_divergence.
+solver_egress = "setup-only"
+solver_egress_deny = ["github.com", "raw.githubusercontent.com", "objects.githubusercontent.com"]
+network_mode = "none"
+
+[verifier]
+# The graded run is a full 3250-step nanoGPT training run on one accelerator, so the
+# verifier bound is the session bound rather than the per-attempt bound. This number is
+# DECLARED and not measured: no single-H100 wall clock for this mix has been taken on the
+# reference machine, and the gap is recorded in solution/grounding.yaml under
+# gap-oer-17-verifier-wall-clock-unmeasured rather than papered over with an estimate.
+timeout_sec = 21600.0
+# The verifier keeps the bound network policy. The asymmetry with [agent] is deliberate.
+egress = "denied"
+network_mode = "none"
+docker_image = "pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407"
+
+[environment]
+docker_image = "pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407"
+gpus = 1
+gpu_types = ["H100"]
+cpus = 8
+memory_mb = 32768
+storage_mb = 262144
+# Provisioning egress. Denying it here would leave the task unable to install, and the
+# FineWeb10B train shards are staged at image build time through it.
+network_mode = "public"

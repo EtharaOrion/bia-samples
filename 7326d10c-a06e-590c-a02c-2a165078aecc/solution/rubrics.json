@@ -1,0 +1,58 @@
+{
+  "criteria": [
+    {
+      "expect": "error-feedback",
+      "id": "matches-reference-scheme",
+      "statement": "The submitted scheme is the reference scheme."
+    },
+    {
+      "expect": {
+        "blk0.attn.proj": 5,
+        "blk0.attn.qkv": 5,
+        "blk0.mlp.fc": 4,
+        "blk0.mlp.proj": 4,
+        "blk1.attn.proj": 4,
+        "blk1.attn.qkv": 6,
+        "blk1.mlp.fc": 4,
+        "blk1.mlp.proj": 4,
+        "blk2.attn.qkv": 6,
+        "blk2.mlp.fc": 4,
+        "emb.tok": 3,
+        "lm_head": 3
+      },
+      "id": "matches-reference-allocation",
+      "statement": "The submitted per-tensor bit allocation is the reference allocation."
+    },
+    {
+      "expect": {
+        "allocated_bits": 147849216,
+        "budget_bits": 147849216,
+        "mean_bits_per_param": 4.0
+      },
+      "id": "spends-the-budget-exactly",
+      "statement": "The allocation spends the fixed bit budget without exceeding it."
+    },
+    {
+      "expect": {
+        "lower_edge": 0.13273,
+        "reason": "separation-margin-cleared",
+        "separation_margin": 0.05,
+        "verdict": "established"
+      },
+      "id": "clears-the-separation-margin",
+      "statement": "The lower edge of the measured separation band reaches the bound margin."
+    },
+    {
+      "expect": 1.0,
+      "id": "earns-full-reward",
+      "statement": "The reference solution is accepted end to end at full reward."
+    }
+  ],
+  "generated_from": "solution/grounding.yaml",
+  "generated_section": "GENERATED SECTION. DO NOT HAND-EDIT.",
+  "grades": "the solution against its reference answer",
+  "not": "trajectory behaviour, which tests/rubrics.jsonl grades separately and which this file never substitutes for",
+  "reference_allocation_sha256": "7b39dd1ca7b87851867580c4bab4fcb52737858613a7cc905b1f516d13d1de92",
+  "schema": "forge.solution_rubrics/v1",
+  "slot": "OER-20"
+}

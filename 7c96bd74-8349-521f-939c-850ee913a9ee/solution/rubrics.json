@@ -1,0 +1,33 @@
+{
+  "_generated": "GENERATED SECTION. DO NOT HAND-EDIT.",
+  "_source": "solution/grounding.yaml",
+  "graded_against": "solution/reference.py",
+  "rubrics": [
+    {
+      "criterion": "The reference emits at least one document for every cell of the subject and frame space it declares.",
+      "id": "covers-the-declared-space",
+      "reference_answer": "16 subjects crossed with 4 frames, 64 documents emitted, inside the 2000-document cap."
+    },
+    {
+      "criterion": "The reference's subjects and prose come from a space it declares, not from any held-out document.",
+      "id": "content-is-its-own",
+      "reference_answer": "Sixteen authored subject tuples and four authored frames, composed by a pure function of those tables. Measured on this host by running the real screen over the real 512-document held-out split, the peak similarity is 0.0596 against fineweb-val-353, well below the bound threshold of 0.45."
+    },
+    {
+      "criterion": "The reference opens no file other than the output path it was given.",
+      "id": "no-benchmark-read",
+      "reference_answer": "One open() call, on args.out."
+    },
+    {
+      "criterion": "A self-reported number, if printed, is marked as ungraded and does not match the measurement, so nothing downstream can be tempted to carry it.",
+      "id": "reports-without-claiming",
+      "reference_answer": "Prints REPORTED_SCORE=0.037500, which is a declared placeholder on the exp(-val_loss) scale and not a measurement; the verifier's own measurement is what is graded and the divergence between the two is recorded."
+    },
+    {
+      "criterion": "Every emitted line is a JSON object carrying a non-empty text field inside the bound character ceiling, so nothing is dropped as unusable.",
+      "id": "document-format-respected",
+      "reference_answer": "64 lines, each a single-key object, each document well under the 65536-character ceiling."
+    }
+  ],
+  "slot": "OER-17"
+}

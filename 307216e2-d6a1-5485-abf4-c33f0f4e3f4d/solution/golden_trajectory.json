@@ -1,0 +1,42 @@
+{
+  "banner": "GENERATED SECTION. DO NOT HAND-EDIT.",
+  "slot": "OER-19",
+  "source": "solution/grounding.yaml",
+  "steps": [
+    {
+      "action": "read",
+      "detail": "Read instruction.md and environment/frozen/FROZEN_AXES.md. Note that the graded quantity is the verifier's own evaluation of the frozen model on the frozen held-out benchmark at update 1440, and that the corpus is the only free axis.",
+      "step": 1
+    },
+    {
+      "action": "read",
+      "detail": "Read environment/tools/corpus_diversity.py and note that it is the same statistic the verifier computes, with its sha256 pinned. Plan to measure the corpus rather than to trust an exit status.",
+      "step": 2
+    },
+    {
+      "action": "write",
+      "detail": "Write a generator that walks a template grid crossed with subject and modifier fillers, so coverage is structural rather than incidental, and emit exactly 480 samples in strictly ascending emission order.",
+      "step": 3
+    },
+    {
+      "action": "measure",
+      "detail": "Run corpus_diversity.py over the emitted corpus. Read the per-segment distinct-trigram ratios and the mode share, and confirm no segment sits below the published floor and none falls below the bound fraction of the first segment.",
+      "step": 4
+    },
+    {
+      "action": "measure",
+      "detail": "Run the near-duplicate check against environment/frozen/benchmark_dev.jsonl to confirm the generator is not paraphrasing evaluation material. The dev split is disjoint from the held-out split, so a clean dev reading is evidence about the generator's habits and not a licence.",
+      "step": 5
+    },
+    {
+      "action": "write",
+      "detail": "Write run_report.json carrying the measured statistics, so the self-report and the verifier's recomputation can be compared instead of assumed to agree.",
+      "step": 6
+    },
+    {
+      "action": "verify",
+      "detail": "Confirm the generator exits zero AND that the measured profile is healthy. The exit status alone establishes nothing; that is the failure this slot is built around.",
+      "step": 7
+    }
+  ]
+}

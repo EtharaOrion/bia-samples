@@ -1,0 +1,20 @@
+{
+  "_source": "Re-based onto environment/nanogpt_substrate.json for batch OER-2026-08-20. solution/grounding.yaml and solution/recompute.py still describe the retired statistics surrogate and must be re-derived against these bytes before this slot is frozen.",
+  "calibration_version_in_force": 2,
+  "issued_at_tick": 7,
+  "ledger": [
+    {
+      "label": "pre-drift calibration slice, the slice an allocation fitted at iteration three was fitted against",
+      "tick": 1,
+      "version": 1
+    },
+    {
+      "label": "post-drift calibration slice, the slice in force at the graded evaluation",
+      "tick": 7,
+      "version": 2
+    }
+  ],
+  "pin_digest": "47c626606f42c18ab017023aa13e60cd679612706d41347424bfb20f56b7c7fb",
+  "schema": "oer22.calibration_state/v2",
+  "statement": "Harness-owned calibration state. The version in force is the one an allocation is graded against. Temporal ordering is carried by the harness tick, a monotonically issued integer handle. No clock is read. This file names the slice in force and digests its pin; it carries no evaluation payload and no held-out token."
+}

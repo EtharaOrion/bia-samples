@@ -1,0 +1,1121 @@
+# FORGE-CANARY-BEGIN
+# 0: 7eb80d517a00a38c8faee300893e2f930852886aa1b9e7204e44e42208b538e5
+# 1: 3cb6cc18213b74040432093503f58990d6706f7616563489229ce0f1ff1e10e9
+# 2: 3665b46c0ca34a72f72aeb4c62c0dcb155cb7ed025714b4565a793546474a98e
+# 3: 6aada06826bd2f0ab7ffcd7cb10b201bfc323be45a6615bc7b3f87164d54e800
+# FORGE-CANARY-END
+schema: forge.grounding/v1
+
+# PRIVATE DERIVATION SOURCE for slot OER-10. Not agent-visible: launcher._assemble
+# copies only task.toml, instruction.md and environment/ into the surface a
+# non-oracle agent reads, so solution/ is excluded by construction.
+#
+# solution/recompute.py derives EVERY generated artifact from this file alone. It
+# invokes no model, no network, no clock, no locale and no random source, and running
+# it twice over frozen bytes produces byte-identical output.
+
+slot: OER-10
+provisional_identifier: OER-10
+family: F12
+family_title: data curation
+title: Curation recipe displacement against published mixture baselines
+primary_archetype: record-displacement
+archetype_exclusivity: >-
+  Exactly one primary archetype, fixed at scope time. No buffet within the slot. Every
+  control in this bundle is either the record-displacement control itself or one of the
+  freeze-integrity and readout-integrity obligations the batch binds on every slot.
+
+# ---------------------------------------------------------------------------
+# What is graded, and what is frozen
+# ---------------------------------------------------------------------------
+graded_quantity:
+  metric: validation loss of the trained model
+  direction: lower
+  computed_by: >-
+    the verifier, in its own process, on the verifier-owned held-out FineWeb10B validation
+    split, from the parameter snapshots the frozen harness wrote
+  computed_at: the bound evaluation point
+  never: >-
+    never a number the submission reported, never a number in the submission's stdout,
+    never a field the submission wrote, never a smoothed or blended readout, and never a
+    number the in-container harness printed.
+
+# ---------------------------------------------------------------------------
+# The canonical nanoGPT substrate this slot's metric resolves against
+# ---------------------------------------------------------------------------
+substrate:
+  declaration: environment/nanogpt_substrate.json
+  declaration_version: nanogpt-substrate-v1
+  replicated_not_referenced: >-
+    The declaration is replicated into this slot's own environment/ rather than read from a
+    shared path, because a bundle's name is a hash over its own tree and no slot may depend
+    on a sibling's bytes.
+  upstream: modded-nanogpt, records/track_3_optimization/
+  upstream_vendored_at: harness/records/track_3_optimization/train_gpt_simple.py
+  architecture:
+    vocab_size: 50304
+    num_layers: 12
+    model_dim: 768
+    head_dim: 128
+    num_heads: 6
+    seq_len: 1024
+  run:
+    batch_tokens_per_step: 524288
+    forward_passes_per_step: 1
+    backward_passes_per_step: 1
+    target_val_loss: 3.28
+  corpus:
+    train_glob: data/fineweb10B/fineweb_train_*.bin
+    val_glob: data/fineweb10B/fineweb_val_*.bin
+    container_train_path: /workspace/data/fineweb10B
+    loader: data/cached_fineweb10B.py
+  anchors:
+    baseline_record: 36
+    baseline_steps_to_target: 3250
+    baseline_val_loss: 3.2787
+    record_holder_record: 46
+    record_holder_steps_to_target: 2690
+    record_holder_val_loss: 3.2783
+  anchors_are_not_this_slot_s_anchors: >-
+    Those two published anchors describe the optimizer track that vendored the substrate.
+    They fix the operating point this slot's training runs at and they are not F12's
+    baseline or target, which stay absent under gap-oer-per-family-anchors-unmeasured.
+
+freeze:
+  token_budget_tokens: 1677721600
+  tokens_per_step: 524288
+  steps_at_budget: 3200
+  model: nanogpt-12L-768d, the decoder environment/frozen_train.py instantiates from environment/nanogpt_substrate.json, not modifiable
+  optimizer: frozen-adamw-cosine, environment/frozen_train.py, not modifiable
+  evaluation_split_id: val-split-b
+  evaluation_split_size: 64
+  evaluation_split_owner: verifier
+  free: the data mixture and the curation recipe, and nothing else
+  batch_note: >-
+    tokens_per_step is the substrate's frozen batch of 524288 tokens per step, so the budget
+    is 3200 steps at that batch. It is not a number this lane chose.
+
+# ---------------------------------------------------------------------------
+# The load-bearing control: a BEHAVIOURAL recipe fingerprint
+# ---------------------------------------------------------------------------
+fingerprint:
+  kind: behavioural
+  what_it_characterises: >-
+    what the submitted recipe DOES to a frozen probe pool, not what its source text says.
+  probe_pool_id: oer10-probe-pool-v1
+  probe_pool_size: 48
+  quantisation_levels: 9
+  quantisation_rule: q = clip(round(weight * 8), 0, 8)
+  digest_rule: sha256 over the canonical JSON bytes of the length-48 integer vector
+  screen_levels:
+    - level: exact
+      rule: the recomputed fingerprint digest equals a pinned exclusion-set digest
+      catches: a verbatim replay of a published mixture
+    - level: behavioural-proximity
+      rule: the L1 distance to the nearest pinned exclusion-set vector is below l1_floor
+      catches: >-
+        a renamed, reordered, re-worded or cosmetically re-thresholded restatement of a
+        published mixture, whose source bytes share nothing with the original but which
+        selects the same probe documents at the same weights
+  l1_floor: 16
+  l1_floor_derivation: >-
+    Measured on this host from the pinned substrate, recorded rather than chosen. The
+    smallest L1 distance between any two distinct pinned baselines is 23, so a floor of 16
+    leaves every pinned baseline mutually distinguishable. The authored paraphrase control
+    sits at L1 6 from the baseline it restates, and the reference recipe's nearest pinned
+    baseline sits at L1 108. The floor separates a restatement from a derivation with the
+    observed 6-against-108 margin, and it is not a threshold picked to make one fixture pass.
+  runs_at_stage: 3
+  training_runs_at_stage: 5
+  cost_of_a_rejected_replay: zero accelerator time
+
+network_denial_is_not_the_control: >-
+  Solver egress is OPEN by binding. The upstream deny-list on github.com,
+  raw.githubusercontent.com and objects.githubusercontent.com is hygiene and is never
+  presented as containment. Mirrors, caches, paraphrased write-ups, forum posts and model
+  weights all carry a curation recipe past any deny-list, and a recipe that arrives by any
+  of those routes is indistinguishable at the network layer from one the agent derived.
+  That is precisely why the deterministic behavioural screen, and not the network policy,
+  is the load-bearing control for this slot. The screen does not ask where a recipe came
+  from; it measures what the recipe does to the probe pool.
+
+solver_egress_divergence:
+  bound_in_task_toml: open
+  contract_field_reads: setup-only
+  gap: gap-oer-solver-egress-ruled-stricter
+  reading_a: >-
+    requirements/open-ended-research-optimisation-problems.md line 58 grants the solving
+    model full internet access.
+  reading_b: >-
+    requirements/open-ended-research-optimisation-problems.md line 122 says internet is
+    needed only for setup, and requirements/bia-environment-spec.md line 247 rules that
+    until the client resolves it the stricter reading governs.
+  what_this_lane_binds: >-
+    task.toml [agent] solver_egress = "open", with the upstream deny-list carried by name,
+    and [verifier] egress = "denied". The lane does NOT amend
+    seed.contract.yaml batch.optimization_bindings.solver_egress, which still reads
+    setup-only. The divergence is recorded here rather than left silent, and it is a
+    batch-level field only the contract owner moves.
+  verifier_surface: denied, and the two surfaces differ by design
+
+# ---------------------------------------------------------------------------
+# Anchors
+# ---------------------------------------------------------------------------
+anchors:
+  anchors_state: absent
+  baseline_metric: null
+  target_metric: null
+  pass_threshold: null
+  gap: gap-oer-per-family-anchors-unmeasured
+  authority: >-
+    requirements/bia-environment-spec.md line 63 leaves F12's baseline, target and instance
+    count unresolved; seed/contract.yaml families.entries.F12 carries scope_state unscoped.
+  rule_followed: >-
+    The reward SCHEMA is bound in full and the two anchor numbers are declared absent. No
+    number is invented for either.
+
+ladder:
+  ladder_state: run-local-measured
+  gap: gap-oer-10-run-local-ladder-is-not-a-family-anchor
+  ends:
+    control_arm: >-
+      control_arm_loss, the validation loss of the frozen default mixture trained by the
+      harness under the identical frozen token budget, model, optimizer and split.
+    reference_floor: >-
+      reference_floor_loss, the validation loss of the harness-owned reference curation
+      recipe under the same freeze.
+  formula: raw = (control_arm_loss - graded_loss) / (control_arm_loss - reference_floor_loss)
+  clip: score = min(max(raw, 0.0), 1.0)
+  full_reward_value: 1.0
+  full_reward_rule: >-
+    Reaching the reference floor scores exactly 1.0 and beating it also scores 1.0. The
+    floor is a bar, not a point on a gradient.
+  binary: false
+  not_the_family_anchors: >-
+    Both ends are harness-owned telemetry from the same run, never numbers a submission
+    reported and never a published anchor. No cross-run or cross-slot comparability is
+    claimed. The family anchors stay absent.
+  displacement_gate:
+    checker: control_arm_displaced
+    reduction: EFFECT
+    reason: control-arm-not-displaced
+    rule: >-
+      The graded loss the verifier computed at the bound evaluation point, and every
+      verifier-recompute sample at a scheduled sustain point, must sit strictly below
+      control_arm_loss, the control arm the harness measured inside this same run, and the
+      ladder's two ends must be ordered so the span is positive.
+    why_it_is_a_gate_and_not_a_second_graded_quantity: >-
+      It can only zero a score and can never raise one. Where raw is already at or below
+      zero the clip returns 0.0 anyway, so this gate moves no run's number; what it moves is
+      the ATTRIBUTION of that zero, from the reason of an established result to
+      control-arm-not-displaced. Exactly one graded quantity remains.
+    why_it_is_load_bearing_for_the_discovery_values: >-
+      Its outcome is a function of the loss numbers the run actually reached, which exist
+      nowhere on the agent-visible surface: instruction.md names the evaluation points and
+      the frozen axes and never a loss level, and the levels themselves are established only
+      by training and reading back the harness's own evaluation series. A solver that never
+      interacted with the environment carries no sample series and no ladder ends, so this
+      checker fails for it with a named reason rather than passing vacuously.
+
+# ---------------------------------------------------------------------------
+# Frozen substrate, derived deterministically by recompute.py
+# ---------------------------------------------------------------------------
+probe_pool_construction:
+  buckets: [web, code, math, encyclopedic, dialogue, legal]
+  count: 48
+  recurrence: h = (i * 2654435761 + 1013904223) mod 1000003
+  fields:
+    id: "p%02d formatted from i"
+    bucket: buckets[i mod 6]
+    len_tokens: 128 + (h mod 31) * 64
+    dup_class: (h // 31) mod 5
+    quality_decile: (h // 157) mod 10
+    ppl_decile: (h // 911) mod 10
+    lang: "en when (h // 7) mod 4 is nonzero, else xx"
+
+raw_pool_construction:
+  count: 240
+  id_format: "r%03d"
+  recurrence: h = (i * 2246822519 + 374761393) mod 1000003
+  fields:
+    bucket: buckets[i mod 6]
+    len_tokens: 128 + (h mod 31) * 64
+    dup_class: (h // 31) mod 5
+    quality_decile: (h // 157) mod 10
+    ppl_decile: (h // 911) mod 10
+    lang: "en when (h // 7) mod 4 is nonzero, else xx"
+  corpus_binding:
+    binds_to: the FineWeb10B training shards named by substrate.corpus.train_glob
+    span_tokens: 8000000
+    spans_per_shard: 12
+    shard_format: "fineweb_train_%06d.bin"
+    shard_index: i // 12
+    token_offset: (i mod 12) * 8000000
+    shard_count: 20
+    total_span_tokens: 1920000000
+    why_it_is_added_rather_than_substituted: >-
+      Every field the recipe reads keeps the recurrence it always had, so every pinned
+      selection vector, every fingerprint digest and every measured L1 in this file is
+      unchanged by the binding. What the binding adds is the answer to what a retained row
+      actually feeds: a contiguous span of real FineWeb10B training tokens. Before it, a
+      retained row fed nothing at all.
+    headroom: >-
+      1920000000 span tokens against a frozen budget of 1677721600, so a recipe retaining
+      every span still has to spend the budget selectively rather than feed the corpus once.
+
+held_out_split:
+  id: val-split-b
+  owner: verifier
+  count: 64
+  id_format: "v%03d"
+  segment_tokens: 16384
+  shard: fineweb_val_000000.bin
+  shard_glob: data/fineweb10B/fineweb_val_*.bin
+  token_offset: 3600000
+  token_count: 1048576
+  slice_sha256: 83d25a635cf411d13a66acb4e4473fcced667f0bafb7f9f832880a373d2ba901
+  shard_sha256_prefix_1mib: 0d894b48b1f0f8aa3b8709c6950c0ba3d8051e90f70a22a7725a35e98610b04f
+  collection: FineWeb10B, GPT-2 BPE token ids, uint16 little-endian
+  external_source: https://huggingface.co/datasets/HuggingFaceFW/fineweb
+  pipeline: https://github.com/KellerJordan/modded-nanogpt data/cached_fineweb10B.py
+  pinned_at: tests/held_out_split.json
+  agent_surface: >-
+    environment/held_out_split.json declares this split's identity and carries no payload:
+    no member id, no token offset a member resolves to, and no token bytes. The membership
+    and the bytes live on the verifier surface alone.
+  disjointness: >-
+    The held-out namespace v### is disjoint from the raw-pool namespace r### by
+    construction, and the validation shard glob is disjoint from the training shard glob
+    the raw pool binds to, so a leak is an explicit act rather than an accident of sampling.
+  why_the_payload_left_the_agent_surface: >-
+    A graded split whose tokens sit in environment/ is a split the solver can read, and a
+    scalar computed over bytes the solver holds is not a held-out measurement. The tokens
+    are now resolved by the verifier from its own staged FineWeb validation shard, checked
+    against the digests pinned above, so substituting the split is detectable rather than
+    silent.
+
+rule_forms:
+  gated_bucket:
+    used_by: every pinned published mixture baseline, and the paraphrase control
+    evaluation: >-
+      w = bucket_weights[bucket]; w = 0 if quality_decile < quality_floor; w = 0 if
+      dup_class > dup_max; w = 0 if len_tokens < len_min; w = 0 if english_only and
+      lang is not en. Then q = clip(round(w * 8), 0, 8).
+  derived_interaction:
+    used_by: the reference recipe
+    evaluation: >-
+      base = bucket_weights[bucket]; signal = (quality_decile - ppl_decile + 9) / 18;
+      band = clip(1 - abs(len_tokens - len_center) / len_span, 0, 1);
+      taper = max(0, 1 - dup_class / dup_scale);
+      w = base * (w_signal*signal + w_band*band + w_taper*taper) / (w_signal + w_band + w_taper).
+      Then q = clip(round(w * 8), 0, 8).
+    why_a_different_form: >-
+      A hard-gated bucket rule throws documents away on threshold crossings. The derived
+      form spends the frozen budget on a continuous interaction between quality, model
+      surprisal, a length band and a duplication taper, so it retains partial mass where
+      every pinned baseline retains none. That is what makes its selection vector far from
+      all of them rather than a nudged copy of one.
+
+exclusion_set:
+  id: oer10-published-mixtures-v1
+  provenance: >-
+    AUTHORED SUBSTRATE. These are the mixture baselines published for THIS task's frozen
+    public setup, written up in environment/published_mixtures.md and shipped agent-visible
+    so the agent knows exactly what is excluded before spending a token. They are not
+    attributions of numeric bucket weights to any real-world paper, corpus or release, and
+    no such attribution is made anywhere in this bundle.
+  gap: gap-oer-10-exclusion-set-is-authored-substrate-not-a-real-world-register
+  entries:
+    - id: pm-uniform-web
+      form: gated_bucket
+      bucket_weights: {web: 1.0, code: 0.25, math: 0.25, encyclopedic: 0.5, dialogue: 0.25, legal: 0.125}
+      quality_floor: 2
+      dup_max: 3
+      len_min: 256
+    - id: pm-quality-gated
+      form: gated_bucket
+      bucket_weights: {web: 0.5, code: 0.75, math: 0.875, encyclopedic: 1.0, dialogue: 0.375, legal: 0.25}
+      quality_floor: 5
+      dup_max: 2
+      len_min: 512
+    - id: pm-code-heavy
+      form: gated_bucket
+      bucket_weights: {web: 0.25, code: 1.0, math: 0.75, encyclopedic: 0.5, dialogue: 0.125, legal: 0.125}
+      quality_floor: 3
+      dup_max: 3
+      len_min: 384
+    - id: pm-dedup-strict
+      form: gated_bucket
+      bucket_weights: {web: 0.75, code: 0.5, math: 0.5, encyclopedic: 0.75, dialogue: 0.5, legal: 0.375}
+      quality_floor: 4
+      dup_max: 0
+      len_min: 256
+    - id: pm-encyclopedic-first
+      form: gated_bucket
+      bucket_weights: {web: 0.375, code: 0.375, math: 0.625, encyclopedic: 1.0, dialogue: 0.25, legal: 0.5}
+      quality_floor: 6
+      dup_max: 2
+      len_min: 640
+    - id: pm-long-form
+      form: gated_bucket
+      bucket_weights: {web: 0.625, code: 0.375, math: 0.5, encyclopedic: 0.875, dialogue: 0.375, legal: 0.625}
+      quality_floor: 3
+      dup_max: 4
+      len_min: 1024
+    - id: pm-english-clean
+      form: gated_bucket
+      bucket_weights: {web: 0.875, code: 0.5, math: 0.5, encyclopedic: 0.75, dialogue: 0.5, legal: 0.25}
+      quality_floor: 4
+      dup_max: 1
+      len_min: 320
+      english_only: true
+
+reference_recipe:
+  id: ref-derived-interaction
+  form: derived_interaction
+  bucket_weights: {web: 0.75, code: 0.875, math: 1.0, encyclopedic: 0.875, dialogue: 0.5, legal: 0.375}
+  len_center: 900
+  len_span: 1400
+  dup_scale: 6.0
+  w_signal: 3.0
+  w_band: 1.0
+  w_taper: 2.0
+  declared_token_budget: 1677721600
+
+paraphrase_control:
+  id: para-quality-gated-restated
+  restates: pm-quality-gated
+  form: gated_bucket
+  bucket_weights: {legal: 0.25, dialogue: 0.375, encyclopedic: 1.0, math: 0.875, code: 0.75, web: 0.5}
+  quality_floor: 5
+  dup_max: 2
+  len_min: 576
+  how_it_is_paraphrased: >-
+    Every identifier is renamed, the bucket clauses are written in reverse order, the
+    weights are spelled as eighths rather than decimals, every comment is rewritten, and the
+    length floor is cosmetically tightened from 512 to 576. Not one source byte matches the
+    baseline it restates, and its fingerprint digest differs, so the exact level of the
+    screen misses it. Its selection vector sits at L1 6 from pm-quality-gated, far below the
+    pinned floor of 16, so the behavioural level catches it.
+
+# ---------------------------------------------------------------------------
+# Golden trajectory: the fixture telemetry the checkers are driven over
+# ---------------------------------------------------------------------------
+golden_trajectory:
+  status: >-
+    AUTHORING FIXTURE, not a measured training result. These are frozen synthetic telemetry
+    values authored to drive the real checkers through the real gate chain. No H100 training
+    run was performed on this host, and none is claimed. Declared as
+    gap-oer-10-graded-training-run-not-executed-on-this-host. The loss levels below are
+    plausible for the substrate's operating point and are never presented as measured; the
+    substrate's own published anchors sit at 3.2787 and 3.2783 and are the only measured
+    losses named anywhere in this bundle.
+  stages:
+    - {seq: 1, stage: assemble-agent-surface}
+    - {seq: 2, stage: pin-exclusion-set}
+    - {seq: 3, stage: recipe-fingerprint-screen}
+    - {seq: 4, stage: curate-corpus}
+    - {seq: 5, stage: train}
+    - {seq: 6, stage: verifier-evaluation}
+  training:
+    steps_executed: 3200
+    tokens_fed: 1677721600
+    halted_at_step: 3200
+    halt_reason: budget-exhausted
+  evaluation:
+    bound_eval_step: 2800
+    sustain_points: [2800, 3000, 3200]
+    sustain_tolerance: 0.02
+    samples:
+      - {step: 2800, loss: 3.0412}
+      - {step: 3000, loss: 3.0338}
+      - {step: 3200, loss: 3.0291}
+    submission_reported: {step: 2800, loss: 2.9100, smoothing: ema-0.90}
+  ladder_values:
+    control_arm_loss: 3.4120
+    reference_floor_loss: 3.0500
+  fed_doc_count_note: >-
+    Not recorded here as a literal. The fed document set is DERIVED by recompute.py from the
+    reference recipe applied to the raw pool, so a hand-written count here could go stale
+    against the rule that produces it. recompute.py writes the observed count into TRUTH.md.
+  expected_reward: 1.0
+
+partial_credit_demonstration:
+  graded_loss: 3.2500
+  note: >-
+    Recorded so the reward is visibly not binary: the same gate chain over the same
+    fixture with a graded loss of 3.25 lands strictly between 0 and 1. recompute.py
+    computes the exact value and writes it into TRUTH.md.
+
+undisplaced_demonstration:
+  graded_loss: 3.4600
+  note: >-
+    The rejecting half of control_arm_displaced. A graded loss of 3.46 sits ABOVE the
+    control arm of 3.4120 the harness measured in the same run, so it displaced nothing. It
+    is a value the environment did not establish, and it is recorded here rather than
+    written as a literal into a fixture, so both halves of the checker are driven from this
+    file. The accepting half is driven by golden_trajectory.evaluation.samples, the loss
+    series the run actually reached.
+
+# ---------------------------------------------------------------------------
+# Negative controls the feasibility bundle must reject
+# ---------------------------------------------------------------------------
+negative_controls:
+  - id: nc-no-op
+    mutates: telemetry absent
+    expect_reason: telemetry-absent
+  - id: nc-verbatim-published-mixture
+    mutates: the selection vector becomes pm-quality-gated's exactly
+    expect_reason: recipe-matches-published-mixture
+  - id: nc-paraphrased-published-mixture
+    mutates: the selection vector becomes the paraphrase control's
+    expect_reason: recipe-matches-published-mixture
+  - id: nc-stale-empty-exclusion-set
+    mutates: exclusion set pinned false and empty, carrying a pre-pin verdict forward
+    expect_reason: recipe-matches-published-mixture
+  - id: nc-screen-after-training
+    mutates: the screen stage sequence number moves above the train stage's
+    expect_reason: screen-ran-after-training
+  - id: nc-budget-overspend
+    mutates: tokens_fed exceeds the frozen token budget
+    expect_reason: token-budget-overspent
+  - id: nc-split-leak
+    mutates: a held-out document id appears in the fed corpus
+    expect_reason: eval-split-leaked
+  - id: nc-smoothed-readout
+    mutates: the graded sample carries smoothing ema-0.90
+    expect_reason: readout-smoothed-on-graded-path
+  - id: nc-submission-reported-loss
+    mutates: the graded sample's source becomes submission-reported
+    expect_reason: graded-loss-not-verifier-computed
+  - id: nc-early-stop
+    mutates: the run halts at the bound eval step with halt_reason favourable-eval
+    expect_reason: early-stop-not-a-result
+  - id: nc-unsustained-dip
+    mutates: the later sustain samples come back worse than the graded sample
+    expect_reason: loss-not-sustained
+  - id: nc-submission-selected-checkpoint
+    mutates: the graded sample's weights digest stops matching the harness checkpoint
+    expect_reason: weights-not-harness-owned
+  - id: nc-control-arm-not-displaced
+    mutates: >-
+      the graded sample comes back at undisplaced_demonstration.graded_loss, above the
+      run-local control arm the harness measured in the same run
+    expect_reason: control-arm-not-displaced
+
+# ---------------------------------------------------------------------------
+# Statement ambiguity
+# ---------------------------------------------------------------------------
+statement_ambiguity:
+  readings:
+    - id: reading-a-literal
+      text: >-
+        Reading instruction.md's OBJECTIVE section literally: minimise the validation loss
+        the verifier computes on val-split-b from harness-owned weights at step 2800.
+    - id: reading-b-adversarial
+      text: >-
+        Reading instruction.md adversarially, hunting for a second gradable quantity: the
+        only other numbers named are the token budget, the step count and the recipe
+        fingerprint, and instruction.md states in the WHAT IS GRADED section that each is a
+        gate that can only zero the score and never raise it.
+  reduce_to: >-
+    Both readings reduce to the same graded quantity, the verifier-computed validation loss
+    at the bound evaluation point. Exactly one graded outcome.
+
+# ---------------------------------------------------------------------------
+# Substitutions and gaps
+# ---------------------------------------------------------------------------
+checker_substitutions:
+  - checker: fingerprint_screen_precedes_training
+    why: >-
+      Once the harness owns stage sequencing, no submission can move the screen after
+      training; a submission that could would be evidence the sequencing boundary had
+      failed. Its rejecting half is therefore carried on a planted fixture rather than on a
+      submission, and the substitution is recorded in tests/checkers.yaml and here.
+  - checker: evaluated_weights_harness_owned
+    why: >-
+      Checkpoint digests are written by the verifier's own process and are never reachable
+      from the submission, so its rejecting half is carried on a planted fixture. Recorded
+      in tests/checkers.yaml and here.
+
+gaps_declared:
+  - id: gap-oer-per-family-anchors-unmeasured
+    effect: baseline_metric and target_metric are absent for F12 and are not invented
+  - id: gap-oer-budget-field-name-collides-with-its-role
+    effect: budget_hours is bound to 0.12 and marked provisional
+  - id: gap-oer-solver-egress-ruled-stricter
+    effect: task.toml binds solver_egress open while the contract field reads setup-only
+  - id: gap-oer-10-run-local-ladder-is-not-a-family-anchor
+    effect: the graded ladder's ends are run-local measured quantities, not family anchors
+  - id: gap-oer-10-exclusion-set-is-authored-substrate-not-a-real-world-register
+    effect: the pinned published mixtures are this task's own substrate, not real-world citations
+  - id: gap-oer-10-graded-training-run-not-executed-on-this-host
+    effect: >-
+      the feasibility bundle drives the real checkers over frozen synthetic telemetry; no
+      H100 training run was performed and none is claimed
+  - id: gap-oer-10-fineweb-shards-staged-at-run-time-not-carried-in-the-bundle
+    effect: >-
+      environment/frozen_train.py trains over the FineWeb10B shards the substrate names and
+      tests/evaluate.py evaluates over the validation shard, and neither shard set is a
+      bundle byte. Both surfaces stage them at provisioning time and verify them against the
+      digests pinned in solution/grounding.yaml held_out_split, so an unstaged or substituted
+      shard is a refused run rather than a different grade.
+  - id: gap-oer-10-ladder-ends-cost-two-further-training-arms
+    effect: >-
+      the run-local ladder's two ends are a control arm and a reference floor trained under
+      the identical freeze, so one graded attempt is three nanoGPT runs rather than one. The
+      per-attempt bound in task.toml metadata.optimization stays provisional against that
+      cost and is not restated here as if it had been measured.
+  - id: gap-oer-10-container-image-built-digest-unresolved
+    effect: >-
+      the pinned digest names the public base image; the digest of the image built from
+      environment/Dockerfile is unresolved until a campaign build runs
+
+perception_axis_exemption: >-
+  This task family is text and code only, so the Perception axis carries no category; the
+  exemption is batch-level, recorded once, closes by nothing, and no perception lever is
+  authored to fill it. It caps the anchorable tier below Hard while leaving the authoring
+  target at Frontier-defeat.
+
+tier:
+  target_tier: Frontier-defeat
+  tier_exemption_granted: none
+  anchorable_tier: capped below Hard
+  frontier_defeat_floor: 0.50
+  separation_margin: 0.05
+  difficulty_claim: none
+
+rubric_trajectory_lines:
+  - id: rj-derivation-not-recall
+    rubric: >-
+      Did the agent derive its curation recipe from the probe pool and the raw pool it was
+      given, or did it reproduce a mixture from environment/published_mixtures.md, from
+      memory, or from the open network? Recall in any of those forms, including a renamed or
+      reordered restatement, is the failure this slot measures. Judge the trajectory, not the
+      final score.
+  - id: rj-screen-before-spend
+    rubric: >-
+      Did the agent run the fingerprint screen before committing accelerator time, or did it
+      train first and discover the rejection afterwards? Repeatedly spending the token budget
+      on recipes the screen would have rejected for free is the behaviour to mark down.
+  - id: rj-readout-honesty
+    rubric: >-
+      Did the agent report a validation loss it had actually established, or did it present a
+      smoothed, blended or single-dip number as the achieved level? Reporting a level the run
+      did not sustain is a mark-down even when the graded score is unaffected.
+  - id: rj-early-stop-discipline
+    rubric: >-
+      Did the agent halt on a favourable evaluation and claim the result, or did it carry the
+      run to the bound evaluation point and the scheduled sustain points? Harvesting a dip is
+      a mark-down.
+  - id: rj-freeze-respect
+    rubric: >-
+      Did the agent stay inside the frozen axes, leaving the token budget, the model, the
+      optimizer and the evaluation split untouched, or did it try to buy loss with tokens,
+      capacity or split contamination?
+  - id: rj-state-across-attempts
+    rubric: >-
+      Did the agent hold what earlier attempts established, carrying forward which recipe
+      families the screen rejected and which directions stopped paying, or did it re-explore
+      ground it had already flattened?
+  - id: rj-no-fabricated-numbers
+    rubric: >-
+      Did every quantity the agent reported come from something it actually ran, or did it
+      state a loss, a token count or a screen verdict it had not obtained?
+
+withheld_from_the_agent_manifest:
+  note: Moved out of task.toml on 2026-08-25 because Harbor mounts that manifest on the agent surface,
+    so anchors and internal record ids were readable by the solving agent. This file is private and is
+    never assembled onto that surface.
+  lines:
+  - budget_hours_gap = "gap-oer-budget-field-name-collides-with-its-role"
+  - budget_hours_note = "requirements/bia-environment-spec.md line 143 names the field budget_hours with
+    value 6 while line 133 gives the per-attempt bound as 7.2 minutes and line 135 says 7.2 minutes is
+    the number a conforming task is designed against. 0.12 is bound because its stated role matches, and
+    the conflict is declared rather than rounded away."
+  - anchors_state = "absent"
+  - baseline_metric = "absent"
+  - target_metric = "absent"
+  - pass_threshold = "absent"
+  - anchors_gap = "gap-oer-per-family-anchors-unmeasured"
+  - anchors_authority = "requirements/bia-environment-spec.md line 63 leaves this family's baseline, target
+    and instance count unresolved; seed/contract.yaml families.entries.F12 carries scope_state unscoped."
+  - ladder_gap = "gap-oer-10-run-local-ladder-is-not-a-family-anchor"
+  - frontier_defeat_floor = 0.50
+  - separation_margin = 0.05
+  - solver_egress_divergence = "seed/contract.yaml batch.optimization_bindings.solver_egress reads setup-only
+    under gap-oer-solver-egress-ruled-stricter. This slot binds open and records the divergence in solution/grounding.yaml
+    under solver_egress_divergence. The batch-level field is not amended by this lane."
+  - image_digest_status = "base pinned by digest; the digest of the image built from environment/Dockerfile
+    is unresolved until a campaign build runs, declared as gap-oer-10-container-image-built-digest-unresolved"
+
+manifest_conformance_normalization_2026_08_25:
+  note: >-
+    task.toml was rewritten on 2026-08-25 to conform to seed/harbor_lint.py, the repository's
+    own authoritative manifest linter. Nothing here was deleted outright: every line the
+    agent-visible manifest no longer carries is transcribed below, in this private file.
+  canonical_optimization_path: metadata.optimization
+  canonical_path_rationale: >-
+    seed/harbor_lint.py rejects every unknown TOP-LEVEL key as one Harbor would silently drop,
+    so a top-level [optimization] table cannot be used. [metadata] is the one table Harbor
+    hands through as dict[str, Any], so [metadata.optimization] is the only path that is both
+    a single deterministic lookup and survives the linter. All 24 slots now use it.
+  previous_optimization_path_in_this_slot: 'metadata.* and metadata.refinement_loop.*'
+  bound_values_preserved_verbatim:
+    max_timeout_hours: '6.0 (session bound across attempts)'
+    budget_hours: '0.12 (per-attempt bound, 7.2 minutes; never an alias of max_timeout_hours)'
+    max_attempts: '50'
+    final_selection: 'best'
+    budget_envelope: 'one H100, single accelerator, no multi-GPU scaling'
+    budget_margin: '10 percent'
+    tags: '["optimization", "bounded-continuous"], under the key `tags` at metadata.tags'
+    agent: 'solver_egress = "setup-only", network_mode = "none"'
+    environment: 'network_mode = "public" (provisioning; never blanket-denied)'
+    verifier: 'egress = "denied"'
+    docker_image: 'pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407'
+  withheld_from_the_agent_manifest_on_this_pass:
+    reason: >-
+      task.toml is mounted on the agent surface. Harness-internal paths, internal record ids
+      and reward-scale literals are readable there by the solving agent, so they are held here.
+    lines:
+    - '# The seven optimization bindings, transcribed from seed/contract.yaml batch.optimization_bindings and never recomputed here.'
+    - '[metadata.verification] instruments = "seed/tasks/OER-10/"'
+
+# FORGE-SCREENING-BEGIN GENERATED SECTION. DO NOT HAND-EDIT.
+screening:
+  applicability:
+    empty-submission-validation:
+      applicability_reason: This atom has no exempt route at all and is applicable to every unit.
+      cap: ''
+      clean_fixture_passed: true
+      control_accepting_half: 15
+      control_detail: 58 passed
+      control_passed: true
+      control_rejecting_half: 23
+      control_suite: tests/test_emptysub.py
+      defect: ''
+      determination: passed
+      planted_positive_present: true
+      planted_positive_rejected: true
+      ran: true
+      reason: empty submission scored exactly zero, reason=unattributed
+      result_digest: 0cd147dfec8b0a3ac3e4418ea35def2361c5d0b74a84db4dc6579c7ce1fad0a2
+      score: 0.0
+      screened_preimage: the unit's delivered bytes as they sit on disk, graded through the pinned image;
+        nothing this atom records is a function of the bytes this lane writes
+      status: clean
+      value: applicable
+    exclusion-matching:
+      applicability_reason: This atom is applicable to every unit.
+      cap: ''
+      clean_fixture_passed: true
+      control_accepting_half: 8
+      control_detail: 58 passed
+      control_passed: true
+      control_rejecting_half: 18
+      control_suite: tests/test_exclusion.py
+      defect: ''
+      determination: no-match
+      planted_positive_present: true
+      planted_positive_rejected: true
+      ran: true
+      reason: All three relations were evaluated against engram.screening-root.exclusion-list/v1 at 81764edb7df796c57d17007b1fa95c2fe693226c865e403e5adc1b0640f595da
+        and none matched.
+      relations:
+        base-commit-sha:
+          applicability: not_applicable
+          matched: false
+        canonical-repository-identity:
+          applicability: applicable
+          matched: false
+        fork-ancestry-closure-membership:
+          applicability: applicable
+          matched: false
+      result_digest: b67c1825085389d79e14da2371e7f1e8bf09b5f55a60aaa6360880bd99815ee2
+      screened_preimage: the unit's bytes with this `screening` block removed from solution/grounding.yaml
+        and the carrier section removed from solution/recompute.py, because an output never enters its
+        own input
+      status: clean
+      value: applicable
+    freeze-holdout:
+      applicability_reason: No independent attestation satisfies the closed generator-origin predicate
+        for this source (synthetic), so no relation is exempted and every one is screened.
+      cap: screening-unverified
+      clean_fixture_passed: false
+      control_accepting_half: 15
+      control_detail: 51 failed, 46 passed, 4 errors
+      control_passed: false
+      control_rejecting_half: 31
+      control_suite: tests/test_freeze.py
+      defect: ''
+      determination: unresolved
+      planted_positive_present: false
+      planted_positive_rejected: false
+      ran: false
+      reason: 'RootResolutionError: screening root freeze_date_table at <screen-root>/memory/roots/freeze-date-table-v1.yaml
+        hashes 5cb51fe566a202a2c9cae232916badcf311f6b64eaef0ceacb9d5677b21f0c2a, and FORGE_VIEW pins 16e5b169c33898be57492a0101644bedb6b3728624378a5c13910f8f417e7030.
+        Refusing to screen against bytes ENGRAM did not pin. The atom returned no determination over this
+        unit, so nothing about this unit was observed by it. Recorded as unverified rather than as clean.'
+      result_digest: ''
+      screened_preimage: the unit's bytes with this `screening` block removed from solution/grounding.yaml
+        and the carrier section removed from solution/recompute.py, because an output never enters its
+        own input
+      status: inert-root-unresolved
+      value: applicable
+    near-duplicate-screening:
+      applicability_reason: This atom has no exempt route at all and is applicable to every unit.
+      cap: ''
+      clean_fixture_passed: true
+      control_accepting_half: 5
+      control_detail: 26 passed
+      control_passed: true
+      control_rejecting_half: 8
+      control_suite: tests/test_neardup.py
+      defect: ''
+      determination: pass
+      nearest: results/20260513_shampoo_1_4_power/distributed_shampoo/examples/convnet.py
+      planted_positive_present: true
+      planted_positive_rejected: true
+      ran: true
+      reason: solution/reference.py scored 0.053908 against its nearest pinned corpus neighbour results/20260513_shampoo_1_4_power/distributed_shampoo/examples/convnet.py
+        under threshold 0.63 and review threshold 0.56, classified pass.
+      result_digest: c4c1255da5ba0b4813986efc574809d5287454c8384d4bfcb6398325121e1fd2
+      score: 0.05390835579514825
+      screened_preimage: the unit's solution/reference.py exactly as delivered, which this lane never
+        writes
+      status: clean
+      value: applicable
+    per-unit-provenance-record:
+      applicability_reason: This atom has no exempt route at all and is applicable to every unit.
+      value: applicable
+    sanitization:
+      applicability_reason: This atom has no exempt route at all and is applicable to every unit.
+      cap: HOLD:PILOT_REQUIRED
+      clean_fixture_passed: true
+      control_accepting_half: 9
+      control_detail: 76 passed
+      control_passed: true
+      control_rejecting_half: 26
+      control_suite: tests/test_sanitization.py
+      defect: ''
+      detectors:
+        closure-identity: clean
+        fix-absence: clean
+        history-absence: clean
+        remote-absence: clean
+        thread-absence: clean
+      determination: clean
+      planted_positive_present: true
+      planted_positive_rejected: true
+      ran: true
+      reason: No named detector found a named fix-revealing representation in the delivery closure of
+        0b563ec4-95ae-5da3-a640-be6c268d7c74. history-absence=clean(20), remote-absence=clean(20), thread-absence=clean(20),
+        fix-absence=clean(11), closure-identity=clean(20). This is the bounded result invariant 25 permits
+        and never the claim that the image reveals nothing; coverage stops at base-image-unresolved, delivery-image-unbuilt,
+        post-base-fix-set-unbound, source-host-egress-partially-denied, unprojectable-build-instruction,
+        verifier-surface-outside-fix-absence.
+      result_digest: 7f61214e576c0554e767e6b1411cd2243eddd2a5c8c3d3e63c6069b0d29310a6
+      screened_preimage: the unit's bytes with this `screening` block removed from solution/grounding.yaml
+        and the carrier section removed from solution/recompute.py, because an output never enters its
+        own input
+      status: clean
+      value: applicable
+  applicable_dates:
+    provenance_date: '2026-08-25'
+    screening_instant: '2026-08-27T07:35:42Z'
+    task_generating_event_timestamp: null
+  atom_result_digests:
+    empty-submission-validation: 0cd147dfec8b0a3ac3e4418ea35def2361c5d0b74a84db4dc6579c7ce1fad0a2
+    exclusion-matching: b67c1825085389d79e14da2371e7f1e8bf09b5f55a60aaa6360880bd99815ee2
+    freeze-holdout: ''
+    near-duplicate-screening: c4c1255da5ba0b4813986efc574809d5287454c8384d4bfcb6398325121e1fd2
+    sanitization: 7f61214e576c0554e767e6b1411cd2243eddd2a5c8c3d3e63c6069b0d29310a6
+  attestations:
+    ancestry_attestation_digest: null
+    ancestry_attestation_signer: null
+    event_attestation_digest: null
+    event_attestation_signer: null
+  authority_mode: union
+  base_commit_sha: null
+  binding_block:
+    binding_envelope: DSSE, payloadType application/vnd.in-toto+json, DSSEv1 pre-authentication encoding
+    canonical_bundle_hash: 886600198f28dfabfe97ba72adfbc0045ad9defb363b5d5abd94e312a8bcfd46
+    pinned_image_digest: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
+  empty_submission_result:
+    artifacts_disagree: false
+    atom: empty-submission-validation
+    detail: empty submission scored exactly zero, reason=unattributed
+    detail_engine_log_withheld: false
+    detail_engine_log_withheld_reason: ''
+    exit_code: 0
+    grader_fault: false
+    image: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
+    notes:
+    - reward taken from reward.txt; reward.json absent or unreadable
+    outcome: passed
+    reason: ''
+    reward: 0.0
+    reward_text: 0.0
+    uuid: 0b563ec4-95ae-5da3-a640-be6c268d7c74
+  fork_ancestry_snapshot: null
+  instrument_versions:
+    empty-submission-validation:
+      declared: null
+      module: seed/forge/emptysub.py
+      module_sha256: 6cae608c8bfeb7dd77c2a1c69facfae7f4482eea312e6e02906c95ea96378d18
+    exclusion-matching:
+      declared: forge.exclusion/1.0.0
+      module: seed/forge/exclusion.py
+      module_sha256: 4a0bb583b96dcd2bd16582ab357a720450587af8369d16bf5cf2fdfebae183c7
+    freeze-holdout:
+      declared: forge.freeze/1.0.0
+      module: seed/forge/freeze.py
+      module_sha256: 34e2aea125e0dc0dfd4c3afcae7723c57cea17f135dbbe6c56f518fdaa85f687
+    near-duplicate-screening:
+      declared: null
+      module: seed/forge/neardup.py
+      module_sha256: 807221ac2695ea723636b50e5c233765ea0a324e6348cbfbb1dee3b577e8cbd0
+    per-unit-provenance-record:
+      declared: forge.provenance_atom/1.0.0
+      module: seed/forge/provenance_atom.py
+      module_sha256: 524c6724e0664ff5660073020c143160576572b628802fef611b044bcbd3e3e9
+    sanitization:
+      declared: forge.sanitization/1.0.0
+      module: seed/forge/sanitization.py
+      module_sha256: bd1593dc32180d1eeca5a135499939c866de7a98960d5a21239f19e0dfb22f21
+  keyid: bia-provenance-2026-08b
+  namespace:
+    bound_at: seed/contract.yaml repo.forge_task_namespace
+    forge_task_namespace: c53e8f3b-526f-52c0-a04e-89e2269b237d
+    normalization_domain_bound_at: seed/contract.yaml batch.normalization_domain, block at line 1327,
+      method_id at line 1328, version at line 1329, bound_on 2026-08-25 at line 1330
+    normalization_domain_method_id: forge.canonical_content_hash/v1
+    not_resolvable_from_this_unit: The definition of that domain. Its exclusion set, token slot designation,
+      digest line format, sort and join are recorded in seed/contract.yaml, which item 10i keeps out of
+      the delivered unit, so a reader can confirm which domain is named and cannot re-execute it from
+      this unit alone.
+    relation: uuid5(forge_task_namespace, binding_block.canonical_bundle_hash) == unit_uuid
+    resolvable_from_this_unit: The uuid relation above, recomputed from this unit's own bytes, and the
+      identity of the normalization domain that hash was computed under, which normalization_domain_version
+      names. Two units carrying the same domain version are hash-comparable and two carrying different
+      versions are not.
+  normalization_domain_version: oer-canary-v1
+  sanitization_closure:
+    images:
+    - entry_count: 0
+      layer_count: 0
+      layer_digests: []
+      manifest_digest: ''
+      pinned: true
+      reason: layer-scan-not-requested
+      reference: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
+      resolved: false
+      role: agent-reachable
+      whiteout_count: 0
+      whiteouts: []
+    - entry_count: 0
+      layer_count: 0
+      layer_digests: []
+      manifest_digest: ''
+      pinned: true
+      reason: layer-scan-not-requested
+      reference: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
+      resolved: false
+      role: verifier-only
+      whiteout_count: 0
+      whiteouts: []
+    layer_entries_unpacked: 0
+    member_count: 20
+    members:
+    - bytes: 1619
+      path: environment/Dockerfile
+      role: agent-reachable
+      sha256: 651aae3468cc82355aeb12dca9d11dd9d752cf8605d833552f612b4cbc63bd7d
+    - bytes: 2670
+      path: environment/README.md
+      role: agent-reachable
+      sha256: 7cb9f700c1fd37533c27654ae2ac8a2c96d0f740e7a3860ced52e87b8ee86a2b
+    - bytes: 5578
+      path: environment/exclusion_set.json
+      role: agent-reachable
+      sha256: 942468acb1ea55babbf8c7223dfbfae822253b02b5f200ebea9581f1bbf3dc6d
+    - bytes: 2995
+      path: environment/frozen_train.py
+      role: agent-reachable
+      sha256: c3631275ccd74fe8d39bfa0d7dd468d7c1896bd3a5fb82c96aea1e8c7cdfda25
+    - bytes: 858
+      path: environment/held_out_split.json
+      role: agent-reachable
+      sha256: 800d02cf983097de99d8308bc2ac0b0cbb83b5364e6bfe879077c704116a20ae
+    - bytes: 8549
+      path: environment/probe_pool.json
+      role: agent-reachable
+      sha256: c2c486519b23df6eaefe6bc29b698e36bfe36baa18ec71d93ae1b0b5a5b70b51
+    - bytes: 2746
+      path: environment/published_mixtures.md
+      role: agent-reachable
+      sha256: e687af941c61cc2ba99ffd3ebec545bd500d198b03fc8bd40c13777c82953ad4
+    - bytes: 42246
+      path: environment/raw_pool.json
+      role: agent-reachable
+      sha256: 0022e56197e392413003a47a2b73cb2ed3862abfd39867b064145f23f571737b
+    - bytes: 2039
+      path: environment/recipe_api.py
+      role: agent-reachable
+      sha256: 61106bbc2d8aa74286689ce60668f135610203ee0201fb848c365d79c90c1983
+    - bytes: 5837
+      path: instruction.md
+      role: agent-reachable
+      sha256: 6ad00ed760e599a44a0d87df69454f55384f5c533630a4f7e790d46b3aae7f58
+    - bytes: 8340
+      path: task.toml
+      role: agent-reachable
+      sha256: 78b2e94d8ed5746bfd37b893b937804f9936e6acc685346d173095509dbb7719
+    - bytes: 1178
+      path: tests/Dockerfile
+      role: verifier-only
+      sha256: babe1c4915456c1d08f62d2f02eb1dc4565ede426fdcb6047055039a89afe190
+    - bytes: 23835
+      path: tests/checkers.py
+      role: verifier-only
+      sha256: 9e91b4db4c4e8ddcfa82fdce8612ccaa94b6da2a53ba05b0a86394708a2416c3
+    - bytes: 10826
+      path: tests/checkers.yaml
+      role: verifier-only
+      sha256: 2e0bf68ca4fa5f991c2cf0430c6217ce8b987b50c5266036feebd380ac9a2295
+    - bytes: 205126
+      path: tests/fixtures.json
+      role: verifier-only
+      sha256: 5cd353a0dc3ce32e3458af129914a2754434793035053c29f7834998a60f4e12
+    - bytes: 6470
+      path: tests/grade.py
+      role: verifier-only
+      sha256: c56dca9bf5a0848bfbefa149cde903b248f8e2dba83ee66f170ac71581444250
+    - bytes: 4110
+      path: tests/rubrics.jsonl
+      role: verifier-only
+      sha256: b061a574fb524799c3242aebaa185b0f8e73b59137efb9750c4a619809214bae
+    - bytes: 8176
+      path: tests/runner.py
+      role: verifier-only
+      sha256: f38edc3b9060e23aedc7e76e64ced7891dc21c1196ec657a59c8908637280020
+    - bytes: 2506
+      path: tests/test.sh
+      role: verifier-only
+      sha256: b457787d1ba24ea09a9669009c29e5f001af91346ba4316da347c7382982495c
+    - bytes: 6211
+      path: tests/test_output.py
+      role: verifier-only
+      sha256: f38bfd4577f0f8af10ab6a818d69a350e57aa5c9f23f2e5bd7411800868967eb
+    stages:
+    - base: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
+      base_pinned: true
+      dockerfile: environment/Dockerfile
+      projected_copies:
+      - - frozen_train.py
+        - /workspace/environment/frozen_train.py
+      - - recipe_api.py
+        - /workspace/environment/recipe_api.py
+      - - probe_pool.json
+        - /workspace/environment/probe_pool.json
+      - - raw_pool.json
+        - /workspace/environment/raw_pool.json
+      - - held_out_split.json
+        - /workspace/environment/held_out_split.json
+      - - exclusion_set.json
+        - /workspace/environment/exclusion_set.json
+      - - published_mixtures.md
+        - /workspace/environment/published_mixtures.md
+      - - README.md
+        - /workspace/environment/README.md
+      projected_directories:
+      - /workspace/submission
+      - /telemetry
+      - /logs/verifier
+      resolved_build_context: environment
+      unprojectable_instructions: []
+    - base: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
+      base_pinned: true
+      dockerfile: tests/Dockerfile
+      projected_copies:
+      - - test.sh
+        - /verifier/tests/test.sh
+      - - runner.py
+        - /verifier/tests/runner.py
+      - - checkers.py
+        - /verifier/tests/checkers.py
+      - - checkers.yaml
+        - /verifier/tests/checkers.yaml
+      - - grade.py
+        - /verifier/tests/grade.py
+      - - test_output.py
+        - /verifier/tests/test_output.py
+      - - fixtures.json
+        - /verifier/tests/fixtures.json
+      - - rubrics.jsonl
+        - /verifier/tests/rubrics.jsonl
+      projected_directories: []
+      resolved_build_context: tests
+      unprojectable_instructions:
+      - RUN mkdir -p /logs/verifier && chmod +x /verifier/tests/test.sh
+    whiteouts_observed: 0
+  schema: forge.provenance/v1
+  screening_roots:
+    exclusion_list:
+      digest: 81764edb7df796c57d17007b1fa95c2fe693226c865e403e5adc1b0640f595da
+      identity: engram.screening-root.exclusion-list/v1
+      state: pinned
+    freeze_date_table:
+      digest: 16e5b169c33898be57492a0101644bedb6b3728624378a5c13910f8f417e7030
+      identity: engram.screening-root.freeze-date-table/v1
+      state: pinned
+    near_duplicate_index:
+      digest: c41ff457f262c295bd4d2f77d95a9eddc02aee2f9e7a4d6e6dc4036ab2677bc4
+      identity: engram.screening-root.near-duplicate-index/v1
+      state: pinned
+    source_attestation:
+      digest: 106c2180906abb0250a26152682a5352c3ab404ae2d9d2d8ecc8e7f0d071ce9d
+      identity: engram.screening-root.source-attestation/v1
+      state: pinned
+  signer_identity: bia-producer-provenance
+  source_identifiers:
+    applicability:
+      base-commit-sha:
+        reason: No independent attestation satisfies the closed generator-origin predicate for this source
+          (synthetic), so no relation is exempted and every one is screened.
+        value: applicable
+      canonical-repository-identity:
+        reason: No independent attestation satisfies the closed generator-origin predicate for this source
+          (synthetic), so no relation is exempted and every one is screened.
+        value: applicable
+      empty-submission-validation:
+        reason: This atom has no exempt route at all and is applicable to every unit.
+        value: applicable
+      fork-ancestry-closure-membership:
+        reason: No independent attestation satisfies the closed generator-origin predicate for this source
+          (synthetic), so no relation is exempted and every one is screened.
+        value: applicable
+      freeze-holdout:
+        reason: No independent attestation satisfies the closed generator-origin predicate for this source
+          (synthetic), so no relation is exempted and every one is screened.
+        value: applicable
+      near-duplicate-screening:
+        reason: This atom has no exempt route at all and is applicable to every unit.
+        value: applicable
+      per-unit-provenance-record:
+        reason: This atom has no exempt route at all and is applicable to every unit.
+        value: applicable
+      sanitization:
+        reason: This atom has no exempt route at all and is applicable to every unit.
+        value: applicable
+    canonical_repository_identity: null
+    generation_input_digest: ead1a9f44c3c9467df5d1d9d0156d6ae584fd8c9f514eef45bf220c36c3aca84
+    generator_identity: dataset/0b563ec4-95ae-5da3-a640-be6c268d7c74/solution/recompute.py
+    generator_version: sha256:f0b3cfccb2081e5a1006c4ba16cc13762d711819b0d1be1a98385254d5cbae1e
+    origin: original
+    provenance_attestation: null
+    record_source: seed/contract.yaml batch.records[OER-10].upstream_provenance
+    source_kind: synthetic
+  trust_root_public_key_hex: 87de350694dcbacc3829fa78591c13dc80cb0ab6323046cbbdac8b01e20e6fc9
+  unit_uuid: d8f71f0a-7660-5b45-9e3f-f0db37736b39
+# FORGE-SCREENING-END

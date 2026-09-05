@@ -1,0 +1,16 @@
+{
+  "accelerators": 1,
+  "banner": "GENERATED SECTION. DO NOT HAND-EDIT.",
+  "chunk_penalty_ticks": 2,
+  "chunk_tokens": 48,
+  "envelope": "one H100, single accelerator, no multi-GPU scaling",
+  "frozen": true,
+  "prefill_tokens_per_tick": 24,
+  "schema": "oer23.hardware/v1",
+  "source": "solution/grounding.yaml",
+  "step_base_ticks": 8,
+  "step_slot_div": 4,
+  "step_slot_ticks": 3,
+  "tick_seconds_den": 1000,
+  "tick_seconds_num": 1
+}

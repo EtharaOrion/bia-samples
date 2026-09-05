@@ -1,0 +1,136 @@
+schema_version = "1.4"
+
+# schema_version is a TOP-LEVEL scalar and is written above the first table header on purpose.
+# TOML scopes every key to the most recent header, so an assignment below [task] would silently
+# become task.schema_version and leave the top-level scalar absent while the file still reads
+# correct to a human.
+
+artifacts = [
+  "/app/submission.json",
+  "/logs/agent/trajectory.jsonl",
+  "/logs/verifier/reward.txt",
+  "/logs/verifier/score.json",
+]
+
+[task]
+name = "bia/oer-26-producer-fence-over-a-linked-crossing-stream"
+version = "1.0.0"
+description = "Enforce a fence between a producer's linked crossing stream and a consumer's admission registry: admit exactly the admissible kinds, refuse the rest with the reason a strict precedence assigns, and account for every crossing. Neither the number of crossings the chain presents nor the set of kinds the fence admits is stated; both are established in built image state and must be recovered through the harness handle."
+authors = ["Bia"]
+keywords = ["enforcement", "bounded-continuous", "producer-fence", "boundary-accounting"]
+
+[metadata]
+tags = ["optimization", "bounded-continuous", "enforcement"]
+category = "enforcement"
+slot = "OER-26"
+provisional_identifier = "OER-26"
+title = "Enforcing a producer fence over a linked crossing stream"
+family = "F3"
+family_title = "producer and consumer boundary enforcement"
+primary_archetype = "producer-fence"
+primary_archetype_title = "Producer Fence"
+archetype_count = 1
+entry_point_tests = "tests/test.sh"
+entry_point_solution = "solution/solve.sh"
+
+target_tier = "T2"
+tier_exemption_granted = "none"
+
+[metadata.discovery]
+count = 2
+state = "established in built environment state, absent from the statement"
+value_one = "the number of crossings the producer chain presents at the fence"
+value_one_handle = "fencelib.open_fence().crossings()"
+value_two = "the set of kinds the fence registry admits"
+value_two_handle = "fencelib.open_fence().admitted_kinds()"
+established_by = "environment/build_fence.py, run at image build time by both Dockerfiles"
+carried_in_bound_as = "a salted commitment over each value, never the value"
+note = "Neither value appears in instruction.md, in this manifest, in environment/ or in tests/. The checkers recompute both from harness-owned telemetry on every graded run, so no checker compares against a literal."
+
+[metadata.statement_closure]
+fixed_by_statement = [
+  "the chain semantics, that a segment nothing links to emitted no crossing",
+  "the registry seal rule that decides whether a declaration is admitted",
+  "the attestation preimage that decides whether a crossing record is attested",
+  "the well-formedness rule over the closed record field set",
+  "the four refusal reasons and the strict precedence between them",
+  "that quota is spent in chain order",
+]
+never_named_by_statement = ["the fence-crossing count", "the admitted-kind set"]
+
+[metadata.metric]
+name = "verdict agreement over every crossing the chain presents"
+direction = "higher"
+computed_by = "the verifier, from a traversal the harness performed in an isolated subprocess over the fence state the verifier image was built with"
+agreement_rule = "a verdict agrees only when both its decision and its refusal reason match the verdict the stated fence semantics produce for that crossing at that position"
+frozen = ["the fence registry", "the producer segment chain", "the fence semantics", "the four refusal reasons and their precedence"]
+free = ["the verdict the solver returns for each crossing, and the counts it accounts them with"]
+
+[metadata.anchors]
+state = "absent"
+authority = "This family is unscoped and records no baseline, target, pass threshold or instance count. The reward schema below is bound in full and no family number is invented here."
+
+[metadata.reward]
+carrier_path = "/logs/verifier/reward.txt"
+carrier_form = "one bare float"
+score_document_path = "/logs/verifier/score.json"
+interval = [0.0, 1.0]
+direction = "higher"
+never_binary = true
+full_reward_exactly = 1.0
+formula = "raw = (agreement - baseline_agreement) / (1.0 - baseline_agreement)"
+clip = "score = min(max(raw, 0.0), 1.0)"
+aggregation = "required_pass over the eight required checkers, then the continuous agreement term"
+baseline_policy = "decisions right on every crossing, every refusal flattened to one reason"
+bar_not_point = "Enforcing the fence exactly scores 1.0. The baseline policy passes every gate and scores 0.0, which is what keeps the reward continuous rather than binary."
+
+
+[metadata.optimization]
+max_timeout_role = "refinement-loop terminator across attempts"
+max_timeout_hours = 6.0
+budget_hours_role = "per-attempt completion bound"
+budget_hours = 0.3
+budget_hours_minutes = 18.0
+max_attempts = 20
+final_selection = "best"
+budget_envelope = "one H100, single accelerator, for the whole per-attempt budget"
+compute_envelope_accelerators = 1
+budget_margin = "10 percent"
+[metadata.clock]
+owner = "harness"
+note = "THE HARNESS OWNS THE CLOCK, and on this slot it owns the traversal too. environment/fence_probe.py walks the producer chain in an isolated subprocess and emits a record stream. Every checker reads those records and never calls a clock and never walks the fence inside the grading interpreter."
+
+[metadata.substrate]
+kind = "deterministic build artifact"
+note = "The fence state is materialised at image build time by an integer recurrence, so the task image and the verifier image carry byte-identical state and a checker's verdict is recomputable by an outside reader. It never passes as an observation of a running production system."
+
+[metadata.build]
+dockerfile = "environment/Dockerfile"
+verifier_dockerfile = "tests/Dockerfile"
+verifier_build_context = "."
+verifier_build_context_note = "The verifier image bakes the SAME generator as the task image so that it establishes the fence state for itself rather than receiving it. That requires the bundle root as build context, which is why image_definition_path is the bundle root and not tests/."
+image_definition_path = "."
+pin_kind = "digest"
+pin_note = "Pinned by @sha256 and never by a floating tag. Harbor accepts any string and does not itself require a digest, so the digest requirement is this contract's."
+dependencies = "standard library only, baked at build time, nothing fetched at graded time"
+pep668_note = "The base image is Debian 12 with Python 3.12 and enforces PEP 668, so any pip install there would need --break-system-packages. No pip install is performed on either surface."
+
+[environment]
+docker_image = "pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407"
+gpus = 1
+# Provisioning egress. Denying it here would leave the task unable to install.
+network_mode = "public"
+
+[verifier]
+docker_image = "pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407"
+image_definition_path = "."
+egress = "denied"
+network_mode = "none"
+egress_note = "The verifier keeps the bound network policy. A verifier that can reach the network is a verifier whose verdict can be fetched."
+
+[agent]
+solver_egress = "setup-only"
+solver_egress_deny = ["github.com", "raw.githubusercontent.com", "objects.githubusercontent.com"]
+solver_egress_note = "The solving agent gets open internet egress inside the sandbox so it can fetch its own packages; the verifier surface is denied. The asymmetry is deliberate and bound here rather than accidental."
+deny_list_is_not_containment = "The deny-list is not a containment proof. Nothing on the network carries this instance's fence state, because that state is established at image build time from a generator that ships inside the bundle, which is why the deterministic checker and not the network policy is the load-bearing control."
+network_mode = "none"

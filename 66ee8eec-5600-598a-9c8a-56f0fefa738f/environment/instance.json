@@ -1,0 +1,11 @@
+{
+  "acceptance_predicate": "every unordered difference of the construction is distinct over the whole difference range, with no window anywhere",
+  "banner": "GENERATED SECTION. DO NOT HAND-EDIT.",
+  "element_ceiling_exclusive": 307,
+  "element_floor": 0,
+  "modulus": 307,
+  "name": "cyclic difference construction over a prime-power projective order",
+  "projective_order": 17,
+  "schema": "oer25.instance/v1",
+  "source": "solution/grounding.yaml"
+}

@@ -1,0 +1,255 @@
+schema: forge.checkers/v1
+reduction_kinds: [VALUE, EFFECT, ABSENCE, INVARIANT, ORDERING, DIVERGENCE]
+
+# MEASURED CORRECTION, carried from the wave-1 lanes: the live seed/forge/verifier.py
+# binds the reward carrier to reward.txt, not reward.json. The bare float goes to
+# reward_path and the machine-readable reason and metric block go to the companion
+# score document. tests/grade.py writes both from one call, so the instrument's binding
+# and the reason carrier can never disagree, and tests/test.sh traps on every exit path.
+reward_path: /logs/verifier/reward.txt
+score_document_path: /logs/verifier/score.json
+
+aggregation:
+  mode: required_pass
+  rationale: >-
+    tests/grade.py runs every checker below, and a single failure zeroes the score with
+    that checker's reason and stops. That is exactly required_pass over the closed checker
+    set: a universal quantifier over the required criteria, with a named criterion in it so
+    it never reports success for having checked nothing. The gate can only zero a score.
+    The reward itself is NOT the gate's bit: once the gate passes, grade.ladder computes a
+    continuous float from the verifier-computed validation loss against the two run-local
+    measured ends the harness produced, so the reward is a float on [0.0, 1.0] and never
+    binary. required_pass names what the gate does; the ladder is what turns a passing gate
+    into a number.
+
+reward:
+  kind: single float
+  interval: closed, 0.0 to 1.0
+  direction: higher is better
+  binary: false
+  full_reward_value: 1.0
+  formula: raw = (control_arm_loss - graded_loss) / (control_arm_loss - reference_floor_loss)
+  clip: score = min(max(raw, 0.0), 1.0)
+  anchors_state: absent
+  baseline_metric: null
+  target_metric: null
+  anchors_gap: gap-oer-per-family-anchors-unmeasured
+  ladder_state: run-local-measured
+  ladder_gap: gap-oer-10-run-local-ladder-is-not-a-family-anchor
+
+purity:
+  imports_allowed: [json, math, hashlib, pathlib, dataclasses, typing]
+  never: >-
+    no planted file read, no environment-secret read, no random source, no clock read, no
+    network, and no import of the submission. Every number a checker uses comes from the
+    telemetry record the verifier's own process wrote in tests/runner.py, never from a
+    value the submission printed or reported.
+  grading_process: >-
+    tests/runner.py copies the submission alone into a fresh temporary directory, launches
+    it as a new session leader under a five-key environment allowlist, captures its output,
+    and kills the whole process group in a finally block. tests/grade.py imports the
+    checkers and reads the reference bytes, and never imports the submission.
+
+checkers:
+  - id: recipe_not_a_replay
+    statement: >-
+      The submitted recipe's BEHAVIOURAL fingerprint, recomputed by the verifier from the
+      selection the recipe produced on the frozen probe pool, diverges from every entry of
+      the pinned published-mixture exclusion set: it equals no pinned digest, and its L1
+      distance to the nearest pinned selection vector is at or above the pinned floor.
+    reduction: DIVERGENCE
+    reached_by: tests/grade.py
+    selector: check_recipe_not_a_replay
+    compiled_test: "tests/test_output.py::test_recipe_not_a_replay"
+    zero_reason: recipe-matches-published-mixture
+    required: true
+    weight: 4
+    live_state_read: >-
+      tests/runner.py telemetry recipe_fingerprint.selection_vector, the quantised weight the
+      submission assigned to each of the 48 frozen probe documents when the verifier's own
+      process executed it, and exclusion_set.entries, pinned from environment/exclusion_set.json
+    behavioural_not_textual: >-
+      The vector characterises what the recipe DOES, so a renamed, reordered, re-worded or
+      cosmetically re-thresholded restatement of a published mixture selects the same probe
+      documents at the same weights and is caught at the proximity level even though not one
+      source byte and not the digest matches. Source-level paraphrase does not defeat it.
+    runs_before_training: >-
+      stage 3 of 6. Training does not begin before stage 5, so a rejected replay costs zero
+      accelerator time. Proven by fingerprint_screen_precedes_training.
+    network_denial_is_not_this_control: >-
+      Solver egress is open by binding. Mirrors, caches, paraphrased write-ups and model
+      weights all carry a recipe past any deny-list, so the deny-list is hygiene and this
+      checker is the control.
+
+  - id: fingerprint_screen_precedes_training
+    statement: >-
+      The exclusion set was pinned, then the fingerprint screen ran, and only then did any
+      training step execute; a run with training steps and no recorded screen stage fails.
+    reduction: ORDERING
+    reached_by: tests/grade.py
+    selector: check_fingerprint_screen_precedes_training
+    compiled_test: "tests/test_output.py::test_fingerprint_screen_precedes_training"
+    zero_reason: screen-ran-after-training
+    required: true
+    weight: 3
+    live_state_read: >-
+      tests/runner.py telemetry stages[], the sequence numbers the verifier's own process
+      wrote as it walked the frozen stage order, and training.steps_executed
+    adequacy_substitution: >-
+      Once the harness owns stage sequencing, no submission can move the screen after
+      training, and one that could would be evidence the sequencing boundary had failed. The
+      rejecting half is therefore carried on the planted fixture nc-screen-after-training
+      rather than on a submission. Recorded here and in seed/tasks/OER-10/feasibility.yaml
+      rather than papered over.
+
+  - id: graded_loss_is_verifier_computed
+    statement: >-
+      Exactly one evaluation sample sits at the bound evaluation point and it carries source
+      verifier-recompute, so the graded loss is the verifier's own evaluation and never a
+      number the submission reported, printed or wrote.
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: check_graded_loss_is_verifier_computed
+    compiled_test: "tests/test_output.py::test_graded_loss_is_verifier_computed"
+    zero_reason: graded-loss-not-verifier-computed
+    required: true
+    weight: 4
+    live_state_read: >-
+      tests/runner.py telemetry evaluation.samples[] at evaluation.bound_eval_step, with
+      evaluation.submission_reported carried alongside precisely so the checker can show it
+      was not what was graded
+
+  - id: graded_readout_unsmoothed
+    statement: >-
+      The graded sample carries smoothing none, and every verifier-computed sample on the
+      graded path is likewise unsmoothed; a submission may EMA-blend or average for its own
+      use but a smoothed sample never reaches the graded path.
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: check_graded_readout_unsmoothed
+    compiled_test: "tests/test_output.py::test_graded_readout_unsmoothed"
+    zero_reason: readout-smoothed-on-graded-path
+    required: true
+    weight: 3
+    live_state_read: tests/runner.py telemetry evaluation.samples[].smoothing
+
+  - id: loss_sustained_at_scheduled_points
+    statement: >-
+      The graded level holds at the bound evaluation point and at every further evaluation
+      point the verifier itself scheduled, each within the bound sustain tolerance, so a
+      single favourable evaluation on a noisy curve cannot be harvested as a level reached.
+    reduction: INVARIANT
+    reached_by: tests/grade.py
+    selector: check_loss_sustained_at_scheduled_points
+    compiled_test: "tests/test_output.py::test_loss_sustained_at_scheduled_points"
+    zero_reason: loss-not-sustained
+    required: true
+    weight: 3
+    live_state_read: >-
+      tests/runner.py telemetry evaluation.sustain_points, evaluation.sustain_tolerance and
+      the verifier-recompute samples at those steps
+
+  - id: early_stop_not_a_result
+    statement: >-
+      The record carries no halt on a favourable evaluation and no halt before the last
+      scheduled sustain point, so a run that stopped on a good eval is graded as not having
+      established the loss, with a reason, rather than as an absent result.
+    reduction: ABSENCE
+    reached_by: tests/grade.py
+    selector: check_early_stop_not_a_result
+    compiled_test: "tests/test_output.py::test_early_stop_not_a_result"
+    zero_reason: early-stop-not-a-result
+    required: true
+    weight: 3
+    live_state_read: >-
+      tests/runner.py telemetry training.halted_at_step and training.halt_reason against
+      evaluation.sustain_points
+
+  - id: evaluated_weights_harness_owned
+    statement: >-
+      The weights evaluated at the bound point are the weights the run produced at that step:
+      the graded sample's weights digest equals the harness checkpoint record at that step and
+      both are harness-owned, never a checkpoint the submission selected.
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: check_evaluated_weights_harness_owned
+    compiled_test: "tests/test_output.py::test_evaluated_weights_harness_owned"
+    zero_reason: weights-not-harness-owned
+    required: true
+    weight: 3
+    live_state_read: >-
+      tests/runner.py telemetry evaluation.samples[].weights_digest and weights_owner against
+      checkpoints[] written by the harness
+    adequacy_substitution: >-
+      Checkpoint digests are written by the verifier's own process and are never reachable
+      from the submission, so the rejecting half is carried on the planted fixture
+      nc-submission-selected-checkpoint. Recorded here and in
+      seed/tasks/OER-10/feasibility.yaml.
+
+  - id: token_budget_respected_as_fed
+    statement: >-
+      The tokens the harness counted as fed are positive and no greater than the frozen token
+      budget, graded as fed and never as the number the curation plan declared.
+    reduction: EFFECT
+    reached_by: tests/grade.py
+    selector: check_token_budget_respected_as_fed
+    compiled_test: "tests/test_output.py::test_token_budget_respected_as_fed"
+    zero_reason: token-budget-overspent
+    required: true
+    weight: 3
+    live_state_read: >-
+      tests/runner.py telemetry training.tokens_fed and training.frozen_token_budget, both
+      counted by the harness
+
+  - id: eval_split_not_trained_on
+    statement: >-
+      The split held out is the bound split, and no document id of that split appears among the
+      documents the harness recorded as fed.
+    reduction: ABSENCE
+    reached_by: tests/grade.py
+    selector: check_eval_split_not_trained_on
+    compiled_test: "tests/test_output.py::test_eval_split_not_trained_on"
+    zero_reason: eval-split-leaked
+    required: true
+    weight: 4
+    live_state_read: >-
+      tests/runner.py telemetry corpus.fed_doc_ids intersected against corpus.held_out_doc_ids,
+      with corpus.bound_held_out_split_id proving the split identity did not move
+
+  - id: control_arm_displaced
+    statement: >-
+      The loss level the run actually reached displaced the control arm the harness measured
+      inside that same run: the ladder's two ends are ordered so its span is positive, the
+      verifier-computed loss at the bound evaluation point is strictly below control_arm_loss,
+      and so is every verifier-recompute sample at a scheduled sustain point.
+    reduction: EFFECT
+    reached_by: tests/grade.py
+    selector: check_control_arm_displaced
+    compiled_test: "tests/test_output.py::test_control_arm_displaced"
+    zero_reason: control-arm-not-displaced
+    required: true
+    weight: 4
+    live_state_read: >-
+      tests/runner.py telemetry ladder.control_arm_loss and ladder.reference_floor_loss, the two
+      run-local ends the harness itself trained and measured, against the verifier-recompute
+      losses in evaluation.samples[] at evaluation.bound_eval_step and evaluation.sustain_points
+    why_this_checker_exists: >-
+      It is the checker whose outcome is a function of the loss LEVELS the run reached, so those
+      levels are load-bearing on the graded path rather than decorative. They appear on no
+      agent-visible byte: instruction.md names the evaluation points, the frozen axes and the
+      scoring formula and never a loss level, and the levels are established only by training and
+      reading the harness's own evaluation series back. A solver that never interacted with the
+      environment carries no sample series and no measured ladder ends, so this checker fails for
+      it with a named reason instead of passing vacuously.
+    gate_not_a_second_graded_quantity: >-
+      It can only zero a score and can never raise one. Where the graded loss fails to displace
+      the control arm the ladder clip already returns 0.0, so this gate moves no run's number;
+      what it moves is the ATTRIBUTION of that zero, which stops reading as an established
+      result and becomes control-arm-not-displaced. Exactly one graded quantity remains.
+    both_halves_on_frozen_fixtures: >-
+      The accepting half runs on the golden trajectory, whose sample series is
+      solution/grounding.yaml golden_trajectory.evaluation.samples. The rejecting half runs on
+      the planted fixture nc-control-arm-not-displaced, whose graded sample carries
+      solution/grounding.yaml undisplaced_demonstration.graded_loss, a level the environment
+      never established. Both literals are derived from grounding.yaml by solution/recompute.py
+      and neither is hand-written into a fixture.

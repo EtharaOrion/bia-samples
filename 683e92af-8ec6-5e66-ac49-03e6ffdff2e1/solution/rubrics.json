@@ -1,0 +1,29 @@
+{
+  "banner": "GENERATED SECTION. DO NOT HAND-EDIT.",
+  "criteria": [
+    {
+      "expects": "The submitted script replaces the optimizer with a Muon step on the 2D parameters and an auxiliary AdamW on the remaining parameters, and changes no frozen axis.",
+      "id": "reference-recipe-shape"
+    },
+    {
+      "expects": "The claim.json carries claimed_step 2690, matching the reference crossing.",
+      "id": "reference-claimed-step"
+    },
+    {
+      "expects": "The submitted script honours --snapshot-dir and --snapshot-steps and writes state_<step>.pt at exactly the harness-scheduled steps and no others.",
+      "id": "reference-snapshot-contract"
+    },
+    {
+      "expects": "Exactly one forward and one backward per optimizer step, unchanged from the substrate.",
+      "id": "reference-one-pass-per-step"
+    },
+    {
+      "expects": "Twenty re-executed seeds all at or below the target, so sep is 1.0 and the significance factor is 1.0.",
+      "id": "reference-separation"
+    }
+  ],
+  "judged": "the solution against its reference answer",
+  "not_the_same_as": "tests/rubrics.jsonl, which is judged against the trajectory",
+  "reference_sha256": "aeb24bba3f74b13036d2d12a98a25dd1a8fd68950e04494ab26fefef7cc0c4e6",
+  "source": "solution/grounding.yaml"
+}

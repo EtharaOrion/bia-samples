@@ -1,0 +1,27 @@
+{
+  "_source": "Re-based onto environment/nanogpt_substrate.json for batch OER-2026-08-20. This file is the verifier's admin plane and is never assembled onto the agent surface.",
+  "schema": "oer22.bound/v1",
+  "statement": "Everything the graded path resolves from outside the bundle is pinned here and nowhere else. No submission byte, no submission call and no agent-visible declaration reaches any value in this file. A slot that resolved its evaluation split dynamically from a solver-reachable call would fail the second clause of the simulator test; this file is what pins the split to the verifier's own copy instead.",
+  "holdout_root": "/verifier/data/fineweb10B",
+  "holdout_val_glob": "fineweb_val_*.bin",
+  "holdout_note": "The FineWeb10B validation shards, staged into the VERIFIER image only. environment/Dockerfile refuses to stage this split, so the agent container cannot hold it.",
+  "folds": [
+    {"id": "shard-a", "tokens": [0, 262144]},
+    {"id": "shard-b", "tokens": [262144, 524288]},
+    {"id": "shard-c", "tokens": [524288, 786432]},
+    {"id": "shard-d", "tokens": [786432, 1048576]}
+  ],
+  "folds_note": "Four disjoint windows of the held-out stream, in the order the schedule names them. The windows appear on no agent-visible byte; environment/eval_corpus_manifest.json publishes the point ids and their sizes only.",
+  "checkpoint_root": "/verifier/checkpoint",
+  "checkpoint_name": "nanogpt.pt",
+  "checkpoint_note": "The verifier's own pristine copy of the checkpoint the agent image built, produced by the identical environment/bootstrap.py invocation under the identical pinned seed and step count. The verifier quantizes THIS copy under the submitted allocation and never loads a parameter file the submission wrote.",
+  "calibration_root": "/verifier/data/fineweb10B",
+  "calibration_note": "The verifier's own copy of the pinned TRAIN shards, used only to recompute the content digest of the calibration slice in force. It is the same pin the agent container carries, read from a different copy.",
+  "eval_rows": 8,
+  "eval_rows_note": "Rows of seq_len tokens per forward pass. Fixed here so the graded reading is not a function of anything the submission chose.",
+  "device": "cuda",
+  "reference_allocation_source": "in-run, fitted by tests/evaluate.py greedy marginal gain against per-tensor sensitivity measured on the calibration slice in force",
+  "scale_points_state": "measured-in-run",
+  "scale_points_note": "F9 carries no published anchors, and the re-base onto the nanoGPT substrate retired the surrogate-era numbers rather than carrying them across. The reward formula's two slots are filled by two in-run measurements through the identical code path: the baseline is the uniform allocation that saturates the budget, the target is the reference allocation fitted against the calibration version in force. Both are declared absent as family anchors under gap-oer-per-family-anchors-unmeasured.",
+  "session_ledger_contract": "the harness writes the attempt ledger; the submission never does"
+}
