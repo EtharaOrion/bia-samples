@@ -1,0 +1,24 @@
+{
+  "_banner": "GENERATED SECTION. DO NOT HAND-EDIT.",
+  "_claim_tolerance_note": "Widened from the stand-in's 0.01 because the re-base moved the evaluation split behind the verifier, which makes an exact self-measurement impossible and made a 0.01 band a trap rather than a test. A solver holding out its own slice of the agent-visible corpus can estimate within 0.02, and 0.02 is still tighter than the superseded 0.05, so the stale control ctl-divergence-verdict-under-loose-tolerance keeps its direction: its planted discrepancy of 0.03 passes at 0.05 and fails here.",
+  "_compute_budget_note": "Optimizer STEPS of 524288 tokens each, one forward and one backward per step, not tokens consumed. 3250 is the substrate's baseline_steps_to_target, record 36. The checker field name is unchanged so the declared grading surface survives the re-base; the unit it counts is redefined in environment/frozen/optimizer_config.json.",
+  "_denominator_note": "The byte length of the verifier's held-out FineWeb slice, pinned by environment/frozen/data_config.json validation.held_out_slice_bytes. The slice is absent from environment/ and from the agent image, so the solver cannot measure this quotient and can only estimate it.",
+  "_max_vocab_note": "The frozen embedding width from the substrate, superseding the stand-in's 8192 table ceiling. A vocabulary above it cannot be embedded by the frozen architecture at all.",
+  "_source": "solution/grounding.yaml",
+  "_substrate": "environment/nanogpt_substrate.json",
+  "_sustain_band_note": "Measured, and no longer provisional. See sustain_band_authority.",
+  "anchors": {
+    "anchors_state": "absent",
+    "baseline_metric": null,
+    "gap": "gap-oer-per-family-anchors-unmeasured",
+    "target_metric": null
+  },
+  "claim_tolerance_bpb": 0.02,
+  "compute_budget_token_updates": 3250,
+  "denominator_frozen_bytes": 1048576,
+  "evaluation_points": 3,
+  "max_vocab_size": 50304,
+  "slot": "OER-16",
+  "sustain_band_bits_per_byte": 0.1,
+  "sustain_points_required": 3
+}

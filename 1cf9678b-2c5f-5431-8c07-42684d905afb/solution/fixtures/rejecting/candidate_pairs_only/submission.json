@@ -1,0 +1,91 @@
+{
+  "adjudication_threshold": 686,
+  "collision_witness": {
+    "a": "r0017",
+    "b": "r0381",
+    "bands": 3,
+    "similarity": 615
+  },
+  "coverage": {
+    "pairs_examined": 130816,
+    "records_examined": 512,
+    "restricted_to_index_candidates": false
+  },
+  "duplicate_group_count": 13,
+  "index_collision_count": 80,
+  "near_duplicate_pairs": [
+    [
+      "r0023",
+      "r0145"
+    ],
+    [
+      "r0047",
+      "r0229"
+    ],
+    [
+      "r0047",
+      "r0425"
+    ],
+    [
+      "r0064",
+      "r0153"
+    ],
+    [
+      "r0064",
+      "r0303"
+    ],
+    [
+      "r0065",
+      "r0500"
+    ],
+    [
+      "r0096",
+      "r0223"
+    ],
+    [
+      "r0153",
+      "r0303"
+    ],
+    [
+      "r0189",
+      "r0217"
+    ],
+    [
+      "r0189",
+      "r0354"
+    ],
+    [
+      "r0216",
+      "r0436"
+    ],
+    [
+      "r0217",
+      "r0354"
+    ],
+    [
+      "r0246",
+      "r0251"
+    ],
+    [
+      "r0282",
+      "r0419"
+    ],
+    [
+      "r0283",
+      "r0324"
+    ],
+    [
+      "r0393",
+      "r0503"
+    ],
+    [
+      "r0421",
+      "r0510"
+    ]
+  ],
+  "readout": {
+    "estimator": "exact",
+    "source": "recomputed-from-shingle-sets"
+  },
+  "schema": "oer27.submission/v1"
+}

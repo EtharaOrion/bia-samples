@@ -1,0 +1,823 @@
+{
+  "_banner": "GENERATED SECTION. DO NOT HAND-EDIT. Source: solution/grounding.yaml, derived by solution/recompute.py.",
+  "_fixture": "reference",
+  "graded_readout_filter": "none",
+  "halt_after": null,
+  "scheme_version": 1,
+  "tensors": [
+    {
+      "groups": [
+        {
+          "bits": 3,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 38633472
+        }
+      ],
+      "name": "embed.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 6,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 589824
+        }
+      ],
+      "name": "blocks.0.attn.q.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 6,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 589824
+        }
+      ],
+      "name": "blocks.0.attn.k.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 6,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 589824
+        }
+      ],
+      "name": "blocks.0.attn.v.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 6,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 589824
+        }
+      ],
+      "name": "blocks.0.attn.proj.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 4,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 2359296
+        }
+      ],
+      "name": "blocks.0.mlp.fc.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 4,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 2359296
+        }
+      ],
+      "name": "blocks.0.mlp.proj.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 6,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 589824
+        }
+      ],
+      "name": "blocks.1.attn.q.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 6,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 589824
+        }
+      ],
+      "name": "blocks.1.attn.k.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 6,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 589824
+        }
+      ],
+      "name": "blocks.1.attn.v.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 6,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 589824
+        }
+      ],
+      "name": "blocks.1.attn.proj.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 4,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 2359296
+        }
+      ],
+      "name": "blocks.1.mlp.fc.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 4,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 2359296
+        }
+      ],
+      "name": "blocks.1.mlp.proj.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 6,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 589824
+        }
+      ],
+      "name": "blocks.2.attn.q.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 6,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 589824
+        }
+      ],
+      "name": "blocks.2.attn.k.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 6,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 589824
+        }
+      ],
+      "name": "blocks.2.attn.v.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 6,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 589824
+        }
+      ],
+      "name": "blocks.2.attn.proj.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 4,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 2359296
+        }
+      ],
+      "name": "blocks.2.mlp.fc.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 4,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 2359296
+        }
+      ],
+      "name": "blocks.2.mlp.proj.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 6,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 589824
+        }
+      ],
+      "name": "blocks.3.attn.q.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 6,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 589824
+        }
+      ],
+      "name": "blocks.3.attn.k.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 6,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 589824
+        }
+      ],
+      "name": "blocks.3.attn.v.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 6,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 589824
+        }
+      ],
+      "name": "blocks.3.attn.proj.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 4,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 2359296
+        }
+      ],
+      "name": "blocks.3.mlp.fc.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 4,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 2359296
+        }
+      ],
+      "name": "blocks.3.mlp.proj.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 6,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 589824
+        }
+      ],
+      "name": "blocks.4.attn.q.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 6,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 589824
+        }
+      ],
+      "name": "blocks.4.attn.k.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 6,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 589824
+        }
+      ],
+      "name": "blocks.4.attn.v.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 6,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 589824
+        }
+      ],
+      "name": "blocks.4.attn.proj.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 4,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 2359296
+        }
+      ],
+      "name": "blocks.4.mlp.fc.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 4,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 2359296
+        }
+      ],
+      "name": "blocks.4.mlp.proj.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 6,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 589824
+        }
+      ],
+      "name": "blocks.5.attn.q.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 6,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 589824
+        }
+      ],
+      "name": "blocks.5.attn.k.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 6,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 589824
+        }
+      ],
+      "name": "blocks.5.attn.v.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 6,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 589824
+        }
+      ],
+      "name": "blocks.5.attn.proj.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 4,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 2359296
+        }
+      ],
+      "name": "blocks.5.mlp.fc.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 4,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 2359296
+        }
+      ],
+      "name": "blocks.5.mlp.proj.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 6,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 589824
+        }
+      ],
+      "name": "blocks.6.attn.q.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 6,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 589824
+        }
+      ],
+      "name": "blocks.6.attn.k.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 6,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 589824
+        }
+      ],
+      "name": "blocks.6.attn.v.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 6,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 589824
+        }
+      ],
+      "name": "blocks.6.attn.proj.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 4,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 2359296
+        }
+      ],
+      "name": "blocks.6.mlp.fc.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 4,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 2359296
+        }
+      ],
+      "name": "blocks.6.mlp.proj.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 6,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 589824
+        }
+      ],
+      "name": "blocks.7.attn.q.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 6,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 589824
+        }
+      ],
+      "name": "blocks.7.attn.k.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 6,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 589824
+        }
+      ],
+      "name": "blocks.7.attn.v.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 6,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 589824
+        }
+      ],
+      "name": "blocks.7.attn.proj.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 4,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 2359296
+        }
+      ],
+      "name": "blocks.7.mlp.fc.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 4,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 2359296
+        }
+      ],
+      "name": "blocks.7.mlp.proj.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 6,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 589824
+        }
+      ],
+      "name": "blocks.8.attn.q.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 6,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 589824
+        }
+      ],
+      "name": "blocks.8.attn.k.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 6,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 589824
+        }
+      ],
+      "name": "blocks.8.attn.v.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 6,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 589824
+        }
+      ],
+      "name": "blocks.8.attn.proj.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 4,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 2359296
+        }
+      ],
+      "name": "blocks.8.mlp.fc.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 4,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 2359296
+        }
+      ],
+      "name": "blocks.8.mlp.proj.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 6,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 589824
+        }
+      ],
+      "name": "blocks.9.attn.q.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 6,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 589824
+        }
+      ],
+      "name": "blocks.9.attn.k.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 6,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 589824
+        }
+      ],
+      "name": "blocks.9.attn.v.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 6,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 589824
+        }
+      ],
+      "name": "blocks.9.attn.proj.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 4,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 2359296
+        }
+      ],
+      "name": "blocks.9.mlp.fc.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 4,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 2359296
+        }
+      ],
+      "name": "blocks.9.mlp.proj.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 6,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 589824
+        }
+      ],
+      "name": "blocks.10.attn.q.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 6,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 589824
+        }
+      ],
+      "name": "blocks.10.attn.k.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 6,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 589824
+        }
+      ],
+      "name": "blocks.10.attn.v.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 6,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 589824
+        }
+      ],
+      "name": "blocks.10.attn.proj.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 4,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 2359296
+        }
+      ],
+      "name": "blocks.10.mlp.fc.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 4,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 2359296
+        }
+      ],
+      "name": "blocks.10.mlp.proj.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 6,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 589824
+        }
+      ],
+      "name": "blocks.11.attn.q.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 6,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 589824
+        }
+      ],
+      "name": "blocks.11.attn.k.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 6,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 589824
+        }
+      ],
+      "name": "blocks.11.attn.v.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 6,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 589824
+        }
+      ],
+      "name": "blocks.11.attn.proj.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 4,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 2359296
+        }
+      ],
+      "name": "blocks.11.mlp.fc.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 4,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 2359296
+        }
+      ],
+      "name": "blocks.11.mlp.proj.weight"
+    },
+    {
+      "groups": [
+        {
+          "bits": 3,
+          "clip": 1.0,
+          "codebook": "symmetric",
+          "size": 38633472
+        }
+      ],
+      "name": "proj.weight"
+    }
+  ]
+}
