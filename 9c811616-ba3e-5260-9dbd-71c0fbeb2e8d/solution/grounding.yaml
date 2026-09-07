@@ -1,0 +1,1201 @@
+# FORGE-CANARY-BEGIN
+# 0: 9803b99129d360db83f605ab89f7035d807a12b5abb590dbb10c6e6ee9efabfb
+# 1: 4efcb3a6885715a8299d08d93e05271a17cc32932cb5b04a309e0fe7f089f59d
+# 2: bc3ec66fa19246ac3914e86010d5cdfb83a0d891c3c7f16f2e85365ee86fcd9e
+# 3: d1e1365cd35c018d021bf6bbbf05facf1dc1c5977ce8c3b0b05118d0f772adac
+# FORGE-CANARY-END
+schema: forge.grounding/v1
+slot: OER-22
+provisional_identifier: OER-22
+family: F9
+family_title: post-training quantization
+primary_archetype: AR9
+primary_archetype_title: Temporal Reasoning Gap
+archetype_exclusivity: >-
+  Exactly one primary archetype, fixed at scope time. No second archetype is
+  claimed anywhere in this bundle and no lever from another archetype is authored.
+title: Calibration set drift between allocation and evaluation
+
+# ---------------------------------------------------------------------------
+# This file is the SINGLE derivation source for this slot. solution/recompute.py
+# derives every generated artifact from these bytes and from the two things this
+# file NAMES rather than restates: the vendored architecture declaration at
+# environment/nanogpt_substrate.json, and the vendored corpus carrier at
+# tests/eval_corpus.json. recompute.py invokes no model, opens no socket, reads no
+# clock, consults no locale and draws from no random source.
+#
+# RE-BASED 2026-09-06. The predecessor of this file described the retired statistics
+# surrogate: twelve invented tensors totalling 108544 parameters, a shipped
+# per-tensor sensitivity vector, a closed-form degradation constant K and a stated
+# reference perplexity of 12.75. Every one of those is gone with the surrogate, and
+# `solution/recompute.py` raised AttributeError on `reference.groups_of` because that
+# API went with it. Nothing surrogate-era is carried across as a number here.
+# ---------------------------------------------------------------------------
+
+metric:
+  name: perplexity degradation at a fixed bit budget
+  direction: lower
+  definition: >-
+    The graded quantity is ppl(quantized) minus ppl(unquantized reference),
+    measured over the verifier's own held-out FineWeb10B validation folds and
+    averaged over every fold the verifier schedules. Both perplexities are real
+    forward passes of real parameters, produced by tests/evaluate.py inside the
+    verifier process from its own pristine checkpoint. It is never a number the
+    submission reported and never a field the submission wrote.
+  units: perplexity points
+
+frozen:
+  - the model, being the nanoGPT checkpoint of the architecture declared at environment/nanogpt_substrate.json
+  - the bit budget, being environment/substrate.json budget_bits
+  - the evaluation corpus, being the held-out FineWeb validation folds the verifier owns
+  - the unquantized reference, being that same checkpoint evaluated unquantized
+free:
+  - the per-tensor bit allocation
+  - the procedure that fits it, being how sensitivity is measured and how the budget is spent
+
+anchors:
+  anchors_state: absent
+  anchors_gap: gap-oer-per-family-anchors-unmeasured
+  baseline_metric_bound: false
+  target_metric_bound: false
+  reason: >-
+    seed/contract.yaml records family F9 with scope_state unscoped and
+    baseline_metric, target_metric and pass_threshold all null, citing
+    requirements/bia-environment-spec.md line 63, which leaves every family other
+    than F1 with an unresolved baseline. The reward SCHEMA is bound in full below.
+    No baseline_metric and no target_metric number is invented here.
+  reward_schema:
+    carrier: /logs/verifier/reward.txt
+    score_document: /logs/verifier/score.json
+    type: single float on the closed interval 0.0 to 1.0
+    direction: higher is better
+    binary: false
+    full_reward: 1.0
+    formula_lower_is_better: raw = (baseline_metric - agent_metric) / (baseline_metric - target_metric)
+    clip: score = min(max(raw, 0.0), 1.0)
+    target_is_a_bar: reaching the target scores exactly 1.0 and beating it also scores 1.0
+
+# The two numbers the reward formula is instantiated against are MEASURED IN RUN by
+# the verifier through the identical code path that measures the submission. They are
+# not published on any byte of this bundle, because under a real checkpoint they are
+# the output of forward passes over a corpus this bundle does not carry, and writing
+# them down here would be publishing a fabricated measurement.
+scale_points:
+  state: measured-in-run
+  baseline_recipe: >-
+    The mean, over every scheduled fold, of the degradation of the uniform allocation
+    that assigns substrate.uniform_reference_bits to every quantizable tensor. That
+    allocation saturates the bit budget exactly under the accounting in force, so it
+    is the allocation a submission gets for spending the budget without reasoning
+    about it.
+  target_recipe: >-
+    The mean, over every scheduled fold, of the degradation of the allocation the
+    reference procedure at environment/model.py fit_allocation derives against the
+    calibration version in force at the graded evaluation.
+  per_point_bar_recipe: >-
+    The baseline allocation's degradation at each scheduled fold, so the
+    sustained-across-points invariant is held to a bar the harness itself reached at
+    that fold.
+  reference_perplexity_recipe: >-
+    The pristine checkpoint evaluated unquantized over the same folds in the same run,
+    so both halves of the degradation come from one code path on one corpus.
+  is_a_family_anchor: false
+  substitution_disclosure: >-
+    These scale points make the bound reward formula computable over this substrate.
+    They are NOT published evidence, they do not close
+    gap-oer-per-family-anchors-unmeasured, and they must not be read as a
+    baseline_metric or a target_metric for family F9.
+
+# ---------------------------------------------------------------------------
+# The substrate. Every architectural number is READ from the vendored declaration
+# named below and none is restated here, so this file cannot drift away from it.
+# ---------------------------------------------------------------------------
+substrate:
+  kind: nanogpt-checkpoint
+  schema: oer22.substrate/v2
+  declaration: environment/nanogpt_substrate.json
+  group_size: 128
+  scale_bits: 16
+  uniform_reference_bits: 4
+  bit_min: 2
+  bit_max: 8
+  round_decimals: 9
+  checkpoint_path: /workspace/checkpoint/nanogpt.pt
+  checkpoint_schema: oer22.checkpoint/v1
+  source_note: >-
+    Re-based onto environment/nanogpt_substrate.json for batch OER-2026-08-20, and
+    re-derived from solution/grounding.yaml on 2026-09-06.
+  statement: >-
+    The artifact quantized in this slot IS a real nanoGPT checkpoint of the canonical
+    12-layer 768-dim decoder declared at environment/nanogpt_substrate.json. There is
+    no closed-form degradation surrogate in this bundle and there is no per-tensor
+    sensitivity vector shipped as a graded input. Perplexity is a real forward pass of
+    real parameters over a real token stream, and the graded reading of it is the
+    verifier's own.
+  architecture_note: >-
+    Read from environment/nanogpt_substrate.json architecture. The verifier re-reads
+    its own copy at grading time and refuses a run whose checkpoint does not bind to
+    these numbers shape for shape.
+  checkpoint_note: >-
+    The checkpoint is a real parameter snapshot of the frozen architecture. Every entry
+    of its state dict is shape-checked against the declaration before any evaluation
+    runs, so a weight table that is not this architecture cannot stand in for one.
+  checkpoint_builder: >-
+    environment/bootstrap.py checkpoint, run once on entry to each surface against the
+    pinned train shards at /workspace/data/fineweb10B. It is not built into an image
+    layer because an image build has no accelerator.
+  checkpoint_digest_state: >-
+    established only in built environment state; on no agent-visible byte before the
+    image is built
+  quantizer: >-
+    group-wise symmetric round-to-nearest over the last dimension, group_size elements
+    per scale, one fp16 scale per group, implemented at environment/model.py
+    quantize_dequantize. The verifier replays this identical function on its own
+    pristine checkpoint.
+  excluded_tensor_ids:
+    - embed.weight
+    - position.weight
+    - head.weight
+    - final_norm.weight
+    - blocks.*.norm_attention.weight
+    - blocks.*.norm_mlp.weight
+  excluded_reason: >-
+    Embeddings, the output head and the norm gains are held at the checkpoint's own
+    precision and are outside both the allocation and the bit budget. Only the 48
+    matmul weights above are yours to allocate.
+  evaluation:
+    graded_quantity: >-
+      ppl(quantized) minus ppl(unquantized checkpoint), over the held-out FineWeb
+      slice, averaged over every scheduled evaluation point
+    producer: the verifier, running real forward passes of real parameters
+    held_out: >-
+      The evaluation payload is a slice of the FineWeb10B validation shards. It is
+      absent from this container, it is resolved from the verifier's own admin plane at
+      tests/bound.json, and no call reachable from the solver returns it.
+    no_forward_pass_no_score: >-
+      Delete the forward pass and this metric is undefined. Nothing in this bundle
+      emits a perplexity by any other route.
+
+# ---------------------------------------------------------------------------
+# The reference allocation procedure. This block is the DECLARATION of the
+# procedure environment/model.py implements once and both solution/reference.py and
+# tests/evaluate.py call; it is not a second expression of it.
+#
+# WHY THE PREDECESSOR PROCEDURE WAS REPLACED, measured on this host on 2026-09-06
+# over the delivered 150-step checkpoint, the delivered pins and the delivered folds.
+# The predecessor measured one number per tensor, the loss increase that tensor alone
+# causes at uniform_reference_bits, then started every tensor at bit_min and bought
+# single bits by that number under a 4 ** -b extrapolation. Both halves failed.
+#   - The measurement carried no signal where it was taken. At 4 bits the single-tensor
+#     effect is 1e-6 to 3e-4 nats and 30 of the 48 readings came back at or below zero,
+#     which max(0.0, ...) clamps to exactly 0.0. The purchase order was therefore fixed
+#     by tensor index, not by measurement.
+#   - Starting at bit_min commits the fit to leaving whatever the budget cannot lift at
+#     the floor. 27 of 48 tensors stayed at 2 bits and the fitted allocation measured
+#     +18.764267672 perplexity points against the uniform baseline's +0.375795832, so
+#     the verifier's own target was 50 times WORSE than its own baseline and
+#     tests/grade.py saw span <= 0 and could not score above zero.
+# The replacement measures the cost curve at every admissible width, so it measures
+# where the signal is, and it selects among candidate fits by a joint measurement
+# rather than by extrapolation. bit_min is unchanged and is not the defect: an
+# allocation that beats the baseline exists inside the declared choice set and simply
+# does not spend at the floor.
+# ---------------------------------------------------------------------------
+allocation:
+  procedure: environment/model.py fit_allocation
+  called_by:
+    - solution/reference.py solve, on the agent surface
+    - tests/evaluate.py reference_allocation, on the verifier surface
+  single_expression_rationale: >-
+    The submitted allocation and the target scale point must agree tensor for tensor or
+    the reference cannot reach its own bar. Two expressions of one procedure is how two
+    things that must agree come to disagree, so the procedure lives once in the module
+    both surfaces already import and neither surface restates it.
+  steps:
+    - id: cut-the-slice
+      what: >-
+        Cut the pinned calibration slice into as many disjoint windows as there are
+        scheduled evaluation points. The first window is the FITTING window and the rest
+        are the SELECTION windows, and no candidate is ever scored on the tokens it was
+        fitted to.
+    - id: measure-cost-curve
+      what: >-
+        For every quantizable tensor and every admissible width, quantize that tensor
+        alone to that width, read the loss on the fitting window, and restore it. This is
+        a real forward pass per reading and it is taken at the widths the fit will
+        actually spend at, not only at the uniform reference width where the effect sits
+        at the reading's own resolution.
+    - id: envelope
+      what: >-
+        Read the curve as the tightest non-increasing, non-negative envelope of what was
+        measured. A coarser grid cannot cost less than a finer one and cannot cost less
+        than nothing, so a reading that says otherwise is at the resolution of the
+        measurement and is read as its tighter neighbour rather than as a licence to
+        starve the tensor.
+    - id: build-the-candidate-family
+      what: >-
+        Solve the budgeted separable allocation once per admissible floor width, and once
+        per demotion cap, the cap being how many tensors the candidate may take below the
+        uniform reference width, walked over the powers of two up to the tensor count.
+        The demotion cap is the conservatism knob: the graded invariant is per fold, so
+        how far a candidate moves from the uniform allocation bounds how far it can fall
+        short at the least favourable fold, and a family without that knob leaves the
+        selector nothing to choose between.
+    - id: include-the-baseline
+      what: >-
+        The uniform reference allocation is always a member of the family, so the
+        procedure can never ship a fit that its own measurement ranks below the
+        allocation the budget admits for free, and a qualifying candidate always exists.
+    - id: select-on-the-windows-not-fitted-on
+      what: >-
+        Measure every candidate on every selection window by quantizing the whole
+        checkpoint under it and reading the loss. A candidate QUALIFIES only if it is at
+        least as good as the uniform allocation on EVERY selection window, which is the
+        calibration-side reading of the invariant
+        check_degradation_sustained_across_scheduled_points enforces per fold. Among the
+        qualifying candidates the lowest mean wins, ties breaking on candidate name, so
+        the result is fixed by the measurement and never by dictionary iteration.
+  admissible_floor_rule: >-
+    A candidate floor w is admitted only when the uniform-w allocation itself fits the
+    frozen budget under the accounting in force. At the declared budget that admits
+    w = 2, 3 and 4 and excludes 5 and above, and the rule is arithmetic over declared
+    values rather than a list somebody wrote down.
+  why_selection_is_not_run_on_the_fitting_window: >-
+    Measured on the delivered checkpoint on 2026-09-06: selecting among candidates on the
+    same tokens the cost curve was measured on preferred a candidate that spent at the
+    floor width and measured +0.760075587 perplexity points against the uniform
+    baseline's +0.375795832. A candidate scored on the tokens it was fitted to is scored
+    on the tokens it overfits.
+  determinism: >-
+    Every reading is a forward pass over a pinned contiguous slice with no shuffling, no
+    random source and no clock, so two runs of this procedure over one checkpoint and
+    one pin produce one allocation.
+
+# ---------------------------------------------------------------------------
+# The vendored corpus carrier. These are upstream FineWeb10B bytes this bundle did
+# not author. recompute.py VERIFIES them by length and sha256 and never writes them,
+# because there is no construction to re-run and a mismatch is never repaired by
+# regeneration.
+# ---------------------------------------------------------------------------
+corpus:
+  carriers:
+    - path: tests/eval_corpus.json
+      length_bytes: 2826949
+      sha256: bb7d82c6c87957d2ecc32547666ac6d6e1d64ebea91a416f40886a83a35f203f
+      carries: >-
+        1048576 real FineWeb10B GPT-2 BPE token ids as raw little-endian uint16 under
+        held_out_split.payload_base64, together with the 46-entry vendored record corpus
+        the near-duplicate screen reads.
+      payload_sha256: dec04f77639fa0e7cfc818acb200e0393dd61796931acec259463955bdebecdd
+      recovery_recipe: >-
+        Read fineweb_val_000000.bin with environment/model.py read_shard, take
+        token_count tokens at token_offset, and base64 the raw uint16 bytes. The shard is
+        identified by the sha256 of its first mebibyte, recorded below, and the recovered
+        slice is identified by payload_sha256.
+      shard: fineweb_val_000000.bin
+      token_offset: 8400000
+      token_count: 1048576
+      shard_sha256_prefix_1mib: 0d894b48b1f0f8aa3b8709c6950c0ba3d8051e90f70a22a7725a35e98610b04f
+  not_on_the_graded_path: >-
+    The graded folds are resolved from tests/bound.json against the verifier's own copy
+    of the validation shards, so this carrier is not the graded payload. It is retained
+    because it is real collected data this bundle carries and deleting an unrecoverable
+    byte is forbidden.
+
+# ---------------------------------------------------------------------------
+# The calibration set, versioned. This is the axis the archetype lives on. A version
+# is a PIN into the frozen FineWeb10B train shards, never a table of numbers.
+# ---------------------------------------------------------------------------
+calibration:
+  handle: environment/calibration_probe.py
+  schema_state: oer22.calibration_state/v2
+  schema_stats: oer22.calibration_stats/v2
+  pin_schema: oer22.calibration_pin/v1
+  corpus_root: /workspace/data/fineweb10B
+  reader: environment/model.py read_slice, and environment/model.py slice_content_sha256 for the content digest
+  pin_digest_form: >-
+    sha256 over json.dumps(pin, sort_keys=True, separators=(",", ":"), ensure_ascii=True),
+    where pin is the object under the version's `pin` key exactly as it stands here
+  content_digest_state: >-
+    established only in built environment state, being sha256 over the raw
+    little-endian uint16 bytes of the pinned slice as the image staged them; it appears
+    on no agent-visible byte in this bundle
+  state_statement: >-
+    Harness-owned calibration state. The version in force is the one an allocation is
+    graded against. Temporal ordering is carried by the harness tick, a monotonically
+    issued integer handle. No clock is read. This file names the slice in force and
+    digests its pin; it carries no evaluation payload and no held-out token.
+  stats_statement: >-
+    Per-version calibration slices. A version is a PIN into the frozen FineWeb10B train
+    shards, not a table of numbers somebody wrote down. There is no shipped per-tensor
+    sensitivity vector in this slot any more: the statistics your allocation is fitted
+    against are the ones you measure yourself, by running the real checkpoint over the
+    slice the version in force names. A version that is not in force is retained for the
+    record and is NOT the version an allocation is graded against.
+  versions:
+    - version: 1
+      tick: 1
+      label: pre-drift calibration slice, the slice an allocation fitted at iteration three was fitted against
+      pin:
+        schema: oer22.calibration_pin/v1
+        shard: fineweb_train_000001.bin
+        token_count: 262144
+        token_offset: 1048576
+        version: 1
+    - version: 2
+      tick: 7
+      label: post-drift calibration slice, the slice in force at the graded evaluation
+      pin:
+        schema: oer22.calibration_pin/v1
+        shard: fineweb_train_000004.bin
+        token_count: 262144
+        token_offset: 6291456
+        version: 2
+  in_force_version: 2
+  ledger: [1, 2]
+  drift_is_silent: >-
+    Nothing on the agent-visible audit surface announces the move from version 1 to
+    version 2. The agent must re-probe. The move is recorded as the headline silent
+    mutation in seed/tasks/OER-22/drift.yaml, bound to checker
+    allocation_matches_in_force_calibration and to stale control
+    ctl-allocation-frozen-at-calibration-v1.
+
+# The verifier-scheduled evaluation protocol, in force at the graded evaluation.
+evaluation_protocol:
+  schema_manifest: oer22.eval_corpus_manifest/v2
+  scheduled_points: [shard-a, shard-b, shard-c, shard-d]
+  tokens_per_point: 262144
+  corpus: FineWeb10B validation split, GPT-2 BPE token ids, uint16 little-endian
+  val_glob: data/fineweb10B/fineweb_val_*.bin
+  resolved_by: tests/bound.json, verifier-owned
+  payload_present_in_the_agent_container: false
+  points_note: >-
+    Four disjoint folds of one held-out slice. The bar must hold at every one of them,
+    so an allocation tuned to whichever fold is cheapest to beat is refused rather than
+    rewarded.
+  manifest_statement: >-
+    The evaluation payload is a held-out slice of the FineWeb10B VALIDATION shards. It
+    is absent from this container by construction, it is resolved by the verifier from
+    its own admin plane at tests/bound.json, and no call reachable from a solver returns
+    it. This manifest names the scheduled evaluation points and their sizes. It carries
+    no token, no offset and no digest over the payload, because any of those on this
+    surface would be the graded surface sitting on the solver surface.
+  bar_derivation: >-
+    Per evaluation point, the bar is the degradation of the uniform reference
+    allocation at that same point. The bar must hold at every scheduled point, so a
+    single favourable point is not a result.
+  pre_drift_scheduled_points: [shard-a, shard-b]
+
+accounting:
+  includes_scale_tensors: true
+  pre_drift_includes_scale_tensors: false
+  formula: >-
+    allocated_bits = sum_i numel_i * alloc_i + sum_i groups_i * scale_bits, where
+    groups_i = numel_i // group_size.
+
+readout:
+  permitted_filters: [none]
+  pre_drift_permitted_filters: [none, ema]
+
+reference_model:
+  schema: oer22.reference_model/v2
+  reference_artifact: the pristine nanoGPT checkpoint, verifier-owned copy
+  perplexity_state: measured-in-run-by-the-verifier
+  retired_scalar_note: >-
+    A previous revision of this slot published 12.75 here as a frozen scalar. That number
+    described a JSON statistics stand-in rather than a model, and it is retired rather
+    than carried across. Publishing a stated perplexity on this surface would be
+    publishing half the graded quantity.
+  statement: >-
+    The unquantized reference in this slot IS the nanoGPT checkpoint at
+    environment/substrate.json checkpoint.path, evaluated unquantized. It is not a number
+    written down in this file. The reference perplexity is MEASURED by the verifier in
+    run, by a real forward pass of the pristine checkpoint over the same held-out FineWeb
+    folds your quantized parameters are read on, so the two halves of the degradation are
+    produced by one code path on one corpus and cannot drift apart.
+
+# ---------------------------------------------------------------------------
+# The checker-level fixtures. Each case is a TELEMETRY record of the shape
+# tests/grade.py builds, mutated from one accepted base by exactly one named defect.
+# ---------------------------------------------------------------------------
+fixtures:
+  schema: oer22.fixtures/v2
+  source_note: Re-based onto environment/nanogpt_substrate.json for batch OER-2026-08-20. Verifier-owned.
+  statement: >-
+    Checker-level fixtures. Each case is a TELEMETRY record of the shape tests/grade.py
+    builds from a real measurement, not a submission, because the graded numbers in this
+    slot come from forward passes on a held-out split and a fixture that had to reach one
+    would need a GPU and the verifier's corpus to run at all. Planting telemetry keeps
+    both halves of every checker exercisable from bundle bytes alone while leaving the
+    checkers the same pure functions the graded path calls. The degradation and
+    perplexity values below are FIXTURE values chosen to sit either side of a bar; they
+    are not measurements and no number here is published as one.
+  witness_placeholder_note: >-
+    calibration_slice.witness_from_live_state carries a placeholder inside this fixture
+    surface only. The real value is established in built environment state and is
+    deliberately absent from every byte of this bundle.
+  planted:
+    checkpoint_path: /verifier/checkpoint/nanogpt.pt
+    frozen_artifact_path: environment/substrate.json
+    frozen_pristine_digest: aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    frozen_modified_digest: bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb
+    slice_witness_placeholder: '0000000000000000000000000000000000000000000000000000000000000000'
+    slice_witness_wrong: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff
+    content_read_from: raw staged bytes
+    reference_perplexity: 31.5
+    baseline_degradation: 0.3
+    target_degradation: 0.22
+    missed_degradation: 0.41
+    overspend_tensor: blocks.0.attention.qkv.weight
+    overspend_bits: 8
+    mismatched_parameter: embed.weight
+    mismatched_observed_parameters: 4
+    lifted_graded_source: submission-reported
+    smoothed_filter: ema
+    early_points_completed: 1
+  cases:
+    - id: reference-accepted
+      expect_reward: 1.0
+      expect_reason: target-scale-point-reached
+      mutation: none
+      note: >-
+        the accepting half: the live checkers accept this telemetry, which is the shape
+        tests/grade.py builds from a real measurement
+    - id: ctl-no-op-submission
+      expect_reward: 0.0
+      expect_reason: allocation-malformed
+      mutation: drop-allocation
+      note: a no-op submission carrying no allocation at all
+    - id: ctl-frozen-artifact-modified
+      expect_reward: 0.0
+      expect_reason: frozen-artifact-modified
+      mutation: modify-frozen-artifact
+      note: a frozen artifact edited in the run workspace
+    - id: ctl-graded-artifact-is-not-the-decoder
+      expect_reward: 0.0
+      expect_reason: graded-artifact-not-the-declared-architecture
+      mutation: unbind-architecture
+      note: >-
+        the headline re-base control: a parameter file that does not bind to the declared
+        architecture shape for shape, which is what every surrogate this batch retired
+        would present
+    - id: ctl-budget-accounted-weights-only
+      expect_reward: 0.0
+      expect_reason: bit-budget-overspent
+      mutation: overspend-budget
+      note: stale control for silent mutation bit-budget-accounting-includes-scale-tensors
+    - id: ctl-probe-ledger-truncated-at-v1
+      expect_reward: 0.0
+      expect_reason: calibration-version-sequence-disordered
+      mutation: truncate-ledger
+      note: stale control for silent mutation calibration-probe-ledger-appends-v2
+    - id: ctl-allocation-frozen-at-calibration-v1
+      expect_reward: 0.0
+      expect_reason: allocation-derived-against-stale-calibration
+      mutation: declare-stale-calibration
+      note: stale control for the headline silent mutation calibration-set-drifts-to-v2
+    - id: ctl-calibration-slice-witness-wrong
+      expect_reward: 0.0
+      expect_reason: calibration-slice-content-not-established
+      mutation: wrong-slice-witness
+      note: >-
+        the near miss: every other field is the accepted one and only the slice content
+        digest differs, which is what a run that reasoned about the pin without opening
+        the slice produces
+    - id: ctl-calibration-slice-witness-absent
+      expect_reward: 0.0
+      expect_reason: calibration-slice-content-not-established
+      mutation: absent-slice-witness
+      note: >-
+        no witness at all, which is what a run that never interacted with built
+        environment state can produce
+    - id: ctl-readout-ema-blended
+      expect_reward: 0.0
+      expect_reason: readout-smoothed
+      mutation: smooth-readout
+      note: stale control for silent mutation readout-filter-registry-closes-ema
+    - id: ctl-graded-value-lifted-from-submission
+      expect_reward: 0.0
+      expect_reason: readout-smoothed
+      mutation: lift-graded-value
+      note: a graded number that does not carry the verifier's own provenance tag
+    - id: ctl-early-stop-on-favourable-point
+      expect_reward: 0.0
+      expect_reason: early-stop-metric-not-established
+      mutation: halt-early
+      note: halted at the first favourable evaluation fold
+    - id: ctl-sustained-claim-over-two-points
+      expect_reward: 0.0
+      expect_reason: degradation-not-sustained
+      mutation: miss-the-bar-on-two-folds
+      note: >-
+        stale control for silent mutation evaluation-point-schedule-extends: the bar is
+        met at two folds and missed at two
+
+# The checkers, in grading order. tests/test_output.py is compiled from this list and
+# from the rejecting control each checker is bound to.
+checkers:
+  - id: allocation_well_formed_over_every_tensor
+    rejecting_control: ctl-no-op-submission
+  - id: frozen_corpus_and_reference_unmodified
+    rejecting_control: ctl-frozen-artifact-modified
+  - id: graded_artifact_binds_to_declared_architecture
+    rejecting_control: ctl-graded-artifact-is-not-the-decoder
+  - id: bit_budget_respected_as_allocated
+    rejecting_control: ctl-budget-accounted-weights-only
+  - id: calibration_probe_ledger_ordered
+    rejecting_control: ctl-probe-ledger-truncated-at-v1
+  - id: allocation_matches_in_force_calibration
+    rejecting_control: ctl-allocation-frozen-at-calibration-v1
+  - id: calibration_slice_witness_matches_live_state
+    rejecting_control: ctl-calibration-slice-witness-wrong
+  - id: graded_degradation_is_verifier_recomputed
+    rejecting_control: ctl-readout-ema-blended
+  - id: early_stop_does_not_establish_metric
+    rejecting_control: ctl-early-stop-on-favourable-point
+  - id: degradation_sustained_across_scheduled_points
+    rejecting_control: ctl-sustained-claim-over-two-points
+
+# ---------------------------------------------------------------------------
+# Bound grants, transcribed from seed/contract.yaml batch.optimization_bindings.
+# Copied, never recomputed.
+# ---------------------------------------------------------------------------
+bindings:
+  tags: [optimization, bounded-continuous]
+  image: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
+  max_timeout_hours: 6.0
+  max_timeout_role: refinement-loop terminator across attempts, in hours
+  budget_hours: 0.3
+  budget_hours_minutes: 18.0
+  budget_hours_role: per-attempt completion bound, in hours
+  budget_hours_state: provisional
+  budget_hours_gap: gap-oer-budget-field-name-collides-with-its-role
+  max_attempts: 50
+  final_selection: best
+  budget_envelope: one H100, single accelerator, no multi-GPU scaling
+  budget_margin: 10 percent
+  compute_envelope_accelerators: 1
+  frontier_defeat_floor: 0.50
+  separation_margin: 0.05
+  target_tier: Frontier-defeat
+  tier_exemption_granted: none
+  anchorable_tier_statement: >-
+    This task family is text and code only, so the Perception axis carries no
+    category; the exemption is batch-level, recorded once, closes by nothing, and
+    no perception lever is authored to fill it. It caps the anchorable tier below
+    Hard while leaving the authoring target at Frontier-defeat.
+
+solver_egress_divergence:
+  agent_surface_reading: open
+  bound_here: open
+  batch_field_reading: setup-only
+  gap_id: gap-oer-solver-egress-ruled-stricter
+  both_readings:
+    - requirements/open-ended-research-optimisation-problems.md line 58 grants the
+      solving agent full internet access.
+    - requirements/open-ended-research-optimisation-problems.md line 122 says
+      internet is needed only for setup, and
+      requirements/bia-environment-spec.md line 247 takes the stricter reading,
+      which is what seed/contract.yaml batch.optimization_bindings.solver_egress
+      records as setup-only.
+  family_delivery_block: >-
+    The family delivery.network_policy block in the same contract binds
+    agent_environment egress allowed with the upstream deny-list, which is the
+    reading bound in this slot's task.toml as solver_egress = open.
+  not_amended_by_this_lane: >-
+    This lane binds open at its own agent surface and does NOT amend the
+    batch-level field. The divergence is recorded here rather than resolved.
+  verifier_surface: denied
+  deny_list_is_not_a_containment_proof: >-
+    The deny-list names github.com, raw.githubusercontent.com and
+    objects.githubusercontent.com. Mirrors, caches, paraphrased write-ups and model
+    weights all carry a recipe past any deny-list. The deterministic checker chain,
+    and not the network policy, is the load-bearing control.
+
+gaps:
+  - id: gap-oer-per-family-anchors-unmeasured
+    state: declared, inherited from the batch
+    effect_here: >-
+      baseline_metric and target_metric are unbound for this slot. The reward schema is
+      bound in full and instantiated against two scale points the verifier measures in
+      run.
+    closes_by: a measured F9 baseline and target from published evidence recorded in seed/contract.yaml
+  - id: gap-oer-22-reward-scale-points-are-measured-in-run
+    state: declared by this lane
+    effect_here: >-
+      The two numbers the bound reward formula is instantiated against are in-run
+      measurements over this bundle's own frozen checkpoint and the verifier's own
+      held-out folds, not published evidence. They make the formula computable and they
+      do not stand in for family anchors. This supersedes
+      gap-oer-22-reward-scale-points-are-substrate-internal, which described the retired
+      surrogate.
+    closes_by: binding measured F9 anchors, at which point the scale points are replaced
+  - id: gap-oer-22-attempt-budget-unmeasured-against-real-forward-passes
+    state: declared by this lane
+    effect_here: >-
+      budget_hours is bound to 0.3 and was first set against a closed-form surrogate that
+      did no forward pass. This lane has measured the verifier side of the real path and
+      records that measurement in solution/TRUTH.md, and it has NOT measured a full
+      solving attempt on the bound one-H100 envelope, so the per-attempt bound stays
+      provisional.
+    closes_by: a measured full attempt against real forward passes on the bound envelope
+  - id: gap-oer-22-calibration-transfer-unquantified
+    state: declared by this lane
+    effect_here: >-
+      The reference selects its allocation on windows of the calibration slice in force,
+      and the graded reading is on held-out validation folds. This lane measured that the
+      selected candidate beats the uniform baseline at every scheduled fold at 1500
+      checkpoint steps, and measured that it does not at 600 or at 150. It did NOT
+      measure how far a calibration-slice ranking generalises in general, nor where
+      between 600 and 1500 steps the crossing lies. The reference's margin over the
+      baseline is a measured fact about this checkpoint and these folds, not a bound.
+    closes_by: a measured transfer study over more than one checkpoint and more than one pin
+  - id: gap-oer-22-checkpoint-build-cost-exceeds-declared-attempt-budget
+    state: declared by this lane
+    effect_here: >-
+      The checkpoint step count is 1500, which is the smallest of the three counts this
+      lane measured at which the reference reaches its own bar at every scheduled fold.
+      It costs 1500 x 3.25s, being 81 minutes, on one H100 on each surface.
+      environment/provision.sh materialises it on entry to the agent surface, so a
+      solving attempt that pays that build exceeds the declared per-attempt budget_hours
+      of 0.3, being 18 minutes. This lane did NOT move budget_hours to fit, because
+      lowering a declared bound to admit a measurement is the one move it is not allowed
+      to make. Which of the two values is wrong is not resolvable inside this slot: the
+      step count is fixed by what makes the metric measurable at all, and the attempt
+      budget is a batch-level grant.
+    closes_by: >-
+      a batch ruling that either rebinds budget_hours against a measured attempt on the
+      bound envelope, or moves the checkpoint build off the per-attempt clock so the
+      agent surface inherits a built checkpoint rather than materialising one
+  - id: gap-oer-22-contamination-screen-absent
+    state: declared by this lane
+    effect_here: >-
+      No contamination screen is authored here. probe-recall-a-published-recipe in
+      shortcut_probes.yaml is recorded as NOT closed.
+    closes_by: the batch-level screening roots being pinned and a screen being run over the frozen bundle bytes
+  - id: gap-oer-budget-field-name-collides-with-its-role
+    state: declared, inherited from the batch
+    effect_here: budget_hours is bound to 0.3 and marked provisional in task.toml.
+    closes_by: an upstream correction to requirements/bia-environment-spec.md line 143
+  - id: gap-oer-solver-egress-ruled-stricter
+    state: declared, inherited from the batch
+    effect_here: see solver_egress_divergence above.
+    closes_by: an upstream ruling that reconciles line 58 with line 122
+
+local_exercise:
+  reward_root_redirect: >-
+    /logs/verifier/ is a single shared host path and concurrent lanes collide on
+    it. Every local exercise of tests/test.sh in this lane redirected the reward
+    root to a lane-private directory through the OER22_REWARD_ROOT environment
+    variable. The bound contract path inside the bundle stays
+    /logs/verifier/reward.txt; only the local exercise was redirected.
+
+golden_trajectory:
+  schema: oer22.golden_trajectory/v2
+  # The reference agent's own recorded reasoning path. Derived, not narrated:
+  # recompute.py turns each step into the artifact it names. No graded number appears
+  # here, because every graded number in this slot is a forward pass the verifier runs
+  # and writing one down would be publishing a fabricated measurement.
+  graded_state: measured-in-run-by-the-verifier
+  steps:
+    - step: 1
+      action: read instruction.md and enumerate the frozen and free axes
+      calibration_version_observed: 1
+    - step: 2
+      action: probe the calibration handle and record version and tick
+      calibration_version_observed: 1
+    - step: 3
+      action: >-
+        measure the per-tensor cost curve over the observed calibration slice and fit an
+        allocation against it
+      calibration_version_observed: 1
+    - step: 4
+      action: >-
+        re-probe the calibration handle before submitting rather than assuming the
+        iteration-three observation is still true, and observe that the version in
+        force has moved
+      calibration_version_observed: 2
+    - step: 5
+      action: >-
+        re-measure the cost curve on the slice now in force, refit, select among the
+        candidates by joint measurement, and record the pin witness and the slice content
+        witness over the bytes actually read
+      calibration_version_observed: 2
+    - step: 6
+      action: >-
+        account the bit budget including the per-group scale tensors and confirm the
+        allocation fits
+      calibration_version_observed: 2
+    - step: 7
+      action: >-
+        complete every evaluation point the verifier schedules, declare no readout
+        filter, and write submission.json
+      calibration_version_observed: 2
+
+withheld_from_the_agent_manifest:
+  note: Moved out of task.toml on 2026-08-25 because Harbor mounts that manifest on the agent surface,
+    so anchors and internal record ids were readable by the solving agent. This file is private and is
+    never assembled onto that surface.
+  lines:
+  - anchors_state = "absent"
+  - anchors_gap = "gap-oer-per-family-anchors-unmeasured"
+  - authority = "seed/contract.yaml records family F9 with scope_state unscoped and baseline_metric, target_metric
+    and pass_threshold all null, citing requirements/bia-environment-spec.md line 63. No baseline_metric
+    and no target_metric number is invented here."
+  - scale_points_gap = "gap-oer-22-reward-scale-points-are-measured-in-run"
+  - solver_egress_divergence = "The batch field seed/contract.yaml batch.optimization_bindings.solver_egress
+    reads setup-only under gap-oer-solver-egress-ruled-stricter. This slot binds open at its agent surface,
+    matching the family delivery.network_policy block, and does NOT amend the batch-level field. Recorded
+    in solution/grounding.yaml under solver_egress_divergence."
+  - budget_hours_gap = "gap-oer-budget-field-name-collides-with-its-role"
+  - frontier_defeat_floor = 0.50
+  - separation_margin = 0.05
+
+manifest_conformance_normalization_2026_08_25:
+  note: >-
+    task.toml was rewritten on 2026-08-25 to conform to seed/harbor_lint.py, the repository's
+    own authoritative manifest linter. Nothing here was deleted outright: every line the
+    agent-visible manifest no longer carries is transcribed below, in this private file.
+  canonical_optimization_path: metadata.optimization
+  canonical_path_rationale: >-
+    seed/harbor_lint.py rejects every unknown TOP-LEVEL key as one Harbor would silently drop,
+    so a top-level [optimization] table cannot be used. [metadata] is the one table Harbor
+    hands through as dict[str, Any], so [metadata.optimization] is the only path that is both
+    a single deterministic lookup and survives the linter. All 24 slots now use it.
+  previous_optimization_path_in_this_slot: 'optimization.*'
+  bound_values_preserved_verbatim:
+    max_timeout_hours: '6.0 (session bound across attempts)'
+    budget_hours: '0.3 (per-attempt bound, 18 minutes; never an alias of max_timeout_hours)'
+    max_attempts: '50'
+    final_selection: 'best'
+    budget_envelope: 'one H100, single accelerator, no multi-GPU scaling'
+    budget_margin: '10 percent'
+    tags: '["optimization", "bounded-continuous"], under the key `tags` at metadata.tags'
+    agent: 'solver_egress = "setup-only", network_mode = "none"'
+    environment: 'network_mode = "public" (provisioning; never blanket-denied)'
+    verifier: 'egress = "denied"'
+    docker_image: 'pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407'
+  withheld_from_the_agent_manifest_on_this_pass:
+    reason: >-
+      task.toml is mounted on the agent surface. Harness-internal paths, internal record ids
+      and reward-scale literals are readable there by the solving agent, so they are held here.
+    lines:
+    - '[gaps] declared = [gap-oer-per-family-anchors-unmeasured, gap-oer-22-reward-scale-points-are-measured-in-run, gap-oer-22-attempt-budget-unmeasured-against-real-forward-passes, gap-oer-22-calibration-transfer-unquantified, gap-oer-22-checkpoint-build-cost-exceeds-declared-attempt-budget, gap-oer-22-contamination-screen-absent, gap-oer-budget-field-name-collides-with-its-role, gap-oer-solver-egress-ruled-stricter]'
+
+# FORGE-SCREENING-BEGIN GENERATED SECTION. DO NOT HAND-EDIT.
+screening:
+  applicability:
+    empty-submission-validation:
+      applicability_reason: This atom has no exempt route at all and is applicable to every unit.
+      cap: ''
+      clean_fixture_passed: true
+      control_accepting_half: 15
+      control_detail: 58 passed
+      control_passed: true
+      control_rejecting_half: 23
+      control_suite: tests/test_emptysub.py
+      defect: ''
+      determination: passed
+      planted_positive_present: true
+      planted_positive_rejected: true
+      ran: true
+      reason: empty submission scored exactly zero, reason=unattributed
+      result_digest: bd4252a87b3a22898743af8a4b2a819f942ab157165be0370144deaa84bded24
+      score: 0.0
+      screened_preimage: the unit's delivered bytes as they sit on disk, graded through the pinned image;
+        nothing this atom records is a function of the bytes this lane writes
+      status: clean
+      value: applicable
+    exclusion-matching:
+      applicability_reason: This atom is applicable to every unit.
+      cap: ''
+      clean_fixture_passed: true
+      control_accepting_half: 8
+      control_detail: 58 passed
+      control_passed: true
+      control_rejecting_half: 18
+      control_suite: tests/test_exclusion.py
+      defect: ''
+      determination: no-match
+      planted_positive_present: true
+      planted_positive_rejected: true
+      ran: true
+      reason: All three relations were evaluated against engram.screening-root.exclusion-list/v1 at 81764edb7df796c57d17007b1fa95c2fe693226c865e403e5adc1b0640f595da
+        and none matched.
+      relations:
+        base-commit-sha:
+          applicability: not_applicable
+          matched: false
+        canonical-repository-identity:
+          applicability: applicable
+          matched: false
+        fork-ancestry-closure-membership:
+          applicability: applicable
+          matched: false
+      result_digest: 7513cbeb0f196036b687a59867f9bf9acf542ac9053abc2abf917815b9e8bc29
+      screened_preimage: the unit's bytes with this `screening` block removed from solution/grounding.yaml
+        and the carrier section removed from solution/recompute.py, because an output never enters its
+        own input
+      status: clean
+      value: applicable
+    freeze-holdout:
+      applicability_reason: No independent attestation satisfies the closed generator-origin predicate
+        for this source (synthetic), so no relation is exempted and every one is screened.
+      cap: screening-unverified
+      clean_fixture_passed: false
+      control_accepting_half: 15
+      control_detail: 51 failed, 46 passed, 4 errors
+      control_passed: false
+      control_rejecting_half: 31
+      control_suite: tests/test_freeze.py
+      defect: ''
+      determination: unresolved
+      planted_positive_present: false
+      planted_positive_rejected: false
+      ran: false
+      reason: 'RootResolutionError: screening root freeze_date_table at <screen-root>/memory/roots/freeze-date-table-v1.yaml
+        hashes 5cb51fe566a202a2c9cae232916badcf311f6b64eaef0ceacb9d5677b21f0c2a, and FORGE_VIEW pins 16e5b169c33898be57492a0101644bedb6b3728624378a5c13910f8f417e7030.
+        Refusing to screen against bytes ENGRAM did not pin. The atom returned no determination over this
+        unit, so nothing about this unit was observed by it. Recorded as unverified rather than as clean.'
+      result_digest: ''
+      screened_preimage: the unit's bytes with this `screening` block removed from solution/grounding.yaml
+        and the carrier section removed from solution/recompute.py, because an output never enters its
+        own input
+      status: inert-root-unresolved
+      value: applicable
+    near-duplicate-screening:
+      applicability_reason: This atom has no exempt route at all and is applicable to every unit.
+      cap: ''
+      clean_fixture_passed: true
+      control_accepting_half: 5
+      control_detail: 26 passed
+      control_passed: true
+      control_rejecting_half: 8
+      control_suite: tests/test_neardup.py
+      defect: ''
+      determination: pass
+      nearest: results/20260513_shampoo_1_4_power/distributed_shampoo/examples/convnet.py
+      planted_positive_present: true
+      planted_positive_rejected: true
+      ran: true
+      reason: solution/reference.py scored 0.051829 against its nearest pinned corpus neighbour results/20260513_shampoo_1_4_power/distributed_shampoo/examples/convnet.py
+        under threshold 0.63 and review threshold 0.56, classified pass.
+      result_digest: fb0ef489e786d608cb014f409a4b5d1451827efbdf9060981db93930351a5c77
+      score: 0.051829268292682924
+      screened_preimage: the unit's solution/reference.py exactly as delivered, which this lane never
+        writes
+      status: clean
+      value: applicable
+    per-unit-provenance-record:
+      applicability_reason: This atom has no exempt route at all and is applicable to every unit.
+      value: applicable
+    sanitization:
+      applicability_reason: This atom has no exempt route at all and is applicable to every unit.
+      cap: HOLD:PILOT_REQUIRED
+      clean_fixture_passed: true
+      control_accepting_half: 9
+      control_detail: 76 passed
+      control_passed: true
+      control_rejecting_half: 26
+      control_suite: tests/test_sanitization.py
+      defect: ''
+      detectors:
+        closure-identity: clean
+        fix-absence: clean
+        history-absence: clean
+        remote-absence: clean
+        thread-absence: clean
+      determination: clean
+      planted_positive_present: true
+      planted_positive_rejected: true
+      ran: true
+      reason: No named detector found a named fix-revealing representation in the delivery closure of
+        cf6b2b9e-5530-5ccb-b462-d33ca07c4053. history-absence=clean(20), remote-absence=clean(20), thread-absence=clean(20),
+        fix-absence=clean(9), closure-identity=clean(20). This is the bounded result invariant 25 permits
+        and never the claim that the image reveals nothing; coverage stops at base-image-unresolved, delivery-image-unbuilt,
+        post-base-fix-set-unbound, source-host-egress-partially-denied, verifier-surface-outside-fix-absence.
+      result_digest: 79daf41bb4ad1b6982ec05bdfde15af9e4fd7cd2822499d2847c87006d381556
+      screened_preimage: the unit's bytes with this `screening` block removed from solution/grounding.yaml
+        and the carrier section removed from solution/recompute.py, because an output never enters its
+        own input
+      status: clean
+      value: applicable
+  applicable_dates:
+    provenance_date: '2026-08-25'
+    screening_instant: '2026-08-27T07:35:42Z'
+    task_generating_event_timestamp: null
+  atom_result_digests:
+    empty-submission-validation: bd4252a87b3a22898743af8a4b2a819f942ab157165be0370144deaa84bded24
+    exclusion-matching: 7513cbeb0f196036b687a59867f9bf9acf542ac9053abc2abf917815b9e8bc29
+    freeze-holdout: ''
+    near-duplicate-screening: fb0ef489e786d608cb014f409a4b5d1451827efbdf9060981db93930351a5c77
+    sanitization: 79daf41bb4ad1b6982ec05bdfde15af9e4fd7cd2822499d2847c87006d381556
+  attestations:
+    ancestry_attestation_digest: null
+    ancestry_attestation_signer: null
+    event_attestation_digest: null
+    event_attestation_signer: null
+  authority_mode: union
+  base_commit_sha: null
+  binding_block:
+    binding_envelope: DSSE, payloadType application/vnd.in-toto+json, DSSEv1 pre-authentication encoding
+    canonical_bundle_hash: 0b792aa14ab17a02a18cc1b23b5e546fa57063c9ca0ae4f1f8847174db9ff02a
+    pinned_image_digest: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
+  empty_submission_result:
+    artifacts_disagree: false
+    atom: empty-submission-validation
+    detail: empty submission scored exactly zero, reason=unattributed
+    detail_engine_log_withheld: false
+    detail_engine_log_withheld_reason: ''
+    exit_code: 0
+    grader_fault: false
+    image: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
+    notes:
+    - reward taken from reward.txt; reward.json absent or unreadable
+    outcome: passed
+    reason: ''
+    reward: 0.0
+    reward_text: 0.0
+    uuid: cf6b2b9e-5530-5ccb-b462-d33ca07c4053
+  fork_ancestry_snapshot: null
+  instrument_versions:
+    empty-submission-validation:
+      declared: null
+      module: seed/forge/emptysub.py
+      module_sha256: 6cae608c8bfeb7dd77c2a1c69facfae7f4482eea312e6e02906c95ea96378d18
+    exclusion-matching:
+      declared: forge.exclusion/1.0.0
+      module: seed/forge/exclusion.py
+      module_sha256: 4a0bb583b96dcd2bd16582ab357a720450587af8369d16bf5cf2fdfebae183c7
+    freeze-holdout:
+      declared: forge.freeze/1.0.0
+      module: seed/forge/freeze.py
+      module_sha256: 34e2aea125e0dc0dfd4c3afcae7723c57cea17f135dbbe6c56f518fdaa85f687
+    near-duplicate-screening:
+      declared: null
+      module: seed/forge/neardup.py
+      module_sha256: 807221ac2695ea723636b50e5c233765ea0a324e6348cbfbb1dee3b577e8cbd0
+    per-unit-provenance-record:
+      declared: forge.provenance_atom/1.0.0
+      module: seed/forge/provenance_atom.py
+      module_sha256: 524c6724e0664ff5660073020c143160576572b628802fef611b044bcbd3e3e9
+    sanitization:
+      declared: forge.sanitization/1.0.0
+      module: seed/forge/sanitization.py
+      module_sha256: bd1593dc32180d1eeca5a135499939c866de7a98960d5a21239f19e0dfb22f21
+  keyid: bia-provenance-2026-08b
+  namespace:
+    bound_at: seed/contract.yaml repo.forge_task_namespace
+    forge_task_namespace: c53e8f3b-526f-52c0-a04e-89e2269b237d
+    normalization_domain_bound_at: seed/contract.yaml batch.normalization_domain, block at line 1327,
+      method_id at line 1328, version at line 1329, bound_on 2026-08-25 at line 1330
+    normalization_domain_method_id: forge.canonical_content_hash/v1
+    not_resolvable_from_this_unit: The definition of that domain. Its exclusion set, token slot designation,
+      digest line format, sort and join are recorded in seed/contract.yaml, which item 10i keeps out of
+      the delivered unit, so a reader can confirm which domain is named and cannot re-execute it from
+      this unit alone.
+    relation: uuid5(forge_task_namespace, binding_block.canonical_bundle_hash) == unit_uuid
+    resolvable_from_this_unit: The uuid relation above, recomputed from this unit's own bytes, and the
+      identity of the normalization domain that hash was computed under, which normalization_domain_version
+      names. Two units carrying the same domain version are hash-comparable and two carrying different
+      versions are not.
+  normalization_domain_version: oer-canary-v1
+  sanitization_closure:
+    images:
+    - entry_count: 0
+      layer_count: 0
+      layer_digests: []
+      manifest_digest: ''
+      pinned: true
+      reason: layer-scan-not-requested
+      reference: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
+      resolved: false
+      role: agent-reachable
+      whiteout_count: 0
+      whiteouts: []
+    - entry_count: 0
+      layer_count: 0
+      layer_digests: []
+      manifest_digest: ''
+      pinned: true
+      reason: layer-scan-not-requested
+      reference: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
+      resolved: false
+      role: verifier-only
+      whiteout_count: 0
+      whiteouts: []
+    layer_entries_unpacked: 0
+    member_count: 20
+    members:
+    - bytes: 1022
+      path: environment/Dockerfile
+      role: agent-reachable
+      sha256: 1b111beb05386e2b10c29df89826f618146b3d45a68272cfe7ac392c417a10d7
+    - bytes: 2558
+      path: environment/calibration_probe.py
+      role: agent-reachable
+      sha256: 41767ecbc9e973cc7500b4148e582b1c5d8b39cb04cf728fce8b2ebdcec56b26
+    - bytes: 824
+      path: environment/calibration_state.json
+      role: agent-reachable
+      sha256: d005623636fdaad9cd9b9a58d005947057f0ecf39304d6c4c38234a64cd35eca
+    - bytes: 1316
+      path: environment/calibration_stats.json
+      role: agent-reachable
+      sha256: 450e5267a955d89cc76ff4d70ff244e094df84e6b52e6a8056bd916fbf2394b2
+    - bytes: 666
+      path: environment/eval_corpus_manifest.json
+      role: agent-reachable
+      sha256: 9e66f297c5020f3ce6685d2939802756251a14299c799775ee0b5d23a47205c9
+    - bytes: 602
+      path: environment/reference_model.json
+      role: agent-reachable
+      sha256: ec85198e94a8e77e0b6eb1efc2443c51be586ec30a077d7d9c04ba3aa0284b68
+    - bytes: 2020
+      path: environment/substrate.json
+      role: agent-reachable
+      sha256: ceaff62d56fe0cc6e875bda0e57421556dd726f254f67eed32fef812ffdc3ec4
+    - bytes: 7301
+      path: instruction.md
+      role: agent-reachable
+      sha256: 46c5b3cd72420bbb0cdacdd2b8d6193ae0114a110eccca526d77fade47b6f766
+    - bytes: 5104
+      path: task.toml
+      role: agent-reachable
+      sha256: 83db841bd2c02ed8965e9513eec16f8ce98ba37e65cfb9ae0fbfc4fcad5af70f
+    - bytes: 961
+      path: tests/Dockerfile
+      role: verifier-only
+      sha256: fbcfd469ea1f2ad2eddb3d255aa2ac66efcf870fcdd73a9237757908ad80296c
+    - bytes: 9611
+      path: tests/checkers.py
+      role: verifier-only
+      sha256: 740043da4f048ce7830a65084b48a9b32cc0448e559e33a9d04ba633bec917e7
+    - bytes: 8456
+      path: tests/checkers.yaml
+      role: verifier-only
+      sha256: 7fbf17c612a772a1b94e6fd51efe3c2f2942c9622ad73b7af0cfc091ed6b70a6
+    - bytes: 1547
+      path: tests/eval_corpus.json
+      role: verifier-only
+      sha256: ff3cc24646cf8bdb49e67fe95e15c5105203617a10aee05111c4c0a0a38710c1
+    - bytes: 11260
+      path: tests/fixtures.json
+      role: verifier-only
+      sha256: 4fa07382ae8a31157f80c677d421f63f8a39d024781188949581b9dda5d244bd
+    - bytes: 16971
+      path: tests/grade.py
+      role: verifier-only
+      sha256: 07e71990b5ac4947545eb3fd16d694288508d63bcd569b6d5303f7f7d649468e
+    - bytes: 4058
+      path: tests/rubrics.jsonl
+      role: verifier-only
+      sha256: 39e5f0dc239a9c49a71647b20b6df1f7a360ee1a53e2728765397f58b1149374
+    - bytes: 4389
+      path: tests/runner.py
+      role: verifier-only
+      sha256: 20313e177bad92897c044478019d12fc73812c377d6c66fc3ce663aa463ac8ba
+    - bytes: 992
+      path: tests/scale_points.json
+      role: verifier-only
+      sha256: 933193ffb3e3cebc15cdbc2b7fdfb73276e6e5ac289a0af020dfb49505f10099
+    - bytes: 2367
+      path: tests/test.sh
+      role: verifier-only
+      sha256: 1b655cadc1475be850e6f7a7c2b59fbe1eb8846301d9ca26dca4d04877de8b3d
+    - bytes: 5662
+      path: tests/test_output.py
+      role: verifier-only
+      sha256: 91b9f8075b1a0bc53f6e162e6258455d8a4d0b613bb3b22219357d86932f1fb3
+    stages:
+    - base: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
+      base_pinned: true
+      dockerfile: environment/Dockerfile
+      projected_copies:
+      - - task.toml
+        - /workspace/task.toml
+      - - instruction.md
+        - /workspace/instruction.md
+      - - environment/
+        - /workspace/environment/
+      projected_directories: []
+      resolved_build_context: .
+      unprojectable_instructions: []
+    - base: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
+      base_pinned: true
+      dockerfile: tests/Dockerfile
+      projected_copies:
+      - - task.toml
+        - /opt/task/task.toml
+      - - instruction.md
+        - /opt/task/instruction.md
+      - - environment/
+        - /opt/task/environment/
+      - - tests/
+        - /opt/task/tests/
+      - - solution/
+        - /opt/task/solution/
+      projected_directories: []
+      resolved_build_context: .
+      unprojectable_instructions: []
+    whiteouts_observed: 0
+  schema: forge.provenance/v1
+  screening_roots:
+    exclusion_list:
+      digest: 81764edb7df796c57d17007b1fa95c2fe693226c865e403e5adc1b0640f595da
+      identity: engram.screening-root.exclusion-list/v1
+      state: pinned
+    freeze_date_table:
+      digest: 16e5b169c33898be57492a0101644bedb6b3728624378a5c13910f8f417e7030
+      identity: engram.screening-root.freeze-date-table/v1
+      state: pinned
+    near_duplicate_index:
+      digest: c41ff457f262c295bd4d2f77d95a9eddc02aee2f9e7a4d6e6dc4036ab2677bc4
+      identity: engram.screening-root.near-duplicate-index/v1
+      state: pinned
+    source_attestation:
+      digest: 106c2180906abb0250a26152682a5352c3ab404ae2d9d2d8ecc8e7f0d071ce9d
+      identity: engram.screening-root.source-attestation/v1
+      state: pinned
+  signer_identity: bia-producer-provenance
+  source_identifiers:
+    applicability:
+      base-commit-sha:
+        reason: No independent attestation satisfies the closed generator-origin predicate for this source
+          (synthetic), so no relation is exempted and every one is screened.
+        value: applicable
+      canonical-repository-identity:
+        reason: No independent attestation satisfies the closed generator-origin predicate for this source
+          (synthetic), so no relation is exempted and every one is screened.
+        value: applicable
+      empty-submission-validation:
+        reason: This atom has no exempt route at all and is applicable to every unit.
+        value: applicable
+      fork-ancestry-closure-membership:
+        reason: No independent attestation satisfies the closed generator-origin predicate for this source
+          (synthetic), so no relation is exempted and every one is screened.
+        value: applicable
+      freeze-holdout:
+        reason: No independent attestation satisfies the closed generator-origin predicate for this source
+          (synthetic), so no relation is exempted and every one is screened.
+        value: applicable
+      near-duplicate-screening:
+        reason: This atom has no exempt route at all and is applicable to every unit.
+        value: applicable
+      per-unit-provenance-record:
+        reason: This atom has no exempt route at all and is applicable to every unit.
+        value: applicable
+      sanitization:
+        reason: This atom has no exempt route at all and is applicable to every unit.
+        value: applicable
+    canonical_repository_identity: null
+    generation_input_digest: 06549108426dc7f7a247d362fb8bf6deab5628e4420f2299fca70a6db4c89f04
+    generator_identity: dataset/cf6b2b9e-5530-5ccb-b462-d33ca07c4053/solution/recompute.py
+    generator_version: sha256:8078e86c92f249d9d72bf691a03f42fbe11cf406892ca9de700a4308a5d2f0b3
+    origin: original
+    provenance_attestation: null
+    record_source: seed/contract.yaml batch.records[OER-22].upstream_provenance
+    source_kind: synthetic
+  trust_root_public_key_hex: 87de350694dcbacc3829fa78591c13dc80cb0ab6323046cbbdac8b01e20e6fc9
+  unit_uuid: 9c811616-ba3e-5260-9dbd-71c0fbeb2e8d
+# FORGE-SCREENING-END
