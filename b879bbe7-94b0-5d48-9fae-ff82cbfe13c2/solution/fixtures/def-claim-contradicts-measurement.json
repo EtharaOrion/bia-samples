@@ -1,0 +1,88 @@
+{
+  "_banner": "GENERATED SECTION. DO NOT HAND-EDIT.",
+  "_source": "solution/grounding.yaml",
+  "base": "clean-reference",
+  "collateral_failures": [],
+  "emitted_reason": "claim-contradicts-measurement",
+  "fires": "claim_matches_measurement",
+  "id": "def-claim-contradicts-measurement",
+  "reason": "claim-contradicts-measurement",
+  "record": {
+    "claim": {
+      "absence_recorded": false,
+      "claimed_bits_per_byte": 0.4123,
+      "graded_on": "measurement",
+      "present": true
+    },
+    "compute": {
+      "budget_token_updates": 3250,
+      "counter_source": "harness-counter",
+      "spent_token_updates": 3250
+    },
+    "corpus": {
+      "denominator_bytes": 1048576,
+      "denominator_source": "harness-measured-frozen-eval-corpus",
+      "eval_corpus_bytes_measured": 1048576
+    },
+    "frozen_axes": {
+      "closing": {
+        "architecture": "1f4b0820a969d8ce4a4996ec997789865eb4139f14d362d18f1928c40a758725",
+        "budget": "ac0b6349bba573634c392c9d9f0588e6a0ffb94a51d0a2f1d43fd05b5898d6b9",
+        "data": "fb18ecf68982f46551d4b5f7ccef1b9c6a091f369f70cbde0f02854c1abcf689",
+        "model": "6d01c12f6929db8609ed14951296267ed58958a38215de6bcc8dfdb6aa6eb0d3",
+        "optimizer": "0439f2df7429ab8a55cf76a4e77435ff01ddf807ff97aeb5ac9900b468718408",
+        "substrate": "cc5d77abb0adb8345337ba4918a549057cb0c1fa1fe60292d165c1274b97ec7e"
+      },
+      "expected": {
+        "architecture": "1f4b0820a969d8ce4a4996ec997789865eb4139f14d362d18f1928c40a758725",
+        "budget": "ac0b6349bba573634c392c9d9f0588e6a0ffb94a51d0a2f1d43fd05b5898d6b9",
+        "data": "fb18ecf68982f46551d4b5f7ccef1b9c6a091f369f70cbde0f02854c1abcf689",
+        "model": "6d01c12f6929db8609ed14951296267ed58958a38215de6bcc8dfdb6aa6eb0d3",
+        "optimizer": "0439f2df7429ab8a55cf76a4e77435ff01ddf807ff97aeb5ac9900b468718408",
+        "substrate": "cc5d77abb0adb8345337ba4918a549057cb0c1fa1fe60292d165c1274b97ec7e"
+      },
+      "opening": {
+        "architecture": "1f4b0820a969d8ce4a4996ec997789865eb4139f14d362d18f1928c40a758725",
+        "budget": "ac0b6349bba573634c392c9d9f0588e6a0ffb94a51d0a2f1d43fd05b5898d6b9",
+        "data": "fb18ecf68982f46551d4b5f7ccef1b9c6a091f369f70cbde0f02854c1abcf689",
+        "model": "6d01c12f6929db8609ed14951296267ed58958a38215de6bcc8dfdb6aa6eb0d3",
+        "optimizer": "0439f2df7429ab8a55cf76a4e77435ff01ddf807ff97aeb5ac9900b468718408",
+        "substrate": "cc5d77abb0adb8345337ba4918a549057cb0c1fa1fe60292d165c1274b97ec7e"
+      }
+    },
+    "model_state": {
+      "fingerprint_at_measurement": "37950e8ebe65df0613da2f7af1df72c200c08dd4bbc74b32076dac3fb5b8163e",
+      "harness_recomputed_fingerprint": "37950e8ebe65df0613da2f7af1df72c200c08dd4bbc74b32076dac3fb5b8163e",
+      "owner": "verifier-harness",
+      "produced_by": "harness-owned-model-state"
+    },
+    "readout": {
+      "graded_bits_per_byte": 4.073010147421838,
+      "pipeline": "raw",
+      "raw_bits_per_byte": 4.073010147421838,
+      "smoothing_applied": false
+    },
+    "schedule": {
+      "halted_early": false,
+      "point_bits_per_byte": [
+        4.016595743152471,
+        4.061015889109548,
+        4.141473813147759
+      ],
+      "points_completed": 3,
+      "points_scheduled": 3
+    },
+    "schema": "oer16.run_record/v1",
+    "sequence": {
+      "claim_recorded_seq": 1,
+      "measurement_computed_seq": 5
+    },
+    "vocabulary": {
+      "loaded_by": "verifier-harness",
+      "max_token_bytes": 9,
+      "size": 768,
+      "source": "submission-tokenizer-json-as-data"
+    },
+    "vocabulary_refusal": ""
+  }
+}

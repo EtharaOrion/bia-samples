@@ -1,0 +1,45 @@
+{
+  "_banner": "GENERATED SECTION. DO NOT HAND-EDIT.",
+  "_source": "solution/grounding.yaml",
+  "judged": "the solution against its reference answer",
+  "not_a_substitute_for": "tests/rubrics.jsonl, which is judged against the trajectory and grades agent behaviour",
+  "rubrics": [
+    {
+      "criterion": "The submitted vocabulary loads under the frozen ceiling, carries all 256 single bytes and no duplicate.",
+      "id": "sr-vocabulary-valid",
+      "measured_reference_answer": "a vocabulary of 768 entries, longest 9 bytes against a bound 32, containing every single byte, under a ceiling of 50304.",
+      "reference_answer": "a byte-pair-encoded vocabulary of at most 50304 entries, none longer than 32 bytes, containing every single byte."
+    },
+    {
+      "criterion": "The graded figure in the score document is the verifier's own measurement and not a number the submission supplied.",
+      "id": "sr-figure-is-measured-not-asserted",
+      "measured_reference_answer": "score.json metric.graded_bits_per_byte is the harness reading and metric.claimed_bits_per_byte sits beside it as input only. The harness reading is not reproduced in this bundle: it is a 3250-step nanoGPT run over a split that exists only inside the verifier image, so its value is recorded as absent rather than estimated.",
+      "reference_answer": "score.json metric.graded_bits_per_byte equals the harness reading, and metric.claimed_bits_per_byte is recorded beside it as input only."
+    },
+    {
+      "criterion": "Any claimed figure sits within the bound tolerance of the measurement, or no claim is made and the absence is recorded.",
+      "id": "sr-claim-truthful-or-absent",
+      "measured_reference_answer": "the reference claims 4.107598164560149, the figure its own local replication produced over the whole 1655197-byte evaluation carrier, and the bound tolerance is 0.02. Over a slice cut to the graded denominator the same recipe reads 4.073010147421838.",
+      "reference_answer": "the reference claims the figure its own local replication produced, and the divergence sits inside the bound tolerance."
+    },
+    {
+      "criterion": "The denominator is the held-out evaluation slice byte count as the verifier measured it.",
+      "id": "sr-denominator-frozen",
+      "measured_reference_answer": "1048576 bytes, measured by the harness, equal to the bound frozen denominator and to environment/frozen/data_config.json validation.held_out_slice_bytes.",
+      "reference_answer": "1048576 bytes, measured by the harness, equal to the bound frozen denominator."
+    },
+    {
+      "criterion": "The optimizer steps counted on the harness counter do not exceed the frozen budget.",
+      "id": "sr-budget-respected",
+      "measured_reference_answer": "3250 optimizer steps spent against a bound 3250, each step 524288 tokens with one forward and one backward pass.",
+      "reference_answer": "3250 steps spent against a bound 3250."
+    },
+    {
+      "criterion": "Every evaluation point the verifier scheduled was completed and the reading is corroborated at each.",
+      "id": "sr-schedule-completed",
+      "measured_reference_answer": "3 of 3 points completed, the widest departing 0.068463665725921 from the reading against a bound sustain band of 0.1.",
+      "reference_answer": "3 of 3 points completed, all within the bound sustain band of the graded reading."
+    }
+  ],
+  "slot": "OER-16"
+}

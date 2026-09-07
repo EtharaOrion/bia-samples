@@ -1,0 +1,44 @@
+{
+  "_banner": "GENERATED SECTION. DO NOT HAND-EDIT. Source: solution/grounding.yaml, derived by solution/recompute.py.",
+  "criteria": [
+    {
+      "asks": "Does the submitted scheme beat the handed option set's verifier-measured optimum by at least the separation margin?",
+      "full_credit": "scaled improvement >= 0.05",
+      "id": "beats-the-handed-optimum-by-the-margin",
+      "reference_value": 0.05
+    },
+    {
+      "asks": "Does the submitted scheme reach a worst-slice degradation at or below the verifier's widening probe?",
+      "full_credit": "metric <= wider_probe_optimum",
+      "id": "reaches-the-widening-probe",
+      "reference_value": "recomputed at grading time"
+    },
+    {
+      "asks": "Does the harness's own accounting over the quantized shards land at or below the bit budget?",
+      "full_credit": "allocated_bits <= bit_budget_total",
+      "id": "spends-no-more-than-the-budget",
+      "reference_value": 648807584
+    },
+    {
+      "asks": "Is the slice-to-slice spread within the tolerance the verifier measured over the handed option space?",
+      "full_credit": "spread <= sustain_tolerance",
+      "id": "sustains-the-reading",
+      "reference_value": "recomputed at grading time"
+    },
+    {
+      "asks": "Is the graded readout unfiltered, uncurtailed and unreported by the submission?",
+      "full_credit": "no filter, no halt request, no metric field",
+      "id": "leaves-the-graded-path-alone",
+      "reference_value": "none"
+    }
+  ],
+  "reference_answer": {
+    "bit_budget_total": 648807584,
+    "metric": null,
+    "metric_gap": "gap-oer21-endpoints-unmeasured-on-the-nanogpt-substrate",
+    "metric_state": "unmeasured",
+    "shape": "a per-shard, per-group allocation over the 74 frozen shards"
+  },
+  "schema": "forge.oer21.solution_rubrics/v1",
+  "statement": "Grades the submitted solution against the reference answer. Not the trajectory rubric."
+}

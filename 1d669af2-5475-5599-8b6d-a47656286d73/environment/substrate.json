@@ -1,0 +1,491 @@
+{
+  "_source": "Re-based onto environment/nanogpt_substrate.json for batch OER-2026-08-20, and re-derived from solution/grounding.yaml on 2026-09-06.",
+  "architecture": {
+    "_note": "Read from environment/nanogpt_substrate.json architecture. The verifier re-reads its own copy at grading time and refuses a run whose checkpoint does not bind to these numbers shape for shape.",
+    "head_dim": 128,
+    "model_dim": 768,
+    "num_heads": 6,
+    "num_layers": 12,
+    "seq_len": 1024,
+    "vocab_size": 50304
+  },
+  "bit_choices": [
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "budget_accounting": "allocated_bits = sum_i numel_i * alloc_i + sum_i groups_i * scale_bits, where groups_i = numel_i // group_size.",
+  "budget_accounting_includes_scale_tensors": true,
+  "budget_bits": 350355456,
+  "checkpoint": {
+    "_note": "The checkpoint is a real parameter snapshot of the frozen architecture. Every entry of its state dict is shape-checked against the declaration before any evaluation runs, so a weight table that is not this architecture cannot stand in for one.",
+    "builder": "environment/bootstrap.py checkpoint, run once on entry to each surface against the pinned train shards at /workspace/data/fineweb10B. It is not built into an image layer because an image build has no accelerator.",
+    "content_sha256_state": "established only in built environment state; on no agent-visible byte before the image is built",
+    "parameter_count_quantizable": 84934656,
+    "path": "/workspace/checkpoint/nanogpt.pt",
+    "schema": "oer22.checkpoint/v1"
+  },
+  "declaration": "environment/nanogpt_substrate.json",
+  "evaluation": {
+    "graded_quantity": "ppl(quantized) minus ppl(unquantized checkpoint), over the held-out FineWeb slice, averaged over every scheduled evaluation point",
+    "held_out": "The evaluation payload is a slice of the FineWeb10B validation shards. It is absent from this container, it is resolved from the verifier's own admin plane at tests/bound.json, and no call reachable from the solver returns it.",
+    "no_forward_pass_no_score": "Delete the forward pass and this metric is undefined. Nothing in this bundle emits a perplexity by any other route.",
+    "producer": "the verifier, running real forward passes of real parameters"
+  },
+  "excluded_tensors": {
+    "ids": [
+      "embed.weight",
+      "position.weight",
+      "head.weight",
+      "final_norm.weight",
+      "blocks.*.norm_attention.weight",
+      "blocks.*.norm_mlp.weight"
+    ],
+    "reason": "Embeddings, the output head and the norm gains are held at the checkpoint's own precision and are outside both the allocation and the bit budget. Only the 48 matmul weights above are yours to allocate."
+  },
+  "group_size": 128,
+  "kind": "nanogpt-checkpoint",
+  "quantizable_tensors": [
+    {
+      "groups": 13824,
+      "id": "blocks.0.attention.qkv.weight",
+      "numel": 1769472,
+      "shape": [
+        2304,
+        768
+      ]
+    },
+    {
+      "groups": 4608,
+      "id": "blocks.0.attention.projection.weight",
+      "numel": 589824,
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "groups": 18432,
+      "id": "blocks.0.mlp.up.weight",
+      "numel": 2359296,
+      "shape": [
+        3072,
+        768
+      ]
+    },
+    {
+      "groups": 18432,
+      "id": "blocks.0.mlp.down.weight",
+      "numel": 2359296,
+      "shape": [
+        768,
+        3072
+      ]
+    },
+    {
+      "groups": 13824,
+      "id": "blocks.1.attention.qkv.weight",
+      "numel": 1769472,
+      "shape": [
+        2304,
+        768
+      ]
+    },
+    {
+      "groups": 4608,
+      "id": "blocks.1.attention.projection.weight",
+      "numel": 589824,
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "groups": 18432,
+      "id": "blocks.1.mlp.up.weight",
+      "numel": 2359296,
+      "shape": [
+        3072,
+        768
+      ]
+    },
+    {
+      "groups": 18432,
+      "id": "blocks.1.mlp.down.weight",
+      "numel": 2359296,
+      "shape": [
+        768,
+        3072
+      ]
+    },
+    {
+      "groups": 13824,
+      "id": "blocks.2.attention.qkv.weight",
+      "numel": 1769472,
+      "shape": [
+        2304,
+        768
+      ]
+    },
+    {
+      "groups": 4608,
+      "id": "blocks.2.attention.projection.weight",
+      "numel": 589824,
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "groups": 18432,
+      "id": "blocks.2.mlp.up.weight",
+      "numel": 2359296,
+      "shape": [
+        3072,
+        768
+      ]
+    },
+    {
+      "groups": 18432,
+      "id": "blocks.2.mlp.down.weight",
+      "numel": 2359296,
+      "shape": [
+        768,
+        3072
+      ]
+    },
+    {
+      "groups": 13824,
+      "id": "blocks.3.attention.qkv.weight",
+      "numel": 1769472,
+      "shape": [
+        2304,
+        768
+      ]
+    },
+    {
+      "groups": 4608,
+      "id": "blocks.3.attention.projection.weight",
+      "numel": 589824,
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "groups": 18432,
+      "id": "blocks.3.mlp.up.weight",
+      "numel": 2359296,
+      "shape": [
+        3072,
+        768
+      ]
+    },
+    {
+      "groups": 18432,
+      "id": "blocks.3.mlp.down.weight",
+      "numel": 2359296,
+      "shape": [
+        768,
+        3072
+      ]
+    },
+    {
+      "groups": 13824,
+      "id": "blocks.4.attention.qkv.weight",
+      "numel": 1769472,
+      "shape": [
+        2304,
+        768
+      ]
+    },
+    {
+      "groups": 4608,
+      "id": "blocks.4.attention.projection.weight",
+      "numel": 589824,
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "groups": 18432,
+      "id": "blocks.4.mlp.up.weight",
+      "numel": 2359296,
+      "shape": [
+        3072,
+        768
+      ]
+    },
+    {
+      "groups": 18432,
+      "id": "blocks.4.mlp.down.weight",
+      "numel": 2359296,
+      "shape": [
+        768,
+        3072
+      ]
+    },
+    {
+      "groups": 13824,
+      "id": "blocks.5.attention.qkv.weight",
+      "numel": 1769472,
+      "shape": [
+        2304,
+        768
+      ]
+    },
+    {
+      "groups": 4608,
+      "id": "blocks.5.attention.projection.weight",
+      "numel": 589824,
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "groups": 18432,
+      "id": "blocks.5.mlp.up.weight",
+      "numel": 2359296,
+      "shape": [
+        3072,
+        768
+      ]
+    },
+    {
+      "groups": 18432,
+      "id": "blocks.5.mlp.down.weight",
+      "numel": 2359296,
+      "shape": [
+        768,
+        3072
+      ]
+    },
+    {
+      "groups": 13824,
+      "id": "blocks.6.attention.qkv.weight",
+      "numel": 1769472,
+      "shape": [
+        2304,
+        768
+      ]
+    },
+    {
+      "groups": 4608,
+      "id": "blocks.6.attention.projection.weight",
+      "numel": 589824,
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "groups": 18432,
+      "id": "blocks.6.mlp.up.weight",
+      "numel": 2359296,
+      "shape": [
+        3072,
+        768
+      ]
+    },
+    {
+      "groups": 18432,
+      "id": "blocks.6.mlp.down.weight",
+      "numel": 2359296,
+      "shape": [
+        768,
+        3072
+      ]
+    },
+    {
+      "groups": 13824,
+      "id": "blocks.7.attention.qkv.weight",
+      "numel": 1769472,
+      "shape": [
+        2304,
+        768
+      ]
+    },
+    {
+      "groups": 4608,
+      "id": "blocks.7.attention.projection.weight",
+      "numel": 589824,
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "groups": 18432,
+      "id": "blocks.7.mlp.up.weight",
+      "numel": 2359296,
+      "shape": [
+        3072,
+        768
+      ]
+    },
+    {
+      "groups": 18432,
+      "id": "blocks.7.mlp.down.weight",
+      "numel": 2359296,
+      "shape": [
+        768,
+        3072
+      ]
+    },
+    {
+      "groups": 13824,
+      "id": "blocks.8.attention.qkv.weight",
+      "numel": 1769472,
+      "shape": [
+        2304,
+        768
+      ]
+    },
+    {
+      "groups": 4608,
+      "id": "blocks.8.attention.projection.weight",
+      "numel": 589824,
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "groups": 18432,
+      "id": "blocks.8.mlp.up.weight",
+      "numel": 2359296,
+      "shape": [
+        3072,
+        768
+      ]
+    },
+    {
+      "groups": 18432,
+      "id": "blocks.8.mlp.down.weight",
+      "numel": 2359296,
+      "shape": [
+        768,
+        3072
+      ]
+    },
+    {
+      "groups": 13824,
+      "id": "blocks.9.attention.qkv.weight",
+      "numel": 1769472,
+      "shape": [
+        2304,
+        768
+      ]
+    },
+    {
+      "groups": 4608,
+      "id": "blocks.9.attention.projection.weight",
+      "numel": 589824,
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "groups": 18432,
+      "id": "blocks.9.mlp.up.weight",
+      "numel": 2359296,
+      "shape": [
+        3072,
+        768
+      ]
+    },
+    {
+      "groups": 18432,
+      "id": "blocks.9.mlp.down.weight",
+      "numel": 2359296,
+      "shape": [
+        768,
+        3072
+      ]
+    },
+    {
+      "groups": 13824,
+      "id": "blocks.10.attention.qkv.weight",
+      "numel": 1769472,
+      "shape": [
+        2304,
+        768
+      ]
+    },
+    {
+      "groups": 4608,
+      "id": "blocks.10.attention.projection.weight",
+      "numel": 589824,
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "groups": 18432,
+      "id": "blocks.10.mlp.up.weight",
+      "numel": 2359296,
+      "shape": [
+        3072,
+        768
+      ]
+    },
+    {
+      "groups": 18432,
+      "id": "blocks.10.mlp.down.weight",
+      "numel": 2359296,
+      "shape": [
+        768,
+        3072
+      ]
+    },
+    {
+      "groups": 13824,
+      "id": "blocks.11.attention.qkv.weight",
+      "numel": 1769472,
+      "shape": [
+        2304,
+        768
+      ]
+    },
+    {
+      "groups": 4608,
+      "id": "blocks.11.attention.projection.weight",
+      "numel": 589824,
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "groups": 18432,
+      "id": "blocks.11.mlp.up.weight",
+      "numel": 2359296,
+      "shape": [
+        3072,
+        768
+      ]
+    },
+    {
+      "groups": 18432,
+      "id": "blocks.11.mlp.down.weight",
+      "numel": 2359296,
+      "shape": [
+        768,
+        3072
+      ]
+    }
+  ],
+  "quantizer": "group-wise symmetric round-to-nearest over the last dimension, group_size elements per scale, one fp16 scale per group, implemented at environment/model.py quantize_dequantize. The verifier replays this identical function on its own pristine checkpoint.",
+  "scale_bits": 16,
+  "schema": "oer22.substrate/v2",
+  "statement": "The artifact quantized in this slot IS a real nanoGPT checkpoint of the canonical 12-layer 768-dim decoder declared at environment/nanogpt_substrate.json. There is no closed-form degradation surrogate in this bundle and there is no per-tensor sensitivity vector shipped as a graded input. Perplexity is a real forward pass of real parameters over a real token stream, and the graded reading of it is the verifier's own.",
+  "uniform_reference_bits": 4
+}

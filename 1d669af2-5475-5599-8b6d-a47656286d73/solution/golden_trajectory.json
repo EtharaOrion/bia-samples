@@ -1,0 +1,121 @@
+{
+  "_generated": "GENERATED SECTION. DO NOT HAND-EDIT. source: solution/grounding.yaml",
+  "graded_mean_degradation": null,
+  "graded_points": null,
+  "graded_reward": null,
+  "graded_state": "measured-in-run-by-the-verifier",
+  "graded_state_note": "Every graded number in this slot is a forward pass tests/evaluate.py runs inside the verifier over its own pristine checkpoint and its own held-out folds. None is recoverable from these bytes, so each is published as absent under gap-oer-22-reward-scale-points-are-measured-in-run rather than written down here.",
+  "schema": "oer22.golden_trajectory/v2",
+  "steps": [
+    {
+      "action": "read instruction.md and enumerate the frozen and free axes",
+      "calibration_fit_witness": "9e639e095abbd234c8f77b2c2442459e96a52f6208bb7b05f071fb1fe3c7274e",
+      "calibration_version_observed": 1,
+      "pin_observed": {
+        "schema": "oer22.calibration_pin/v1",
+        "shard": "fineweb_train_000001.bin",
+        "token_count": 262144,
+        "token_offset": 1048576,
+        "version": 1
+      },
+      "step": 1
+    },
+    {
+      "action": "probe the calibration handle and record version and tick",
+      "calibration_fit_witness": "9e639e095abbd234c8f77b2c2442459e96a52f6208bb7b05f071fb1fe3c7274e",
+      "calibration_version_observed": 1,
+      "pin_observed": {
+        "schema": "oer22.calibration_pin/v1",
+        "shard": "fineweb_train_000001.bin",
+        "token_count": 262144,
+        "token_offset": 1048576,
+        "version": 1
+      },
+      "step": 2
+    },
+    {
+      "action": "measure the per-tensor cost curve over the observed calibration slice and fit an allocation against it",
+      "calibration_fit_witness": "9e639e095abbd234c8f77b2c2442459e96a52f6208bb7b05f071fb1fe3c7274e",
+      "calibration_version_observed": 1,
+      "pin_observed": {
+        "schema": "oer22.calibration_pin/v1",
+        "shard": "fineweb_train_000001.bin",
+        "token_count": 262144,
+        "token_offset": 1048576,
+        "version": 1
+      },
+      "step": 3
+    },
+    {
+      "action": "re-probe the calibration handle before submitting rather than assuming the iteration-three observation is still true, and observe that the version in force has moved",
+      "calibration_fit_witness": "47c626606f42c18ab017023aa13e60cd679612706d41347424bfb20f56b7c7fb",
+      "calibration_version_observed": 2,
+      "pin_observed": {
+        "schema": "oer22.calibration_pin/v1",
+        "shard": "fineweb_train_000004.bin",
+        "token_count": 262144,
+        "token_offset": 6291456,
+        "version": 2
+      },
+      "step": 4
+    },
+    {
+      "action": "re-measure the cost curve on the slice now in force, refit, select among the candidates by joint measurement, and record the pin witness and the slice content witness over the bytes actually read",
+      "calibration_fit_witness": "47c626606f42c18ab017023aa13e60cd679612706d41347424bfb20f56b7c7fb",
+      "calibration_version_observed": 2,
+      "pin_observed": {
+        "schema": "oer22.calibration_pin/v1",
+        "shard": "fineweb_train_000004.bin",
+        "token_count": 262144,
+        "token_offset": 6291456,
+        "version": 2
+      },
+      "step": 5
+    },
+    {
+      "action": "account the bit budget including the per-group scale tensors and confirm the allocation fits",
+      "calibration_fit_witness": "47c626606f42c18ab017023aa13e60cd679612706d41347424bfb20f56b7c7fb",
+      "calibration_version_observed": 2,
+      "pin_observed": {
+        "schema": "oer22.calibration_pin/v1",
+        "shard": "fineweb_train_000004.bin",
+        "token_count": 262144,
+        "token_offset": 6291456,
+        "version": 2
+      },
+      "step": 6
+    },
+    {
+      "action": "complete every evaluation point the verifier schedules, declare no readout filter, and write submission.json",
+      "calibration_fit_witness": "47c626606f42c18ab017023aa13e60cd679612706d41347424bfb20f56b7c7fb",
+      "calibration_version_observed": 2,
+      "pin_observed": {
+        "schema": "oer22.calibration_pin/v1",
+        "shard": "fineweb_train_000004.bin",
+        "token_count": 262144,
+        "token_offset": 6291456,
+        "version": 2
+      },
+      "step": 7
+    }
+  ],
+  "submitted": {
+    "allocation_state": "fitted-in-run-by-environment/model.py-fit_allocation",
+    "calibration_fit_witness": "47c626606f42c18ab017023aa13e60cd679612706d41347424bfb20f56b7c7fb",
+    "calibration_slice_witness_state": "established only in built environment state; on no byte of this bundle",
+    "derived_against_calibration_version": 2,
+    "observed_calibration_ledger": [
+      1,
+      2
+    ],
+    "protocol": {
+      "halted_early": false,
+      "points_completed": 4
+    },
+    "readout": {
+      "filter": "none",
+      "reported_degradation": null
+    },
+    "schema": "oer22.submission/v2"
+  }
+}
