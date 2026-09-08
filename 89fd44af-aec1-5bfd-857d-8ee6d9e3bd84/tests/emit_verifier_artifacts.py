@@ -6,6 +6,10 @@ import pathlib
 import re
 import sys
 
+sys.path.insert(0, str(pathlib.Path(__file__).resolve().parent))
+
+import rubric_gate
+
 
 def _pytest_counts(log: str) -> dict:
     tail = log.strip().splitlines()[-1] if log.strip() else ""
@@ -78,30 +82,21 @@ REASON_CODES = (
 REASON_CODE_MISSING = -1
 REASON_CODE_UNRECOGNISED = 99
 
-RUBRIC_GATE_CLEAN = 1
-RUBRIC_GATE_VETOED = 0
-RUBRIC_GATE_ABSENT = -1
-RUBRIC_GATE_INDETERMINATE = -2
+RUBRIC_GATE_CLEAN = rubric_gate.RUBRIC_GATE_CLEAN
+RUBRIC_GATE_VETOED = rubric_gate.RUBRIC_GATE_VETOED
+RUBRIC_GATE_ABSENT = rubric_gate.RUBRIC_GATE_ABSENT
+RUBRIC_GATE_INDETERMINATE = rubric_gate.RUBRIC_GATE_INDETERMINATE
 
 
 def _apply_rubric_veto(run: pathlib.Path, score: float, verd: dict):
-    doc = {}
-    p = run / "rubric_verdicts.json"
-    if p.is_file():
-        try:
-            doc = json.loads(p.read_text())
-        except json.JSONDecodeError:
-            return score, None, RUBRIC_GATE_INDETERMINATE
-    else:
-        return score, None, RUBRIC_GATE_ABSENT
-    if doc.get("_indeterminate") or doc.get("overall_pass") is None:
-        return score, None, RUBRIC_GATE_INDETERMINATE
-    failed = sorted(k for k, x in (verd or {}).items() if not (x or {}).get("pass"))
-    if not failed and doc.get("overall_pass") is not False:
-        return score, None, RUBRIC_GATE_CLEAN
-    if score <= 0.0:
-        return 0.0, None, RUBRIC_GATE_VETOED
-    return 0.0, "rubric_veto_" + ",".join(failed or ["overall"]), RUBRIC_GATE_VETOED
+    """Delegate to tests/rubric_gate.py.
+
+    `verd` is retained for call compatibility; the gate re-reads the document so that the
+    ABSENT and INDETERMINATE cases stay distinguishable, which a bare verdict mapping
+    cannot express. tests/test_rubric_gate_characterization.py pins the 15 shipped triples
+    across this extraction.
+    """
+    return rubric_gate.apply_rubric_veto(score, rubric_gate.load_verdicts(run))
 
 
 def _reason_code(reason: str) -> int:

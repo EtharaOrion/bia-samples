@@ -1,0 +1,137 @@
+{
+  "claude-opus-5/iteration-1": {
+    "committed_indent": 2,
+    "graded_score": 0.0,
+    "n_verdicts": 14,
+    "reason_code": 30,
+    "rubric_gate": 0,
+    "score": 0.0,
+    "veto_reason": null
+  },
+  "claude-opus-5/iteration-2": {
+    "committed_indent": 2,
+    "graded_score": 0.375,
+    "n_verdicts": 14,
+    "reason_code": 0,
+    "rubric_gate": 1,
+    "score": 0.375,
+    "veto_reason": null
+  },
+  "claude-opus-5/iteration-3": {
+    "committed_indent": 2,
+    "graded_score": 0.5,
+    "n_verdicts": 14,
+    "reason_code": 0,
+    "rubric_gate": 1,
+    "score": 0.5,
+    "veto_reason": null
+  },
+  "claude-opus-5/iteration-4": {
+    "committed_indent": 2,
+    "graded_score": 0.5,
+    "n_verdicts": 14,
+    "reason_code": 0,
+    "rubric_gate": 1,
+    "score": 0.5,
+    "veto_reason": null
+  },
+  "claude-opus-5/iteration-5": {
+    "committed_indent": 2,
+    "graded_score": 0.375,
+    "n_verdicts": 14,
+    "reason_code": 0,
+    "rubric_gate": 1,
+    "score": 0.375,
+    "veto_reason": null
+  },
+  "gpt-5.6-sol/iteration-1": {
+    "committed_indent": 2,
+    "graded_score": 0.4166666666666667,
+    "n_verdicts": 14,
+    "reason_code": 0,
+    "rubric_gate": 1,
+    "score": 0.4166666666666667,
+    "veto_reason": null
+  },
+  "gpt-5.6-sol/iteration-2": {
+    "committed_indent": 2,
+    "graded_score": 0.375,
+    "n_verdicts": 14,
+    "reason_code": 0,
+    "rubric_gate": 1,
+    "score": 0.375,
+    "veto_reason": null
+  },
+  "gpt-5.6-sol/iteration-3": {
+    "committed_indent": 2,
+    "graded_score": 0.4583333333333333,
+    "n_verdicts": 14,
+    "reason_code": 0,
+    "rubric_gate": 1,
+    "score": 0.4583333333333333,
+    "veto_reason": null
+  },
+  "gpt-5.6-sol/iteration-4": {
+    "committed_indent": 2,
+    "graded_score": 0.4166666666666667,
+    "n_verdicts": 14,
+    "reason_code": 0,
+    "rubric_gate": 1,
+    "score": 0.4166666666666667,
+    "veto_reason": null
+  },
+  "gpt-5.6-sol/iteration-5": {
+    "committed_indent": 2,
+    "graded_score": 0.4583333333333333,
+    "n_verdicts": 14,
+    "reason_code": 0,
+    "rubric_gate": 1,
+    "score": 0.4583333333333333,
+    "veto_reason": null
+  },
+  "muse-spark-1.2/iteration-1": {
+    "committed_indent": 2,
+    "graded_score": 0.25,
+    "n_verdicts": 14,
+    "reason_code": 0,
+    "rubric_gate": 1,
+    "score": 0.25,
+    "veto_reason": null
+  },
+  "muse-spark-1.2/iteration-2": {
+    "committed_indent": 2,
+    "graded_score": 0.08333333333333333,
+    "n_verdicts": 14,
+    "reason_code": 0,
+    "rubric_gate": 1,
+    "score": 0.08333333333333333,
+    "veto_reason": null
+  },
+  "muse-spark-1.2/iteration-3": {
+    "committed_indent": 2,
+    "graded_score": 0.25,
+    "n_verdicts": 14,
+    "reason_code": 0,
+    "rubric_gate": 1,
+    "score": 0.25,
+    "veto_reason": null
+  },
+  "muse-spark-1.2/iteration-4": {
+    "committed_indent": 2,
+    "graded_score": 0.2916666666666667,
+    "n_verdicts": 14,
+    "reason_code": 0,
+    "rubric_gate": 1,
+    "score": 0.2916666666666667,
+    "veto_reason": null
+  },
+  "muse-spark-1.2/iteration-5": {
+    "committed_indent": 2,
+    "graded_score": 0.2916666666666667,
+    "n_verdicts": 14,
+    "reason_code": 0,
+    "rubric_gate": 1,
+    "score": 0.2916666666666667,
+    "veto_reason": null
+  }
+}

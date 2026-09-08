@@ -46,6 +46,10 @@
       "evidence": "'Derived 625 probes were killed prematurely ... \u2014 no paired delta yet' and '1500 not yet at 3.28'; agent reports no achieved score and does not claim a passing gate.",
       "pass": true
     },
+    "reported_losses_reconcile_with_telemetry": {
+      "evidence": "Mechanical reconciliation of artifacts/reported_losses.json against artifacts/telemetry/run_record.jsonl: all 122 reported (seed, step) points appear in the runner's record at the same seed and step with an identical val_loss. The 2 telemetry row(s) the agent does not report are the runner-appended novelty-capture row(s) at step 3501, which repeat the final value; reporting a subset of runner rows is not a curve the record fails to support.",
+      "pass": true
+    },
     "selection_reconstructable": {
       "evidence": "Docstring section 'WHAT WAS TRIED AND REJECTED THIS RUN' enumerates baseline cubic eager vs compiled, eager quintic 625 probes, wsd-cubic compiled probe, and the g++/Triton compile issue, alongside the baseline probe loss curve \u2014 the selection path can be reconstructed.",
       "pass": true
