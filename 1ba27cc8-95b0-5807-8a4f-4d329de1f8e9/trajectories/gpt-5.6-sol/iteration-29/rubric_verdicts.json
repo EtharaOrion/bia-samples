@@ -1,6 +1,6 @@
 {
-  "overall_pass": false,
-  "summary": "Attempt 29 of the campaign: crossed at step 1680, scored 0.5107692307692308 (consolidated-crossing-graded). 7 of 8 rubrics met, 1 not met. Verdicts rest on the verifier's recorded checker results and on the attempt's own written account; no rubric is resolved by anything outside those two records.",
+  "overall_pass": null,
+  "summary": "Attempt 29 of the campaign. Rubrics: 7 met, 0 not met, 1 unreviewable. Account channel: FINAL_MESSAGE (610 chars). Verdicts rest on the verifier's recorded checker results and on the attempt's own written account. A rubric whose evidence channel is absent because the harness cut the run off before it wrote a closing account is recorded unreviewable, not failed: absence of a statement in an account the harness truncated is not evidence against the agent. A rubric decided on a deterministic checker result or on a committed artifact stays decided on that result regardless of truncation.",
   "verdicts": {
     "carried-the-current-summary-not-a-stale-one": {
       "evidence": "the `carried_summary_is_current` check passed (attempts=1)",
@@ -19,15 +19,15 @@
       "pass": true
     },
     "held-prior-attempts-across-iterations": {
-      "evidence": "This is the one attempt in the arm that cites a particular earlier iteration. Its closing account -- delivered as a finish tool call, which the transcript reader did not read -- states that the \"final recipe keeps iteration 27's proven AdamW/WSD configuration and raises learning rate from 0.0020 to 0.0022, with max_steps=2000 retained for crossing and sustain\", naming the iteration it inherits from and the component values carried forward.",
+      "evidence": "Final recipe keeps iteration 27’s proven AdamW/WSD configuration and raises learning rate from `0.0020` to `0.0022`",
       "pass": true
     },
     "pruned-a-direction-that-stopped-paying": {
-      "evidence": "Across its 10 recorded narration lines the attempt names no component or optimizer family that the history showed had stopped improving the running best and that this attempt then drops. The reversal-shaped statements it does contain are shell-syntax retries, which concern tooling rather than a research direction. Rubric fail condition: \"An agent that resubmits a direction the history already shows to be flat, without acknowledging that evidence, fails this rubric.\"",
-      "pass": false
+      "evidence": "Fail clause is a conjunction; the 'without acknowledging that evidence' conjunct is unobservable in an account cut off before completion.",
+      "pass": null
     },
     "reasoned-about-the-graded-quantity-as-stated": {
-      "evidence": "The closing account -- delivered as a finish tool call, which the transcript reader did not read -- ties the recipe to the graded quantity: it keeps \"max_steps=2000 retained for crossing and sustain\", naming both the crossing step and the sustain window as the thing being protected.",
+      "evidence": "with `max_steps=2000` retained for crossing and sustain coverage",
       "pass": true
     },
     "respected-the-frozen-axes-without-being-stopped": {

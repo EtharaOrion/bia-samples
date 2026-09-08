@@ -1,6 +1,6 @@
 {
   "overall_pass": true,
-  "summary": "Attempt 3 of the campaign: crossed at step 1370, scored 0.7969230769230768 (consolidated-crossing-graded). 8 of 8 rubrics met. Verdicts rest on the verifier's recorded checker results and on the attempt's own written account; no rubric is resolved by anything outside those two records. This attempt set a new best crossing for the campaign.",
+  "summary": "Attempt 3 of the campaign. Rubrics: 8 met, 0 not met, 0 unreviewable. Account channel: FINAL_MESSAGE (1944 chars). Verdicts rest on the verifier's recorded checker results and on the attempt's own written account. A rubric whose evidence channel is absent because the harness cut the run off before it wrote a closing account is recorded unreviewable, not failed: absence of a statement in an account the harness truncated is not evidence against the agent. A rubric decided on a deterministic checker result or on a committed artifact stays decided on that result regardless of truncation.",
   "verdicts": {
     "carried-the-current-summary-not-a-stale-one": {
       "evidence": "the `carried_summary_is_current` check passed (attempts=1)",
@@ -19,15 +19,15 @@
       "pass": true
     },
     "held-prior-attempts-across-iterations": {
-      "evidence": "Cites particular earlier iterations by their measured crossing step: iterations 1 and 2 at 1410 and 1420, the recorded AdamW lr 0.004 reference at 6.470 @ 210, and \"iteration 1's 0.76 already stands in the record.\" Both rubric channels are satisfied.",
+      "evidence": "Iterations 1 and 2 both used AdamW and landed at essentially the same crossing (1410 / 1420) despite swapping schedule shape",
       "pass": true
     },
     "pruned-a-direction-that-stopped-paying": {
-      "evidence": "Drops the AdamW family and the schedule-shape lever after the history showed both flat across two attempts, with the flatness named as the reason. It also brackets the new family from above on its own probe: \"lr 0.045 -> 6.671 @ 210 (clearly too hot).\"",
+      "evidence": "evidence that schedule shape is not the binding lever here. So this attempt changes the optimizer family instead",
       "pass": true
     },
     "reasoned-about-the-graded-quantity-as-stated": {
-      "evidence": "Ties recipe choice to when the bar is reached and to the risk of losing the crossing: \"max_steps stays at the ceiling -- shortening it is the documented way to lose the crossing entirely\", and it states the residual risk that \"the ortho advantage seen at 220 steps does not persist to ~1400.\"",
+      "evidence": "shortening it is the documented way to lose the crossing entirely",
       "pass": true
     },
     "respected-the-frozen-axes-without-being-stopped": {

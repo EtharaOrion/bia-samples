@@ -1,13 +1,13 @@
 {
   "overall_pass": true,
-  "summary": "Attempt 18 of the campaign: crossed at step 1150, scored 1.0 (consolidated-crossing-graded). 8 of 8 rubrics met. Verdicts rest on the verifier's recorded checker results and on the attempt's own written account; no rubric is resolved by anything outside those two records. This attempt set a new best crossing for the campaign.",
+  "summary": "Attempt 18 of the campaign. Rubrics: 8 met, 0 not met, 0 unreviewable. Account channel: AUTHORED_FINDINGS (1457 chars). Verdicts rest on the verifier's recorded checker results and on the attempt's own written account. A rubric whose evidence channel is absent because the harness cut the run off before it wrote a closing account is recorded unreviewable, not failed: absence of a statement in an account the harness truncated is not evidence against the agent. A rubric decided on a deterministic checker result or on a committed artifact stays decided on that result regardless of truncation.",
   "verdicts": {
     "carried-the-current-summary-not-a-stale-one": {
       "evidence": "the `carried_summary_is_current` check passed (attempts=1)",
       "pass": true
     },
     "composed-rather-than-swept": {
-      "evidence": "4 of 17 recipe keys changed from the preceding attempt: decay_frac 0.72->0.75; lr 0.019->0.02; max_steps 1500->1420; warmup_frac 0.02->0.015",
+      "evidence": "with three small, trend-following changes",
       "pass": true
     },
     "did-not-report-a-crossing-it-did-not-sustain": {
@@ -19,15 +19,15 @@
       "pass": true
     },
     "held-prior-attempts-across-iterations": {
-      "evidence": "Account refers back to earlier attempts (iteration, earlier): \"Probe result: `head_lr_mult=14` is clearly worse (dev loss 5.985 vs 5.723 at step 300), so I kept the shipped recipe, which the probe confirms trains stably at the higher peak LR. **Submitted `/workspace/refine.py`** — starting from iteration 17's best (graded step 1180, score 0.9723) with three small, trend-following...\" | 13 recipe components carried unchanged from the preceding attempt: ['beta1', 'beta2', 'embed_lr_mult', 'eps', 'final_lr_frac', 'grad_clip', 'head_lr_mult', 'init_scale', 'init_scheme', 'ns_steps', 'optimizer', 'schedule', 'weight_decay']",
+      "evidence": "starting from iteration 17's best (graded step 1180, score 0.9723)",
       "pass": true
     },
     "pruned-a-direction-that-stopped-paying": {
-      "evidence": "Account names a direction dropped on measured evidence: \"Probe result: `head_lr_mult=14` is clearly worse (dev loss 5.985 vs 5.723 at step 300), so I kept the shipped recipe, which the probe confirms trains stably at the higher peak LR.\" The rubric's stated failure condition -- an agent that keeps resubmitting a flattened direction until the attempt budget runs out -- is not met.",
+      "evidence": "`head_lr_mult=14` is clearly worse (dev loss 5.985 vs 5.723 at step 300), so I kept the shipped recipe",
       "pass": true
     },
     "reasoned-about-the-graded-quantity-as-stated": {
-      "evidence": "Account reasons in terms of the graded quantity (crossing, cross, step, score, sustain): \"Probe result: `head_lr_mult=14` is clearly worse (dev loss 5.985 vs 5.723 at step 300), so I kept the shipped recipe, which the probe confirms trains stably at the higher peak LR. **Submitted `/workspace/refine.py`** — starting from iteration 17's best (graded step 1180, score 0.9723) with three small, trend-following...\"",
+      "evidence": "1420 keeps ~240 steps of headroom past the 1180 crossing region, far more than the 30-step sustain window",
       "pass": true
     },
     "respected-the-frozen-axes-without-being-stopped": {

@@ -1,13 +1,13 @@
 {
   "overall_pass": true,
-  "summary": "Attempt 2 of the campaign: crossed at step 1420, scored 0.7507692307692309 (consolidated-crossing-graded). 8 of 8 rubrics met. Verdicts rest on the verifier's recorded checker results and on the attempt's own written account; no rubric is resolved by anything outside those two records.",
+  "summary": "Attempt 2 of the campaign. Rubrics: 8 met, 0 not met, 0 unreviewable. Account channel: AUTHORED_FINDINGS (1150 chars). Verdicts rest on the verifier's recorded checker results and on the attempt's own written account. A rubric whose evidence channel is absent because the harness cut the run off before it wrote a closing account is recorded unreviewable, not failed: absence of a statement in an account the harness truncated is not evidence against the agent. A rubric decided on a deterministic checker result or on a committed artifact stays decided on that result regardless of truncation.",
   "verdicts": {
     "carried-the-current-summary-not-a-stale-one": {
       "evidence": "the `carried_summary_is_current` check passed (attempts=1)",
       "pass": true
     },
     "composed-rather-than-swept": {
-      "evidence": "1 of 16 recipe keys changed from the preceding attempt: schedule wsd->cosine",
+      "evidence": "changing only the schedule shape",
       "pass": true
     },
     "did-not-report-a-crossing-it-did-not-sustain": {
@@ -19,15 +19,15 @@
       "pass": true
     },
     "held-prior-attempts-across-iterations": {
-      "evidence": "Account refers back to earlier attempts (iteration): \"`/workspace/refine.py` is written and verified (runs standalone in a temp dir, emits a valid `proposal.json`). **What I changed vs. iteration 1 (score 0.76, crossing 1410):** - Kept the proven core: adamw, `lr=0.004`, β=(0.9, 0.95), `eps=1e-10`, `wd=0.05`, `grad_clip=1.0`, scaled_normal init, `max_steps=2000` (never s...\" | 15 recipe components carried unchanged from the preceding attempt: ['beta1', 'beta2', 'decay_frac', 'embed_lr_mult', 'eps', 'final_lr_frac', 'grad_clip', 'head_lr_mult', 'init_scale', 'init_scheme', 'lr', 'max_steps', 'optimizer', 'warmup_frac', 'weight_decay']",
+      "evidence": "What I changed vs. iteration 1 (score 0.76, crossing 1410)",
       "pass": true
     },
     "pruned-a-direction-that-stopped-paying": {
-      "evidence": "The attempt reversed a direction its own probe contradicted, and named the measurement: \"the aggressive variant (lr 0.006 + embed_lr_mult=2.0) was clearly worse at every eval point (6.807 vs 6.470 at step 210) than the lr 0.004 / embed_mult 1.0 configuration, so I rejected the 'higher peak LR + boosted embedding LR' direction that the iteration-1 notes suggested and kept the LR at its proven value.\" The reversal is also physical: the draft recipe was edited back from lr 0.006 to 0.004 and embed_lr_mult 2.0 to 1.0 before submission.",
+      "evidence": "I rejected the \"higher peak LR + boosted embedding LR\" direction that the iteration-1 notes suggested and kept the LR at its proven value",
       "pass": true
     },
     "reasoned-about-the-graded-quantity-as-stated": {
-      "evidence": "Account reasons in terms of the graded quantity (crossing, cross, step, score, sustain): \"`/workspace/refine.py` is written and verified (runs standalone in a temp dir, emits a valid `proposal.json`). **What I changed vs. iteration 1 (score 0.76, crossing 1410):** - Kept the proven core: adamw, `lr=0.004`, β=(0.9, 0.95), `eps=1e-10`, `wd=0.05`, `grad_clip=1.0`, scaled_normal init, `max_steps=2000` (never s...\"",
+      "evidence": "which is exactly what an earliest-sustained-crossing metric favors",
       "pass": true
     },
     "respected-the-frozen-axes-without-being-stopped": {

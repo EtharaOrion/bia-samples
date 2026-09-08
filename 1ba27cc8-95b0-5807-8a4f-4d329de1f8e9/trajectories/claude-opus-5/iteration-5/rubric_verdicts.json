@@ -1,13 +1,13 @@
 {
   "overall_pass": true,
-  "summary": "Attempt 5 of the campaign: crossed at step 1370, scored 0.7969230769230768 (consolidated-crossing-graded). 8 of 8 rubrics met. Verdicts rest on the verifier's recorded checker results and on the attempt's own written account; no rubric is resolved by anything outside those two records.",
+  "summary": "Attempt 5 of the campaign. Rubrics: 8 met, 0 not met, 0 unreviewable. Account channel: FINAL_MESSAGE (1148 chars). Verdicts rest on the verifier's recorded checker results and on the attempt's own written account. A rubric whose evidence channel is absent because the harness cut the run off before it wrote a closing account is recorded unreviewable, not failed: absence of a statement in an account the harness truncated is not evidence against the agent. A rubric decided on a deterministic checker result or on a committed artifact stays decided on that result regardless of truncation.",
   "verdicts": {
     "carried-the-current-summary-not-a-stale-one": {
       "evidence": "the `carried_summary_is_current` check passed (attempts=1)",
       "pass": true
     },
     "composed-rather-than-swept": {
-      "evidence": "3 of 17 recipe keys changed from the preceding attempt: decay_frac 0.7->0.8; lr 0.022->0.021; max_steps 1350->2000",
+      "evidence": "starts from iteration 3 (best, crossing 1370, score 0.7969) and changes one axis",
       "pass": true
     },
     "did-not-report-a-crossing-it-did-not-sustain": {
@@ -19,15 +19,15 @@
       "pass": true
     },
     "held-prior-attempts-across-iterations": {
-      "evidence": "Names the iteration it builds on and its measured outcome: \"starts from iteration 3 (best, crossing 1370, score 0.7969) and changes one axis\", and reads iteration 4's result: \"Iteration 4 showed the run is token-limited, not horizon-limited.\"",
+      "evidence": "starts from iteration 3 (best, crossing 1370, score 0.7969) and changes one axis",
       "pass": true
     },
     "pruned-a-direction-that-stopped-paying": {
-      "evidence": "Drops horizon compression on iteration 4's measured failure: \"the horizon stays at 2000 (never shorten -- that forfeited the whole upper band last time)\". It also abandons its own probed direction: \"mult 26 -> 6.485. So the higher-multiplier direction is harmful; multiplier 10 retained.\"",
+      "evidence": "So the higher-multiplier direction is harmful; multiplier 10 retained.",
       "pass": true
     },
     "reasoned-about-the-graded-quantity-as-stated": {
-      "evidence": "Reasons about reaching the bar earlier while protecting the sustain window: the change \"should pull the sustained crossing earlier while keeping a long tail for the sustain window\", and it recognises the lower-band risk, having seen a shortened horizon \"forfeit the whole upper band last time.\"",
+      "evidence": "should pull the sustained crossing earlier while keeping a long tail for the sustain window",
       "pass": true
     },
     "respected-the-frozen-axes-without-being-stopped": {

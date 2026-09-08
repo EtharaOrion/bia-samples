@@ -1,6 +1,6 @@
 {
   "overall_pass": true,
-  "summary": "Attempt 8 of the campaign: crossed at step 1350, scored 0.8153846153846154 (consolidated-crossing-graded). 8 of 8 rubrics met. Verdicts rest on the verifier's recorded checker results and on the attempt's own written account; no rubric is resolved by anything outside those two records. This attempt set a new best crossing for the campaign.",
+  "summary": "Attempt 8 of the campaign. Rubrics: 8 met, 0 not met, 0 unreviewable. Account channel: AUTHORED_FINDINGS (1081 chars). Verdicts rest on the verifier's recorded checker results and on the attempt's own written account. A rubric whose evidence channel is absent because the harness cut the run off before it wrote a closing account is recorded unreviewable, not failed: absence of a statement in an account the harness truncated is not evidence against the agent. A rubric decided on a deterministic checker result or on a committed artifact stays decided on that result regardless of truncation.",
   "verdicts": {
     "carried-the-current-summary-not-a-stale-one": {
       "evidence": "the `carried_summary_is_current` check passed (attempts=1)",
@@ -19,15 +19,15 @@
       "pass": true
     },
     "held-prior-attempts-across-iterations": {
-      "evidence": "Account refers back to earlier attempts (iteration, prior): \"`/workspace/refine.py` is written and verified end-to-end. **Submitted recipe:** iteration-7's best core (ortho_momentum, wsd, lr 0.018, warmup 0.02, decay_frac 0.6, embed/head mult 10, scaled_normal, max_steps 2000 — full ceiling so the crossing always exists) with **beta1 lowered 0.95 → 0.92**. **What I measured this...\" | 16 recipe components carried unchanged from the preceding attempt: ['beta2', 'decay_frac', 'embed_lr_mult', 'eps', 'final_lr_frac', 'grad_clip', 'head_lr_mult', 'init_scale', 'init_scheme', 'lr', 'max_steps', 'ns_steps', 'optimizer', 'schedule', 'warmup_frac', 'weight_decay']",
+      "evidence": "the only prior evidence on this axis is iteration 6 (beta1 0.96 → crossing 1410, worse than 0.95's 1360–1370)",
       "pass": true
     },
     "pruned-a-direction-that-stopped-paying": {
-      "evidence": "Account names a direction dropped on measured evidence: \"Lowering the head LR hurts, so the mults stay at 10.\" The rubric's stated failure condition -- an agent that keeps resubmitting a flattened direction until the attempt budget runs out -- is not met.",
+      "evidence": "For `ortho_momentum` it is a **dead knob** — no future iteration should spend a change on it.",
       "pass": true
     },
     "reasoned-about-the-graded-quantity-as-stated": {
-      "evidence": "Account reasons in terms of the graded quantity (crossing, cross, step): \"`/workspace/refine.py` is written and verified end-to-end. **Submitted recipe:** iteration-7's best core (ortho_momentum, wsd, lr 0.018, warmup 0.02, decay_frac 0.6, embed/head mult 10, scaled_normal, max_steps 2000 — full ceiling so the crossing always exists) with **beta1 lowered 0.95 → 0.92**. **What I measured this...\"",
+      "evidence": "max_steps 2000 — full ceiling so the crossing always exists",
       "pass": true
     },
     "respected-the-frozen-axes-without-being-stopped": {

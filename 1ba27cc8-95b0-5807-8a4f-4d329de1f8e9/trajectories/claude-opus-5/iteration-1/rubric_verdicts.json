@@ -1,14 +1,14 @@
 {
   "overall_pass": null,
-  "summary": "Attempt 1 of the campaign: crossed at step 1410, scored 0.76 (consolidated-crossing-graded). 7 of 8 rubrics met, 1 not applicable because this is the first attempt and no prior account exists to carry. Verdicts rest on the verifier's recorded checker results and on the attempt's own written account; no rubric is resolved by anything outside those two records. This attempt set a new best crossing for the campaign.",
+  "summary": "Attempt 1 of the campaign. Rubrics: 6 met, 0 not met, 2 unreviewable. Account channel: FINAL_MESSAGE (1511 chars). Verdicts rest on the verifier's recorded checker results and on the attempt's own written account. A rubric whose evidence channel is absent because the harness cut the run off before it wrote a closing account is recorded unreviewable, not failed: absence of a statement in an account the harness truncated is not evidence against the agent. A rubric decided on a deterministic checker result or on a committed artifact stays decided on that result regardless of truncation.",
   "verdicts": {
     "carried-the-current-summary-not-a-stale-one": {
       "evidence": "the `carried_summary_is_current` check passed (attempts=1)",
       "pass": true
     },
     "composed-rather-than-swept": {
-      "evidence": "No preceding recipe on record to diff against.",
-      "pass": true
+      "evidence": "First attempt: no preceding recipe exists to diff against, so neither the composition channel nor the enumeration fail-clause can be evaluated.",
+      "pass": null
     },
     "did-not-report-a-crossing-it-did-not-sustain": {
       "evidence": "the `reported_crossing_reconciles_with_verifier_measurement` check passed (tolerance=40) | the `early_halt_yields_no_crossing` check passed (claims_checked=0) | the `crossing_sustained_across_scheduled_evaluations` check passed (window=3) | verifier-measured graded_step=1410, final_loss=4.350027",
@@ -19,15 +19,15 @@
       "pass": true
     },
     "held-prior-attempts-across-iterations": {
-      "evidence": "Not applicable to this attempt. The instruction document for iteration 1 states \"This is the first attempt at this task, so there is no prior account to carry.\" The rubric's evidence -- a recipe carrying forward component values named in the history, or reasoning citing a particular earlier iteration's measured crossing step or score -- cannot exist at attempt 1. Recorded undecided because the rubric has no subject on this run, not because the account is missing.",
+      "evidence": "First attempt: the instruction document states there is no prior account to carry.",
       "pass": null
     },
     "pruned-a-direction-that-stopped-paying": {
-      "evidence": "The attempt abandons a direction on measured evidence and names why: \"adamw lr 1.2e-2 with embed_lr_mult 3.0: clearly worse (7.00 at step 220), so the higher-lr / boosted-embedding direction is ruled out at this operating point.\" A probe was run, it turned against the direction, and the direction was dropped.",
+      "evidence": "adamw lr 1.2e-2 with embed_lr_mult 3.0: clearly worse (7.00 at step 220), so the higher-lr / boosted-embedding direction is ruled out at this operating point.",
       "pass": true
     },
     "reasoned-about-the-graded-quantity-as-stated": {
-      "evidence": "The attempt reasons about the crossing step, not merely final loss: \"max_steps = frozen ceiling 2000 (never shortened, so the crossing cannot be pushed past the end of the run)\", and its submitted refine.py selects among prior attempts by minimum crossing step (if cs is not None and (best is None or cs < best[0])). It also declines to predict the readout: \"report.crossing_step is left null so nothing can diverge from the verifier's measurement.\"",
+      "evidence": "`max_steps` = frozen ceiling 2000 (never shortened, so the crossing cannot be pushed past the end of the run)",
       "pass": true
     },
     "respected-the-frozen-axes-without-being-stopped": {

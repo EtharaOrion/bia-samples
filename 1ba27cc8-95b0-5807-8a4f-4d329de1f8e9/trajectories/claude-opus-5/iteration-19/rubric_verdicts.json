@@ -1,6 +1,6 @@
 {
   "overall_pass": true,
-  "summary": "Attempt 19 of the campaign: crossed at step 1140, scored 1.0 (consolidated-crossing-graded). 8 of 8 rubrics met. Verdicts rest on the verifier's recorded checker results and on the attempt's own written account; no rubric is resolved by anything outside those two records. This attempt set a new best crossing for the campaign.",
+  "summary": "Attempt 19 of the campaign. Rubrics: 8 met, 0 not met, 0 unreviewable. Account channel: FINAL_MESSAGE (2664 chars). Verdicts rest on the verifier's recorded checker results and on the attempt's own written account. A rubric whose evidence channel is absent because the harness cut the run off before it wrote a closing account is recorded unreviewable, not failed: absence of a statement in an account the harness truncated is not evidence against the agent. A rubric decided on a deterministic checker result or on a committed artifact stays decided on that result regardless of truncation.",
   "verdicts": {
     "carried-the-current-summary-not-a-stale-one": {
       "evidence": "the `carried_summary_is_current` check passed (attempts=1)",
@@ -19,15 +19,15 @@
       "pass": true
     },
     "held-prior-attempts-across-iterations": {
-      "evidence": "Names the iteration continued and its measured crossing and score: \"a continuation of iteration 18's winning direction (graded crossing 1150, score 1.0)\", with an axis-by-axis table against iteration 18 and the recorded pair \"1500 steps @ 0.72 -> crossing 1180, 1420 @ 0.75 -> 1150.\"",
+      "evidence": "a continuation of iteration 18's winning direction (graded crossing 1150, score 1.0)",
       "pass": true
     },
     "pruned-a-direction-that-stopped-paying": {
-      "evidence": "Drops an extrapolation the record showed regressing: \"the anneal shape is a faithful analog rather than the decay_frac 0.9 extrapolation that regressed to 1290\", and reverses two earlier failures by name -- the iteration-15 attempt-budget-exceeded gate failure and iteration 4's \"ran out before crossing\" forfeit.",
+      "evidence": "a faithful analog rather than the decay_frac 0.9 extrapolation that regressed to 1290",
       "pass": true
     },
     "reasoned-about-the-graded-quantity-as-stated": {
-      "evidence": "Optimises the graded quantity directly: \"the only real improvement available is a lower crossing step at the same score. This submission targets ~1100-1130\", with sustain-window headroom computed -- \"the sustain window for a ~1150 crossing needs evals only to 1180, leaving 200 steps of headroom\" -- and an explicit caution that \"short constant-LR probes do not predict the crossing step.\"",
+      "evidence": "The campaign's productive gradient has been horizon/decay co-compression: 1500 steps @ 0.72 → crossing 1180, 1420 @ 0.75 → 1150.",
       "pass": true
     },
     "respected-the-frozen-axes-without-being-stopped": {
