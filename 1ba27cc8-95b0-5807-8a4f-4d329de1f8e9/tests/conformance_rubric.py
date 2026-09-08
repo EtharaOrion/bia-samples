@@ -2,7 +2,8 @@
 """Both-halves conformance for the rubric layer (FORGE invariant 17 / item 328).
 
 Every check runs twice: once over the repaired bundle, where it must PASS, and once over a
-copy carrying exactly the defect that check catches, where it must FIRE. A check proven on
+copy carrying exactly the defect that check catches. Planting is done EXTERNALLY by the
+caller; this module runs the clean half only. A check proven on
 only one half is a coverage gap capping at BLOCK:INVALID_TASK, so a one-sided result here is
 reported as INERT rather than as a pass.
 """
@@ -156,6 +157,27 @@ def c12_committed_matches_generator(root):
         shutil.rmtree(tmp, ignore_errors=True)
 
 
+def c13_rubric_ids_match_verdicts(root):
+    """Every rubric must be judged, and every judgement must name a live rubric.
+
+    C11 validates the shape of each line and C12 binds the verdicts to their generator,
+    but nothing bound the rubric SET to the judged SET. A rubric rewrite could therefore
+    land with rubrics carrying no verdict and verdicts naming rubrics that no longer
+    exist, and both checks would still pass.
+    """
+    ids = {json.loads(l)["id"]
+           for l in (root/"tests"/"rubrics.jsonl").read_text(encoding="utf-8").splitlines() if l.strip()}
+    judged = set()
+    for v in sorted(root.rglob("rubric_verdicts.json")):
+        d = json.loads(v.read_text(encoding="utf-8")); vs = d.get("verdicts") or {}
+        judged |= set(vs.keys()) if isinstance(vs, dict) else {x.get("id") for x in vs}
+    unjudged = sorted(ids - judged)
+    orphaned = sorted(judged - ids)
+    if unjudged or orphaned:
+        return False, "unjudged rubric(s): %s; orphaned verdict id(s): %s" % (unjudged[:3], orphaned[:3])
+    return True, "all %d rubric ids are judged and no verdict is orphaned" % len(ids)
+
+
 CHECKS=[("C1  regeneration determinism (G-RUB-REGEN)",c1_regen_determinism),
         ("C2  compiled/test identifier set equality",c2_set_equality),
         ("C3  compilation floor >= 0.75",c3_compilation_floor),
@@ -167,7 +189,8 @@ CHECKS=[("C1  regeneration determinism (G-RUB-REGEN)",c1_regen_determinism),
         ("C9  rubric hard-pass gate vetoes",c9_gate_vetoes),
         ("C10 quoted evidence is verbatim",c10_quotes_verbatim),
         ("C11 rubrics.jsonl is exactly {id,rubric}",c11_jsonl_schema),
-    ("C12 committed verdicts == generator output", c12_committed_matches_generator),]
+    ("C12 committed verdicts == generator output", c12_committed_matches_generator),
+    ("C13 rubric ids == judged verdict ids", c13_rubric_ids_match_verdicts),]
 
 
 
