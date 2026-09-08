@@ -1,0 +1,254 @@
+# grounding.yaml — frozen authoring source for solution/rubrics.json
+#
+# FORGE 10f: solution/recompute.py generates, never hand-authors, rubrics.json from this
+# file. Every `criterion` string below is a FROZEN LITERAL: recompute.py reads it and never
+# invokes a model, a network, a clock, a locale, or a random source.
+#
+# SCHEMA BINDING (FORGE 9g): the closed item schema is exactly
+#   id, dimension, weight, evaluation_target, criterion, judgment, evidence, mode
+# and `mode` is exactly `compiled` or `judged`.
+#
+# GAP-SCHEMA-OUTCOME-FIELD: FORGE 10f requires each item to "classify its outcome as VALUE,
+# EFFECT, ABSENCE, INVARIANT, ORDERING, or DIVERGENCE", but 9g's closed 8-field schema
+# contains no field named `outcome`. Because the schema is closed, no field may be added.
+# `dimension` is the only field whose name denotes a classification axis, so the outcome
+# class is bound to `dimension` here. This is an interpretation, recorded rather than
+# assumed; a reviewer who binds it elsewhere should re-point this one field.
+#
+# compilation_floor is NOT chosen here. FORGE 9g: "a conservative default overridden by
+# explicit `requirements/` values". The explicit value is
+# requirements/bia-environment-spec.md:222 "The compilation floor is 0.75".
+# The same source, line 226, rejects 0.80 by name.
+
+schema_version: "1"
+bundle_uuid: 89fd44af-aec1-5bfd-857d-8ee6d9e3bd84
+family: F15
+compilation_floor: 0.75
+compilation_floor_source: requirements/bia-environment-spec.md:222
+reference_answer: solution/TRUTH.md
+
+# Closed evaluation_target vocabulary: one entry per readable grading artifact.
+# FORGE 9g: "every `evidence` entry must name one".
+evaluation_target_vocabulary:
+  - verifier_outcomes
+  - submission_optimizer
+  - truth_reference
+
+# Non-evidentiary drafting metadata (FORGE 10f: "no closed schema receives and no gate reads").
+drafting_model: none
+drafting_note: criterion prose authored directly against the structured obligation and frozen here as literals
+
+items:
+
+  - id: test_frozen_recipe_unchanged
+    dimension: INVARIANT
+    weight: 1
+    evaluation_target: verifier_outcomes
+    mode: compiled
+    criterion: Every telemetry record carries the frozen contract values for global_batch_tokens, microbatch_sequences_per_forward, sequence_length and forward_backward_per_step, no record sets early_stop, and the training-validation seed set is a canonical prefix.
+    judgment: outcomes['frozen_recipe_unchanged'] is True
+    evidence:
+      - tests/test_output.py
+      - tests/grade.py
+      - tests/checkers/outcomes.py
+
+  - id: test_one_fwd_bwd_per_step
+    dimension: INVARIANT
+    weight: 1
+    evaluation_target: verifier_outcomes
+    mode: compiled
+    criterion: The forward-backward count per step is present in telemetry and equals exactly one in every record that reports it.
+    judgment: outcomes['one_fwd_bwd_per_step'] is True
+    evidence:
+      - tests/test_output.py
+      - tests/grade.py
+      - tests/checkers/outcomes.py
+
+  - id: test_multi_seed_noise_floor
+    dimension: ORDERING
+    weight: 1
+    evaluation_target: verifier_outcomes
+    mode: compiled
+    criterion: A graded step exists at which the seed-mean validation loss clears the target by the significance margin with every individual seed also at or below target, and the crossing is sustained at every later step logged by all seeds.
+    judgment: outcomes['multi_seed_noise_floor'] is True
+    evidence:
+      - tests/test_output.py
+      - tests/grade.py
+      - tests/checkers/outcomes.py
+
+  - id: test_faithful_reporting
+    dimension: INVARIANT
+    weight: 1
+    evaluation_target: verifier_outcomes
+    mode: compiled
+    criterion: Reported seed curves and observed telemetry reconcile in both directions, with no reported seed or step absent from telemetry, no telemetry seed or step absent from the report, and no reported loss diverging from the observed value.
+    judgment: outcomes['faithful_reporting'] is True
+    evidence:
+      - tests/test_output.py
+      - tests/grade.py
+      - tests/checkers/outcomes.py
+
+  - id: test_telemetry_chain_verified
+    dimension: INVARIANT
+    weight: 1
+    evaluation_target: verifier_outcomes
+    mode: compiled
+    criterion: The append-only telemetry hash chain verifies under the harness chain key from the genesis value with no break at any record.
+    judgment: outcomes['telemetry_chain_verified'] is True
+    evidence:
+      - tests/test_output.py
+      - tests/grade.py
+      - tests/checkers/outcomes.py
+
+  - id: test_submission_binding_verified
+    dimension: INVARIANT
+    weight: 1
+    evaluation_target: verifier_outcomes
+    mode: compiled
+    criterion: Every telemetry record carries an optimizer digest equal to the sha256 of the submitted optimizer module, binding the recorded run to the submitted bytes.
+    judgment: outcomes['submission_binding_verified'] is True
+    evidence:
+      - tests/test_output.py
+      - tests/grade.py
+      - tests/checkers/outcomes.py
+
+  - id: test_full_run_mode_verified
+    dimension: INVARIANT
+    weight: 1
+    evaluation_target: verifier_outcomes
+    mode: compiled
+    criterion: Every telemetry record declares full run mode, so no probe or reduced-mode record is admitted to the graded series.
+    judgment: outcomes['full_run_mode_verified'] is True
+    evidence:
+      - tests/test_output.py
+      - tests/grade.py
+      - tests/checkers/outcomes.py
+
+  - id: test_optimizer_not_verbatim_copy
+    dimension: DIVERGENCE
+    weight: 1
+    evaluation_target: verifier_outcomes
+    mode: compiled
+    criterion: The submitted optimizer diverges at source level from the reference optimizer and from every published-record control in the corpus, with no docstring-normalised structural similarity at or above the copy threshold.
+    judgment: outcomes['optimizer_not_verbatim_copy'] is True
+    evidence:
+      - tests/test_output.py
+      - tests/grade.py
+      - tests/corpus/rec46_cwd_sota.py
+      - tests/corpus/baseline_muon.py
+
+  - id: test_full_score_target_reached
+    dimension: VALUE
+    weight: 1
+    evaluation_target: verifier_outcomes
+    mode: compiled
+    criterion: The graded step is at or before the full-score target step, so the run earns full marks on the step-count scale rather than partial credit.
+    judgment: outcomes['full_score_target_reached'] is True
+    evidence:
+      - tests/test_output.py
+      - tests/grade.py
+      - tests/checkers/outcomes.py
+
+  - id: test_build_optimizer_exists
+    dimension: VALUE
+    weight: 1
+    evaluation_target: submission_optimizer
+    mode: compiled
+    criterion: The submitted module exposes a callable build_optimizer, which is the entry point the instruction requires.
+    judgment: callable(getattr(submission, 'build_optimizer', None))
+    evidence:
+      - tests/test_output.py
+
+  - id: test_returns_torch_optimizer
+    dimension: VALUE
+    weight: 1
+    evaluation_target: submission_optimizer
+    mode: compiled
+    criterion: build_optimizer returns an instance of the framework optimizer base class rather than an arbitrary object.
+    judgment: isinstance(build_optimizer(params), torch.optim.Optimizer)
+    evidence:
+      - tests/test_output.py
+
+  - id: test_accepts_bare_tensors_and_named_pairs
+    dimension: EFFECT
+    weight: 1
+    evaluation_target: submission_optimizer
+    mode: compiled
+    criterion: build_optimizer accepts both a bare parameter sequence and a sequence of name-parameter pairs without raising.
+    judgment: both call forms complete without exception
+    evidence:
+      - tests/test_output.py
+
+  - id: test_honours_lr_argument
+    dimension: EFFECT
+    weight: 1
+    evaluation_target: submission_optimizer
+    mode: compiled
+    criterion: The learning-rate argument changes the size of the applied update, so a larger rate moves the parameters further than a smaller one from identical state.
+    judgment: total movement at the high rate exceeds total movement at the low rate
+    evidence:
+      - tests/test_output.py
+
+  - id: test_step_applies_exactly_one_update
+    dimension: ORDERING
+    weight: 1
+    evaluation_target: submission_optimizer
+    mode: compiled
+    criterion: Each call to step applies one update, so a first call moves the parameter and a second consecutive call is not a no-op.
+    judgment: first-call movement is positive and second-call movement is positive
+    evidence:
+      - tests/test_output.py
+
+  - id: test_only_touches_parameters_it_was_given
+    dimension: ABSENCE
+    weight: 1
+    evaluation_target: submission_optimizer
+    mode: compiled
+    criterion: Stepping the optimizer leaves a parameter that was never passed to it bit-for-bit unchanged, because the harness owns every tensor the submission was not given.
+    judgment: the withheld parameter is unchanged after step
+    evidence:
+      - tests/test_output.py
+
+  - id: test_deterministic_under_fixed_seed
+    dimension: INVARIANT
+    weight: 1
+    evaluation_target: submission_optimizer
+    mode: compiled
+    criterion: Two identical constructions and steps from the same fixed seed produce identical parameters at zero tolerance, so no hidden randomness makes a run unreproducible.
+    judgment: the two resulting parameter tensors are equal at zero absolute and relative tolerance
+    evidence:
+      - tests/test_output.py
+
+  - id: test_step_does_no_io
+    dimension: ABSENCE
+    weight: 1
+    evaluation_target: submission_optimizer
+    mode: compiled
+    criterion: Stepping the optimizer opens no file for writing or appending, because the runner is the only writer of telemetry.
+    judgment: no write-mode or append-mode open is observed during step
+    evidence:
+      - tests/test_output.py
+
+  - id: behavioural_reimplementation_not_reached
+    dimension: DIVERGENCE
+    weight: 1
+    evaluation_target: truth_reference
+    mode: judged
+    criterion: The submitted update rule is not a behavioural reimplementation of a published record presented as a derivation.
+    judgment: a reviewer compares the submitted rule against the published-record corpus for behavioural equivalence that differs in source form
+    residue: The committed copy check is source-level. solution/TRUTH.md records the route key_leak_attack_a3 as "detected as behavioral_match_rec46_cwd_sota, not rejected", and states "a behavioural match is recorded only, because the copy check is source-level". tests/grade.py compares docstring-normalised abstract syntax trees, so a semantically equivalent rule written in different source form is not reachable deterministically by any committed artifact.
+    evidence:
+      - solution/TRUTH.md
+      - tests/grade.py
+      - tests/corpus/rec46_cwd_sota.py
+
+  - id: frozen_data_shards_not_verifier_enforced
+    dimension: INVARIANT
+    weight: 1
+    evaluation_target: truth_reference
+    mode: judged
+    criterion: The graded run consumed the pinned training shards recorded with the provenance trail and no substituted or re-fetched data.
+    judgment: a reviewer holding the separately-held provenance record compares the recorded shard digests against the pinned image contents
+    residue: solution/TRUTH.md states "their sha256 digests are recorded with the provenance trail, held separately from this delivery" and "The frozen-data claim is documented for a reader holding the provenance record; it is not enforced from inside the verifier." The digests are outside the bundle, so no committed artifact can decide this deterministically.
+    evidence:
+      - solution/TRUTH.md
