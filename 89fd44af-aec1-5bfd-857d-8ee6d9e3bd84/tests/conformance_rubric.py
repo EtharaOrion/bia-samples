@@ -321,6 +321,19 @@ def c15_account_chars_live(root):
         else "stale account_chars: %s" % bad[:3]
 
 
+def c16_jsonl_binds_to_verdicts(root):
+    """The shipped proof artifact must be a VIEW, never a second source of truth.
+
+    trajectories/rubric_verdicts.jsonl is the one file a reviewer opens to see that rubrics
+    exist AND that every one was judged. It is only trustworthy if it cannot disagree with the
+    per-attempt rubric_verdicts.json it summarises, so this check requires every line to
+    reproduce its source entry exactly and the line set to equal attempts x rubrics.
+    """
+    sys.path.insert(0, str(root/"tests"))
+    import rubric_verdicts_jsonl as RVJ
+    return RVJ.check_binding(root)
+
+
 CHECKS = [("C1  regeneration determinism (G-RUB-REGEN)", c1_regen_determinism),
           ("C2  compiled/test identifier set equality", c2_set_equality),
           ("C3  compilation floor >= 0.75", c3_compilation_floor),
@@ -335,7 +348,8 @@ CHECKS = [("C1  regeneration determinism (G-RUB-REGEN)", c1_regen_determinism),
           ("C12 committed verdicts == generator output", c12_committed_matches_generator),
           ("C13 rubric ids == judged verdict ids", c13_rubric_ids_match_verdicts),
           ("C14 grounding covers every attempt x rubric", c14_grounding_covers_corpus),
-          ("C15 account_chars recomputes live", c15_account_chars_live)]
+          ("C15 account_chars recomputes live", c15_account_chars_live),
+          ("C16 proof artifact binds to verdicts", c16_jsonl_binds_to_verdicts)]
 
 
 def main():

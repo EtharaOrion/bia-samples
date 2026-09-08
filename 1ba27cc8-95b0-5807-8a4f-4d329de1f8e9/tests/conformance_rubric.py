@@ -178,6 +178,48 @@ def c13_rubric_ids_match_verdicts(root):
     return True, "all %d rubric ids are judged and no verdict is orphaned" % len(ids)
 
 
+def c14_grounding_covers_corpus(root):
+    g = json.loads((root/"tests"/"rubric_judgment_grounding.json").read_text())
+    ids = {json.loads(l)["id"] for l in (root/"tests"/"rubrics.jsonl").read_text().splitlines() if l.strip()}
+    n = len(list(root.glob("trajectories/*/*/rubric_verdicts.json")))
+    if len(g) != n:
+        return False, "grounding has %d entries for %d attempts" % (len(g), n)
+    for k, e in g.items():
+        if set(e["items"]) != ids:
+            return False, "%s misses %s" % (k, sorted(ids ^ set(e["items"]))[:3])
+        if not e.get("account_chars", 0) > 0:
+            return False, "%s has an empty account" % k
+    return True, "%d attempts x %d rubrics, all accounts non-empty" % (len(g), len(ids))
+
+
+def c15_account_chars_live(root):
+    g = json.loads((root/"tests"/"rubric_judgment_grounding.json").read_text())
+    bad = []
+    for k, e in g.items():
+        coh, it = k.split("/")
+        # the grounding records the RAW account length (verified 50/50 against
+        # this corpus); normalising here would report a false staleness of a few chars
+        live = len(account(root/"trajectories"/coh/it))
+        if live != e["account_chars"]:
+            bad.append((k, e["account_chars"], live))
+    if bad:
+        return False, "account_chars stale: %s" % bad[:3]
+    return True, "all %d account_chars match a live recomputation" % len(g)
+
+
+def c16_jsonl_binds_to_verdicts(root):
+    """The shipped proof artifact must be a VIEW, never a second source of truth.
+
+    trajectories/rubric_verdicts.jsonl is the one file a reviewer opens to see that rubrics
+    exist AND that every one was judged. It is only trustworthy if it cannot disagree with the
+    per-attempt rubric_verdicts.json it summarises, so this check requires every line to
+    reproduce its source entry exactly and the line set to equal attempts x rubrics.
+    """
+    sys.path.insert(0, str(root/"tests"))
+    import rubric_verdicts_jsonl as RVJ
+    return RVJ.check_binding(root)
+
+
 CHECKS=[("C1  regeneration determinism (G-RUB-REGEN)",c1_regen_determinism),
         ("C2  compiled/test identifier set equality",c2_set_equality),
         ("C3  compilation floor >= 0.75",c3_compilation_floor),
@@ -190,7 +232,10 @@ CHECKS=[("C1  regeneration determinism (G-RUB-REGEN)",c1_regen_determinism),
         ("C10 quoted evidence is verbatim",c10_quotes_verbatim),
         ("C11 rubrics.jsonl is exactly {id,rubric}",c11_jsonl_schema),
     ("C12 committed verdicts == generator output", c12_committed_matches_generator),
-    ("C13 rubric ids == judged verdict ids", c13_rubric_ids_match_verdicts),]
+    ("C13 rubric ids == judged verdict ids", c13_rubric_ids_match_verdicts),
+    ("C14 grounding covers every attempt x rubric", c14_grounding_covers_corpus),
+    ("C15 account_chars recomputes live", c15_account_chars_live),
+    ("C16 proof artifact binds to verdicts", c16_jsonl_binds_to_verdicts),]
 
 
 
