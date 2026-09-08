@@ -50,7 +50,6 @@ entry_point_solution = "solution/solve.sh"
 
 frozen = "the architecture, the initialisation seed, the token stream, the optimizer recipe, the compute budget, the snapshot schedule, the retention budget and the evaluation window"
 free = "which snapshots are kept, and the convex weights they are averaged with"
-metric = "validation cross-entropy in nats of the averaged model, on the verifier's held-out FineWeb slice"
 metric_direction = "lower"
 
 # WHY THE ARCHETYPE STILL HOLDS AFTER THE RE-BASE.
