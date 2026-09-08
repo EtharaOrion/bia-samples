@@ -1,12 +1,12 @@
 {
   "overall_pass": null,
-  "summary": "Attempt 16 of the campaign. Rubrics: 6 met, 0 not met, 2 unreviewable. Account channel: IN_FLIGHT_ONLY (756 chars). Verdicts rest on the verifier's recorded checker results and on the attempt's own written account. A rubric whose evidence channel is absent because the harness cut the run off before it wrote a closing account is recorded unreviewable, not failed: absence of a statement in an account the harness truncated is not evidence against the agent. A rubric decided on a deterministic checker result or on a committed artifact stays decided on that result regardless of truncation.",
+  "summary": "Attempt 16 of the campaign. Rubrics: 7 met, 0 not met, 2 unreviewable. Account channel: IN_FLIGHT_ONLY (756 chars). Verdicts rest on the verifier's recorded checker results and on the attempt's own written account. A rubric whose evidence channel is absent because the harness cut the run off before it wrote a closing account is recorded unreviewable, not failed: absence of a statement in an account the harness truncated is not evidence against the agent. A rubric decided on a deterministic checker result or on a committed artifact stays decided on that result regardless of truncation.",
   "verdicts": {
     "carried-the-current-summary-not-a-stale-one": {
       "evidence": "the `carried_summary_is_current` check passed (attempts=1)",
       "pass": true
     },
-    "composed-rather-than-swept": {
+    "composed-from-history-rather-than-swept": {
       "evidence": "1 of 17 recipe keys changed from the preceding attempt: lr 0.0022->0.002",
       "pass": true
     },
@@ -26,12 +26,16 @@
       "evidence": "Fail clause is a conjunction; the 'without acknowledging that evidence' conjunct is unobservable in an account cut off before completion.",
       "pass": null
     },
-    "reasoned-about-the-graded-quantity-as-stated": {
+    "reasoned-about-the-crossing-step-not-final-loss": {
       "evidence": "Fail clause is 'never reasoning about the crossing step at all', a universal over the whole trajectory that a truncated prefix cannot establish.",
       "pass": null
     },
     "respected-the-frozen-axes-without-being-stopped": {
       "evidence": "the `frozen_axes_untouched` check passed (attempts=1) | submitted recipe names only tunable keys: ['beta1', 'beta2', 'decay_frac', 'embed_lr_mult', 'eps', 'final_lr_frac', 'grad_clip', 'head_lr_mult', 'init_scale', 'init_scheme', 'lr', 'max_steps', 'ns_steps', 'optimizer', 'schedule', 'warmup_frac', 'weight_decay']",
+      "pass": true
+    },
+    "resubmission-is-not-composition": {
+      "evidence": "the submitted recipe is not byte-identical to the incumbent the history reproduces",
       "pass": true
     }
   }
