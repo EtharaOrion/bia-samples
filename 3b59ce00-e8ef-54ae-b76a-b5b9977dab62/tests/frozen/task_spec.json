@@ -1,0 +1,64 @@
+{
+  "schema": "oer-nanogpt-policy-substrate/v1",
+  "note": "The frozen half of the task. Nothing a submission says may move any number in this file. The verifier reads its OWN copy of it at grading time, and tests/Dockerfile refuses to build unless the two copies are byte-identical.",
+
+  "architecture": {
+    "vocab_size": 50304,
+    "num_layers": 6,
+    "model_dim": 384,
+    "head_dim": 64,
+    "num_heads": 6,
+    "seq_len": 512,
+    "attention_scale": 0.12,
+    "default_logit_softcap": 15.0,
+    "note": "The shape is frozen. `default_logit_softcap` is the upstream constant and is recorded here as provenance only: in this slot the cap is one of the controls a policy sets, and it reaches the decoder as a run-time tensor."
+  },
+
+  "budget": {
+    "micro_batch": 16,
+    "micro_steps": 3072,
+    "grad_accum": 1,
+    "total_train_tokens": 25165824,
+    "note": "The compute budget is FIXED in tokens and in forward and backward passes. No policy can change how many micro-batches are run or how they are grouped, so every policy costs the same FLOPs and very nearly the same wall clock."
+  },
+
+  "optimizer": {
+    "name": "AdamW",
+    "lr_embed": 0.018,
+    "lr_hidden": 0.006,
+    "lr_head": 0.006,
+    "lr_scalar": 0.018,
+    "beta1": 0.9,
+    "beta2": 0.999,
+    "eps": 1e-10,
+    "grad_clip": 1.0,
+    "schedule_shape": "wsd",
+    "warmup_frac": 0.10,
+    "stable_frac": 0.60,
+    "final_frac": 0.0,
+    "note": "FROZEN, and deliberately a GOOD recipe rather than a weak one. The four per-role peak learning rates, every AdamW constant, the clip and the whole warmup-hold-decay envelope are fixed by the task. This slot does not grade optimizer or schedule tuning -- those axes are already spent -- it grades what is left: how the objective is regularised and how the 50304-way output distribution is shaped. Note what is ABSENT from this block: weight_decay. Decay is decoupled from the optimizer's other constants precisely because it is one of the things a policy sets, and it is set PER PARAMETER ROLE rather than once."
+  },
+
+  "objective": {
+    "training_loss": "(1 - label_smoothing) * mean NLL + label_smoothing * mean uniform NLL + z_loss * mean(logsumexp(logits)^2)",
+    "graded_loss": "plain mean token-level cross entropy through the same logit softcap the run trained under",
+    "note": "The training objective and the graded reading are DIFFERENT functions on purpose. Smoothing and the log-partition penalty are training-time regularisers; the reading is the unsmoothed, unpenalised cross entropy. A policy that helps the training loss and hurts the reading is a policy that scores worse, and that asymmetry is the whole tension of this slot."
+  },
+
+  "init": {
+    "seed": 1234,
+    "note": "Every run in this task starts from the same parameter tensors. The policy is the only thing that differs between two runs."
+  },
+
+  "evaluation": {
+    "tokens": 2097152,
+    "batch": 16,
+    "metric": "mean token-level cross entropy in nats, lower is better",
+    "note": "The graded split is NOT in the agent image. environment/data/devset_slice.bin is a proxy cut from a different training shard and is the agent's own yardstick; it is never the graded number."
+  },
+
+  "data": {
+    "format": "FineWeb10B GPT-2 BPE. 1024-byte int32 header (magic 20240520, version 1, token count), then uint16 token ids.",
+    "train_slice_tokens": 25165825
+  }
+}

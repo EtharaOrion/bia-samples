@@ -1,0 +1,307 @@
+schema: forge.checkers/v1
+reduction_kinds: [VALUE, EFFECT, ABSENCE, INVARIANT, ORDERING, DIVERGENCE]
+reward_path: /logs/verifier/reward.txt
+score_document_path: /logs/verifier/score.json
+
+substrate:
+  declaration: environment/nanogpt_substrate.json
+  replicated_from: .seed/nanogpt_substrate.json, byte for byte
+  architecture: vocab_size 50304, num_layers 12, model_dim 768, head_dim 128, num_heads 6, seq_len 1024
+  run: 65536 tokens per step, one forward and one backward pass per step, one optimizer step per step
+  model_in_the_loop: >-
+    The graded artifact is a real parameter snapshot of that decoder, written by the harness-owned
+    frozen train stage at the bound evaluation point, and the graded scalar is the verifier's own
+    forward pass of those parameters over its own held-out FineWeb validation shards. The re-base
+    that produced this manifest REPLACED the training and evaluation path: the previous path graded
+    an interpolated bigram over the submission's own vocabulary, which is not a model of this
+    architecture and which kept emitting a loss with every forward and backward pass removed.
+
+aggregation:
+  mode: required_pass
+  rationale: >-
+    required_pass describes the gate, which is what tests/grade.py actually does with the checker
+    set: every checker below is required, and the first required checker that fails resolves the
+    run to 0.0 carrying that checker's zero_reason. required_pass never manufactures the reward.
+    The reward a passing gate carries is the continuous metric term the gate did not compute,
+    raw = (baseline - agent) / (baseline - floor) clipped into [0, 1], so the score is bounded
+    continuous rather than binary. A gate that passes with no measured end-to-end improvement is
+    impossible by construction, because end_to_end_gain_not_stage_local is itself required and
+    demands a strict improvement, so a passing gate always carries a strictly positive reward.
+
+anchors:
+  anchors_state: absent
+  anchors_gap: gap-oer-per-family-anchors-unmeasured
+  baseline_metric: null
+  target_metric: null
+  reason: >-
+    F13 carries no published baseline or target, and the bigram-era measurements did not survive
+    the re-base onto the nanoGPT substrate. They were measurements of a different model on a
+    different split, so they were retired rather than carried across, and no number replaced them.
+    The reward schema is bound in full and no number is invented. The two slots of the bound
+    lower-is-better formula are filled in-run by verifier measurement of two harness-owned
+    compositions: the pristine delivered composition supplies the baseline slot and the reference
+    composition supplies the target slot, both trained through the identical frozen decoder under
+    the identical step budget. When the family anchors are measured, the published pair replaces
+    the in-run pair and this block closes.
+  formula: "raw = (baseline_metric - agent_metric) / (baseline_metric - target_metric)"
+  clip: "score = min(max(raw, 0.0), 1.0)"
+  direction: lower
+
+graded_quantity:
+  what: nanoGPT validation loss on the verifier-owned held-out FineWeb split
+  unit: mean cross entropy in nats per token
+  computed_by: tests/checkers.py::recomputed_loss, inside the verifier process
+  produced_by: >-
+    tests/frozen/nanogpt.py::validation_loss, the verifier's own forward pass, bound onto the
+    checker handle by tests/harness.py before any checker runs. It sits outside tests/checkers.py
+    only because the forward pass needs torch and the checker import surface excludes it on
+    purpose. The process, the code and the split are the verifier's throughout, and the checkers
+    still verify from bytes that the parameters evaluated are the ones the harness wrote and that
+    every tensor shape binds to the frozen architecture.
+  weights: the parameter snapshot the harness-owned frozen train stage wrote at the bound evaluation point
+  split: >-
+    the verifier's own held-out FineWeb validation shards under the root pinned in tests/bound.json.
+    They are absent from environment/ by construction, the agent container resolves no path to them,
+    and environment/eval/ carries only a notice and the fold declaration.
+  never: >-
+    never a number the submission reported, printed or wrote, and never a number an in-container
+    harness printed; no smoothing, averaging or EMA is applied anywhere on the graded path
+
+checkers:
+  - id: frozen_axes_unmodified
+    statement: "Every frozen artifact in the submission tree is byte-identical to the delivered one, including the substrate declaration that pins the architecture, so the architecture, the step budget, the optimizer and the token space were not moved."
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: check_frozen_axes_unmodified
+    zero_reason: frozen-axis-modified
+    required: true
+    weight: 1
+    live_state_read: "telemetry.frozen_digests_delivered and telemetry.frozen_digests_observed, both produced by tests/harness.py digesting the pristine bundle environment tree and the staged submission tree in the verifier's own process, over a glob set that now leads with nanogpt_substrate.json"
+    compiled_test: "tests/test_output.py::test_frozen_axes_unmodified"
+
+  - id: stage_chain_order_observed
+    statement: "The harness observed the phases open, parse, tokenize and train in that order, and every artifact a phase consumed was produced by an earlier phase with the same digest."
+    reduction: ORDERING
+    reached_by: tests/grade.py
+    selector: check_stage_chain_order_observed
+    zero_reason: stage-chain-order-violated
+    required: true
+    weight: 1
+    live_state_read: "telemetry.phase_log, the ordered event log tests/harness.py writes as it executes the composition plan stage by stage, digesting each stage's declared inputs before the launch and its declared outputs after it"
+    compiled_test: "tests/test_output.py::test_stage_chain_order_observed"
+
+  - id: stage_claim_matches_next_stage_consumption
+    statement: "What each stage claims in its own report matches what the next stage actually consumed, under the field set the bound stage output contract compares, down to the digest of every shard file the train stage read."
+    reduction: DIVERGENCE
+    reached_by: tests/grade.py
+    selector: check_stage_claim_matches_next_stage_consumption
+    zero_reason: stage-claim-contradicted-by-chain
+    required: true
+    weight: 1
+    live_state_read: "telemetry.stage_claims, read back from the submission's own stage reports, against telemetry.stage_observed and telemetry.stage_inputs_digested, both measured independently by tests/harness.py at the moment before the next stage launched, and bound.stage_output_contract"
+    compiled_test: "tests/test_output.py::test_stage_claim_matches_next_stage_consumption"
+
+  - id: token_budget_respected_as_fed
+    statement: "Exactly the bound step budget was run, each step consumed exactly the declared 65536 tokens, exactly one optimizer step was taken per step, and the micro-batch accounting reconstructs exactly one logical forward and one logical backward pass per step."
+    reduction: EFFECT
+    reached_by: tests/grade.py
+    selector: check_token_budget_respected_as_fed
+    zero_reason: token-budget-not-respected-as-fed
+    required: true
+    weight: 1
+    live_state_read: "bound.step_budget_steps resolved from the admin plane at run start, the run block of the pristine substrate declaration, and telemetry.train written by the harness-owned frozen train stage including optimizer_steps, forward_passes_total and micro_batches_per_step"
+    compiled_test: "tests/test_output.py::test_token_budget_respected_as_fed"
+
+  - id: holdout_split_is_verifier_owned
+    statement: "The graded split resolved to the verifier's own held-out FineWeb validation shards under the root pinned on the admin plane, and no validation shard is present on the agent surface."
+    reduction: ABSENCE
+    reached_by: tests/grade.py
+    selector: check_holdout_split_is_verifier_owned
+    zero_reason: holdout-split-not-verifier-owned
+    required: true
+    weight: 1
+    live_state_read: "bound.holdout_root and bound.holdout_val_glob, the shard paths tests/harness.py resolved under that root and handed to the checker, and telemetry.frozen_digests_delivered as the record of what environment/eval actually carries"
+    compiled_test: "tests/test_output.py::test_holdout_split_is_verifier_owned"
+
+  - id: eval_split_not_trained_on
+    statement: "No shingle of the held-out split appears in the submission's shard stream, compared in the frozen token space rather than asserted."
+    reduction: ABSENCE
+    reached_by: tests/grade.py
+    selector: check_eval_split_not_trained_on
+    zero_reason: evaluation-split-leaked-into-training
+    required: true
+    weight: 1
+    live_state_read: "telemetry.leakage, which tests/harness.py builds by indexing every 48-token window of the submission's own shard stream and probing the verifier-owned held-out stream against that index"
+    compiled_test: "tests/test_output.py::test_eval_split_not_trained_on"
+
+  - id: full_chain_completed_no_early_stop
+    statement: "The chain ran every stage and reached the bound evaluation point; a run that halted at an intermediate snapshot established no loss."
+    reduction: ABSENCE
+    reached_by: tests/grade.py
+    selector: check_full_chain_completed_no_early_stop
+    zero_reason: early-stop-loss-not-established
+    required: true
+    weight: 1
+    live_state_read: "telemetry.train.halted_at_tokens and telemetry.train.bound_point_reached, both written by the harness-owned frozen train stage, and telemetry.composition.order as the harness executed it"
+    compiled_test: "tests/test_output.py::test_full_chain_completed_no_early_stop"
+
+  - id: evaluation_point_is_bound_not_selected
+    statement: "The parameters evaluated are the ones at the bound evaluation point, not a snapshot the submission selected."
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: check_evaluation_point_is_bound_not_selected
+    zero_reason: evaluation-point-submission-selected
+    required: true
+    weight: 1
+    live_state_read: "bound.graded_evaluation_point, telemetry.train.bound_checkpoint_id, telemetry.graded_model.checkpoint and telemetry.composition.select_checkpoint"
+    compiled_test: "tests/test_output.py::test_evaluation_point_is_bound_not_selected"
+
+  - id: graded_parameters_bind_frozen_architecture
+    statement: "The graded artifact is a real parameter snapshot of the frozen decoder: every tensor the substrate declaration implies is present, no tensor it does not imply is present, and every shape binds to the declared vocab_size, num_layers, model_dim, head_dim and seq_len."
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: check_graded_parameters_bind_frozen_architecture
+    zero_reason: frozen-architecture-not-instantiated
+    required: true
+    weight: 1
+    live_state_read: "the shape map tests/frozen/nanogpt.py reads off the snapshot at telemetry.graded_model.path, against the shape map the checker derives from the pristine substrate declaration alone"
+    compiled_test: "tests/test_output.py::test_graded_parameters_bind_frozen_architecture"
+    why_this_checker_exists: >-
+      This is the checker the retired bigram path could not have passed. A count table over a
+      221-unit vocabulary carries no embed.weight, no attention projection and no layer stack, so it
+      cannot be mistaken here for the 12-layer, 768-dim decoder the metric is supposed to resolve
+      against. The shape map is derived from the declaration and never from the artifact, so a
+      snapshot cannot define its own architecture into compliance.
+    adequacy_substitution:
+      half: rejecting
+      carried_on: planted fixture
+      why: >-
+        The snapshot is written by the harness-owned frozen train stage into a verifier-owned
+        directory the submission never sees, so no submission can move this checker. The rejecting
+        half is carried on a planted fixture whose shape map is a valid tensor set of the wrong
+        architecture, and the accepting half on the shape map the declaration implies.
+
+  - id: graded_loss_from_harness_weights
+    statement: "The graded validation loss is computed inside the verifier by a forward pass over the parameter snapshot the harness itself wrote at the bound evaluation point, and that snapshot still digests to what the harness recorded."
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: check_graded_loss_from_harness_weights
+    zero_reason: graded-loss-not-from-harness-weights
+    required: true
+    weight: 1
+    live_state_read: "telemetry.graded_model with its writer, path and sha256, digested again by the checker through the harness handle, and the verifier's own evaluator run over the verifier's own held-out shards"
+    compiled_test: "tests/test_output.py::test_graded_loss_from_harness_weights"
+    adequacy_substitution:
+      half: rejecting
+      carried_on: planted fixture
+      why: >-
+        No submission can move this checker, because the parameters are written by the harness-owned
+        frozen train stage into a verifier-owned directory the submission never sees. The isolation
+        boundary holds, so the rejecting half is carried on a planted fixture that substitutes a
+        snapshot whose digest no longer matches the harness record, and the substitution is recorded
+        here rather than papered over.
+
+  - id: no_smoothing_on_graded_path
+    statement: "Every validation loss the submission reported agrees with the verifier's raw recomputation within the bound tolerance, and the bound readout policy is raw-only."
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: check_no_smoothing_on_graded_path
+    zero_reason: readout-smoothing-on-graded-path
+    required: true
+    weight: 1
+    live_state_read: "telemetry.submission_reported.loss_claims collected by the harness from the composition plan and the stage reports, against the raw recomputation the verifier's evaluator performs, and bound.readout_smoothing_policy and bound.reported_loss_tolerance"
+    compiled_test: "tests/test_output.py::test_no_smoothing_on_graded_path"
+
+  - id: floor_anchor_matches_bound_reference
+    statement: "The reference composition the harness measures in-run is the floor anchor: it was trained through the identical frozen decoder under the budget in force, it is finite, it improves on the in-run baseline, and no published constant stands in for it."
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: check_floor_anchor_matches_bound_reference
+    zero_reason: floor-anchor-not-the-bound-reference
+    required: true
+    weight: 1
+    live_state_read: "telemetry.floor.val_loss, telemetry.floor.step_budget and telemetry.floor.source, which tests/harness.py records by executing the reference composition stage by stage and training it through the identical frozen protocol, against bound.reference_anchor_state, bound.reference_anchor_published, bound.reference_anchor_step_budget, bound.reference_anchor_source and bound.step_budget_steps resolved from the admin plane"
+    compiled_test: "tests/test_output.py::test_floor_anchor_matches_bound_reference"
+    discovery_value: >-
+      the reference composition's nanoGPT validation loss. It is carried on no agent-visible byte
+      and is not derivable from one: instruction.md, task.toml and everything under environment/
+      name the quantity and never its value. It exists only once the chain has been run in the live
+      environment. The re-base removed the pinned constant that used to stand beside it, because
+      that constant was a bigram measurement and republishing it against a transformer run would
+      have been a fabricated result; the anchor is now established solely by the in-run measurement
+      and the checker fails closed on an anchor the environment did not establish.
+    adequacy_substitution:
+      half: rejecting
+      carried_on: planted fixture
+      why: >-
+        The floor anchor is measured over a reference composition materialized from
+        solution/reference.py into a verifier-owned workspace, so no submission has a handle on it
+        and no submission can move it. The rejecting half is carried on the planted fixture in
+        tests/test_output.py, which drives this selector over a floor the environment did not
+        establish and requires the bound zero reason; the accepting half is carried on the same
+        fixture pair at an established floor and on the live reference run.
+
+  - id: loss_sustained_across_bound_evals
+    statement: "The improvement over the in-run measured baseline holds at the bound evaluation point and at every one of the held-out folds the verifier's own schedule selects, so a single favourable evaluation cannot be harvested."
+    reduction: INVARIANT
+    reached_by: tests/grade.py
+    selector: check_loss_sustained_across_bound_evals
+    zero_reason: improvement-not-sustained
+    required: true
+    weight: 1
+    live_state_read: "bound.eval_fold_schedule and bound.sustain_points resolved from the admin plane, the fold partition declared at environment/eval/folds.json, the per-fold losses the verifier's evaluator computes over its own held-out stream, and telemetry.baseline.fold_losses measured in-run by the harness"
+    compiled_test: "tests/test_output.py::test_loss_sustained_across_bound_evals"
+    adequacy_substitution:
+      half: rejecting
+      carried_on: planted fixture
+      why: >-
+        A submission that beats the baseline overall while losing a specific scheduled fold is not
+        reachable by editing the two stages within the bound budget, so the rejecting half is
+        carried on a planted fixture whose per-fold pair fails at one scheduled point.
+
+  - id: session_state_carried_forward
+    statement: "The attempt ledger is written by the harness, indexes attempts monotonically from one, and carries every field the bound ledger contract requires at the attempt in force."
+    reduction: INVARIANT
+    reached_by: tests/grade.py
+    selector: check_session_state_carried_forward
+    zero_reason: session-state-broken
+    required: true
+    weight: 1
+    live_state_read: "the session ledger tests/harness.py writes onto the checker handle, and bound.session_ledger_contract resolved from the admin plane"
+    compiled_test: "tests/test_output.py::test_session_state_carried_forward"
+    adequacy_substitution:
+      half: rejecting
+      carried_on: planted fixture
+      why: >-
+        The ledger is harness-written and the submission has no handle on it, so no submission can
+        fire this checker. The rejecting half is carried on a planted fixture whose newest attempt
+        was recorded under the pre-mutation ledger contract, which is exactly the stale control for
+        the session-ledger-v2 silent mutation.
+
+  - id: end_to_end_gain_not_stage_local
+    statement: "The composition improves on the in-run measured baseline composition at the end of the chain; a stage-local optimum that raises one stage's own readout while degrading the trained model scores zero."
+    reduction: EFFECT
+    reached_by: tests/grade.py
+    selector: check_end_to_end_gain_not_stage_local
+    zero_reason: stage-local-optimum-degrades-composition
+    required: true
+    weight: 1
+    live_state_read: "the loss the verifier's evaluator computes from the harness-written parameters, against telemetry.baseline.val_loss and telemetry.floor.val_loss, both measured in-run by tests/harness.py through the identical frozen protocol"
+    compiled_test: "tests/test_output.py::test_end_to_end_gain_not_stage_local"
+
+purity:
+  import_allowlist: [json, math, hashlib, pathlib, dataclasses, typing]
+  forbidden: >-
+    no planted file read, no environment-secret read, no random source, no clock read, no network,
+    no import of the submission, no importlib, no eval, no exec
+  torch_boundary: >-
+    tests/checkers.py imports no torch. The forward pass that produces the graded scalar lives in
+    tests/frozen/nanogpt.py and is bound onto the checker handle by tests/harness.py, so the checker
+    module keeps its narrow, walkable import surface while the graded scalar stays the verifier's
+    own computation on the verifier's own split.
+  submission_isolation: >-
+    tests/runner.py copies the submission alone into a fresh directory, launches each stage as a
+    new session leader under a small environment allowlist, captures its output and kills the whole
+    process group in a finally block. tests/grade.py imports the checkers and the reference and
+    never imports the submission. The frozen train stage and the evaluator are never launched from
+    the submission tree.

@@ -1,0 +1,79 @@
+{
+  "schema": "oer22-nanogpt-substrate/v1",
+  "note": "The frozen half of the task. Nothing a submission says may move any number in this file. The verifier reads its own copy of it at grading time, and tests/Dockerfile refuses to build unless the two copies are byte-identical.",
+  "architecture": {
+    "vocab_size": 50304,
+    "num_layers": 6,
+    "model_dim": 384,
+    "head_dim": 64,
+    "num_heads": 6,
+    "seq_len": 512,
+    "logit_softcap": 15.0,
+    "attention_scale": 0.12
+  },
+  "budget": {
+    "micro_batch": 16,
+    "micro_steps": 6144,
+    "total_train_tokens": 50331648,
+    "note": "The training run is FROZEN and identical for every submission. A submission does not train anything and cannot change a single forward or backward pass; it chooses which of the snapshots that run produced to keep, and how to combine them."
+  },
+  "training_recipe": {
+    "note": "FROZEN. Stated here in full so the run that produces the snapshots is reproducible on the agent surface with environment/train_local.py. The learning rate is CONSTANT and is never decayed: that is the property that makes the last iterate a noisy point in a basin rather than the bottom of one, and it is the reason a combination of snapshots can be worth more than the final snapshot.",
+    "grad_accum": 1,
+    "grad_clip": 1.0,
+    "optimizer": {
+      "lr_embed": 0.03,
+      "lr_hidden": 0.006,
+      "lr_head": 0.004,
+      "lr_scalar": 0.03,
+      "beta1": 0.9,
+      "beta2": 0.95,
+      "eps": 1e-10,
+      "weight_decay": 0.0
+    },
+    "schedule": {
+      "shape": "constant",
+      "warmup_frac": 0.05
+    }
+  },
+  "snapshots": {
+    "count": 16,
+    "every_steps": 384,
+    "ids": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      7,
+      8,
+      9,
+      10,
+      11,
+      12,
+      13,
+      14,
+      15,
+      16
+    ],
+    "note": "Snapshot i is the parameter state immediately after optimizer step i * every_steps. Snapshot 16 is the final state of the run. The ids are the whole namespace a selection may refer to.",
+    "storage_budget": 6,
+    "storage_budget_note": "The retention budget. At most 6 of the 16 snapshots may be KEPT, which is what makes this a selection problem rather than an averaging identity. Keeping all sixteen is not an available answer."
+  },
+  "init": {
+    "seed": 1234,
+    "note": "The frozen initialisation. The verifier's training run starts from these tensors on every grading pass."
+  },
+  "evaluation": {
+    "tokens": 2097152,
+    "batch": 16,
+    "metric": "mean token-level cross-entropy in nats, lower is better",
+    "note": "The graded split is NOT in the agent image. environment/data/devset_slice.bin is a proxy cut from a different FineWeb training shard and is the agent's own yardstick. The snapshot ranking the agent measures on the devset and the ranking the verifier measures on its held-out split are NOT the same ranking, and closing that gap is the task."
+  },
+  "data": {
+    "format": "FineWeb10B GPT-2 BPE. 1024-byte int32 header (magic 20240520, version 1, token count), then uint16 token ids.",
+    "train_slice_tokens": 50331649,
+    "train_slice_note": "Exactly the 50331648 tokens the frozen run consumes, plus one for the shifted target."
+  }
+}

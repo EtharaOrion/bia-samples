@@ -1,0 +1,48 @@
+{
+  "_comment": "The canonical nanoGPT operating point for this project. Every value below is read from the vendored record set at harness/records/track_3_optimization/train_gpt_simple.py and its README, never invented. A slot replicates this file into its own environment/ so no slot reads a sibling's bytes; the verifier re-reads its own copy at grading time, so editing a local copy produces a refused run with reason frozen-axis-moved rather than a different grade.",
+  "declaration_version": "nanogpt-substrate-v1",
+  "upstream": "modded-nanogpt, records/track_3_optimization/",
+  "upstream_vendored_at": "harness/records/track_3_optimization/train_gpt_simple.py",
+  "architecture": {
+    "vocab_size": 50304,
+    "num_layers": 12,
+    "model_dim": 768,
+    "head_dim": 128,
+    "num_heads": 6,
+    "seq_len": 1024,
+    "_head_dim_note": "head_dim defaults to 128 in CausalSelfAttention.__init__ at train_gpt_simple.py line 91, and num_heads is model_dim // head_dim, so 768 // 128 is 6."
+  },
+  "run": {
+    "batch_tokens_per_step": 65536,
+    "_batch_note": "RE-SCALED OPERATING POINT, wave-4. Upstream train_gpt_simple.py line 249 sets batch_size = 8 * 64 * 1024 = 524288 tokens per step. That figure was transcribed into this slot and NEVER TIMED against the slot's own grading envelope. Timed here: the graded pass trains the frozen decoder THREE times -- the submission composition, the delivered baseline and the reference floor -- and at 524288 tokens per step over the bound 64-step budget that is 100.7M tokens of forward-and-backward on one H100, which measured past the grading timeout and returned no reward at all. The step COUNT is what the training dynamics and the checkpoint schedule are built on, so the count is held at 64 and the per-step batch is cut by a factor of eight to 65536 tokens, which is 64 rows of the frozen 1024-token sequence and still an exact multiple of the 16-row micro-batch. Every other frozen axis is untouched: one forward and one backward pass per step, one optimizer step per step, the architecture, the seed and the evaluation split. The re-scale moves the operating point, not the grading discipline: both endpoints of the reward scale are still measured from scratch on every grading run.",
+    "forward_passes_per_step": 1,
+    "backward_passes_per_step": 1,
+    "target_val_loss": 3.28,
+    "_target_note": "Runs must attain below 3.28 val loss, matching the llm.c GPT-2 replication, per the record set README benchmark definition."
+  },
+  "corpus": {
+    "train_glob": "data/fineweb10B/fineweb_train_*.bin",
+    "val_glob": "data/fineweb10B/fineweb_val_*.bin",
+    "container_train_path": "/workspace/data/fineweb10B",
+    "loader": "data/cached_fineweb10B.py",
+    "_val_note": "The validation split is deliberately absent from every agent-visible container. The number that scores a submission is computed by the verifier on a held-out split the solver cannot see, from parameter snapshots the pinned harness wrote."
+  },
+  "anchors": {
+    "baseline_record": 36,
+    "baseline_steps_to_target": 3250,
+    "baseline_val_loss": 3.2787,
+    "baseline_seeds": 10,
+    "record_holder_record": 46,
+    "record_holder_steps_to_target": 2690,
+    "record_holder_val_loss": 3.2783,
+    "record_holder_seeds": 8,
+    "_anchor_note": "Read from the notable results history table in the record set README. Record 36 is the tuned baseline and record 46 is the standing world record."
+  },
+  "frozen_axes": [
+    "dataset",
+    "batch size",
+    "architecture",
+    "one forward-backward pass per step"
+  ],
+  "free_axes_note": "What is free is named per slot by that slot's own statement. This file freezes only the substrate the metric resolves against."
+}

@@ -1,0 +1,22 @@
+{
+  "schema": "oer-nanogpt-recipe/v1",
+  "notes": "THE HIGH ANCHOR. This file is staged only into the verifier image and is never on the agent surface. It is a BAR, not a claim to be the optimum of this space: it is the best recipe an authoring search over this harness found, and a submission that reaches or beats it scores 1.0. Its distinguishing finding is that the token embedding and the untied output projection want opposite treatment despite having the same shape -- the embedding at 0.030 and the head at 0.004, a factor of seven apart -- on top of a 10 percent warmup and a hold-then-decay schedule.",
+  "grad_accum": 1,
+  "grad_clip": 1.0,
+  "optimizer": {
+    "lr_embed": 0.030,
+    "lr_hidden": 0.006,
+    "lr_head": 0.004,
+    "lr_scalar": 0.030,
+    "beta1": 0.9,
+    "beta2": 0.999,
+    "eps": 1e-10,
+    "weight_decay": 0.0
+  },
+  "schedule": {
+    "shape": "wsd",
+    "warmup_frac": 0.10,
+    "final_frac": 0.0,
+    "stable_frac": 0.6
+  }
+}

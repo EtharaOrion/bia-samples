@@ -1,0 +1,8 @@
+{
+  "schema": "oer12-eval-policy/v1",
+  "notes": "THE SHIPPED DEFAULT, and the LOW ANCHOR of the reward scale. It is what a training script does when nobody chose an evaluation policy: run to the end, evaluate once with everything you were willing to spend, keep that checkpoint. On a run whose data pipeline degrades before the end it keeps the worst checkpoint it could have kept. The verifier replays it from scratch on every grading run rather than reading a stored number for it, so the floor of the scale is measured on the same drawn run your policy is measured on.",
+  "probes": [
+    {"step": 2048, "tokens": 98304}
+  ],
+  "selection": {"rule": "argmin"}
+}

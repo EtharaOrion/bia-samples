@@ -1,0 +1,162 @@
+# Harbor delivery manifest for OER-07.
+#
+# schema_version is a TOP-LEVEL scalar and is written above the first table header on
+# purpose. TOML scopes every key to the most recent header, so an assignment written
+# after `[task]` would silently become `task.schema_version` and leave the top-level
+# scalar absent while the file still read correct to a human.
+schema_version = "1.4"
+
+multi_step_reward_strategy = "last"
+
+# Graded deliverables, TOP-LEVEL list, above the first table header for the same
+# scoping reason.
+artifacts = [
+  "/workspace/submission/schedule.json",
+  "/logs/verifier/reward.txt",
+  "/logs/verifier/reward.json",
+  "/logs/verifier/score.json",
+]
+
+[task]
+name = "bia/oer-07-schedule-shape"
+version = "2.0.0"
+description = """
+Shape the learning-rate envelope of a frozen nanoGPT at a fixed compute budget.
+The architecture, the initialisation, the token stream, the budget and the ENTIRE optimizer --
+including its four per-role peak learning rates -- are frozen; only the multiplier applied to those
+peaks at each of the 3072 optimizer steps is free. The graded figure is the verifier's own
+validation cross-entropy on a held-out FineWeb slice that is absent from the agent image. Reward is
+the fraction of the gap closed between two anchors that are BOTH retrained from scratch on every
+grading run.
+"""
+authors = ["Bia"]
+keywords = ["optimization", "bounded-continuous", "hyperparameter-search"]
+
+[metadata]
+tags = ["optimization", "bounded-continuous"]
+category = "optimization"
+title = "Learning-rate schedule shape on a frozen nanoGPT at fixed compute"
+frozen = "the architecture, the initialisation, the token stream, the compute budget and the whole optimizer including its four per-role peak learning rates"
+free = "the shape of the step-size envelope over time: the warmup fraction and ramp, the decay family, its exponent, the hold fraction and the floor"
+metric = "validation cross-entropy in nats on the verifier's held-out FineWeb slice"
+metric_direction = "lower"
+entry_point_tests = "tests/test.sh"
+entry_point_solution = "solution/solve.sh"
+
+[metadata.optimization]
+max_timeout_hours = 6.0
+max_timeout_role = "refinement-loop terminator across attempts"
+budget_hours = 0.5
+budget_hours_role = "per-attempt completion bound"
+max_attempts = 20
+final_selection = "best"
+budget_envelope = "one H100, single accelerator, no multi-GPU scaling"
+compute_envelope_accelerators = 1
+
+# The graded path is THREE from-scratch training runs plus three evaluations, and it is
+# deliberately sized to fit well inside one grading pass. The number below is MEASURED
+# and not declared: see solution/grounding.md.
+graded_path_seconds_measured = 212
+graded_path_seconds_budget = 1320
+
+[environment]
+docker_image = "pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407"
+os = "linux"
+cpus = 8
+memory_mb = 65536
+storage_mb = 32768
+gpus = 1
+gpu_types = ["H100"]
+workdir = "/app"
+build_timeout_sec = 3600
+network_mode = "public"
+
+[agent]
+submission_path = "/workspace/submission/schedule.json"
+network_mode = "none"
+note = """
+The corpus and every dependency are staged at image build, so the solving agent needs no
+run-time egress. /workspace is the only path shared with the verifier.
+"""
+
+[verifier]
+egress = "denied"
+network_mode = "none"
+docker_image = "pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407"
+reward_path = "/logs/verifier/reward.txt"
+score_document_path = "/logs/verifier/score.json"
+reward_kind = "single float on the closed interval 0.0 to 1.0, higher is better, never binary"
+never_imports_submission = true
+note = """
+The submission is a JSON declaration. The verifier parses it, bounds-checks it and trains
+with it. No code from the agent surface is imported or executed here, and no number the
+submission reports about itself is read.
+"""
+
+[verifier.reward]
+schema = "single float, closed interval [0.0, 1.0], higher is better, never binary"
+full_reward = 1.0
+floor = 0.0
+formula = "raw = (default_loss - agent_loss) / (default_loss - reference_loss)"
+clip = "reward = min(max(raw, 0.0), 1.0)"
+target_is_a_bar = "reaching the reference scores exactly 1.0 and beating it also scores 1.0"
+zero_carries_reason = true
+
+[verifier.anchors]
+baseline_metric_declared = "absent-by-design"
+target_metric_declared = "absent-by-design"
+note = """
+No literal for either endpoint appears anywhere in this bundle, and that is the point
+rather than an omission. This slot previously declared its anchors UNMEASURED and
+refused every submission at 0.0 for want of them, which made the reward constant and
+the task dead. Both endpoints are now MEASURED on every grading run by real
+from-scratch training runs inside the verifier: the low anchor by retraining the
+shipped environment/default_schedule.json, the high anchor by training
+tests/private/reference_schedule.json, which is staged only into the verifier image.
+If either anchor fails to produce a finite loss the run refuses at 0.0 with reason
+anchor-diverged, and if the two coincide it refuses with calibration-span-nonpositive.
+Neither path substitutes a stored value.
+"""
+
+[verifier.hygiene]
+note = """
+Schema and bounds validation is a GATE, not a grade. schedule_schema.py answers one question
+-- is this a well-formed submission inside the declared bounds -- and a failure REFUSES
+the run at 0.0 with a machine-readable reason. It never scales the float and never
+contributes a partial credit.
+"""
+refusal_reasons = [
+  "submission-absent",
+  "schedule-unreadable",
+  "schedule-not-an-object",
+  "schedule-block-not-an-object",
+  "schedule-schema-unrecognised",
+  "schedule-key-unknown",
+  "schedule-key-missing",
+  "schedule-shape-unknown",
+  "schedule-warmup-shape-unknown",
+  "schedule-value-not-a-number",
+  "schedule-value-out-of-bounds",
+  "verifier-anchor-invalid",
+  "accelerator-absent",
+  "verifier-substrate-unavailable",
+  "anchor-run-failed",
+  "anchor-diverged",
+  "calibration-span-nonpositive",
+  "agent-run-failed",
+  "agent-diverged",
+  "grading-chain-failed",
+  "grading-timed-out",
+  "grading-killed"
+]
+
+[solution]
+oracle = "solution/reference.py"
+entry = "solution/solve.sh"
+grounding = "solution/grounding.md"
+note = """
+The oracle installs a schedule that was derived by a search over this exact
+harness and corpus during authoring. It is NOT the verifier's private reference schedule: the two
+differ in their decay family and in their warmup, so the reference arm of the gate is never the
+high anchor being graded against itself.
+"""

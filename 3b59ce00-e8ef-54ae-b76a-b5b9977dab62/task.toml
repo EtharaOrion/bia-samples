@@ -1,0 +1,189 @@
+# Harbor delivery manifest, slot OER-14, family F14.
+#
+# schema_version is a TOP-LEVEL scalar and is written above the first table header
+# on purpose. TOML scopes every key to the most recent header, so an assignment
+# written after `[task]` would silently become `task.schema_version` and leave the
+# top-level scalar absent while the file still read correct to a human.
+schema_version = "1.4"
+
+multi_step_reward_strategy = "last"
+
+# Graded deliverables, TOP-LEVEL list, above the first table header for the same
+# scoping reason.
+artifacts = [
+  "/workspace/submission/policy.json",
+  "/logs/verifier/reward.txt",
+  "/logs/verifier/reward.json",
+  "/logs/verifier/score.json",
+]
+
+[task]
+name = "bia/oer-14-nanogpt-regularisation-policy"
+version = "2.0.0"
+description = """
+Choose a regularisation and output-distribution policy for a frozen nanoGPT whose
+optimizer is already tuned. The architecture, the initialisation, the token stream, the
+compute budget and the whole optimizer and schedule are frozen; decoupled weight decay
+per parameter role, label smoothing, a log-partition penalty and the logit softcap are
+free. Two of those terms are in the training objective and NOT in the graded reading,
+which is plain cross entropy, so a policy that helps the training loss and hurts the
+reading scores worse. The graded figure is the verifier's own validation cross entropy
+on a held-out FineWeb slice that is absent from the agent image. Reward is the fraction
+of the gap closed between two anchors that are BOTH retrained from scratch on every
+grading run.
+"""
+authors = ["Bia"]
+keywords = ["optimization", "bounded-continuous", "regularisation"]
+
+[metadata]
+tags = ["optimization", "bounded-continuous"]
+category = "optimization"
+slot = "OER-14"
+provisional_identifier = "OER-14"
+family = "F14"
+family_title = "vocabulary and output-distribution shaping"
+title = "Regularisation and output-distribution policy on a frozen nanoGPT at fixed compute"
+archetype = "measured-anchor"
+archetype_note = """
+The archetype framing is unchanged from this slot's scope, and it is the property this
+slot was already the corpus's good example of: NEITHER endpoint of the reward scale is
+a constant anywhere in the bundle. Both are resolved BY MEASUREMENT on the grading run,
+by real from-scratch training runs of the verifier's own harness. What was replaced is
+the task mechanics, not that discipline.
+"""
+frozen = "the architecture, the initialisation seed, the token stream, the compute budget, the micro-batch shape and accumulation, and the whole optimizer and learning-rate schedule"
+free = "decoupled weight decay on each of four parameter roles, the label smoothing and log-partition penalty in the training objective, and the logit softcap"
+metric = "plain validation cross entropy in nats on the verifier's held-out FineWeb slice, taken through the policy's own logit softcap"
+metric_direction = "lower"
+entry_point_tests = "tests/test.sh"
+entry_point_solution = "solution/solve.sh"
+
+[metadata.substrate]
+declaration = "environment/frozen/task_spec.json"
+verifier_copy = "tests/frozen/task_spec.json"
+identity_enforced_at = "tests/Dockerfile, by cmp at image build over five files"
+architecture = "vocab_size 50304, num_layers 6, model_dim 384, head_dim 64, num_heads 6, seq_len 512, rotary positions"
+budget = "3072 micro-batches of 16 x 512, 25165824 tokens, grad_accum 1, identical for every policy"
+note = """
+Every policy control reaches the decoder as a 0-dim TENSOR rather than a Python
+constant. That is not a stylistic choice: a Python float is burned into the compiled
+graph, so three policies with three different softcaps would pay three compilations and
+grading would cost a function of what was submitted. Passed as tensors, ONE compiled
+graph serves all three runs of a grading pass.
+"""
+
+[metadata.optimization]
+max_timeout_hours = 6.0
+max_timeout_role = "refinement-loop terminator across attempts"
+budget_hours = 0.5
+budget_hours_role = "per-attempt completion bound"
+max_attempts = 20
+final_selection = "best"
+budget_envelope = "one H100, single accelerator, no multi-GPU scaling"
+compute_envelope_accelerators = 1
+
+# The graded path is THREE from-scratch training runs plus three evaluations. The
+# number below is MEASURED and not declared: it is grading_seconds from the verifier's
+# own score.json on a container-gate run of this bundle, taken on one H100 that was
+# shared with another slot's grading pass at the time, so it is an upper reading rather
+# than a best case. The three runs measured 180.2 s, 147.7 s and 160.2 s.
+graded_path_seconds_measured = 491
+graded_path_seconds_budget = 900
+
+[environment]
+docker_image = "pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407"
+os = "linux"
+cpus = 8
+memory_mb = 65536
+storage_mb = 32768
+gpus = 1
+gpu_types = ["H100"]
+workdir = "/app"
+build_timeout_sec = 3600
+network_mode = "public"
+
+[agent]
+submission_path = "/workspace/submission/policy.json"
+network_mode = "none"
+note = """
+The corpus and every dependency are staged at image build, so the solving agent needs
+no run-time egress. /workspace is the only path shared with the verifier.
+"""
+
+[verifier]
+egress = "denied"
+network_mode = "none"
+docker_image = "pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407"
+reward_path = "/logs/verifier/reward.txt"
+score_document_path = "/logs/verifier/score.json"
+reward_kind = "single float on the closed interval 0.0 to 1.0, higher is better, never binary"
+never_imports_submission = true
+note = """
+The submission is a JSON declaration of seven numbers. The verifier parses it,
+bounds-checks it and trains with it. No code from the agent surface is imported or
+executed here, and no number the submission reports about itself is read.
+"""
+
+[verifier.reward]
+schema = "single float, closed interval [0.0, 1.0], higher is better, never binary"
+full_reward = 1.0
+floor = 0.0
+formula = "raw = (default_loss - agent_loss) / (default_loss - reference_loss)"
+clip = "reward = min(max(raw, 0.0), 1.0)"
+target_is_a_bar = "reaching the reference scores exactly 1.0 and beating it also scores 1.0"
+zero_carries_reason = true
+
+[verifier.anchors]
+baseline_metric_declared = "absent-by-design"
+target_metric_declared = "absent-by-design"
+note = """
+No literal for either endpoint appears anywhere in this bundle, and that is the point
+rather than an omission. Both are MEASURED on every grading run by real from-scratch
+training runs inside the verifier: the low anchor by retraining the shipped
+environment/default_policy.json, the high anchor by training
+tests/private/reference_policy.json, which is staged only into the verifier image.
+If either anchor fails to produce a finite loss the run refuses at 0.0 with reason
+anchor-diverged, and if the two coincide it refuses with calibration-span-nonpositive.
+Neither path substitutes a stored value.
+"""
+
+[verifier.hygiene]
+note = """
+Schema and bounds validation is a GATE, not a grade. policy_schema.py answers one
+question -- is this a well-formed policy inside the declared bounds -- and a failure
+REFUSES the run at 0.0 with a machine-readable reason. It never scales the float and
+never contributes a partial credit.
+"""
+refusal_reasons = [
+  "submission-absent",
+  "policy-unreadable",
+  "policy-not-an-object",
+  "policy-block-not-an-object",
+  "policy-schema-unrecognised",
+  "policy-key-unknown",
+  "policy-key-missing",
+  "policy-value-not-a-number",
+  "policy-value-out-of-bounds",
+  "verifier-anchor-policy-invalid",
+  "accelerator-absent",
+  "verifier-substrate-unavailable",
+  "anchor-run-failed",
+  "anchor-diverged",
+  "calibration-span-nonpositive",
+  "agent-run-failed",
+  "agent-policy-diverged",
+  "grading-chain-failed",
+  "grading-timed-out",
+  "grading-killed",
+]
+
+[solution]
+oracle = "solution/reference.py"
+entry = "solution/solve.sh"
+grounding = "solution/grounding.md"
+note = """
+The oracle installs a policy that was derived by a search over this exact harness and
+corpus during authoring. It is NOT the verifier's private reference policy: the two were
+arrived at separately and differ in their objective terms, so the reference arm of the
+gate is never the high anchor being graded against itself.
+"""

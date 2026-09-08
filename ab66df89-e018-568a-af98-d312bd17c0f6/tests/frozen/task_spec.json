@@ -1,0 +1,68 @@
+{
+  "schema": "oer16-compute-allocation-substrate/v1",
+  "note": "The frozen half of the task. Nothing a submission says may move any number in this file. The verifier reads its own copy of it at grading time.",
+  "architecture_common": {
+    "vocab_size": 50304,
+    "head_dim": 64,
+    "seq_len": 512,
+    "logit_softcap": 15.0,
+    "attention_scale": 0.12
+  },
+  "model_menu": {
+    "m02x128": {
+      "num_layers": 2,
+      "model_dim": 128
+    },
+    "m03x192": {
+      "num_layers": 3,
+      "model_dim": 192
+    },
+    "m04x256": {
+      "num_layers": 4,
+      "model_dim": 256
+    },
+    "m06x384": {
+      "num_layers": 6,
+      "model_dim": 384
+    },
+    "m12x384": {
+      "num_layers": 12,
+      "model_dim": 384
+    },
+    "m08x512": {
+      "num_layers": 8,
+      "model_dim": 512
+    },
+    "m06x640": {
+      "num_layers": 6,
+      "model_dim": 640
+    }
+  },
+  "budget": {
+    "micro_batch": 16,
+    "flop_budget": 2000000000000000,
+    "note": "TWO PETAFLOP-SECONDS-ISH, counted by the declared arithmetic in harness.micro_batch_flops and not by a profiler. This is the only scarce resource in the task. An allocation names a model, a number of micro-batches and a gradient accumulation; it is admissible when micro_steps * micro_batch_flops(model) does not exceed this budget. A bigger model therefore buys fewer tokens and a smaller one buys more, and which trade is best is the question."
+  },
+  "accounting": {
+    "forward_backward_multiplier": 3,
+    "macs_per_token": "num_layers * (4*d*d + 8*d*d + 2*seq_len*d) + d*vocab_size",
+    "flops_per_token": "2 * macs_per_token * forward_backward_multiplier",
+    "note": "The backward pass is charged at twice the forward, which is the standard convention and is written down here rather than left implicit. The formula is DECLARED: it is what bounds a submission on the agent surface and what charges it at grading time, so what an allocation costs never depends on which machine ran it."
+  },
+  "init": {
+    "seed": 1234,
+    "note": "Every model of a given menu entry starts from the same parameter tensors. Two allocations on the same entry differ by how the budget was spent and by nothing else."
+  },
+  "evaluation": {
+    "tokens": 2097152,
+    "batch": 16,
+    "metric": "mean token-level cross-entropy in nats, lower is better",
+    "note": "The graded split is NOT in the agent image. environment/data/devset_slice.bin is a proxy cut from a different training shard and is the agent's own yardstick; it is never the graded number. Every allocation is evaluated on the same window, so a model that bought fewer tokens is not also charged a different measurement."
+  },
+  "data": {
+    "format": "FineWeb10B GPT-2 BPE. 1024-byte int32 header (magic 20240520, version 1, token count), then uint16 token ids.",
+    "train_stream_note": "The stream is long enough for the largest number of micro-batches any admissible allocation can buy, which is the smallest menu entry at the full budget. There is no extra training data to find: the FLOP budget rather than the corpus is the scarce thing.",
+    "corpus_tokens": 19521536,
+    "cycling": "THE CORPUS IS FINITE AND SMALLER THAN THE BUDGET CAN BUY AT THE SMALL END OF THE MENU. An allocation that asks for more tokens than data/train_slice.bin holds is not refused: the stream CYCLES, and the run sees the corpus again from the start. That is a real allocation a plan may choose and it is charged the same FLOPs as any other. What it costs is that repeated tokens teach less than fresh ones, so the smallest menu entries buy their extra steps in increasingly stale data. This is the data-constrained half of the trade and it is why the menu does not simply reward the smallest model."
+  }
+}

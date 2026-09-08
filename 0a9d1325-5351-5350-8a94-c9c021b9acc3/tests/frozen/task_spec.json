@@ -1,0 +1,69 @@
+{
+  "schema": "oer-curation-substrate/v1",
+  "note": "The frozen half of OER-09. Nothing a submission says may move any number in this file. The verifier reads its OWN copy of it at grading time, and tests/Dockerfile refuses to build unless the two copies are byte-identical.",
+
+  "architecture": {
+    "vocab_size": 50304,
+    "num_layers": 6,
+    "model_dim": 384,
+    "head_dim": 64,
+    "num_heads": 6,
+    "seq_len": 512,
+    "logit_softcap": 15.0,
+    "attention_scale": 0.12
+  },
+
+  "budget": {
+    "micro_batch": 16,
+    "block_tokens": 8192,
+    "blocks": 3072,
+    "total_train_tokens": 25165824,
+    "note": "The budget is fixed in BLOCKS, not in documents. Exactly 3072 admitted blocks of 8192 tokens are consumed, one per optimizer step, in register order. Curation therefore never buys or spends compute: it only decides WHICH 3072 blocks of the pool are the ones consumed. A filter that admits more than 3072 blocks has the surplus ignored; a filter that admits fewer than 3072 is refused."
+  },
+
+  "pool": {
+    "blocks": 5120,
+    "block_tokens": 8192,
+    "register": "pool/source_register.jsonl",
+    "blocks_file": "pool/pool_blocks.bin",
+    "note": "The pool is PUBLIC and identical on both surfaces. Every field of the register was computed from the block's own tokens by the authoring pass; no field is a label asserted about a block from outside it."
+  },
+
+  "optimizer": {
+    "frozen": true,
+    "lr_embed": 0.030,
+    "lr_hidden": 0.006,
+    "lr_head": 0.004,
+    "lr_scalar": 0.030,
+    "beta1": 0.9,
+    "beta2": 0.999,
+    "eps": 1e-10,
+    "weight_decay": 0.0,
+    "grad_clip": 1.0,
+    "note": "The whole optimizer is frozen. It is not a free axis of this slot and the schema has no place to declare one."
+  },
+
+  "schedule": {
+    "frozen": true,
+    "shape": "wsd",
+    "warmup_frac": 0.10,
+    "final_frac": 0.0,
+    "stable_frac": 0.6
+  },
+
+  "init": {
+    "seed": 1234,
+    "note": "Every run in this task starts from the same parameter tensors. The admitted block set is the only thing that differs between two runs."
+  },
+
+  "evaluation": {
+    "tokens": 2097152,
+    "batch": 16,
+    "metric": "mean token-level cross-entropy in nats, lower is better",
+    "note": "The graded split is NOT in the agent image. It is a slice of fineweb_val_000000 staged only into the verifier image. environment/data/devset_slice.bin is a proxy cut from a different training shard and is the agent's own yardstick; it is never the graded number."
+  },
+
+  "data": {
+    "format": "FineWeb10B GPT-2 BPE. 1024-byte int32 header (magic 20240520, version 1, token count), then uint16 token ids."
+  }
+}

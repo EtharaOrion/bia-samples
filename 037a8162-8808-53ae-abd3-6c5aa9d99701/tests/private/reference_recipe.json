@@ -1,0 +1,22 @@
+{
+  "schema": "oer-displacement-recipe/v1",
+  "notes": "THE HIGH ANCHOR. Staged only into the verifier image and never on the agent surface. It is a BAR, not a claim to be the optimum of this space: it is the fastest crossing an authoring search over this harness found, and a submission that reaches or beats it scores 1.0. Its distinguishing finding is that this slot does not reward the recipe that ends lowest. A cosine decayed to zero from a short 5 percent warmup ends well ABOVE the hold-then-decay recipes on final loss and crosses the target well BEFORE them, because the whole point of holding a peak is quality that arrives after the bar has already been passed.",
+  "grad_accum": 1,
+  "grad_clip": 1.0,
+  "optimizer": {
+    "lr_embed": 0.036,
+    "lr_hidden": 0.008,
+    "lr_head": 0.005,
+    "lr_scalar": 0.036,
+    "beta1": 0.9,
+    "beta2": 0.999,
+    "eps": 1e-10,
+    "weight_decay": 0.0
+  },
+  "schedule": {
+    "shape": "cosine",
+    "warmup_frac": 0.05,
+    "final_frac": 0.0,
+    "stable_frac": 0.6
+  }
+}

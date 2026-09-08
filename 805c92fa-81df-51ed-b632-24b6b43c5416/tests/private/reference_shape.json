@@ -1,0 +1,10 @@
+{
+  "schema": "oer-nanogpt-shape/v1",
+  "notes": "THE HIGH ANCHOR. This file is staged only into the verifier image and is never on the agent surface. It is a BAR, not a claim to be the optimum of this space: it is the best shape an authoring search over this harness found, and a submission that reaches or beats it scores 1.0. Its distinguishing finding is that the answer is INTERIOR: at this parameter budget, this token budget and this frozen recipe, both ends of the admissible band lose. The wide-and-shallow corner loses to depth and the deep-and-narrow corner gives it back, and the best point sits in the middle of the band rather than at either extreme a rule of thumb would send you to.",
+  "shape": {
+    "num_layers": 6,
+    "model_dim": 384,
+    "head_dim": 64,
+    "mlp_ratio": 4
+  }
+}

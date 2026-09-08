@@ -1,0 +1,17 @@
+{
+  "schema": "oer-nanogpt-mixture/v1",
+  "notes": "THE HIGH ANCHOR. Staged only into the verifier image and never on the agent surface. It is a BAR and not a claim to be the optimum of this space: it is the interleaved member of the best FAMILY an authoring search over this harness found. That family is a plateau -- interleaving, chunks of 8 and chunks of 512 measured 5.02281, 5.02089 and 5.01954, which is a spread of 0.003 nats against a measurement floor of 0.0002 -- so a submission that lands anywhere on it reaches or beats the bar and scores 1.0. That is what 'the target is a bar' means here and it is not an accident. Two findings define it. The first is that the three untouched shards carry essentially all of the value and the three that a pipeline touched carry very little -- training on shard_d and shard_e alone reaches 7.68 where the six-way default reaches 5.50. The second is that the correction has a ceiling: three clean shards at equal weight is 1024 blocks each against 1023 available, so the budget is spent almost exactly once over, and pushing further onto fewer shards starts paying for repetition instead of buying quality.",
+  "mixture": {
+    "shard_a": 1.0,
+    "shard_b": 1.0,
+    "shard_c": 1.0,
+    "shard_d": 0.0,
+    "shard_e": 0.0,
+    "shard_f": 0.0
+  },
+  "order": {
+    "policy": "interleave",
+    "block_group": 1,
+    "seed": 0
+  }
+}

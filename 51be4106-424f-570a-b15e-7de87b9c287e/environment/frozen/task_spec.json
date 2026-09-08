@@ -1,0 +1,40 @@
+{
+  "schema": "oer-nanogpt-substrate/v1",
+  "note": "The frozen half of the task. Nothing a submission says may move any number in this file. The verifier reads its own copy of it at grading time.",
+
+  "architecture": {
+    "vocab_size": 50304,
+    "num_layers": 6,
+    "model_dim": 384,
+    "head_dim": 64,
+    "num_heads": 6,
+    "seq_len": 512,
+    "logit_softcap": 15.0,
+    "attention_scale": 0.12
+  },
+
+  "budget": {
+    "micro_batch": 16,
+    "micro_steps": 3072,
+    "total_train_tokens": 25165824,
+    "note": "The compute budget is FIXED in tokens and in forward/backward passes. A recipe chooses how many micro-batches accumulate into one optimizer step; it cannot change how many micro-batches are run. Every recipe therefore costs the same FLOPs and very nearly the same wall clock."
+  },
+
+  "init": {
+    "seed": 1234,
+    "note": "Every run in this task starts from the same parameter tensors. The optimizer recipe is the only thing that differs between two runs."
+  },
+
+  "evaluation": {
+    "tokens": 2097152,
+    "batch": 16,
+    "metric": "mean token-level cross-entropy in nats, lower is better",
+    "note": "The graded split is NOT in the agent image. environment/data/devset_slice.bin is a proxy cut from a different training shard and is the agent's own yardstick; it is never the graded number."
+  },
+
+  "data": {
+    "format": "FineWeb10B GPT-2 BPE. 1024-byte int32 header (magic 20240520, version 1, token count), then uint16 token ids.",
+    "train_slice_tokens": 25165825,
+    "train_slice_note": "Exactly the 25165824 tokens the budget consumes, plus one for the shifted target. There is no extra training data to find."
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "schema": "oer-nanogpt-packing-substrate/v1",
+  "note": "The frozen half of the task. Nothing a submission says may move any number in this file. The verifier reads its OWN copy of it at grading time, and tests/Dockerfile refuses to build unless the two copies are byte-identical.",
+
+  "architecture": {
+    "vocab_size": 50304,
+    "num_layers": 6,
+    "model_dim": 384,
+    "head_dim": 64,
+    "num_heads": 6,
+    "max_seq_len": 1024,
+    "logit_softcap": 15.0,
+    "attention_scale": 0.12,
+    "note": "Rotary position encoding, so the decoder is defined at every sequence length up to max_seq_len and the same parameters serve every geometry a plan may name. That is what makes the sequence length a FREE variable here instead of an architectural constant."
+  },
+
+  "budget": {
+    "total_train_tokens": 8388608,
+    "note": "The compute budget is fixed in TOKENS, not in optimizer steps and not in wall clock. It was SIZED BY MEASUREMENT: the graded pass trains three models over it from scratch, and this figure is what keeps that pass inside the grading envelope on a shared H100. Every plan consumes exactly this many training tokens in exactly this order, so every plan costs the same number of token-forward and token-backward passes. What a plan chooses is the SHAPE those tokens are fed in -- how many rows, how long each row is, and how many micro-batches accumulate into one optimizer step -- and therefore how many optimizer steps the same tokens buy and how much context each token is predicted from."
+  },
+
+  "geometry": {
+    "allowed_rows": [8, 16, 32, 64],
+    "allowed_seq_len": [128, 256, 512, 1024],
+    "allowed_grad_accum": [1, 2, 4],
+    "min_microbatch_tokens": 8192,
+    "max_microbatch_tokens": 32768,
+    "max_phases": 6,
+    "min_phase_optimizer_steps": 8,
+    "note": "rows * seq_len is the micro-batch token count and is held between min_microbatch_tokens and max_microbatch_tokens so that no plan can be much slower per token than any other. rows * seq_len * grad_accum is the optimizer-step token count, and total_train_tokens divided by it is how many optimizer steps that phase buys."
+  },
+
+  "optimizer": {
+    "name": "AdamW",
+    "lr_embed": 0.018,
+    "lr_hidden": 0.006,
+    "lr_head": 0.006,
+    "lr_scalar": 0.018,
+    "beta1": 0.9,
+    "beta2": 0.999,
+    "eps": 1e-10,
+    "weight_decay": 0.0,
+    "grad_clip": 1.0,
+    "note": "FROZEN. These four per-role peak learning rates and every AdamW constant are fixed by the task and no plan may move them. This slot does not grade optimizer tuning; it grades batch geometry."
+  },
+
+  "schedule": {
+    "shape": "wsd",
+    "warmup_frac": 0.05,
+    "stable_frac": 0.55,
+    "final_frac": 0.0,
+    "clock": "tokens-consumed",
+    "batch_scaling": "sqrt",
+    "batch_scaling_reference_tokens": 8192,
+    "note": "FROZEN, and deliberately clocked in TOKENS CONSUMED rather than in optimizer steps. A schedule read off a step index would hand a plan with fewer, larger steps a different envelope than a plan with more, smaller ones, and the comparison would then be about the schedule rather than about the geometry. Clocked in tokens, every plan sees the same peak-relative multiplier at the same point of the same token budget. On top of that envelope the peak is scaled by sqrt(optimizer_step_tokens / batch_scaling_reference_tokens), the standard square-root rule for adaptive optimizers, so a plan that accumulates into larger steps is not simply handed a smaller total parameter movement. Both rules are frozen and applied by the harness; neither is a number a plan may set."
+  },
+
+  "init": {
+    "seed": 1234,
+    "note": "Every run in this task starts from the same parameter tensors. The batch-geometry plan is the only thing that differs between two runs."
+  },
+
+  "evaluation": {
+    "tokens": 2097152,
+    "rows": 16,
+    "seq_len": 512,
+    "metric": "mean token-level cross entropy in nats, lower is better",
+    "note": "The evaluation geometry is FIXED at 16 x 512 for every run, whatever geometry a plan trained under. A plan is scored on the loss it produces at one fixed reading geometry, so a plan cannot win by moving the measurement. The graded split is NOT in the agent image: environment/data/devset_slice.bin is a proxy cut from a different training shard and is the agent's own yardstick."
+  },
+
+  "data": {
+    "format": "FineWeb10B GPT-2 BPE. 1024-byte int32 header (magic 20240520, version 1, token count), then uint16 token ids.",
+    "train_slice_tokens": 25165825,
+    "train_slice_note": "The stream is consumed strictly in order from position 0 and every plan consumes exactly total_train_tokens of it, so two plans see the same tokens in the same order and differ only in how those tokens were grouped."
+  }
+}

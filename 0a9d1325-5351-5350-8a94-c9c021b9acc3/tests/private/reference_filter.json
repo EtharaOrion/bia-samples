@@ -1,0 +1,9 @@
+{
+  "schema": "oer-curation-filter/v1",
+  "notes": "THE HIGH ANCHOR. Staged only into the verifier image and never on the agent surface. It is a BAR, not a claim to be the optimum of this space: it is the best chain an authoring search over this register found, and a submission that reaches or beats it scores 1.0. Its distinguishing finding is that TWO features are needed and neither suffices alone -- the bigram term is the only one that sees a block whose tokens were permuted, because permutation leaves every unigram statistic untouched; the distinct-token ratio is the only one that sees a block built by tiling a short span, because tiling leaves the bigram term as coherent as clean text.",
+  "rules": [
+    {"field": "bigram_coherence", "op": "ge", "value": -13.8},
+    {"field": "distinct_token_ratio", "op": "ge", "value": 0.10},
+    {"field": "distinct_token_ratio", "op": "le", "value": 0.60}
+  ]
+}

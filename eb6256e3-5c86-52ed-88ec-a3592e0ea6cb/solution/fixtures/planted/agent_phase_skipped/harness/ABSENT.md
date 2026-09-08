@@ -1,1 +1,0 @@
-The harness journal is deliberately absent from this fixture. That absence IS the fixture: it is what a workspace looks like when the handoff was synthesised and no agent phase ever ran. The file is here so the empty directory survives a checkout, and it is never read by the grading path.

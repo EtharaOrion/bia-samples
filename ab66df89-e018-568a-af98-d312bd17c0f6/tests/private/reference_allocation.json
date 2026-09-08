@@ -1,0 +1,7 @@
+{
+  "schema": "oer16-compute-allocation/v1",
+  "notes": "THE HIGH ANCHOR. This file is staged only into the verifier image and is never on the agent surface. It is a BAR, not a claim to be the optimum of this space: it is the best allocation an authoring sweep of the whole menu at full budget found, and a submission that reaches or beats it scores 1.0. Its distinguishing finding is that at a two-petaflop budget against this corpus the menu is monotone in the wrong direction from where instinct points -- every step UP in model size costs validation loss, and the smallest entry wins even though spending its full budget means seeing the corpus 2.4 times over. Repetition is cheaper than under-training here. grad_accum 1 because at this token count every optimizer step is worth having.",
+  "model": "m02x128",
+  "micro_steps": 5728,
+  "grad_accum": 1
+}

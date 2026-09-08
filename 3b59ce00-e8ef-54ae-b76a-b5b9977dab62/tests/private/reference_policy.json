@@ -1,0 +1,15 @@
+{
+  "schema": "oer-nanogpt-policy/v1",
+  "notes": "THE HIGH ANCHOR. This file is staged only into the verifier image and is never on the agent surface. It is a BAR, not a claim to be the optimum of this space: it is the best policy an authoring search over this harness found, and a submission that reaches or beats it scores 1.0. What separates it from the shipped default is that the two regularisers the default inherited from convention -- a uniform weight decay and a tenth of label smoothing -- both cost real nats at a budget where the model is nowhere near fitting the corpus, while the one control the default left at its transcribed upstream value, the logit softcap, was worth moving.",
+  "decay": {
+    "wd_embed": 0.0,
+    "wd_hidden": 0.0,
+    "wd_head": 0.0,
+    "wd_scalar": 0.0
+  },
+  "objective": {
+    "label_smoothing": 0.0,
+    "z_loss": 0.001,
+    "logit_softcap": 15.0
+  }
+}

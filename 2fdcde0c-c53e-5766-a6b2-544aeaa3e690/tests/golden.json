@@ -1,0 +1,4381 @@
+{
+ "anchors": {
+  "authority": "tests/anchors.py, which re-runs tests/probe_handed.py and tests/probe_refined.py on every graded run",
+  "baseline_metric": null,
+  "direction": "lower",
+  "pass_threshold": 0.65,
+  "state": "measured-at-grade-time",
+  "target_metric": null,
+  "why_null": "These were the literals 3250 and 2690 under state 'measured'. 3250 is the SCHEDULE LENGTH of environment/train_locked.py, which is not a crossing step and was never run; 2690 is an upstream speedrun record measured on a different substrate. Neither was ever produced by this bundle. They are null here because this file is no longer where they come from."
+ },
+ "banner": "GENERATED SECTION. DO NOT HAND-EDIT.",
+ "bound_state": {
+  "_superseded": "grade.py:bound_state() now DERIVES these from environment/operating_point.json through environment/bia_corpus.py, carried into the verifier image at /app/env, which is the same declaration the pinned harness, the loader, the model and the evaluator resolve. This block is retained for the recorded fixtures below and is no longer the runtime's source.",
+  "baseline_metric": 3250,
+  "eval_stride": 100,
+  "frozen_architecture_digest": "a4c8f1d09b2e7635c0a91d84fe3b2705d6c9a83f1e40b7d259c6a3f08e12b4d7",
+  "frozen_batch_size": 480,
+  "frozen_dataset_digest": "d1a7e2b6f0c94d3a8e5b1c07f42d9a63b8e0c5147d2a9f3b6e8c04a17d5b29e3",
+  "frozen_fwd_bwd_per_step": 1,
+  "graded_quantity": "crossing_step",
+  "max_schedule_steps": 4000,
+  "readout_filter_admitted": "raw",
+  "sustain_points": 3,
+  "target_loss": 3.279,
+  "target_metric": 2690,
+  "weights_digest_domain": "bia/oer-03/weights/v2"
+ },
+ "extension_control": {
+  "expected_graded_step": 2600,
+  "expected_reward": 1.0,
+  "id": "ctl-schedule-extended-past-crossing",
+  "telemetry": {
+   "bound": {
+    "anchors_state": "fixture-calibrated",
+    "baseline_metric": 3250,
+    "eval_stride": 100,
+    "frozen_architecture_digest": "a4c8f1d09b2e7635c0a91d84fe3b2705d6c9a83f1e40b7d259c6a3f08e12b4d7",
+    "frozen_batch_size": 480,
+    "frozen_dataset_digest": "d1a7e2b6f0c94d3a8e5b1c07f42d9a63b8e0c5147d2a9f3b6e8c04a17d5b29e3",
+    "frozen_fwd_bwd_per_step": 1,
+    "graded_quantity": "crossing_step",
+    "max_schedule_steps": 4000,
+    "readout_filter_admitted": "raw",
+    "sustain_points": 3,
+    "target_loss": 3.279,
+    "target_metric": 2690,
+    "weights_digest_domain": "bia/oer-03/weights/v2"
+   },
+   "evaluations": [
+    {
+     "filter": "raw",
+     "loss": 4.921,
+     "params_digest": "01f8da92e5c327b709df15dfb7451fe57aedf387db99640c83f207b2407244c0",
+     "scheduled_by": "verifier",
+     "step": 100,
+     "weights_digest": "a7bb33801dd5e7b2472b860b8bdd29edd33d6b5aa3cb447f7f06b7e28860560b",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 4.213,
+     "params_digest": "f938597352cfe685f1e79bf8da2556b192d036803cc7005adb5dd970e58a07a1",
+     "scheduled_by": "verifier",
+     "step": 200,
+     "weights_digest": "88aecf607aa0009a4b1581cb69006edd55d086a05d044a7ce8519caeea65e5b4",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.864,
+     "params_digest": "1f58d97de6d6b23961f3acad134d6904354594ff916ba67f38705059232e08cb",
+     "scheduled_by": "verifier",
+     "step": 300,
+     "weights_digest": "66ad57d41aa700aca9b973309610371575a5d0338a1a6efd7f57aac75636e5e1",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.672,
+     "params_digest": "e0a48cf2f14902bba5ac7551e56de2ae6a3d27267102bcd724b9fe65e6bf4a62",
+     "scheduled_by": "verifier",
+     "step": 400,
+     "weights_digest": "3ff65ea6473b1029018015c88cb774ae8037779e2587f326ad57c9b58ec9976d",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.551,
+     "params_digest": "f2ca64b5ffd56806280a414d25a1fadc459c94830425d2c4110cc581731bd35b",
+     "scheduled_by": "verifier",
+     "step": 500,
+     "weights_digest": "38834b0a9cb425ce9279d2ed3273ce3bdc6b1eee37e25d6e28ba1219a055a2f4",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.47,
+     "params_digest": "6c8be2a3e141162d944dd6bdcfb631da86a6880902d38580f4fd385ddc688a8c",
+     "scheduled_by": "verifier",
+     "step": 600,
+     "weights_digest": "a9b270a7060130381512f197a19c99b17fa66095ea7adf4972c1ac5cedaea024",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.413,
+     "params_digest": "22bac1b442afa8f13d1215b4d48c5ad054999c1c7276d07d111d681320d61106",
+     "scheduled_by": "verifier",
+     "step": 700,
+     "weights_digest": "4c7ba7b5a56cdd01bca687cef33cdfe6a110c2ba16e57100c01303ecec59c901",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.371,
+     "params_digest": "11717514fe15e400ab35a5a3077b8d9d6352fe17b3658a0ab1b5e8b0f3c68d54",
+     "scheduled_by": "verifier",
+     "step": 800,
+     "weights_digest": "81319dad8c833d1cc6fe681149670106bfb569a6097e7a9bec7a3954ec3f98c6",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.34,
+     "params_digest": "7ef46b4e56ef9144cc1281f241dc6a989d33de177af94cde9450268dd42c0c3d",
+     "scheduled_by": "verifier",
+     "step": 900,
+     "weights_digest": "8d98a9a7415cf76d45bcb93fb0f0bed5987daa6ad60a745acf20db057b35c438",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.317,
+     "params_digest": "9deb9b155cc33038562b7daf96b919715c9aefc6b7cdd3b6942f5297fc270761",
+     "scheduled_by": "verifier",
+     "step": 1000,
+     "weights_digest": "809d495a2c05a9afecc8724ef5e360ea385604a9485cfc2a68339ec19a149960",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.3,
+     "params_digest": "6b90187082b47f9e3bd572490fa5b3a2deaf5f2d0997db2cf2b77c8e20715acc",
+     "scheduled_by": "verifier",
+     "step": 1100,
+     "weights_digest": "3b5b451e3bc38587ec83d07dbb8d1430693afc9dbf8fd4b7b8ca3a4dbb425b4d",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.294,
+     "params_digest": "c586fc65b4a521b5850e3b75fa3b816db46b0bbd446eff96761ad9b06738a581",
+     "scheduled_by": "verifier",
+     "step": 1200,
+     "weights_digest": "0469317b9a37477afe7233ddbdf79ff59c7655866a974557d3ddcb60e621e780",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.29,
+     "params_digest": "d5ae9274fbc783d2d45cc1b4c5356454d09bab66f3292362d091558009b44b46",
+     "scheduled_by": "verifier",
+     "step": 1300,
+     "weights_digest": "d546782ef8f2db184f51d414694b8b208c47edadc89e3575727b3229614215b8",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.287,
+     "params_digest": "2a016e2d8b481091bcd634677ad3aec840b8fda15d68da397f537437f31f0618",
+     "scheduled_by": "verifier",
+     "step": 1400,
+     "weights_digest": "173b7d3eca3b42e4cd6cc51655b003714622e1466ec2ed71ae73f7c469b17a87",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.285,
+     "params_digest": "a99ae612c54782f5178f00638b1afc201511cd36668c5a2cd9442d4aff5ef37a",
+     "scheduled_by": "verifier",
+     "step": 1500,
+     "weights_digest": "c432eda13425fd877d410fd7aafe5696c4393a7461498d687adb83f098c9d314",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.2835,
+     "params_digest": "3e26510e52c2862393c74137236976477e2dd5c7c188b1f4e326efca69f6e90a",
+     "scheduled_by": "verifier",
+     "step": 1600,
+     "weights_digest": "c548ec67ff5a36aeca43080019600eb7679f79791e590efbcafbb43f8a2a097c",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.2823,
+     "params_digest": "eeedd8c61bc017e9c17a58ceac7526d168da62b5b5e642797696a3f099e9d092",
+     "scheduled_by": "verifier",
+     "step": 1700,
+     "weights_digest": "e1bcb7d185139d34d4d58461799270cb5bac3a5474d0c104427539c73b73f94d",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.2814,
+     "params_digest": "9bb36405b4d50c0c1c35666209387511667f04517d1971d251e06a403c345f33",
+     "scheduled_by": "verifier",
+     "step": 1800,
+     "weights_digest": "065821978487c29456eb07c922ab02bea4c745359d75783dbaa1a5b1d76ff5fb",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.28075,
+     "params_digest": "ede1c98016de82cd017e03223030e864ad1ac580fb85fbf575d408f42d575c39",
+     "scheduled_by": "verifier",
+     "step": 1900,
+     "weights_digest": "e3791e83afa0fc7cab21e3d71b5a48bbc554be05fc97bb1779cfbd1915a73d2c",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.2805,
+     "params_digest": "c9291470dc3d07384ee6698e0ebac1a7a32fa6cdd33997c7bce8318277f34ebf",
+     "scheduled_by": "verifier",
+     "step": 2000,
+     "weights_digest": "c67434c7d1fe4e4cda33d183ceeb9ac33461d61318c5c785e34d21d5c05e01c2",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.28035,
+     "params_digest": "cbe4bb33f74885082477b575047b1fc2d62ebceded2e656db3de94fb8ab4546e",
+     "scheduled_by": "verifier",
+     "step": 2100,
+     "weights_digest": "156a6e1acef6e9fc503e5fb486985832ac466d71243116fc2c343efd2d58e891",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.2803,
+     "params_digest": "f7adcf1b266b5bcd4e025810da28dc3969331f2d18379ed7b8d42e3ba2db51ba",
+     "scheduled_by": "verifier",
+     "step": 2200,
+     "weights_digest": "bf01dcfea4fe978620bad4dc4254ed8260e15d6c5b7da101efd5302b4e4d78bc",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.28025,
+     "params_digest": "4a4d75fe583c4ecccb5567fe2cf0acbe5fb2ba9995e1ed67e46bb5205030b386",
+     "scheduled_by": "verifier",
+     "step": 2300,
+     "weights_digest": "1f009c02d9a17b20e68050208752d41ab71f5e595f8372a3d828fe791e0f13f6",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.2802,
+     "params_digest": "e6371ed44e9d83a06530fd2776dbda6ff9b79eb77771f1af72d5160dd7607266",
+     "scheduled_by": "verifier",
+     "step": 2400,
+     "weights_digest": "409ccef39f535c6c3d92f378d734996960d8ee03e9def97a62993f6c925761b2",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.27945,
+     "params_digest": "26c84637b0bcfae9d498c24e7cdbee0616c4ce6410b3aeac2fc28b52b48d2ca9",
+     "scheduled_by": "verifier",
+     "step": 2500,
+     "weights_digest": "910454fff64539ae0de5e64e60ccbb407435a5078d56a6901fd953204ecadc52",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.2788,
+     "params_digest": "5a1c52125ce3c275ae2f506d4a66ffca352e5f2bea01c98e7c8a4d223e7f13b8",
+     "scheduled_by": "verifier",
+     "step": 2600,
+     "weights_digest": "66250f322e664a7ce04d1441e11a6f6fb065c3000dfbc51d88dbf04dc708a94b",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.2784,
+     "params_digest": "10084c00e82c602e6d47bc05623d6ca32b2dc2e6c80bac81b789adeb738b9556",
+     "scheduled_by": "verifier",
+     "step": 2700,
+     "weights_digest": "8eb65457dba84bf638c31213f0ab453ca43e5c6894461b2a046fc7b2cbfe9435",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.27815,
+     "params_digest": "721fb73696958037ed7cc5d099a851bb611f4c0744836c8eabfc18dcfc741d2e",
+     "scheduled_by": "verifier",
+     "step": 2800,
+     "weights_digest": "318a3907294540e8eac85dd28b18b9f070c4264f8a940dc8cb4b7975bcc26dc8",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.278,
+     "params_digest": "9f91b6c012fa24eadd5883dd90a6adef2c5d7a23c47c6e0483c9d36b4a5a475c",
+     "scheduled_by": "verifier",
+     "step": 2900,
+     "weights_digest": "f4797d88bea78e841d6d0bfe5f5673a9d5d1ec54573ee32f522eb18f1d02cd33",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.2779,
+     "params_digest": "76796425929c1b628afc6fa404af03ab3d7d3b307a029383fcc94188a8150168",
+     "scheduled_by": "verifier",
+     "step": 3000,
+     "weights_digest": "870589a6a6e673d7218ae21931c102a29636fdbbceadf44f0abf0df03b5ccfb9",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.2778799999999997,
+     "params_digest": "3aad988ab7f7fc1d0a18205192af402c842ba69952b1dfc15e38c2d57a711637",
+     "scheduled_by": "verifier",
+     "step": 3100,
+     "weights_digest": "bd70e368e208e2ea20df7fc2e49f8b85d690692a20bdc78ffb47d44af0a653a9",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.27786,
+     "params_digest": "bf68519f0230cc204864bf4d7de9be4c90b201d25df1895368e49d914c8a3131",
+     "scheduled_by": "verifier",
+     "step": 3200,
+     "weights_digest": "33a86b30a83766875d0fb1fa4f1f75fed3827eb1d94e189de037064483eb5b7f",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.27784,
+     "params_digest": "4617ffe5047791620652ff3a152a2e30f98e087b0b5eb660b0e102056d18f4ff",
+     "scheduled_by": "verifier",
+     "step": 3300,
+     "weights_digest": "b564b5eb43ab6067123832b125e3800c1037a6b16ce31321e6aa47481eedac84",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.2778199999999997,
+     "params_digest": "5267715bf3b3fd6e19cad40bb323c3291a90a2c7259d798d41c991c0db698f80",
+     "scheduled_by": "verifier",
+     "step": 3400,
+     "weights_digest": "5d051665ecde482244f73cd2c0ab1c7fe8269c5ec1d3248504cacf151ce0c165",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.2777999999999996,
+     "params_digest": "6df9eef90abd17179175a2dded111056f0bcf7f593993d21800d944e3ca1f622",
+     "scheduled_by": "verifier",
+     "step": 3500,
+     "weights_digest": "ffafa10b5afca7b4615ab4956a5f1ece8d763a6d6d2981fc4857a310f0a416f2",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.27778,
+     "params_digest": "d39b223c80415ffea5c4e3e55c4384b3856fdfa2f212c364fcc72831a62cf26a",
+     "scheduled_by": "verifier",
+     "step": 3600,
+     "weights_digest": "545dec882eb5805ae81ff50b00ae962b6fe2e3d24d895e963814ae77ee326a14",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.27776,
+     "params_digest": "db452b72b8accfea49727d6796f5652021e3898a82010ac0971b58095609b98c",
+     "scheduled_by": "verifier",
+     "step": 3700,
+     "weights_digest": "7852c1cfd182f6b52f4a1d76e80a140a522614f46632a364ce9559ed547215d3",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.2777399999999997,
+     "params_digest": "f73685a826bde745c9f02ca3cc31e111a99096e88f0bcdb9714e02a0503d4fc1",
+     "scheduled_by": "verifier",
+     "step": 3800,
+     "weights_digest": "eae2531cf163ba2189f85224b33914cebadc9f3b9f6089939add904d9fc7a14e",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.27772,
+     "params_digest": "192f87aaa52a17390c1a2df6676963e84e538535931bb15f507deca8cc795437",
+     "scheduled_by": "verifier",
+     "step": 3900,
+     "weights_digest": "343bda40cb5fdbae8715586eb5a96dedc3c9957c7bbd504d51541d249cccf11c",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.2777,
+     "params_digest": "50b1980c797e76d32b7586f534c02a0742bc0c080522bd0877083c44238aff88",
+     "scheduled_by": "verifier",
+     "step": 4000,
+     "weights_digest": "1e3ef544a686192cee51ca8e59d2af0d9ad8688be268e0f80823917ef0aba812",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.2776799999999997,
+     "params_digest": "6347b03c90838f181d148ab7e4e5bced887b6ed541d85004014bf9aff15bb4d1",
+     "scheduled_by": "verifier",
+     "step": 4100,
+     "weights_digest": "6ccbc7fcb648b583d7e49cc59a2bde84aa694b97fd36aefc50e30644881fbb9e",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.27766,
+     "params_digest": "c851a328d300cec03e6514432af2cc4286d3a0d97c9ed7b80cfbad4d97736773",
+     "scheduled_by": "verifier",
+     "step": 4200,
+     "weights_digest": "7709ccd53d9a7e51647c1b9179047f6ac2f321df3965e8bc0732928c7573688b",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.27764,
+     "params_digest": "576e2c59567ea1b3966ab7d11b3c503f34c0736b6618af083afcbacebd02fed8",
+     "scheduled_by": "verifier",
+     "step": 4300,
+     "weights_digest": "3aff5974aca08ee4e739413da3da0dcfe11e5d5e6acadbf1580b229c2875761f",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.2776199999999998,
+     "params_digest": "37efcafd1ef54cb5e96a949812d001b53c283755d04d3f684569da1dc9d399e3",
+     "scheduled_by": "verifier",
+     "step": 4400,
+     "weights_digest": "64dcd9a70ed8c6eaf50ee2bdd9329469e133f90c3bd2f77757626aef3a5e09a1",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.2775999999999996,
+     "params_digest": "382f7428b9a277d02de4adfeb93dee7cf438dded014ab2aeb525ef955a36752b",
+     "scheduled_by": "verifier",
+     "step": 4500,
+     "weights_digest": "520eb6cd0a59d9e26e9aafd8b30868beb395abdc26f90c99c49ab7216abeb89b",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.27758,
+     "params_digest": "21281ba8e45dfaa1e5791443c0f4c58089a7e5be0fd8d2af733e1316534a5483",
+     "scheduled_by": "verifier",
+     "step": 4600,
+     "weights_digest": "3c2ea5b1dd69092238ec81cddf49025e23ab421c921430f5d7b2ad369e8f9739",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.27756,
+     "params_digest": "61df28803c43a4244236655d65d4a1d56521f49f46620f5ba6c38400ba313cd3",
+     "scheduled_by": "verifier",
+     "step": 4700,
+     "weights_digest": "7bee8ad15cfbd1c5f9fa84d33643a94aff446ff12f967e313bc8a50eef7a23aa",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.2775399999999997,
+     "params_digest": "140dafee95c3c30fbc5d8165c984c39ba2f81f22de461bf2d0451c82cbea6214",
+     "scheduled_by": "verifier",
+     "step": 4800,
+     "weights_digest": "2adb1e8bf67f929d6c270d74659d7e0df52e85ba372fc948a4bc0b06571e408c",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.27752,
+     "params_digest": "be18aaaa917c7f49fa20239217ba7713964694692b2df569175affb19ce3a12c",
+     "scheduled_by": "verifier",
+     "step": 4900,
+     "weights_digest": "2cdbeaf32e9922d25317343d6fcfe1b70f44ed90df0e57e4008bc419dcde938a",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.2775,
+     "params_digest": "f62d0535e85906aa92f9f1acb421926e42d990eed9d4da5d9dedf598840b8e43",
+     "scheduled_by": "verifier",
+     "step": 5000,
+     "weights_digest": "ce0da7fe7d1b2e87f655caa13a03fff440448637a07b0aec47dc0e506ffb2e56",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.2774799999999997,
+     "params_digest": "8aa28bfe1415548b8db1a0da2ef6bf48bb34890f4437a162f1f465b0e40524f4",
+     "scheduled_by": "verifier",
+     "step": 5100,
+     "weights_digest": "121506b9e6d1ff939889baffe021e6c3b95a577df966a83d38a24341d3812533",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.2774599999999996,
+     "params_digest": "7831bedd2d9cf7610924d089df000d8b291eb43722f555b25d789f115cd42da0",
+     "scheduled_by": "verifier",
+     "step": 5200,
+     "weights_digest": "6e408a2aa9dd62aee32e375617b183850f9c6eebe1102d5ab5ae2f42f0514e14",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.27744,
+     "params_digest": "718c0e7ed3d9c517482a93b2b7d11dbb227d7ee5031bd9018b4863ede1735174",
+     "scheduled_by": "verifier",
+     "step": 5300,
+     "weights_digest": "e23041ca863a001f3df83a382f2f324683dab6509733fa2f102c91112f0a7f58",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.2774199999999998,
+     "params_digest": "79f7c3d3a6fb7421b7d385e91a97d08029c4be5e3f04941daadae6052dd341d3",
+     "scheduled_by": "verifier",
+     "step": 5400,
+     "weights_digest": "058f9618dea01ee2b59eae7a46b16b22c8aa2d298ca3887f863dbaa391c67b59",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.2773999999999996,
+     "params_digest": "3ebf16eba963333e24ac12d1f788c3ab0a1178e0351ab154634ae80e119a3554",
+     "scheduled_by": "verifier",
+     "step": 5500,
+     "weights_digest": "ae936731eeb8e60f19541bfabb5c631dfa784f335e29ebc820df425b8f9cdffc",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.27738,
+     "params_digest": "b31a23ae2299cfc6bc36700e0d5c314a80d695a990e89de1ac86493b65d118bf",
+     "scheduled_by": "verifier",
+     "step": 5600,
+     "weights_digest": "30c231fc9853ec65a650171ea6cc4dbc46684fbd84c6ffe370d493458a449a2c",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.27736,
+     "params_digest": "688914902084979c6e785d56edf5f73b45d3d7aaed9265df4828a6201ad1d2b2",
+     "scheduled_by": "verifier",
+     "step": 5700,
+     "weights_digest": "080379bbeef31aa91c0c68071d459150715e2edf39a56dcd8c8f06758d862f1d",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.2773399999999997,
+     "params_digest": "8c7d23545bb440c6d14a4fc1197a0d1d4229cb656814ccdbb3eeb58e44ffca19",
+     "scheduled_by": "verifier",
+     "step": 5800,
+     "weights_digest": "ef8a89bf86c5e904383a88ea703ac4c83c6ef64c879a93e67277302287516ec7",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.27732,
+     "params_digest": "988f5764b0b75ecc48407d46dba0fb209c2eefa95255ef8d622f7f826abbac2b",
+     "scheduled_by": "verifier",
+     "step": 5900,
+     "weights_digest": "26172fe82eccc76119f8e7d5ceb583622901f9eebaa3287c64a3b6dcd5e3ab97",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.2773,
+     "params_digest": "1afa02def35e4e89609da2604e3a5b9876639d6d2b701370029736ffee7fc9dc",
+     "scheduled_by": "verifier",
+     "step": 6000,
+     "weights_digest": "6793cf455caa998f0002b3bdf42c51fe1ecf02475227ae9af04a897466e51d42",
+     "weights_source": "harness"
+    }
+   ],
+   "frozen_axes_observed": {
+    "architecture_digest": "a4c8f1d09b2e7635c0a91d84fe3b2705d6c9a83f1e40b7d259c6a3f08e12b4d7",
+    "batch_size": 480,
+    "dataset_digest": "d1a7e2b6f0c94d3a8e5b1c07f42d9a63b8e0c5147d2a9f3b6e8c04a17d5b29e3",
+    "fwd_bwd_per_step": 1
+   },
+   "run": {
+    "exit_code": 0,
+    "schedule_length": 6000,
+    "status": "completed",
+    "steps_executed": 6000,
+    "stopped_by": "schedule-end"
+   },
+   "submission_report": {}
+  }
+ },
+ "fixtures": [
+  {
+   "checker": "run_produced_verifier_owned_state",
+   "id": "fx-no-op-submission",
+   "stale_control": "",
+   "statement": "A submission that produces nothing. The run status is crashed and the verifier owns no evaluated state, so the run is graded a failure with a reason rather than reported absent.",
+   "telemetry": {
+    "bound": {
+     "anchors_state": "fixture-calibrated",
+     "baseline_metric": 3250,
+     "eval_stride": 100,
+     "frozen_architecture_digest": "a4c8f1d09b2e7635c0a91d84fe3b2705d6c9a83f1e40b7d259c6a3f08e12b4d7",
+     "frozen_batch_size": 480,
+     "frozen_dataset_digest": "d1a7e2b6f0c94d3a8e5b1c07f42d9a63b8e0c5147d2a9f3b6e8c04a17d5b29e3",
+     "frozen_fwd_bwd_per_step": 1,
+     "graded_quantity": "crossing_step",
+     "max_schedule_steps": 4000,
+     "readout_filter_admitted": "raw",
+     "sustain_points": 3,
+     "target_loss": 3.279,
+     "target_metric": 2690,
+     "weights_digest_domain": "bia/oer-03/weights/v2"
+    },
+    "evaluations": [],
+    "frozen_axes_observed": {
+     "architecture_digest": "a4c8f1d09b2e7635c0a91d84fe3b2705d6c9a83f1e40b7d259c6a3f08e12b4d7",
+     "batch_size": 480,
+     "dataset_digest": "d1a7e2b6f0c94d3a8e5b1c07f42d9a63b8e0c5147d2a9f3b6e8c04a17d5b29e3",
+     "fwd_bwd_per_step": 1
+    },
+    "run": {
+     "exit_code": 1,
+     "schedule_length": 3000,
+     "status": "crashed",
+     "steps_executed": 0,
+     "stopped_by": "nonzero-exit"
+    },
+    "submission_report": {}
+   },
+   "zero_reason": "run-produced-no-verifier-state"
+  },
+  {
+   "checker": "evaluated_weights_owned_by_the_harness",
+   "id": "fx-weights-domain-stale",
+   "stale_control": "ctl-weights-domain-stale",
+   "statement": "Evaluation digests bound under the pre-drift weights domain, which is a pre-mutation answer carried forward.",
+   "telemetry": {
+    "bound": {
+     "anchors_state": "fixture-calibrated",
+     "baseline_metric": 3250,
+     "eval_stride": 100,
+     "frozen_architecture_digest": "a4c8f1d09b2e7635c0a91d84fe3b2705d6c9a83f1e40b7d259c6a3f08e12b4d7",
+     "frozen_batch_size": 480,
+     "frozen_dataset_digest": "d1a7e2b6f0c94d3a8e5b1c07f42d9a63b8e0c5147d2a9f3b6e8c04a17d5b29e3",
+     "frozen_fwd_bwd_per_step": 1,
+     "graded_quantity": "crossing_step",
+     "max_schedule_steps": 4000,
+     "readout_filter_admitted": "raw",
+     "sustain_points": 3,
+     "target_loss": 3.279,
+     "target_metric": 2690,
+     "weights_digest_domain": "bia/oer-03/weights/v2"
+    },
+    "evaluations": [
+     {
+      "filter": "raw",
+      "loss": 4.921,
+      "params_digest": "01f8da92e5c327b709df15dfb7451fe57aedf387db99640c83f207b2407244c0",
+      "scheduled_by": "verifier",
+      "step": 100,
+      "weights_digest": "a32776ee5f0646179e00f559faed6b7094fbad621f3de7df878825c652f5fd45",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 4.213,
+      "params_digest": "f938597352cfe685f1e79bf8da2556b192d036803cc7005adb5dd970e58a07a1",
+      "scheduled_by": "verifier",
+      "step": 200,
+      "weights_digest": "56dbe9aba146b5d17a30b6d52dcf5e02bfd4c3a53f5bd25f0b5b56c2c57ea7af",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.864,
+      "params_digest": "1f58d97de6d6b23961f3acad134d6904354594ff916ba67f38705059232e08cb",
+      "scheduled_by": "verifier",
+      "step": 300,
+      "weights_digest": "4e449250f974b6d9abb535baf880d9577dc66e83d997b62f2a8f41ca24b2003c",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.672,
+      "params_digest": "e0a48cf2f14902bba5ac7551e56de2ae6a3d27267102bcd724b9fe65e6bf4a62",
+      "scheduled_by": "verifier",
+      "step": 400,
+      "weights_digest": "a3b3df592288a7c68271d91c5548ad491d6c8ec3ba06bab4c4557a79ab27b2ac",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.551,
+      "params_digest": "f2ca64b5ffd56806280a414d25a1fadc459c94830425d2c4110cc581731bd35b",
+      "scheduled_by": "verifier",
+      "step": 500,
+      "weights_digest": "cba743094b79a08c0691411412d1692439cd088b2650c5ad18e5038e99730178",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.47,
+      "params_digest": "6c8be2a3e141162d944dd6bdcfb631da86a6880902d38580f4fd385ddc688a8c",
+      "scheduled_by": "verifier",
+      "step": 600,
+      "weights_digest": "8be8f14b7508854ef17aa031778a34099c35fc06ae5f8cc5acd2d59459a8f1ff",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.413,
+      "params_digest": "22bac1b442afa8f13d1215b4d48c5ad054999c1c7276d07d111d681320d61106",
+      "scheduled_by": "verifier",
+      "step": 700,
+      "weights_digest": "6894a0d3683c2f2d3e5493add7e8cbb05231ee08bdb702d48e4658d8c92973e7",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.371,
+      "params_digest": "11717514fe15e400ab35a5a3077b8d9d6352fe17b3658a0ab1b5e8b0f3c68d54",
+      "scheduled_by": "verifier",
+      "step": 800,
+      "weights_digest": "d6db6f6508ac7be9cdb23b988d2b0b9d77c8a41faaaa749f501dfc4cfabb5c81",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.34,
+      "params_digest": "7ef46b4e56ef9144cc1281f241dc6a989d33de177af94cde9450268dd42c0c3d",
+      "scheduled_by": "verifier",
+      "step": 900,
+      "weights_digest": "69919aa576da307c4f82377eb2ae23fc940f2c1fcb01f7a39397989920460968",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.317,
+      "params_digest": "9deb9b155cc33038562b7daf96b919715c9aefc6b7cdd3b6942f5297fc270761",
+      "scheduled_by": "verifier",
+      "step": 1000,
+      "weights_digest": "7e16075f93701f0f239995b846343435048685a749f0b8ec1f3f61fcd2a41bac",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.3,
+      "params_digest": "6b90187082b47f9e3bd572490fa5b3a2deaf5f2d0997db2cf2b77c8e20715acc",
+      "scheduled_by": "verifier",
+      "step": 1100,
+      "weights_digest": "ded692a5d62ec1fb90c83f3e75858522bee31e346326873a34ac514275801f1e",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.294,
+      "params_digest": "c586fc65b4a521b5850e3b75fa3b816db46b0bbd446eff96761ad9b06738a581",
+      "scheduled_by": "verifier",
+      "step": 1200,
+      "weights_digest": "5bc02d095dc670dd0ab824ecdee905f8473db042e1888dfc1f87a24bde4e4244",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.29,
+      "params_digest": "d5ae9274fbc783d2d45cc1b4c5356454d09bab66f3292362d091558009b44b46",
+      "scheduled_by": "verifier",
+      "step": 1300,
+      "weights_digest": "791e49cf191e5efb76a4e1f23a730dee35c21910950a7ac668e26afed775a437",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.287,
+      "params_digest": "2a016e2d8b481091bcd634677ad3aec840b8fda15d68da397f537437f31f0618",
+      "scheduled_by": "verifier",
+      "step": 1400,
+      "weights_digest": "08797f3a760d6108feba8d4f5c51b0838152d3b45e4ce1709dedda6aa27219af",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.285,
+      "params_digest": "a99ae612c54782f5178f00638b1afc201511cd36668c5a2cd9442d4aff5ef37a",
+      "scheduled_by": "verifier",
+      "step": 1500,
+      "weights_digest": "fe05a4c39d679ace191d3f96e40e3b6b6aecdba9296fbcd94c4e10f1a4f0242e",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2835,
+      "params_digest": "3e26510e52c2862393c74137236976477e2dd5c7c188b1f4e326efca69f6e90a",
+      "scheduled_by": "verifier",
+      "step": 1600,
+      "weights_digest": "db65a5de0a01f9de1239e9acf194b79eeed199fc94996c0a429d2ca468921e68",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2823,
+      "params_digest": "eeedd8c61bc017e9c17a58ceac7526d168da62b5b5e642797696a3f099e9d092",
+      "scheduled_by": "verifier",
+      "step": 1700,
+      "weights_digest": "5c0dbe1557141c5d13d94c7071075e46cfdc94753d249ddfae9e6d6ae865e615",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2814,
+      "params_digest": "9bb36405b4d50c0c1c35666209387511667f04517d1971d251e06a403c345f33",
+      "scheduled_by": "verifier",
+      "step": 1800,
+      "weights_digest": "1b6063c54f9a9d9aaed38e16325f7b6e5fb972802873a2e882107613fc2e3d90",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.28075,
+      "params_digest": "ede1c98016de82cd017e03223030e864ad1ac580fb85fbf575d408f42d575c39",
+      "scheduled_by": "verifier",
+      "step": 1900,
+      "weights_digest": "ffb7c5ae3f17e116439a893be53a524f4d88c4a104e4cb65aa7892aa3a94fe82",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2805,
+      "params_digest": "c9291470dc3d07384ee6698e0ebac1a7a32fa6cdd33997c7bce8318277f34ebf",
+      "scheduled_by": "verifier",
+      "step": 2000,
+      "weights_digest": "fb246be11e80addfd2e0215a4f5abdea72c878efefed6b0204067eed860d7ea7",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.28035,
+      "params_digest": "cbe4bb33f74885082477b575047b1fc2d62ebceded2e656db3de94fb8ab4546e",
+      "scheduled_by": "verifier",
+      "step": 2100,
+      "weights_digest": "1bf5a757958efbbbfa758f9a88c4b65a33546283d5115077c0c865c38983bf57",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2803,
+      "params_digest": "f7adcf1b266b5bcd4e025810da28dc3969331f2d18379ed7b8d42e3ba2db51ba",
+      "scheduled_by": "verifier",
+      "step": 2200,
+      "weights_digest": "23aee9282a4ffac44c2608e8fcd7bec940fb0043bc776dca621afe9347a1366b",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.28025,
+      "params_digest": "4a4d75fe583c4ecccb5567fe2cf0acbe5fb2ba9995e1ed67e46bb5205030b386",
+      "scheduled_by": "verifier",
+      "step": 2300,
+      "weights_digest": "d455deede753c58aaca1d4344c5efc511d3823cfabb5f5279758d823fe4958a2",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2802,
+      "params_digest": "e6371ed44e9d83a06530fd2776dbda6ff9b79eb77771f1af72d5160dd7607266",
+      "scheduled_by": "verifier",
+      "step": 2400,
+      "weights_digest": "6862d237c5568cb5b349bdfd94d2e18fad6afcb58d159726003631beda1132bd",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.27945,
+      "params_digest": "26c84637b0bcfae9d498c24e7cdbee0616c4ce6410b3aeac2fc28b52b48d2ca9",
+      "scheduled_by": "verifier",
+      "step": 2500,
+      "weights_digest": "9c28f294151e5bba7c8029b5e284a32d0c88d997e68a82634aaa3d376cc11c4e",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2788,
+      "params_digest": "5a1c52125ce3c275ae2f506d4a66ffca352e5f2bea01c98e7c8a4d223e7f13b8",
+      "scheduled_by": "verifier",
+      "step": 2600,
+      "weights_digest": "cc73f80fd2e7cf33155c9c525e540e96fc18ffbe9339a12fbc3009f2ea7e737d",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2784,
+      "params_digest": "10084c00e82c602e6d47bc05623d6ca32b2dc2e6c80bac81b789adeb738b9556",
+      "scheduled_by": "verifier",
+      "step": 2700,
+      "weights_digest": "4ce2ad7d5abb96ffc72244a40901f256715dd49f40fa258daff8e78d2a76cb58",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.27815,
+      "params_digest": "721fb73696958037ed7cc5d099a851bb611f4c0744836c8eabfc18dcfc741d2e",
+      "scheduled_by": "verifier",
+      "step": 2800,
+      "weights_digest": "0b5a967a1b084b918f523a86fd41f52f97dfc6e07c9d415c91c9dc2fd1df663b",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.278,
+      "params_digest": "9f91b6c012fa24eadd5883dd90a6adef2c5d7a23c47c6e0483c9d36b4a5a475c",
+      "scheduled_by": "verifier",
+      "step": 2900,
+      "weights_digest": "54c8d25d4ac269b4f30560fa2a3e780dca23d7b1c05ce49e417066c3cde1f540",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2779,
+      "params_digest": "76796425929c1b628afc6fa404af03ab3d7d3b307a029383fcc94188a8150168",
+      "scheduled_by": "verifier",
+      "step": 3000,
+      "weights_digest": "43c5b690b7303a6ddb7d5668e2c606bf71b3e4b2ecf9c55487c9991c063dc1ba",
+      "weights_source": "harness"
+     }
+    ],
+    "frozen_axes_observed": {
+     "architecture_digest": "a4c8f1d09b2e7635c0a91d84fe3b2705d6c9a83f1e40b7d259c6a3f08e12b4d7",
+     "batch_size": 480,
+     "dataset_digest": "d1a7e2b6f0c94d3a8e5b1c07f42d9a63b8e0c5147d2a9f3b6e8c04a17d5b29e3",
+     "fwd_bwd_per_step": 1
+    },
+    "run": {
+     "exit_code": 0,
+     "schedule_length": 3000,
+     "status": "completed",
+     "steps_executed": 3000,
+     "stopped_by": "schedule-end"
+    },
+    "submission_report": {}
+   },
+   "zero_reason": "weights-not-harness-owned"
+  },
+  {
+   "checker": "evaluated_weights_owned_by_the_harness",
+   "id": "fx-submission-selected-checkpoint",
+   "stale_control": "",
+   "statement": "Weights the submission selected rather than the weights the harness owns at that step.",
+   "telemetry": {
+    "bound": {
+     "anchors_state": "fixture-calibrated",
+     "baseline_metric": 3250,
+     "eval_stride": 100,
+     "frozen_architecture_digest": "a4c8f1d09b2e7635c0a91d84fe3b2705d6c9a83f1e40b7d259c6a3f08e12b4d7",
+     "frozen_batch_size": 480,
+     "frozen_dataset_digest": "d1a7e2b6f0c94d3a8e5b1c07f42d9a63b8e0c5147d2a9f3b6e8c04a17d5b29e3",
+     "frozen_fwd_bwd_per_step": 1,
+     "graded_quantity": "crossing_step",
+     "max_schedule_steps": 4000,
+     "readout_filter_admitted": "raw",
+     "sustain_points": 3,
+     "target_loss": 3.279,
+     "target_metric": 2690,
+     "weights_digest_domain": "bia/oer-03/weights/v2"
+    },
+    "evaluations": [
+     {
+      "filter": "raw",
+      "loss": 4.921,
+      "params_digest": "01f8da92e5c327b709df15dfb7451fe57aedf387db99640c83f207b2407244c0",
+      "scheduled_by": "verifier",
+      "step": 100,
+      "weights_digest": "a7bb33801dd5e7b2472b860b8bdd29edd33d6b5aa3cb447f7f06b7e28860560b",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 4.213,
+      "params_digest": "f938597352cfe685f1e79bf8da2556b192d036803cc7005adb5dd970e58a07a1",
+      "scheduled_by": "verifier",
+      "step": 200,
+      "weights_digest": "88aecf607aa0009a4b1581cb69006edd55d086a05d044a7ce8519caeea65e5b4",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.864,
+      "params_digest": "1f58d97de6d6b23961f3acad134d6904354594ff916ba67f38705059232e08cb",
+      "scheduled_by": "verifier",
+      "step": 300,
+      "weights_digest": "66ad57d41aa700aca9b973309610371575a5d0338a1a6efd7f57aac75636e5e1",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.672,
+      "params_digest": "e0a48cf2f14902bba5ac7551e56de2ae6a3d27267102bcd724b9fe65e6bf4a62",
+      "scheduled_by": "verifier",
+      "step": 400,
+      "weights_digest": "3ff65ea6473b1029018015c88cb774ae8037779e2587f326ad57c9b58ec9976d",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.551,
+      "params_digest": "f2ca64b5ffd56806280a414d25a1fadc459c94830425d2c4110cc581731bd35b",
+      "scheduled_by": "verifier",
+      "step": 500,
+      "weights_digest": "38834b0a9cb425ce9279d2ed3273ce3bdc6b1eee37e25d6e28ba1219a055a2f4",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.47,
+      "params_digest": "6c8be2a3e141162d944dd6bdcfb631da86a6880902d38580f4fd385ddc688a8c",
+      "scheduled_by": "verifier",
+      "step": 600,
+      "weights_digest": "a9b270a7060130381512f197a19c99b17fa66095ea7adf4972c1ac5cedaea024",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.413,
+      "params_digest": "22bac1b442afa8f13d1215b4d48c5ad054999c1c7276d07d111d681320d61106",
+      "scheduled_by": "verifier",
+      "step": 700,
+      "weights_digest": "4c7ba7b5a56cdd01bca687cef33cdfe6a110c2ba16e57100c01303ecec59c901",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.371,
+      "params_digest": "11717514fe15e400ab35a5a3077b8d9d6352fe17b3658a0ab1b5e8b0f3c68d54",
+      "scheduled_by": "verifier",
+      "step": 800,
+      "weights_digest": "81319dad8c833d1cc6fe681149670106bfb569a6097e7a9bec7a3954ec3f98c6",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.34,
+      "params_digest": "7ef46b4e56ef9144cc1281f241dc6a989d33de177af94cde9450268dd42c0c3d",
+      "scheduled_by": "verifier",
+      "step": 900,
+      "weights_digest": "8d98a9a7415cf76d45bcb93fb0f0bed5987daa6ad60a745acf20db057b35c438",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.317,
+      "params_digest": "9deb9b155cc33038562b7daf96b919715c9aefc6b7cdd3b6942f5297fc270761",
+      "scheduled_by": "verifier",
+      "step": 1000,
+      "weights_digest": "809d495a2c05a9afecc8724ef5e360ea385604a9485cfc2a68339ec19a149960",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.3,
+      "params_digest": "6b90187082b47f9e3bd572490fa5b3a2deaf5f2d0997db2cf2b77c8e20715acc",
+      "scheduled_by": "verifier",
+      "step": 1100,
+      "weights_digest": "3b5b451e3bc38587ec83d07dbb8d1430693afc9dbf8fd4b7b8ca3a4dbb425b4d",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.294,
+      "params_digest": "c586fc65b4a521b5850e3b75fa3b816db46b0bbd446eff96761ad9b06738a581",
+      "scheduled_by": "verifier",
+      "step": 1200,
+      "weights_digest": "0469317b9a37477afe7233ddbdf79ff59c7655866a974557d3ddcb60e621e780",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.29,
+      "params_digest": "d5ae9274fbc783d2d45cc1b4c5356454d09bab66f3292362d091558009b44b46",
+      "scheduled_by": "verifier",
+      "step": 1300,
+      "weights_digest": "d546782ef8f2db184f51d414694b8b208c47edadc89e3575727b3229614215b8",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.287,
+      "params_digest": "2a016e2d8b481091bcd634677ad3aec840b8fda15d68da397f537437f31f0618",
+      "scheduled_by": "verifier",
+      "step": 1400,
+      "weights_digest": "173b7d3eca3b42e4cd6cc51655b003714622e1466ec2ed71ae73f7c469b17a87",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.285,
+      "params_digest": "a99ae612c54782f5178f00638b1afc201511cd36668c5a2cd9442d4aff5ef37a",
+      "scheduled_by": "verifier",
+      "step": 1500,
+      "weights_digest": "c432eda13425fd877d410fd7aafe5696c4393a7461498d687adb83f098c9d314",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2835,
+      "params_digest": "3e26510e52c2862393c74137236976477e2dd5c7c188b1f4e326efca69f6e90a",
+      "scheduled_by": "verifier",
+      "step": 1600,
+      "weights_digest": "c548ec67ff5a36aeca43080019600eb7679f79791e590efbcafbb43f8a2a097c",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2823,
+      "params_digest": "eeedd8c61bc017e9c17a58ceac7526d168da62b5b5e642797696a3f099e9d092",
+      "scheduled_by": "verifier",
+      "step": 1700,
+      "weights_digest": "e1bcb7d185139d34d4d58461799270cb5bac3a5474d0c104427539c73b73f94d",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2814,
+      "params_digest": "9bb36405b4d50c0c1c35666209387511667f04517d1971d251e06a403c345f33",
+      "scheduled_by": "verifier",
+      "step": 1800,
+      "weights_digest": "065821978487c29456eb07c922ab02bea4c745359d75783dbaa1a5b1d76ff5fb",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.28075,
+      "params_digest": "ede1c98016de82cd017e03223030e864ad1ac580fb85fbf575d408f42d575c39",
+      "scheduled_by": "verifier",
+      "step": 1900,
+      "weights_digest": "e3791e83afa0fc7cab21e3d71b5a48bbc554be05fc97bb1779cfbd1915a73d2c",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2805,
+      "params_digest": "c9291470dc3d07384ee6698e0ebac1a7a32fa6cdd33997c7bce8318277f34ebf",
+      "scheduled_by": "verifier",
+      "step": 2000,
+      "weights_digest": "c67434c7d1fe4e4cda33d183ceeb9ac33461d61318c5c785e34d21d5c05e01c2",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.28035,
+      "params_digest": "cbe4bb33f74885082477b575047b1fc2d62ebceded2e656db3de94fb8ab4546e",
+      "scheduled_by": "verifier",
+      "step": 2100,
+      "weights_digest": "156a6e1acef6e9fc503e5fb486985832ac466d71243116fc2c343efd2d58e891",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2803,
+      "params_digest": "f7adcf1b266b5bcd4e025810da28dc3969331f2d18379ed7b8d42e3ba2db51ba",
+      "scheduled_by": "verifier",
+      "step": 2200,
+      "weights_digest": "bf01dcfea4fe978620bad4dc4254ed8260e15d6c5b7da101efd5302b4e4d78bc",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.28025,
+      "params_digest": "4a4d75fe583c4ecccb5567fe2cf0acbe5fb2ba9995e1ed67e46bb5205030b386",
+      "scheduled_by": "verifier",
+      "step": 2300,
+      "weights_digest": "1f009c02d9a17b20e68050208752d41ab71f5e595f8372a3d828fe791e0f13f6",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2802,
+      "params_digest": "e6371ed44e9d83a06530fd2776dbda6ff9b79eb77771f1af72d5160dd7607266",
+      "scheduled_by": "verifier",
+      "step": 2400,
+      "weights_digest": "409ccef39f535c6c3d92f378d734996960d8ee03e9def97a62993f6c925761b2",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.27945,
+      "params_digest": "26c84637b0bcfae9d498c24e7cdbee0616c4ce6410b3aeac2fc28b52b48d2ca9",
+      "scheduled_by": "verifier",
+      "step": 2500,
+      "weights_digest": "910454fff64539ae0de5e64e60ccbb407435a5078d56a6901fd953204ecadc52",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2788,
+      "params_digest": "5a1c52125ce3c275ae2f506d4a66ffca352e5f2bea01c98e7c8a4d223e7f13b8",
+      "scheduled_by": "verifier",
+      "step": 2600,
+      "weights_digest": "66250f322e664a7ce04d1441e11a6f6fb065c3000dfbc51d88dbf04dc708a94b",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2784,
+      "params_digest": "10084c00e82c602e6d47bc05623d6ca32b2dc2e6c80bac81b789adeb738b9556",
+      "scheduled_by": "verifier",
+      "step": 2700,
+      "weights_digest": "8eb65457dba84bf638c31213f0ab453ca43e5c6894461b2a046fc7b2cbfe9435",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.27815,
+      "params_digest": "721fb73696958037ed7cc5d099a851bb611f4c0744836c8eabfc18dcfc741d2e",
+      "scheduled_by": "verifier",
+      "step": 2800,
+      "weights_digest": "318a3907294540e8eac85dd28b18b9f070c4264f8a940dc8cb4b7975bcc26dc8",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.278,
+      "params_digest": "9f91b6c012fa24eadd5883dd90a6adef2c5d7a23c47c6e0483c9d36b4a5a475c",
+      "scheduled_by": "verifier",
+      "step": 2900,
+      "weights_digest": "f4797d88bea78e841d6d0bfe5f5673a9d5d1ec54573ee32f522eb18f1d02cd33",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2779,
+      "params_digest": "76796425929c1b628afc6fa404af03ab3d7d3b307a029383fcc94188a8150168",
+      "scheduled_by": "verifier",
+      "step": 3000,
+      "weights_digest": "870589a6a6e673d7218ae21931c102a29636fdbbceadf44f0abf0df03b5ccfb9",
+      "weights_source": "submission"
+     }
+    ],
+    "frozen_axes_observed": {
+     "architecture_digest": "a4c8f1d09b2e7635c0a91d84fe3b2705d6c9a83f1e40b7d259c6a3f08e12b4d7",
+     "batch_size": 480,
+     "dataset_digest": "d1a7e2b6f0c94d3a8e5b1c07f42d9a63b8e0c5147d2a9f3b6e8c04a17d5b29e3",
+     "fwd_bwd_per_step": 1
+    },
+    "run": {
+     "exit_code": 0,
+     "schedule_length": 3000,
+     "status": "completed",
+     "steps_executed": 3000,
+     "stopped_by": "schedule-end"
+    },
+    "submission_report": {}
+   },
+   "zero_reason": "weights-not-harness-owned"
+  },
+  {
+   "checker": "evaluation_points_ascend_on_the_verifier_schedule",
+   "id": "fx-evaluation-order-broken",
+   "stale_control": "",
+   "statement": "An evaluation series that does not ascend on the verifier's own grid.",
+   "telemetry": {
+    "bound": {
+     "anchors_state": "fixture-calibrated",
+     "baseline_metric": 3250,
+     "eval_stride": 100,
+     "frozen_architecture_digest": "a4c8f1d09b2e7635c0a91d84fe3b2705d6c9a83f1e40b7d259c6a3f08e12b4d7",
+     "frozen_batch_size": 480,
+     "frozen_dataset_digest": "d1a7e2b6f0c94d3a8e5b1c07f42d9a63b8e0c5147d2a9f3b6e8c04a17d5b29e3",
+     "frozen_fwd_bwd_per_step": 1,
+     "graded_quantity": "crossing_step",
+     "max_schedule_steps": 4000,
+     "readout_filter_admitted": "raw",
+     "sustain_points": 3,
+     "target_loss": 3.279,
+     "target_metric": 2690,
+     "weights_digest_domain": "bia/oer-03/weights/v2"
+    },
+    "evaluations": [
+     {
+      "filter": "raw",
+      "loss": 3.2779,
+      "params_digest": "76796425929c1b628afc6fa404af03ab3d7d3b307a029383fcc94188a8150168",
+      "scheduled_by": "verifier",
+      "step": 3000,
+      "weights_digest": "870589a6a6e673d7218ae21931c102a29636fdbbceadf44f0abf0df03b5ccfb9",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.278,
+      "params_digest": "9f91b6c012fa24eadd5883dd90a6adef2c5d7a23c47c6e0483c9d36b4a5a475c",
+      "scheduled_by": "verifier",
+      "step": 2900,
+      "weights_digest": "f4797d88bea78e841d6d0bfe5f5673a9d5d1ec54573ee32f522eb18f1d02cd33",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.27815,
+      "params_digest": "721fb73696958037ed7cc5d099a851bb611f4c0744836c8eabfc18dcfc741d2e",
+      "scheduled_by": "verifier",
+      "step": 2800,
+      "weights_digest": "318a3907294540e8eac85dd28b18b9f070c4264f8a940dc8cb4b7975bcc26dc8",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2784,
+      "params_digest": "10084c00e82c602e6d47bc05623d6ca32b2dc2e6c80bac81b789adeb738b9556",
+      "scheduled_by": "verifier",
+      "step": 2700,
+      "weights_digest": "8eb65457dba84bf638c31213f0ab453ca43e5c6894461b2a046fc7b2cbfe9435",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2788,
+      "params_digest": "5a1c52125ce3c275ae2f506d4a66ffca352e5f2bea01c98e7c8a4d223e7f13b8",
+      "scheduled_by": "verifier",
+      "step": 2600,
+      "weights_digest": "66250f322e664a7ce04d1441e11a6f6fb065c3000dfbc51d88dbf04dc708a94b",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.27945,
+      "params_digest": "26c84637b0bcfae9d498c24e7cdbee0616c4ce6410b3aeac2fc28b52b48d2ca9",
+      "scheduled_by": "verifier",
+      "step": 2500,
+      "weights_digest": "910454fff64539ae0de5e64e60ccbb407435a5078d56a6901fd953204ecadc52",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2802,
+      "params_digest": "e6371ed44e9d83a06530fd2776dbda6ff9b79eb77771f1af72d5160dd7607266",
+      "scheduled_by": "verifier",
+      "step": 2400,
+      "weights_digest": "409ccef39f535c6c3d92f378d734996960d8ee03e9def97a62993f6c925761b2",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.28025,
+      "params_digest": "4a4d75fe583c4ecccb5567fe2cf0acbe5fb2ba9995e1ed67e46bb5205030b386",
+      "scheduled_by": "verifier",
+      "step": 2300,
+      "weights_digest": "1f009c02d9a17b20e68050208752d41ab71f5e595f8372a3d828fe791e0f13f6",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2803,
+      "params_digest": "f7adcf1b266b5bcd4e025810da28dc3969331f2d18379ed7b8d42e3ba2db51ba",
+      "scheduled_by": "verifier",
+      "step": 2200,
+      "weights_digest": "bf01dcfea4fe978620bad4dc4254ed8260e15d6c5b7da101efd5302b4e4d78bc",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.28035,
+      "params_digest": "cbe4bb33f74885082477b575047b1fc2d62ebceded2e656db3de94fb8ab4546e",
+      "scheduled_by": "verifier",
+      "step": 2100,
+      "weights_digest": "156a6e1acef6e9fc503e5fb486985832ac466d71243116fc2c343efd2d58e891",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2805,
+      "params_digest": "c9291470dc3d07384ee6698e0ebac1a7a32fa6cdd33997c7bce8318277f34ebf",
+      "scheduled_by": "verifier",
+      "step": 2000,
+      "weights_digest": "c67434c7d1fe4e4cda33d183ceeb9ac33461d61318c5c785e34d21d5c05e01c2",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.28075,
+      "params_digest": "ede1c98016de82cd017e03223030e864ad1ac580fb85fbf575d408f42d575c39",
+      "scheduled_by": "verifier",
+      "step": 1900,
+      "weights_digest": "e3791e83afa0fc7cab21e3d71b5a48bbc554be05fc97bb1779cfbd1915a73d2c",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2814,
+      "params_digest": "9bb36405b4d50c0c1c35666209387511667f04517d1971d251e06a403c345f33",
+      "scheduled_by": "verifier",
+      "step": 1800,
+      "weights_digest": "065821978487c29456eb07c922ab02bea4c745359d75783dbaa1a5b1d76ff5fb",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2823,
+      "params_digest": "eeedd8c61bc017e9c17a58ceac7526d168da62b5b5e642797696a3f099e9d092",
+      "scheduled_by": "verifier",
+      "step": 1700,
+      "weights_digest": "e1bcb7d185139d34d4d58461799270cb5bac3a5474d0c104427539c73b73f94d",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2835,
+      "params_digest": "3e26510e52c2862393c74137236976477e2dd5c7c188b1f4e326efca69f6e90a",
+      "scheduled_by": "verifier",
+      "step": 1600,
+      "weights_digest": "c548ec67ff5a36aeca43080019600eb7679f79791e590efbcafbb43f8a2a097c",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.285,
+      "params_digest": "a99ae612c54782f5178f00638b1afc201511cd36668c5a2cd9442d4aff5ef37a",
+      "scheduled_by": "verifier",
+      "step": 1500,
+      "weights_digest": "c432eda13425fd877d410fd7aafe5696c4393a7461498d687adb83f098c9d314",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.287,
+      "params_digest": "2a016e2d8b481091bcd634677ad3aec840b8fda15d68da397f537437f31f0618",
+      "scheduled_by": "verifier",
+      "step": 1400,
+      "weights_digest": "173b7d3eca3b42e4cd6cc51655b003714622e1466ec2ed71ae73f7c469b17a87",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.29,
+      "params_digest": "d5ae9274fbc783d2d45cc1b4c5356454d09bab66f3292362d091558009b44b46",
+      "scheduled_by": "verifier",
+      "step": 1300,
+      "weights_digest": "d546782ef8f2db184f51d414694b8b208c47edadc89e3575727b3229614215b8",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.294,
+      "params_digest": "c586fc65b4a521b5850e3b75fa3b816db46b0bbd446eff96761ad9b06738a581",
+      "scheduled_by": "verifier",
+      "step": 1200,
+      "weights_digest": "0469317b9a37477afe7233ddbdf79ff59c7655866a974557d3ddcb60e621e780",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.3,
+      "params_digest": "6b90187082b47f9e3bd572490fa5b3a2deaf5f2d0997db2cf2b77c8e20715acc",
+      "scheduled_by": "verifier",
+      "step": 1100,
+      "weights_digest": "3b5b451e3bc38587ec83d07dbb8d1430693afc9dbf8fd4b7b8ca3a4dbb425b4d",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.317,
+      "params_digest": "9deb9b155cc33038562b7daf96b919715c9aefc6b7cdd3b6942f5297fc270761",
+      "scheduled_by": "verifier",
+      "step": 1000,
+      "weights_digest": "809d495a2c05a9afecc8724ef5e360ea385604a9485cfc2a68339ec19a149960",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.34,
+      "params_digest": "7ef46b4e56ef9144cc1281f241dc6a989d33de177af94cde9450268dd42c0c3d",
+      "scheduled_by": "verifier",
+      "step": 900,
+      "weights_digest": "8d98a9a7415cf76d45bcb93fb0f0bed5987daa6ad60a745acf20db057b35c438",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.371,
+      "params_digest": "11717514fe15e400ab35a5a3077b8d9d6352fe17b3658a0ab1b5e8b0f3c68d54",
+      "scheduled_by": "verifier",
+      "step": 800,
+      "weights_digest": "81319dad8c833d1cc6fe681149670106bfb569a6097e7a9bec7a3954ec3f98c6",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.413,
+      "params_digest": "22bac1b442afa8f13d1215b4d48c5ad054999c1c7276d07d111d681320d61106",
+      "scheduled_by": "verifier",
+      "step": 700,
+      "weights_digest": "4c7ba7b5a56cdd01bca687cef33cdfe6a110c2ba16e57100c01303ecec59c901",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.47,
+      "params_digest": "6c8be2a3e141162d944dd6bdcfb631da86a6880902d38580f4fd385ddc688a8c",
+      "scheduled_by": "verifier",
+      "step": 600,
+      "weights_digest": "a9b270a7060130381512f197a19c99b17fa66095ea7adf4972c1ac5cedaea024",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.551,
+      "params_digest": "f2ca64b5ffd56806280a414d25a1fadc459c94830425d2c4110cc581731bd35b",
+      "scheduled_by": "verifier",
+      "step": 500,
+      "weights_digest": "38834b0a9cb425ce9279d2ed3273ce3bdc6b1eee37e25d6e28ba1219a055a2f4",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.672,
+      "params_digest": "e0a48cf2f14902bba5ac7551e56de2ae6a3d27267102bcd724b9fe65e6bf4a62",
+      "scheduled_by": "verifier",
+      "step": 400,
+      "weights_digest": "3ff65ea6473b1029018015c88cb774ae8037779e2587f326ad57c9b58ec9976d",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.864,
+      "params_digest": "1f58d97de6d6b23961f3acad134d6904354594ff916ba67f38705059232e08cb",
+      "scheduled_by": "verifier",
+      "step": 300,
+      "weights_digest": "66ad57d41aa700aca9b973309610371575a5d0338a1a6efd7f57aac75636e5e1",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 4.213,
+      "params_digest": "f938597352cfe685f1e79bf8da2556b192d036803cc7005adb5dd970e58a07a1",
+      "scheduled_by": "verifier",
+      "step": 200,
+      "weights_digest": "88aecf607aa0009a4b1581cb69006edd55d086a05d044a7ce8519caeea65e5b4",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 4.921,
+      "params_digest": "01f8da92e5c327b709df15dfb7451fe57aedf387db99640c83f207b2407244c0",
+      "scheduled_by": "verifier",
+      "step": 100,
+      "weights_digest": "a7bb33801dd5e7b2472b860b8bdd29edd33d6b5aa3cb447f7f06b7e28860560b",
+      "weights_source": "harness"
+     }
+    ],
+    "frozen_axes_observed": {
+     "architecture_digest": "a4c8f1d09b2e7635c0a91d84fe3b2705d6c9a83f1e40b7d259c6a3f08e12b4d7",
+     "batch_size": 480,
+     "dataset_digest": "d1a7e2b6f0c94d3a8e5b1c07f42d9a63b8e0c5147d2a9f3b6e8c04a17d5b29e3",
+     "fwd_bwd_per_step": 1
+    },
+    "run": {
+     "exit_code": 0,
+     "schedule_length": 3000,
+     "status": "completed",
+     "steps_executed": 3000,
+     "stopped_by": "schedule-end"
+    },
+    "submission_report": {}
+   },
+   "zero_reason": "evaluation-order-violated"
+  },
+  {
+   "checker": "graded_readout_unsmoothed",
+   "id": "fx-readout-smoothed",
+   "stale_control": "",
+   "statement": "An EMA-blended readout on the graded path. The submission may smooth for its own use; the graded quantity is recomputed unsmoothed.",
+   "telemetry": {
+    "bound": {
+     "anchors_state": "fixture-calibrated",
+     "baseline_metric": 3250,
+     "eval_stride": 100,
+     "frozen_architecture_digest": "a4c8f1d09b2e7635c0a91d84fe3b2705d6c9a83f1e40b7d259c6a3f08e12b4d7",
+     "frozen_batch_size": 480,
+     "frozen_dataset_digest": "d1a7e2b6f0c94d3a8e5b1c07f42d9a63b8e0c5147d2a9f3b6e8c04a17d5b29e3",
+     "frozen_fwd_bwd_per_step": 1,
+     "graded_quantity": "crossing_step",
+     "max_schedule_steps": 4000,
+     "readout_filter_admitted": "raw",
+     "sustain_points": 3,
+     "target_loss": 3.279,
+     "target_metric": 2690,
+     "weights_digest_domain": "bia/oer-03/weights/v2"
+    },
+    "evaluations": [
+     {
+      "filter": "ema",
+      "loss": 4.921,
+      "params_digest": "01f8da92e5c327b709df15dfb7451fe57aedf387db99640c83f207b2407244c0",
+      "scheduled_by": "verifier",
+      "step": 100,
+      "weights_digest": "a7bb33801dd5e7b2472b860b8bdd29edd33d6b5aa3cb447f7f06b7e28860560b",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "ema",
+      "loss": 4.213,
+      "params_digest": "f938597352cfe685f1e79bf8da2556b192d036803cc7005adb5dd970e58a07a1",
+      "scheduled_by": "verifier",
+      "step": 200,
+      "weights_digest": "88aecf607aa0009a4b1581cb69006edd55d086a05d044a7ce8519caeea65e5b4",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "ema",
+      "loss": 3.864,
+      "params_digest": "1f58d97de6d6b23961f3acad134d6904354594ff916ba67f38705059232e08cb",
+      "scheduled_by": "verifier",
+      "step": 300,
+      "weights_digest": "66ad57d41aa700aca9b973309610371575a5d0338a1a6efd7f57aac75636e5e1",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "ema",
+      "loss": 3.672,
+      "params_digest": "e0a48cf2f14902bba5ac7551e56de2ae6a3d27267102bcd724b9fe65e6bf4a62",
+      "scheduled_by": "verifier",
+      "step": 400,
+      "weights_digest": "3ff65ea6473b1029018015c88cb774ae8037779e2587f326ad57c9b58ec9976d",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "ema",
+      "loss": 3.551,
+      "params_digest": "f2ca64b5ffd56806280a414d25a1fadc459c94830425d2c4110cc581731bd35b",
+      "scheduled_by": "verifier",
+      "step": 500,
+      "weights_digest": "38834b0a9cb425ce9279d2ed3273ce3bdc6b1eee37e25d6e28ba1219a055a2f4",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "ema",
+      "loss": 3.47,
+      "params_digest": "6c8be2a3e141162d944dd6bdcfb631da86a6880902d38580f4fd385ddc688a8c",
+      "scheduled_by": "verifier",
+      "step": 600,
+      "weights_digest": "a9b270a7060130381512f197a19c99b17fa66095ea7adf4972c1ac5cedaea024",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "ema",
+      "loss": 3.413,
+      "params_digest": "22bac1b442afa8f13d1215b4d48c5ad054999c1c7276d07d111d681320d61106",
+      "scheduled_by": "verifier",
+      "step": 700,
+      "weights_digest": "4c7ba7b5a56cdd01bca687cef33cdfe6a110c2ba16e57100c01303ecec59c901",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "ema",
+      "loss": 3.371,
+      "params_digest": "11717514fe15e400ab35a5a3077b8d9d6352fe17b3658a0ab1b5e8b0f3c68d54",
+      "scheduled_by": "verifier",
+      "step": 800,
+      "weights_digest": "81319dad8c833d1cc6fe681149670106bfb569a6097e7a9bec7a3954ec3f98c6",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "ema",
+      "loss": 3.34,
+      "params_digest": "7ef46b4e56ef9144cc1281f241dc6a989d33de177af94cde9450268dd42c0c3d",
+      "scheduled_by": "verifier",
+      "step": 900,
+      "weights_digest": "8d98a9a7415cf76d45bcb93fb0f0bed5987daa6ad60a745acf20db057b35c438",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "ema",
+      "loss": 3.317,
+      "params_digest": "9deb9b155cc33038562b7daf96b919715c9aefc6b7cdd3b6942f5297fc270761",
+      "scheduled_by": "verifier",
+      "step": 1000,
+      "weights_digest": "809d495a2c05a9afecc8724ef5e360ea385604a9485cfc2a68339ec19a149960",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "ema",
+      "loss": 3.3,
+      "params_digest": "6b90187082b47f9e3bd572490fa5b3a2deaf5f2d0997db2cf2b77c8e20715acc",
+      "scheduled_by": "verifier",
+      "step": 1100,
+      "weights_digest": "3b5b451e3bc38587ec83d07dbb8d1430693afc9dbf8fd4b7b8ca3a4dbb425b4d",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "ema",
+      "loss": 3.294,
+      "params_digest": "c586fc65b4a521b5850e3b75fa3b816db46b0bbd446eff96761ad9b06738a581",
+      "scheduled_by": "verifier",
+      "step": 1200,
+      "weights_digest": "0469317b9a37477afe7233ddbdf79ff59c7655866a974557d3ddcb60e621e780",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "ema",
+      "loss": 3.29,
+      "params_digest": "d5ae9274fbc783d2d45cc1b4c5356454d09bab66f3292362d091558009b44b46",
+      "scheduled_by": "verifier",
+      "step": 1300,
+      "weights_digest": "d546782ef8f2db184f51d414694b8b208c47edadc89e3575727b3229614215b8",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "ema",
+      "loss": 3.287,
+      "params_digest": "2a016e2d8b481091bcd634677ad3aec840b8fda15d68da397f537437f31f0618",
+      "scheduled_by": "verifier",
+      "step": 1400,
+      "weights_digest": "173b7d3eca3b42e4cd6cc51655b003714622e1466ec2ed71ae73f7c469b17a87",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "ema",
+      "loss": 3.285,
+      "params_digest": "a99ae612c54782f5178f00638b1afc201511cd36668c5a2cd9442d4aff5ef37a",
+      "scheduled_by": "verifier",
+      "step": 1500,
+      "weights_digest": "c432eda13425fd877d410fd7aafe5696c4393a7461498d687adb83f098c9d314",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "ema",
+      "loss": 3.2835,
+      "params_digest": "3e26510e52c2862393c74137236976477e2dd5c7c188b1f4e326efca69f6e90a",
+      "scheduled_by": "verifier",
+      "step": 1600,
+      "weights_digest": "c548ec67ff5a36aeca43080019600eb7679f79791e590efbcafbb43f8a2a097c",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "ema",
+      "loss": 3.2823,
+      "params_digest": "eeedd8c61bc017e9c17a58ceac7526d168da62b5b5e642797696a3f099e9d092",
+      "scheduled_by": "verifier",
+      "step": 1700,
+      "weights_digest": "e1bcb7d185139d34d4d58461799270cb5bac3a5474d0c104427539c73b73f94d",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "ema",
+      "loss": 3.2814,
+      "params_digest": "9bb36405b4d50c0c1c35666209387511667f04517d1971d251e06a403c345f33",
+      "scheduled_by": "verifier",
+      "step": 1800,
+      "weights_digest": "065821978487c29456eb07c922ab02bea4c745359d75783dbaa1a5b1d76ff5fb",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "ema",
+      "loss": 3.28075,
+      "params_digest": "ede1c98016de82cd017e03223030e864ad1ac580fb85fbf575d408f42d575c39",
+      "scheduled_by": "verifier",
+      "step": 1900,
+      "weights_digest": "e3791e83afa0fc7cab21e3d71b5a48bbc554be05fc97bb1779cfbd1915a73d2c",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "ema",
+      "loss": 3.2805,
+      "params_digest": "c9291470dc3d07384ee6698e0ebac1a7a32fa6cdd33997c7bce8318277f34ebf",
+      "scheduled_by": "verifier",
+      "step": 2000,
+      "weights_digest": "c67434c7d1fe4e4cda33d183ceeb9ac33461d61318c5c785e34d21d5c05e01c2",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "ema",
+      "loss": 3.28035,
+      "params_digest": "cbe4bb33f74885082477b575047b1fc2d62ebceded2e656db3de94fb8ab4546e",
+      "scheduled_by": "verifier",
+      "step": 2100,
+      "weights_digest": "156a6e1acef6e9fc503e5fb486985832ac466d71243116fc2c343efd2d58e891",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "ema",
+      "loss": 3.2803,
+      "params_digest": "f7adcf1b266b5bcd4e025810da28dc3969331f2d18379ed7b8d42e3ba2db51ba",
+      "scheduled_by": "verifier",
+      "step": 2200,
+      "weights_digest": "bf01dcfea4fe978620bad4dc4254ed8260e15d6c5b7da101efd5302b4e4d78bc",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "ema",
+      "loss": 3.28025,
+      "params_digest": "4a4d75fe583c4ecccb5567fe2cf0acbe5fb2ba9995e1ed67e46bb5205030b386",
+      "scheduled_by": "verifier",
+      "step": 2300,
+      "weights_digest": "1f009c02d9a17b20e68050208752d41ab71f5e595f8372a3d828fe791e0f13f6",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "ema",
+      "loss": 3.2802,
+      "params_digest": "e6371ed44e9d83a06530fd2776dbda6ff9b79eb77771f1af72d5160dd7607266",
+      "scheduled_by": "verifier",
+      "step": 2400,
+      "weights_digest": "409ccef39f535c6c3d92f378d734996960d8ee03e9def97a62993f6c925761b2",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "ema",
+      "loss": 3.27945,
+      "params_digest": "26c84637b0bcfae9d498c24e7cdbee0616c4ce6410b3aeac2fc28b52b48d2ca9",
+      "scheduled_by": "verifier",
+      "step": 2500,
+      "weights_digest": "910454fff64539ae0de5e64e60ccbb407435a5078d56a6901fd953204ecadc52",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "ema",
+      "loss": 3.2788,
+      "params_digest": "5a1c52125ce3c275ae2f506d4a66ffca352e5f2bea01c98e7c8a4d223e7f13b8",
+      "scheduled_by": "verifier",
+      "step": 2600,
+      "weights_digest": "66250f322e664a7ce04d1441e11a6f6fb065c3000dfbc51d88dbf04dc708a94b",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "ema",
+      "loss": 3.2784,
+      "params_digest": "10084c00e82c602e6d47bc05623d6ca32b2dc2e6c80bac81b789adeb738b9556",
+      "scheduled_by": "verifier",
+      "step": 2700,
+      "weights_digest": "8eb65457dba84bf638c31213f0ab453ca43e5c6894461b2a046fc7b2cbfe9435",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "ema",
+      "loss": 3.27815,
+      "params_digest": "721fb73696958037ed7cc5d099a851bb611f4c0744836c8eabfc18dcfc741d2e",
+      "scheduled_by": "verifier",
+      "step": 2800,
+      "weights_digest": "318a3907294540e8eac85dd28b18b9f070c4264f8a940dc8cb4b7975bcc26dc8",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "ema",
+      "loss": 3.278,
+      "params_digest": "9f91b6c012fa24eadd5883dd90a6adef2c5d7a23c47c6e0483c9d36b4a5a475c",
+      "scheduled_by": "verifier",
+      "step": 2900,
+      "weights_digest": "f4797d88bea78e841d6d0bfe5f5673a9d5d1ec54573ee32f522eb18f1d02cd33",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "ema",
+      "loss": 3.2779,
+      "params_digest": "76796425929c1b628afc6fa404af03ab3d7d3b307a029383fcc94188a8150168",
+      "scheduled_by": "verifier",
+      "step": 3000,
+      "weights_digest": "870589a6a6e673d7218ae21931c102a29636fdbbceadf44f0abf0df03b5ccfb9",
+      "weights_source": "harness"
+     }
+    ],
+    "frozen_axes_observed": {
+     "architecture_digest": "a4c8f1d09b2e7635c0a91d84fe3b2705d6c9a83f1e40b7d259c6a3f08e12b4d7",
+     "batch_size": 480,
+     "dataset_digest": "d1a7e2b6f0c94d3a8e5b1c07f42d9a63b8e0c5147d2a9f3b6e8c04a17d5b29e3",
+     "fwd_bwd_per_step": 1
+    },
+    "run": {
+     "exit_code": 0,
+     "schedule_length": 3000,
+     "status": "completed",
+     "steps_executed": 3000,
+     "stopped_by": "schedule-end"
+    },
+    "submission_report": {}
+   },
+   "zero_reason": "readout-smoothed"
+  },
+  {
+   "checker": "crossing_sustained_across_verifier_evaluations",
+   "id": "fx-crossing-not-sustained",
+   "stale_control": "ctl-sustain-window-stale",
+   "statement": "A single favourable evaluation followed by a rebound above the bar. Under the pre-drift sustain window of two points this would have been harvested.",
+   "telemetry": {
+    "bound": {
+     "anchors_state": "fixture-calibrated",
+     "baseline_metric": 3250,
+     "eval_stride": 100,
+     "frozen_architecture_digest": "a4c8f1d09b2e7635c0a91d84fe3b2705d6c9a83f1e40b7d259c6a3f08e12b4d7",
+     "frozen_batch_size": 480,
+     "frozen_dataset_digest": "d1a7e2b6f0c94d3a8e5b1c07f42d9a63b8e0c5147d2a9f3b6e8c04a17d5b29e3",
+     "frozen_fwd_bwd_per_step": 1,
+     "graded_quantity": "crossing_step",
+     "max_schedule_steps": 4000,
+     "readout_filter_admitted": "raw",
+     "sustain_points": 3,
+     "target_loss": 3.279,
+     "target_metric": 2690,
+     "weights_digest_domain": "bia/oer-03/weights/v2"
+    },
+    "evaluations": [
+     {
+      "filter": "raw",
+      "loss": 4.921,
+      "params_digest": "01f8da92e5c327b709df15dfb7451fe57aedf387db99640c83f207b2407244c0",
+      "scheduled_by": "verifier",
+      "step": 100,
+      "weights_digest": "a7bb33801dd5e7b2472b860b8bdd29edd33d6b5aa3cb447f7f06b7e28860560b",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 4.213,
+      "params_digest": "f938597352cfe685f1e79bf8da2556b192d036803cc7005adb5dd970e58a07a1",
+      "scheduled_by": "verifier",
+      "step": 200,
+      "weights_digest": "88aecf607aa0009a4b1581cb69006edd55d086a05d044a7ce8519caeea65e5b4",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.864,
+      "params_digest": "1f58d97de6d6b23961f3acad134d6904354594ff916ba67f38705059232e08cb",
+      "scheduled_by": "verifier",
+      "step": 300,
+      "weights_digest": "66ad57d41aa700aca9b973309610371575a5d0338a1a6efd7f57aac75636e5e1",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.672,
+      "params_digest": "e0a48cf2f14902bba5ac7551e56de2ae6a3d27267102bcd724b9fe65e6bf4a62",
+      "scheduled_by": "verifier",
+      "step": 400,
+      "weights_digest": "3ff65ea6473b1029018015c88cb774ae8037779e2587f326ad57c9b58ec9976d",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.551,
+      "params_digest": "f2ca64b5ffd56806280a414d25a1fadc459c94830425d2c4110cc581731bd35b",
+      "scheduled_by": "verifier",
+      "step": 500,
+      "weights_digest": "38834b0a9cb425ce9279d2ed3273ce3bdc6b1eee37e25d6e28ba1219a055a2f4",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.47,
+      "params_digest": "6c8be2a3e141162d944dd6bdcfb631da86a6880902d38580f4fd385ddc688a8c",
+      "scheduled_by": "verifier",
+      "step": 600,
+      "weights_digest": "a9b270a7060130381512f197a19c99b17fa66095ea7adf4972c1ac5cedaea024",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.413,
+      "params_digest": "22bac1b442afa8f13d1215b4d48c5ad054999c1c7276d07d111d681320d61106",
+      "scheduled_by": "verifier",
+      "step": 700,
+      "weights_digest": "4c7ba7b5a56cdd01bca687cef33cdfe6a110c2ba16e57100c01303ecec59c901",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.371,
+      "params_digest": "11717514fe15e400ab35a5a3077b8d9d6352fe17b3658a0ab1b5e8b0f3c68d54",
+      "scheduled_by": "verifier",
+      "step": 800,
+      "weights_digest": "81319dad8c833d1cc6fe681149670106bfb569a6097e7a9bec7a3954ec3f98c6",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.34,
+      "params_digest": "7ef46b4e56ef9144cc1281f241dc6a989d33de177af94cde9450268dd42c0c3d",
+      "scheduled_by": "verifier",
+      "step": 900,
+      "weights_digest": "8d98a9a7415cf76d45bcb93fb0f0bed5987daa6ad60a745acf20db057b35c438",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.317,
+      "params_digest": "9deb9b155cc33038562b7daf96b919715c9aefc6b7cdd3b6942f5297fc270761",
+      "scheduled_by": "verifier",
+      "step": 1000,
+      "weights_digest": "809d495a2c05a9afecc8724ef5e360ea385604a9485cfc2a68339ec19a149960",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.3,
+      "params_digest": "6b90187082b47f9e3bd572490fa5b3a2deaf5f2d0997db2cf2b77c8e20715acc",
+      "scheduled_by": "verifier",
+      "step": 1100,
+      "weights_digest": "3b5b451e3bc38587ec83d07dbb8d1430693afc9dbf8fd4b7b8ca3a4dbb425b4d",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.294,
+      "params_digest": "c586fc65b4a521b5850e3b75fa3b816db46b0bbd446eff96761ad9b06738a581",
+      "scheduled_by": "verifier",
+      "step": 1200,
+      "weights_digest": "0469317b9a37477afe7233ddbdf79ff59c7655866a974557d3ddcb60e621e780",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.29,
+      "params_digest": "d5ae9274fbc783d2d45cc1b4c5356454d09bab66f3292362d091558009b44b46",
+      "scheduled_by": "verifier",
+      "step": 1300,
+      "weights_digest": "d546782ef8f2db184f51d414694b8b208c47edadc89e3575727b3229614215b8",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.287,
+      "params_digest": "2a016e2d8b481091bcd634677ad3aec840b8fda15d68da397f537437f31f0618",
+      "scheduled_by": "verifier",
+      "step": 1400,
+      "weights_digest": "173b7d3eca3b42e4cd6cc51655b003714622e1466ec2ed71ae73f7c469b17a87",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.285,
+      "params_digest": "a99ae612c54782f5178f00638b1afc201511cd36668c5a2cd9442d4aff5ef37a",
+      "scheduled_by": "verifier",
+      "step": 1500,
+      "weights_digest": "c432eda13425fd877d410fd7aafe5696c4393a7461498d687adb83f098c9d314",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2835,
+      "params_digest": "3e26510e52c2862393c74137236976477e2dd5c7c188b1f4e326efca69f6e90a",
+      "scheduled_by": "verifier",
+      "step": 1600,
+      "weights_digest": "c548ec67ff5a36aeca43080019600eb7679f79791e590efbcafbb43f8a2a097c",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2823,
+      "params_digest": "eeedd8c61bc017e9c17a58ceac7526d168da62b5b5e642797696a3f099e9d092",
+      "scheduled_by": "verifier",
+      "step": 1700,
+      "weights_digest": "e1bcb7d185139d34d4d58461799270cb5bac3a5474d0c104427539c73b73f94d",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2814,
+      "params_digest": "9bb36405b4d50c0c1c35666209387511667f04517d1971d251e06a403c345f33",
+      "scheduled_by": "verifier",
+      "step": 1800,
+      "weights_digest": "065821978487c29456eb07c922ab02bea4c745359d75783dbaa1a5b1d76ff5fb",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.28075,
+      "params_digest": "ede1c98016de82cd017e03223030e864ad1ac580fb85fbf575d408f42d575c39",
+      "scheduled_by": "verifier",
+      "step": 1900,
+      "weights_digest": "e3791e83afa0fc7cab21e3d71b5a48bbc554be05fc97bb1779cfbd1915a73d2c",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2805,
+      "params_digest": "c9291470dc3d07384ee6698e0ebac1a7a32fa6cdd33997c7bce8318277f34ebf",
+      "scheduled_by": "verifier",
+      "step": 2000,
+      "weights_digest": "c67434c7d1fe4e4cda33d183ceeb9ac33461d61318c5c785e34d21d5c05e01c2",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.28035,
+      "params_digest": "cbe4bb33f74885082477b575047b1fc2d62ebceded2e656db3de94fb8ab4546e",
+      "scheduled_by": "verifier",
+      "step": 2100,
+      "weights_digest": "156a6e1acef6e9fc503e5fb486985832ac466d71243116fc2c343efd2d58e891",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2803,
+      "params_digest": "f7adcf1b266b5bcd4e025810da28dc3969331f2d18379ed7b8d42e3ba2db51ba",
+      "scheduled_by": "verifier",
+      "step": 2200,
+      "weights_digest": "bf01dcfea4fe978620bad4dc4254ed8260e15d6c5b7da101efd5302b4e4d78bc",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.28025,
+      "params_digest": "4a4d75fe583c4ecccb5567fe2cf0acbe5fb2ba9995e1ed67e46bb5205030b386",
+      "scheduled_by": "verifier",
+      "step": 2300,
+      "weights_digest": "1f009c02d9a17b20e68050208752d41ab71f5e595f8372a3d828fe791e0f13f6",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2802,
+      "params_digest": "e6371ed44e9d83a06530fd2776dbda6ff9b79eb77771f1af72d5160dd7607266",
+      "scheduled_by": "verifier",
+      "step": 2400,
+      "weights_digest": "409ccef39f535c6c3d92f378d734996960d8ee03e9def97a62993f6c925761b2",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.27945,
+      "params_digest": "26c84637b0bcfae9d498c24e7cdbee0616c4ce6410b3aeac2fc28b52b48d2ca9",
+      "scheduled_by": "verifier",
+      "step": 2500,
+      "weights_digest": "910454fff64539ae0de5e64e60ccbb407435a5078d56a6901fd953204ecadc52",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2788,
+      "params_digest": "5a1c52125ce3c275ae2f506d4a66ffca352e5f2bea01c98e7c8a4d223e7f13b8",
+      "scheduled_by": "verifier",
+      "step": 2600,
+      "weights_digest": "66250f322e664a7ce04d1441e11a6f6fb065c3000dfbc51d88dbf04dc708a94b",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2784,
+      "params_digest": "10084c00e82c602e6d47bc05623d6ca32b2dc2e6c80bac81b789adeb738b9556",
+      "scheduled_by": "verifier",
+      "step": 2700,
+      "weights_digest": "8eb65457dba84bf638c31213f0ab453ca43e5c6894461b2a046fc7b2cbfe9435",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.27815,
+      "params_digest": "721fb73696958037ed7cc5d099a851bb611f4c0744836c8eabfc18dcfc741d2e",
+      "scheduled_by": "verifier",
+      "step": 2800,
+      "weights_digest": "318a3907294540e8eac85dd28b18b9f070c4264f8a940dc8cb4b7975bcc26dc8",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2796,
+      "params_digest": "9f91b6c012fa24eadd5883dd90a6adef2c5d7a23c47c6e0483c9d36b4a5a475c",
+      "scheduled_by": "verifier",
+      "step": 2900,
+      "weights_digest": "f4797d88bea78e841d6d0bfe5f5673a9d5d1ec54573ee32f522eb18f1d02cd33",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2779,
+      "params_digest": "76796425929c1b628afc6fa404af03ab3d7d3b307a029383fcc94188a8150168",
+      "scheduled_by": "verifier",
+      "step": 3000,
+      "weights_digest": "870589a6a6e673d7218ae21931c102a29636fdbbceadf44f0abf0df03b5ccfb9",
+      "weights_source": "harness"
+     }
+    ],
+    "frozen_axes_observed": {
+     "architecture_digest": "a4c8f1d09b2e7635c0a91d84fe3b2705d6c9a83f1e40b7d259c6a3f08e12b4d7",
+     "batch_size": 480,
+     "dataset_digest": "d1a7e2b6f0c94d3a8e5b1c07f42d9a63b8e0c5147d2a9f3b6e8c04a17d5b29e3",
+     "fwd_bwd_per_step": 1
+    },
+    "run": {
+     "exit_code": 0,
+     "schedule_length": 3000,
+     "status": "completed",
+     "steps_executed": 3000,
+     "stopped_by": "schedule-end"
+    },
+    "submission_report": {}
+   },
+   "zero_reason": "crossing-not-sustained"
+  },
+  {
+   "checker": "early_stop_is_not_a_crossing",
+   "id": "fx-early-stop",
+   "stale_control": "",
+   "statement": "A run halted at a favourable evaluation without executing the steps the sustain window needs.",
+   "telemetry": {
+    "bound": {
+     "anchors_state": "fixture-calibrated",
+     "baseline_metric": 3250,
+     "eval_stride": 100,
+     "frozen_architecture_digest": "a4c8f1d09b2e7635c0a91d84fe3b2705d6c9a83f1e40b7d259c6a3f08e12b4d7",
+     "frozen_batch_size": 480,
+     "frozen_dataset_digest": "d1a7e2b6f0c94d3a8e5b1c07f42d9a63b8e0c5147d2a9f3b6e8c04a17d5b29e3",
+     "frozen_fwd_bwd_per_step": 1,
+     "graded_quantity": "crossing_step",
+     "max_schedule_steps": 4000,
+     "readout_filter_admitted": "raw",
+     "sustain_points": 3,
+     "target_loss": 3.279,
+     "target_metric": 2690,
+     "weights_digest_domain": "bia/oer-03/weights/v2"
+    },
+    "evaluations": [
+     {
+      "filter": "raw",
+      "loss": 4.921,
+      "params_digest": "01f8da92e5c327b709df15dfb7451fe57aedf387db99640c83f207b2407244c0",
+      "scheduled_by": "verifier",
+      "step": 100,
+      "weights_digest": "a7bb33801dd5e7b2472b860b8bdd29edd33d6b5aa3cb447f7f06b7e28860560b",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 4.213,
+      "params_digest": "f938597352cfe685f1e79bf8da2556b192d036803cc7005adb5dd970e58a07a1",
+      "scheduled_by": "verifier",
+      "step": 200,
+      "weights_digest": "88aecf607aa0009a4b1581cb69006edd55d086a05d044a7ce8519caeea65e5b4",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.864,
+      "params_digest": "1f58d97de6d6b23961f3acad134d6904354594ff916ba67f38705059232e08cb",
+      "scheduled_by": "verifier",
+      "step": 300,
+      "weights_digest": "66ad57d41aa700aca9b973309610371575a5d0338a1a6efd7f57aac75636e5e1",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.672,
+      "params_digest": "e0a48cf2f14902bba5ac7551e56de2ae6a3d27267102bcd724b9fe65e6bf4a62",
+      "scheduled_by": "verifier",
+      "step": 400,
+      "weights_digest": "3ff65ea6473b1029018015c88cb774ae8037779e2587f326ad57c9b58ec9976d",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.551,
+      "params_digest": "f2ca64b5ffd56806280a414d25a1fadc459c94830425d2c4110cc581731bd35b",
+      "scheduled_by": "verifier",
+      "step": 500,
+      "weights_digest": "38834b0a9cb425ce9279d2ed3273ce3bdc6b1eee37e25d6e28ba1219a055a2f4",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.47,
+      "params_digest": "6c8be2a3e141162d944dd6bdcfb631da86a6880902d38580f4fd385ddc688a8c",
+      "scheduled_by": "verifier",
+      "step": 600,
+      "weights_digest": "a9b270a7060130381512f197a19c99b17fa66095ea7adf4972c1ac5cedaea024",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.413,
+      "params_digest": "22bac1b442afa8f13d1215b4d48c5ad054999c1c7276d07d111d681320d61106",
+      "scheduled_by": "verifier",
+      "step": 700,
+      "weights_digest": "4c7ba7b5a56cdd01bca687cef33cdfe6a110c2ba16e57100c01303ecec59c901",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.371,
+      "params_digest": "11717514fe15e400ab35a5a3077b8d9d6352fe17b3658a0ab1b5e8b0f3c68d54",
+      "scheduled_by": "verifier",
+      "step": 800,
+      "weights_digest": "81319dad8c833d1cc6fe681149670106bfb569a6097e7a9bec7a3954ec3f98c6",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.34,
+      "params_digest": "7ef46b4e56ef9144cc1281f241dc6a989d33de177af94cde9450268dd42c0c3d",
+      "scheduled_by": "verifier",
+      "step": 900,
+      "weights_digest": "8d98a9a7415cf76d45bcb93fb0f0bed5987daa6ad60a745acf20db057b35c438",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.317,
+      "params_digest": "9deb9b155cc33038562b7daf96b919715c9aefc6b7cdd3b6942f5297fc270761",
+      "scheduled_by": "verifier",
+      "step": 1000,
+      "weights_digest": "809d495a2c05a9afecc8724ef5e360ea385604a9485cfc2a68339ec19a149960",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.3,
+      "params_digest": "6b90187082b47f9e3bd572490fa5b3a2deaf5f2d0997db2cf2b77c8e20715acc",
+      "scheduled_by": "verifier",
+      "step": 1100,
+      "weights_digest": "3b5b451e3bc38587ec83d07dbb8d1430693afc9dbf8fd4b7b8ca3a4dbb425b4d",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.294,
+      "params_digest": "c586fc65b4a521b5850e3b75fa3b816db46b0bbd446eff96761ad9b06738a581",
+      "scheduled_by": "verifier",
+      "step": 1200,
+      "weights_digest": "0469317b9a37477afe7233ddbdf79ff59c7655866a974557d3ddcb60e621e780",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.29,
+      "params_digest": "d5ae9274fbc783d2d45cc1b4c5356454d09bab66f3292362d091558009b44b46",
+      "scheduled_by": "verifier",
+      "step": 1300,
+      "weights_digest": "d546782ef8f2db184f51d414694b8b208c47edadc89e3575727b3229614215b8",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.287,
+      "params_digest": "2a016e2d8b481091bcd634677ad3aec840b8fda15d68da397f537437f31f0618",
+      "scheduled_by": "verifier",
+      "step": 1400,
+      "weights_digest": "173b7d3eca3b42e4cd6cc51655b003714622e1466ec2ed71ae73f7c469b17a87",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.285,
+      "params_digest": "a99ae612c54782f5178f00638b1afc201511cd36668c5a2cd9442d4aff5ef37a",
+      "scheduled_by": "verifier",
+      "step": 1500,
+      "weights_digest": "c432eda13425fd877d410fd7aafe5696c4393a7461498d687adb83f098c9d314",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2835,
+      "params_digest": "3e26510e52c2862393c74137236976477e2dd5c7c188b1f4e326efca69f6e90a",
+      "scheduled_by": "verifier",
+      "step": 1600,
+      "weights_digest": "c548ec67ff5a36aeca43080019600eb7679f79791e590efbcafbb43f8a2a097c",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2823,
+      "params_digest": "eeedd8c61bc017e9c17a58ceac7526d168da62b5b5e642797696a3f099e9d092",
+      "scheduled_by": "verifier",
+      "step": 1700,
+      "weights_digest": "e1bcb7d185139d34d4d58461799270cb5bac3a5474d0c104427539c73b73f94d",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2814,
+      "params_digest": "9bb36405b4d50c0c1c35666209387511667f04517d1971d251e06a403c345f33",
+      "scheduled_by": "verifier",
+      "step": 1800,
+      "weights_digest": "065821978487c29456eb07c922ab02bea4c745359d75783dbaa1a5b1d76ff5fb",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.28075,
+      "params_digest": "ede1c98016de82cd017e03223030e864ad1ac580fb85fbf575d408f42d575c39",
+      "scheduled_by": "verifier",
+      "step": 1900,
+      "weights_digest": "e3791e83afa0fc7cab21e3d71b5a48bbc554be05fc97bb1779cfbd1915a73d2c",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2805,
+      "params_digest": "c9291470dc3d07384ee6698e0ebac1a7a32fa6cdd33997c7bce8318277f34ebf",
+      "scheduled_by": "verifier",
+      "step": 2000,
+      "weights_digest": "c67434c7d1fe4e4cda33d183ceeb9ac33461d61318c5c785e34d21d5c05e01c2",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.28035,
+      "params_digest": "cbe4bb33f74885082477b575047b1fc2d62ebceded2e656db3de94fb8ab4546e",
+      "scheduled_by": "verifier",
+      "step": 2100,
+      "weights_digest": "156a6e1acef6e9fc503e5fb486985832ac466d71243116fc2c343efd2d58e891",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2803,
+      "params_digest": "f7adcf1b266b5bcd4e025810da28dc3969331f2d18379ed7b8d42e3ba2db51ba",
+      "scheduled_by": "verifier",
+      "step": 2200,
+      "weights_digest": "bf01dcfea4fe978620bad4dc4254ed8260e15d6c5b7da101efd5302b4e4d78bc",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.28025,
+      "params_digest": "4a4d75fe583c4ecccb5567fe2cf0acbe5fb2ba9995e1ed67e46bb5205030b386",
+      "scheduled_by": "verifier",
+      "step": 2300,
+      "weights_digest": "1f009c02d9a17b20e68050208752d41ab71f5e595f8372a3d828fe791e0f13f6",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2802,
+      "params_digest": "e6371ed44e9d83a06530fd2776dbda6ff9b79eb77771f1af72d5160dd7607266",
+      "scheduled_by": "verifier",
+      "step": 2400,
+      "weights_digest": "409ccef39f535c6c3d92f378d734996960d8ee03e9def97a62993f6c925761b2",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.27945,
+      "params_digest": "26c84637b0bcfae9d498c24e7cdbee0616c4ce6410b3aeac2fc28b52b48d2ca9",
+      "scheduled_by": "verifier",
+      "step": 2500,
+      "weights_digest": "910454fff64539ae0de5e64e60ccbb407435a5078d56a6901fd953204ecadc52",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2788,
+      "params_digest": "5a1c52125ce3c275ae2f506d4a66ffca352e5f2bea01c98e7c8a4d223e7f13b8",
+      "scheduled_by": "verifier",
+      "step": 2600,
+      "weights_digest": "66250f322e664a7ce04d1441e11a6f6fb065c3000dfbc51d88dbf04dc708a94b",
+      "weights_source": "harness"
+     }
+    ],
+    "frozen_axes_observed": {
+     "architecture_digest": "a4c8f1d09b2e7635c0a91d84fe3b2705d6c9a83f1e40b7d259c6a3f08e12b4d7",
+     "batch_size": 480,
+     "dataset_digest": "d1a7e2b6f0c94d3a8e5b1c07f42d9a63b8e0c5147d2a9f3b6e8c04a17d5b29e3",
+     "fwd_bwd_per_step": 1
+    },
+    "run": {
+     "exit_code": 0,
+     "schedule_length": 3000,
+     "status": "terminated-early",
+     "steps_executed": 2600,
+     "stopped_by": "submission-early-stop"
+    },
+    "submission_report": {}
+   },
+   "zero_reason": "early-stop-without-sustained-crossing"
+  },
+  {
+   "checker": "non_convergence_graded_as_failure_with_a_reason",
+   "id": "fx-non-convergence-ungraded",
+   "stale_control": "",
+   "statement": "A non-converging run whose outcome document carries no reason and no explicit graded_step key, so the failure would leave the grader as an absent result rather than as a graded zero.",
+   "telemetry": {
+    "bound": {
+     "anchors_state": "fixture-calibrated",
+     "baseline_metric": 3250,
+     "eval_stride": 100,
+     "frozen_architecture_digest": "a4c8f1d09b2e7635c0a91d84fe3b2705d6c9a83f1e40b7d259c6a3f08e12b4d7",
+     "frozen_batch_size": 480,
+     "frozen_dataset_digest": "d1a7e2b6f0c94d3a8e5b1c07f42d9a63b8e0c5147d2a9f3b6e8c04a17d5b29e3",
+     "frozen_fwd_bwd_per_step": 1,
+     "graded_quantity": "crossing_step",
+     "max_schedule_steps": 4000,
+     "readout_filter_admitted": "raw",
+     "sustain_points": 3,
+     "target_loss": 3.279,
+     "target_metric": 2690,
+     "weights_digest_domain": "bia/oer-03/weights/v2"
+    },
+    "evaluations": [
+     {
+      "filter": "raw",
+      "loss": 4.921,
+      "params_digest": "01f8da92e5c327b709df15dfb7451fe57aedf387db99640c83f207b2407244c0",
+      "scheduled_by": "verifier",
+      "step": 100,
+      "weights_digest": "a7bb33801dd5e7b2472b860b8bdd29edd33d6b5aa3cb447f7f06b7e28860560b",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 4.213,
+      "params_digest": "f938597352cfe685f1e79bf8da2556b192d036803cc7005adb5dd970e58a07a1",
+      "scheduled_by": "verifier",
+      "step": 200,
+      "weights_digest": "88aecf607aa0009a4b1581cb69006edd55d086a05d044a7ce8519caeea65e5b4",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.864,
+      "params_digest": "1f58d97de6d6b23961f3acad134d6904354594ff916ba67f38705059232e08cb",
+      "scheduled_by": "verifier",
+      "step": 300,
+      "weights_digest": "66ad57d41aa700aca9b973309610371575a5d0338a1a6efd7f57aac75636e5e1",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.672,
+      "params_digest": "e0a48cf2f14902bba5ac7551e56de2ae6a3d27267102bcd724b9fe65e6bf4a62",
+      "scheduled_by": "verifier",
+      "step": 400,
+      "weights_digest": "3ff65ea6473b1029018015c88cb774ae8037779e2587f326ad57c9b58ec9976d",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.551,
+      "params_digest": "f2ca64b5ffd56806280a414d25a1fadc459c94830425d2c4110cc581731bd35b",
+      "scheduled_by": "verifier",
+      "step": 500,
+      "weights_digest": "38834b0a9cb425ce9279d2ed3273ce3bdc6b1eee37e25d6e28ba1219a055a2f4",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.47,
+      "params_digest": "6c8be2a3e141162d944dd6bdcfb631da86a6880902d38580f4fd385ddc688a8c",
+      "scheduled_by": "verifier",
+      "step": 600,
+      "weights_digest": "a9b270a7060130381512f197a19c99b17fa66095ea7adf4972c1ac5cedaea024",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.413,
+      "params_digest": "22bac1b442afa8f13d1215b4d48c5ad054999c1c7276d07d111d681320d61106",
+      "scheduled_by": "verifier",
+      "step": 700,
+      "weights_digest": "4c7ba7b5a56cdd01bca687cef33cdfe6a110c2ba16e57100c01303ecec59c901",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.371,
+      "params_digest": "11717514fe15e400ab35a5a3077b8d9d6352fe17b3658a0ab1b5e8b0f3c68d54",
+      "scheduled_by": "verifier",
+      "step": 800,
+      "weights_digest": "81319dad8c833d1cc6fe681149670106bfb569a6097e7a9bec7a3954ec3f98c6",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.34,
+      "params_digest": "7ef46b4e56ef9144cc1281f241dc6a989d33de177af94cde9450268dd42c0c3d",
+      "scheduled_by": "verifier",
+      "step": 900,
+      "weights_digest": "8d98a9a7415cf76d45bcb93fb0f0bed5987daa6ad60a745acf20db057b35c438",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.317,
+      "params_digest": "9deb9b155cc33038562b7daf96b919715c9aefc6b7cdd3b6942f5297fc270761",
+      "scheduled_by": "verifier",
+      "step": 1000,
+      "weights_digest": "809d495a2c05a9afecc8724ef5e360ea385604a9485cfc2a68339ec19a149960",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.3,
+      "params_digest": "6b90187082b47f9e3bd572490fa5b3a2deaf5f2d0997db2cf2b77c8e20715acc",
+      "scheduled_by": "verifier",
+      "step": 1100,
+      "weights_digest": "3b5b451e3bc38587ec83d07dbb8d1430693afc9dbf8fd4b7b8ca3a4dbb425b4d",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.294,
+      "params_digest": "c586fc65b4a521b5850e3b75fa3b816db46b0bbd446eff96761ad9b06738a581",
+      "scheduled_by": "verifier",
+      "step": 1200,
+      "weights_digest": "0469317b9a37477afe7233ddbdf79ff59c7655866a974557d3ddcb60e621e780",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.29,
+      "params_digest": "d5ae9274fbc783d2d45cc1b4c5356454d09bab66f3292362d091558009b44b46",
+      "scheduled_by": "verifier",
+      "step": 1300,
+      "weights_digest": "d546782ef8f2db184f51d414694b8b208c47edadc89e3575727b3229614215b8",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.287,
+      "params_digest": "2a016e2d8b481091bcd634677ad3aec840b8fda15d68da397f537437f31f0618",
+      "scheduled_by": "verifier",
+      "step": 1400,
+      "weights_digest": "173b7d3eca3b42e4cd6cc51655b003714622e1466ec2ed71ae73f7c469b17a87",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.285,
+      "params_digest": "a99ae612c54782f5178f00638b1afc201511cd36668c5a2cd9442d4aff5ef37a",
+      "scheduled_by": "verifier",
+      "step": 1500,
+      "weights_digest": "c432eda13425fd877d410fd7aafe5696c4393a7461498d687adb83f098c9d314",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2835,
+      "params_digest": "3e26510e52c2862393c74137236976477e2dd5c7c188b1f4e326efca69f6e90a",
+      "scheduled_by": "verifier",
+      "step": 1600,
+      "weights_digest": "c548ec67ff5a36aeca43080019600eb7679f79791e590efbcafbb43f8a2a097c",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2823,
+      "params_digest": "eeedd8c61bc017e9c17a58ceac7526d168da62b5b5e642797696a3f099e9d092",
+      "scheduled_by": "verifier",
+      "step": 1700,
+      "weights_digest": "e1bcb7d185139d34d4d58461799270cb5bac3a5474d0c104427539c73b73f94d",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2814,
+      "params_digest": "9bb36405b4d50c0c1c35666209387511667f04517d1971d251e06a403c345f33",
+      "scheduled_by": "verifier",
+      "step": 1800,
+      "weights_digest": "065821978487c29456eb07c922ab02bea4c745359d75783dbaa1a5b1d76ff5fb",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.28075,
+      "params_digest": "ede1c98016de82cd017e03223030e864ad1ac580fb85fbf575d408f42d575c39",
+      "scheduled_by": "verifier",
+      "step": 1900,
+      "weights_digest": "e3791e83afa0fc7cab21e3d71b5a48bbc554be05fc97bb1779cfbd1915a73d2c",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2805,
+      "params_digest": "c9291470dc3d07384ee6698e0ebac1a7a32fa6cdd33997c7bce8318277f34ebf",
+      "scheduled_by": "verifier",
+      "step": 2000,
+      "weights_digest": "c67434c7d1fe4e4cda33d183ceeb9ac33461d61318c5c785e34d21d5c05e01c2",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.28035,
+      "params_digest": "cbe4bb33f74885082477b575047b1fc2d62ebceded2e656db3de94fb8ab4546e",
+      "scheduled_by": "verifier",
+      "step": 2100,
+      "weights_digest": "156a6e1acef6e9fc503e5fb486985832ac466d71243116fc2c343efd2d58e891",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2803,
+      "params_digest": "f7adcf1b266b5bcd4e025810da28dc3969331f2d18379ed7b8d42e3ba2db51ba",
+      "scheduled_by": "verifier",
+      "step": 2200,
+      "weights_digest": "bf01dcfea4fe978620bad4dc4254ed8260e15d6c5b7da101efd5302b4e4d78bc",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.28025,
+      "params_digest": "4a4d75fe583c4ecccb5567fe2cf0acbe5fb2ba9995e1ed67e46bb5205030b386",
+      "scheduled_by": "verifier",
+      "step": 2300,
+      "weights_digest": "1f009c02d9a17b20e68050208752d41ab71f5e595f8372a3d828fe791e0f13f6",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2802,
+      "params_digest": "e6371ed44e9d83a06530fd2776dbda6ff9b79eb77771f1af72d5160dd7607266",
+      "scheduled_by": "verifier",
+      "step": 2400,
+      "weights_digest": "409ccef39f535c6c3d92f378d734996960d8ee03e9def97a62993f6c925761b2",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.27945,
+      "params_digest": "26c84637b0bcfae9d498c24e7cdbee0616c4ce6410b3aeac2fc28b52b48d2ca9",
+      "scheduled_by": "verifier",
+      "step": 2500,
+      "weights_digest": "910454fff64539ae0de5e64e60ccbb407435a5078d56a6901fd953204ecadc52",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2788,
+      "params_digest": "5a1c52125ce3c275ae2f506d4a66ffca352e5f2bea01c98e7c8a4d223e7f13b8",
+      "scheduled_by": "verifier",
+      "step": 2600,
+      "weights_digest": "66250f322e664a7ce04d1441e11a6f6fb065c3000dfbc51d88dbf04dc708a94b",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2784,
+      "params_digest": "10084c00e82c602e6d47bc05623d6ca32b2dc2e6c80bac81b789adeb738b9556",
+      "scheduled_by": "verifier",
+      "step": 2700,
+      "weights_digest": "8eb65457dba84bf638c31213f0ab453ca43e5c6894461b2a046fc7b2cbfe9435",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.27815,
+      "params_digest": "721fb73696958037ed7cc5d099a851bb611f4c0744836c8eabfc18dcfc741d2e",
+      "scheduled_by": "verifier",
+      "step": 2800,
+      "weights_digest": "318a3907294540e8eac85dd28b18b9f070c4264f8a940dc8cb4b7975bcc26dc8",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.278,
+      "params_digest": "9f91b6c012fa24eadd5883dd90a6adef2c5d7a23c47c6e0483c9d36b4a5a475c",
+      "scheduled_by": "verifier",
+      "step": 2900,
+      "weights_digest": "f4797d88bea78e841d6d0bfe5f5673a9d5d1ec54573ee32f522eb18f1d02cd33",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2779,
+      "params_digest": "76796425929c1b628afc6fa404af03ab3d7d3b307a029383fcc94188a8150168",
+      "scheduled_by": "verifier",
+      "step": 3000,
+      "weights_digest": "870589a6a6e673d7218ae21931c102a29636fdbbceadf44f0abf0df03b5ccfb9",
+      "weights_source": "harness"
+     }
+    ],
+    "frozen_axes_observed": {
+     "architecture_digest": "a4c8f1d09b2e7635c0a91d84fe3b2705d6c9a83f1e40b7d259c6a3f08e12b4d7",
+     "batch_size": 480,
+     "dataset_digest": "d1a7e2b6f0c94d3a8e5b1c07f42d9a63b8e0c5147d2a9f3b6e8c04a17d5b29e3",
+     "fwd_bwd_per_step": 1
+    },
+    "outcome": {
+     "crossed": false
+    },
+    "run": {
+     "exit_code": 0,
+     "schedule_length": 3000,
+     "status": "completed",
+     "steps_executed": 3000,
+     "stopped_by": "schedule-end"
+    },
+    "submission_report": {}
+   },
+   "zero_reason": "non-convergence-ungraded"
+  },
+  {
+   "checker": "graded_step_is_the_crossing_not_the_schedule",
+   "id": "fx-graded-step-is-schedule-length",
+   "stale_control": "",
+   "statement": "The schedule length substituted for the crossing point.",
+   "telemetry": {
+    "bound": {
+     "anchors_state": "fixture-calibrated",
+     "baseline_metric": 3250,
+     "eval_stride": 100,
+     "frozen_architecture_digest": "a4c8f1d09b2e7635c0a91d84fe3b2705d6c9a83f1e40b7d259c6a3f08e12b4d7",
+     "frozen_batch_size": 480,
+     "frozen_dataset_digest": "d1a7e2b6f0c94d3a8e5b1c07f42d9a63b8e0c5147d2a9f3b6e8c04a17d5b29e3",
+     "frozen_fwd_bwd_per_step": 1,
+     "graded_quantity": "crossing_step",
+     "max_schedule_steps": 4000,
+     "readout_filter_admitted": "raw",
+     "sustain_points": 3,
+     "target_loss": 3.279,
+     "target_metric": 2690,
+     "weights_digest_domain": "bia/oer-03/weights/v2"
+    },
+    "evaluations": [
+     {
+      "filter": "raw",
+      "loss": 4.921,
+      "params_digest": "01f8da92e5c327b709df15dfb7451fe57aedf387db99640c83f207b2407244c0",
+      "scheduled_by": "verifier",
+      "step": 100,
+      "weights_digest": "a7bb33801dd5e7b2472b860b8bdd29edd33d6b5aa3cb447f7f06b7e28860560b",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 4.213,
+      "params_digest": "f938597352cfe685f1e79bf8da2556b192d036803cc7005adb5dd970e58a07a1",
+      "scheduled_by": "verifier",
+      "step": 200,
+      "weights_digest": "88aecf607aa0009a4b1581cb69006edd55d086a05d044a7ce8519caeea65e5b4",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.864,
+      "params_digest": "1f58d97de6d6b23961f3acad134d6904354594ff916ba67f38705059232e08cb",
+      "scheduled_by": "verifier",
+      "step": 300,
+      "weights_digest": "66ad57d41aa700aca9b973309610371575a5d0338a1a6efd7f57aac75636e5e1",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.672,
+      "params_digest": "e0a48cf2f14902bba5ac7551e56de2ae6a3d27267102bcd724b9fe65e6bf4a62",
+      "scheduled_by": "verifier",
+      "step": 400,
+      "weights_digest": "3ff65ea6473b1029018015c88cb774ae8037779e2587f326ad57c9b58ec9976d",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.551,
+      "params_digest": "f2ca64b5ffd56806280a414d25a1fadc459c94830425d2c4110cc581731bd35b",
+      "scheduled_by": "verifier",
+      "step": 500,
+      "weights_digest": "38834b0a9cb425ce9279d2ed3273ce3bdc6b1eee37e25d6e28ba1219a055a2f4",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.47,
+      "params_digest": "6c8be2a3e141162d944dd6bdcfb631da86a6880902d38580f4fd385ddc688a8c",
+      "scheduled_by": "verifier",
+      "step": 600,
+      "weights_digest": "a9b270a7060130381512f197a19c99b17fa66095ea7adf4972c1ac5cedaea024",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.413,
+      "params_digest": "22bac1b442afa8f13d1215b4d48c5ad054999c1c7276d07d111d681320d61106",
+      "scheduled_by": "verifier",
+      "step": 700,
+      "weights_digest": "4c7ba7b5a56cdd01bca687cef33cdfe6a110c2ba16e57100c01303ecec59c901",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.371,
+      "params_digest": "11717514fe15e400ab35a5a3077b8d9d6352fe17b3658a0ab1b5e8b0f3c68d54",
+      "scheduled_by": "verifier",
+      "step": 800,
+      "weights_digest": "81319dad8c833d1cc6fe681149670106bfb569a6097e7a9bec7a3954ec3f98c6",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.34,
+      "params_digest": "7ef46b4e56ef9144cc1281f241dc6a989d33de177af94cde9450268dd42c0c3d",
+      "scheduled_by": "verifier",
+      "step": 900,
+      "weights_digest": "8d98a9a7415cf76d45bcb93fb0f0bed5987daa6ad60a745acf20db057b35c438",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.317,
+      "params_digest": "9deb9b155cc33038562b7daf96b919715c9aefc6b7cdd3b6942f5297fc270761",
+      "scheduled_by": "verifier",
+      "step": 1000,
+      "weights_digest": "809d495a2c05a9afecc8724ef5e360ea385604a9485cfc2a68339ec19a149960",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.3,
+      "params_digest": "6b90187082b47f9e3bd572490fa5b3a2deaf5f2d0997db2cf2b77c8e20715acc",
+      "scheduled_by": "verifier",
+      "step": 1100,
+      "weights_digest": "3b5b451e3bc38587ec83d07dbb8d1430693afc9dbf8fd4b7b8ca3a4dbb425b4d",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.294,
+      "params_digest": "c586fc65b4a521b5850e3b75fa3b816db46b0bbd446eff96761ad9b06738a581",
+      "scheduled_by": "verifier",
+      "step": 1200,
+      "weights_digest": "0469317b9a37477afe7233ddbdf79ff59c7655866a974557d3ddcb60e621e780",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.29,
+      "params_digest": "d5ae9274fbc783d2d45cc1b4c5356454d09bab66f3292362d091558009b44b46",
+      "scheduled_by": "verifier",
+      "step": 1300,
+      "weights_digest": "d546782ef8f2db184f51d414694b8b208c47edadc89e3575727b3229614215b8",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.287,
+      "params_digest": "2a016e2d8b481091bcd634677ad3aec840b8fda15d68da397f537437f31f0618",
+      "scheduled_by": "verifier",
+      "step": 1400,
+      "weights_digest": "173b7d3eca3b42e4cd6cc51655b003714622e1466ec2ed71ae73f7c469b17a87",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.285,
+      "params_digest": "a99ae612c54782f5178f00638b1afc201511cd36668c5a2cd9442d4aff5ef37a",
+      "scheduled_by": "verifier",
+      "step": 1500,
+      "weights_digest": "c432eda13425fd877d410fd7aafe5696c4393a7461498d687adb83f098c9d314",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2835,
+      "params_digest": "3e26510e52c2862393c74137236976477e2dd5c7c188b1f4e326efca69f6e90a",
+      "scheduled_by": "verifier",
+      "step": 1600,
+      "weights_digest": "c548ec67ff5a36aeca43080019600eb7679f79791e590efbcafbb43f8a2a097c",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2823,
+      "params_digest": "eeedd8c61bc017e9c17a58ceac7526d168da62b5b5e642797696a3f099e9d092",
+      "scheduled_by": "verifier",
+      "step": 1700,
+      "weights_digest": "e1bcb7d185139d34d4d58461799270cb5bac3a5474d0c104427539c73b73f94d",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2814,
+      "params_digest": "9bb36405b4d50c0c1c35666209387511667f04517d1971d251e06a403c345f33",
+      "scheduled_by": "verifier",
+      "step": 1800,
+      "weights_digest": "065821978487c29456eb07c922ab02bea4c745359d75783dbaa1a5b1d76ff5fb",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.28075,
+      "params_digest": "ede1c98016de82cd017e03223030e864ad1ac580fb85fbf575d408f42d575c39",
+      "scheduled_by": "verifier",
+      "step": 1900,
+      "weights_digest": "e3791e83afa0fc7cab21e3d71b5a48bbc554be05fc97bb1779cfbd1915a73d2c",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2805,
+      "params_digest": "c9291470dc3d07384ee6698e0ebac1a7a32fa6cdd33997c7bce8318277f34ebf",
+      "scheduled_by": "verifier",
+      "step": 2000,
+      "weights_digest": "c67434c7d1fe4e4cda33d183ceeb9ac33461d61318c5c785e34d21d5c05e01c2",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.28035,
+      "params_digest": "cbe4bb33f74885082477b575047b1fc2d62ebceded2e656db3de94fb8ab4546e",
+      "scheduled_by": "verifier",
+      "step": 2100,
+      "weights_digest": "156a6e1acef6e9fc503e5fb486985832ac466d71243116fc2c343efd2d58e891",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2803,
+      "params_digest": "f7adcf1b266b5bcd4e025810da28dc3969331f2d18379ed7b8d42e3ba2db51ba",
+      "scheduled_by": "verifier",
+      "step": 2200,
+      "weights_digest": "bf01dcfea4fe978620bad4dc4254ed8260e15d6c5b7da101efd5302b4e4d78bc",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.28025,
+      "params_digest": "4a4d75fe583c4ecccb5567fe2cf0acbe5fb2ba9995e1ed67e46bb5205030b386",
+      "scheduled_by": "verifier",
+      "step": 2300,
+      "weights_digest": "1f009c02d9a17b20e68050208752d41ab71f5e595f8372a3d828fe791e0f13f6",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2802,
+      "params_digest": "e6371ed44e9d83a06530fd2776dbda6ff9b79eb77771f1af72d5160dd7607266",
+      "scheduled_by": "verifier",
+      "step": 2400,
+      "weights_digest": "409ccef39f535c6c3d92f378d734996960d8ee03e9def97a62993f6c925761b2",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.27945,
+      "params_digest": "26c84637b0bcfae9d498c24e7cdbee0616c4ce6410b3aeac2fc28b52b48d2ca9",
+      "scheduled_by": "verifier",
+      "step": 2500,
+      "weights_digest": "910454fff64539ae0de5e64e60ccbb407435a5078d56a6901fd953204ecadc52",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2788,
+      "params_digest": "5a1c52125ce3c275ae2f506d4a66ffca352e5f2bea01c98e7c8a4d223e7f13b8",
+      "scheduled_by": "verifier",
+      "step": 2600,
+      "weights_digest": "66250f322e664a7ce04d1441e11a6f6fb065c3000dfbc51d88dbf04dc708a94b",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2784,
+      "params_digest": "10084c00e82c602e6d47bc05623d6ca32b2dc2e6c80bac81b789adeb738b9556",
+      "scheduled_by": "verifier",
+      "step": 2700,
+      "weights_digest": "8eb65457dba84bf638c31213f0ab453ca43e5c6894461b2a046fc7b2cbfe9435",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.27815,
+      "params_digest": "721fb73696958037ed7cc5d099a851bb611f4c0744836c8eabfc18dcfc741d2e",
+      "scheduled_by": "verifier",
+      "step": 2800,
+      "weights_digest": "318a3907294540e8eac85dd28b18b9f070c4264f8a940dc8cb4b7975bcc26dc8",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.278,
+      "params_digest": "9f91b6c012fa24eadd5883dd90a6adef2c5d7a23c47c6e0483c9d36b4a5a475c",
+      "scheduled_by": "verifier",
+      "step": 2900,
+      "weights_digest": "f4797d88bea78e841d6d0bfe5f5673a9d5d1ec54573ee32f522eb18f1d02cd33",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2779,
+      "params_digest": "76796425929c1b628afc6fa404af03ab3d7d3b307a029383fcc94188a8150168",
+      "scheduled_by": "verifier",
+      "step": 3000,
+      "weights_digest": "870589a6a6e673d7218ae21931c102a29636fdbbceadf44f0abf0df03b5ccfb9",
+      "weights_source": "harness"
+     }
+    ],
+    "frozen_axes_observed": {
+     "architecture_digest": "a4c8f1d09b2e7635c0a91d84fe3b2705d6c9a83f1e40b7d259c6a3f08e12b4d7",
+     "batch_size": 480,
+     "dataset_digest": "d1a7e2b6f0c94d3a8e5b1c07f42d9a63b8e0c5147d2a9f3b6e8c04a17d5b29e3",
+     "fwd_bwd_per_step": 1
+    },
+    "outcome": {
+     "basis": "verifier-recomputed",
+     "crossed": true,
+     "graded_step": 3000,
+     "reason": ""
+    },
+    "run": {
+     "exit_code": 0,
+     "schedule_length": 3000,
+     "status": "completed",
+     "steps_executed": 3000,
+     "stopped_by": "schedule-end"
+    },
+    "submission_report": {}
+   },
+   "zero_reason": "graded-step-not-the-crossing"
+  },
+  {
+   "checker": "graded_step_is_the_crossing_not_the_schedule",
+   "id": "fx-crossing-bar-stale",
+   "stale_control": "ctl-crossing-bar-stale",
+   "statement": "A graded step computed against the pre-drift target bar, which names 2500 where the bound bar names 2600.",
+   "telemetry": {
+    "bound": {
+     "anchors_state": "fixture-calibrated",
+     "baseline_metric": 3250,
+     "eval_stride": 100,
+     "frozen_architecture_digest": "a4c8f1d09b2e7635c0a91d84fe3b2705d6c9a83f1e40b7d259c6a3f08e12b4d7",
+     "frozen_batch_size": 480,
+     "frozen_dataset_digest": "d1a7e2b6f0c94d3a8e5b1c07f42d9a63b8e0c5147d2a9f3b6e8c04a17d5b29e3",
+     "frozen_fwd_bwd_per_step": 1,
+     "graded_quantity": "crossing_step",
+     "max_schedule_steps": 4000,
+     "readout_filter_admitted": "raw",
+     "sustain_points": 3,
+     "target_loss": 3.279,
+     "target_metric": 2690,
+     "weights_digest_domain": "bia/oer-03/weights/v2"
+    },
+    "evaluations": [
+     {
+      "filter": "raw",
+      "loss": 4.921,
+      "params_digest": "01f8da92e5c327b709df15dfb7451fe57aedf387db99640c83f207b2407244c0",
+      "scheduled_by": "verifier",
+      "step": 100,
+      "weights_digest": "a7bb33801dd5e7b2472b860b8bdd29edd33d6b5aa3cb447f7f06b7e28860560b",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 4.213,
+      "params_digest": "f938597352cfe685f1e79bf8da2556b192d036803cc7005adb5dd970e58a07a1",
+      "scheduled_by": "verifier",
+      "step": 200,
+      "weights_digest": "88aecf607aa0009a4b1581cb69006edd55d086a05d044a7ce8519caeea65e5b4",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.864,
+      "params_digest": "1f58d97de6d6b23961f3acad134d6904354594ff916ba67f38705059232e08cb",
+      "scheduled_by": "verifier",
+      "step": 300,
+      "weights_digest": "66ad57d41aa700aca9b973309610371575a5d0338a1a6efd7f57aac75636e5e1",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.672,
+      "params_digest": "e0a48cf2f14902bba5ac7551e56de2ae6a3d27267102bcd724b9fe65e6bf4a62",
+      "scheduled_by": "verifier",
+      "step": 400,
+      "weights_digest": "3ff65ea6473b1029018015c88cb774ae8037779e2587f326ad57c9b58ec9976d",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.551,
+      "params_digest": "f2ca64b5ffd56806280a414d25a1fadc459c94830425d2c4110cc581731bd35b",
+      "scheduled_by": "verifier",
+      "step": 500,
+      "weights_digest": "38834b0a9cb425ce9279d2ed3273ce3bdc6b1eee37e25d6e28ba1219a055a2f4",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.47,
+      "params_digest": "6c8be2a3e141162d944dd6bdcfb631da86a6880902d38580f4fd385ddc688a8c",
+      "scheduled_by": "verifier",
+      "step": 600,
+      "weights_digest": "a9b270a7060130381512f197a19c99b17fa66095ea7adf4972c1ac5cedaea024",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.413,
+      "params_digest": "22bac1b442afa8f13d1215b4d48c5ad054999c1c7276d07d111d681320d61106",
+      "scheduled_by": "verifier",
+      "step": 700,
+      "weights_digest": "4c7ba7b5a56cdd01bca687cef33cdfe6a110c2ba16e57100c01303ecec59c901",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.371,
+      "params_digest": "11717514fe15e400ab35a5a3077b8d9d6352fe17b3658a0ab1b5e8b0f3c68d54",
+      "scheduled_by": "verifier",
+      "step": 800,
+      "weights_digest": "81319dad8c833d1cc6fe681149670106bfb569a6097e7a9bec7a3954ec3f98c6",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.34,
+      "params_digest": "7ef46b4e56ef9144cc1281f241dc6a989d33de177af94cde9450268dd42c0c3d",
+      "scheduled_by": "verifier",
+      "step": 900,
+      "weights_digest": "8d98a9a7415cf76d45bcb93fb0f0bed5987daa6ad60a745acf20db057b35c438",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.317,
+      "params_digest": "9deb9b155cc33038562b7daf96b919715c9aefc6b7cdd3b6942f5297fc270761",
+      "scheduled_by": "verifier",
+      "step": 1000,
+      "weights_digest": "809d495a2c05a9afecc8724ef5e360ea385604a9485cfc2a68339ec19a149960",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.3,
+      "params_digest": "6b90187082b47f9e3bd572490fa5b3a2deaf5f2d0997db2cf2b77c8e20715acc",
+      "scheduled_by": "verifier",
+      "step": 1100,
+      "weights_digest": "3b5b451e3bc38587ec83d07dbb8d1430693afc9dbf8fd4b7b8ca3a4dbb425b4d",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.294,
+      "params_digest": "c586fc65b4a521b5850e3b75fa3b816db46b0bbd446eff96761ad9b06738a581",
+      "scheduled_by": "verifier",
+      "step": 1200,
+      "weights_digest": "0469317b9a37477afe7233ddbdf79ff59c7655866a974557d3ddcb60e621e780",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.29,
+      "params_digest": "d5ae9274fbc783d2d45cc1b4c5356454d09bab66f3292362d091558009b44b46",
+      "scheduled_by": "verifier",
+      "step": 1300,
+      "weights_digest": "d546782ef8f2db184f51d414694b8b208c47edadc89e3575727b3229614215b8",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.287,
+      "params_digest": "2a016e2d8b481091bcd634677ad3aec840b8fda15d68da397f537437f31f0618",
+      "scheduled_by": "verifier",
+      "step": 1400,
+      "weights_digest": "173b7d3eca3b42e4cd6cc51655b003714622e1466ec2ed71ae73f7c469b17a87",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.285,
+      "params_digest": "a99ae612c54782f5178f00638b1afc201511cd36668c5a2cd9442d4aff5ef37a",
+      "scheduled_by": "verifier",
+      "step": 1500,
+      "weights_digest": "c432eda13425fd877d410fd7aafe5696c4393a7461498d687adb83f098c9d314",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2835,
+      "params_digest": "3e26510e52c2862393c74137236976477e2dd5c7c188b1f4e326efca69f6e90a",
+      "scheduled_by": "verifier",
+      "step": 1600,
+      "weights_digest": "c548ec67ff5a36aeca43080019600eb7679f79791e590efbcafbb43f8a2a097c",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2823,
+      "params_digest": "eeedd8c61bc017e9c17a58ceac7526d168da62b5b5e642797696a3f099e9d092",
+      "scheduled_by": "verifier",
+      "step": 1700,
+      "weights_digest": "e1bcb7d185139d34d4d58461799270cb5bac3a5474d0c104427539c73b73f94d",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2814,
+      "params_digest": "9bb36405b4d50c0c1c35666209387511667f04517d1971d251e06a403c345f33",
+      "scheduled_by": "verifier",
+      "step": 1800,
+      "weights_digest": "065821978487c29456eb07c922ab02bea4c745359d75783dbaa1a5b1d76ff5fb",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.28075,
+      "params_digest": "ede1c98016de82cd017e03223030e864ad1ac580fb85fbf575d408f42d575c39",
+      "scheduled_by": "verifier",
+      "step": 1900,
+      "weights_digest": "e3791e83afa0fc7cab21e3d71b5a48bbc554be05fc97bb1779cfbd1915a73d2c",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2805,
+      "params_digest": "c9291470dc3d07384ee6698e0ebac1a7a32fa6cdd33997c7bce8318277f34ebf",
+      "scheduled_by": "verifier",
+      "step": 2000,
+      "weights_digest": "c67434c7d1fe4e4cda33d183ceeb9ac33461d61318c5c785e34d21d5c05e01c2",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.28035,
+      "params_digest": "cbe4bb33f74885082477b575047b1fc2d62ebceded2e656db3de94fb8ab4546e",
+      "scheduled_by": "verifier",
+      "step": 2100,
+      "weights_digest": "156a6e1acef6e9fc503e5fb486985832ac466d71243116fc2c343efd2d58e891",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2803,
+      "params_digest": "f7adcf1b266b5bcd4e025810da28dc3969331f2d18379ed7b8d42e3ba2db51ba",
+      "scheduled_by": "verifier",
+      "step": 2200,
+      "weights_digest": "bf01dcfea4fe978620bad4dc4254ed8260e15d6c5b7da101efd5302b4e4d78bc",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.28025,
+      "params_digest": "4a4d75fe583c4ecccb5567fe2cf0acbe5fb2ba9995e1ed67e46bb5205030b386",
+      "scheduled_by": "verifier",
+      "step": 2300,
+      "weights_digest": "1f009c02d9a17b20e68050208752d41ab71f5e595f8372a3d828fe791e0f13f6",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2802,
+      "params_digest": "e6371ed44e9d83a06530fd2776dbda6ff9b79eb77771f1af72d5160dd7607266",
+      "scheduled_by": "verifier",
+      "step": 2400,
+      "weights_digest": "409ccef39f535c6c3d92f378d734996960d8ee03e9def97a62993f6c925761b2",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.27945,
+      "params_digest": "26c84637b0bcfae9d498c24e7cdbee0616c4ce6410b3aeac2fc28b52b48d2ca9",
+      "scheduled_by": "verifier",
+      "step": 2500,
+      "weights_digest": "910454fff64539ae0de5e64e60ccbb407435a5078d56a6901fd953204ecadc52",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2788,
+      "params_digest": "5a1c52125ce3c275ae2f506d4a66ffca352e5f2bea01c98e7c8a4d223e7f13b8",
+      "scheduled_by": "verifier",
+      "step": 2600,
+      "weights_digest": "66250f322e664a7ce04d1441e11a6f6fb065c3000dfbc51d88dbf04dc708a94b",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2784,
+      "params_digest": "10084c00e82c602e6d47bc05623d6ca32b2dc2e6c80bac81b789adeb738b9556",
+      "scheduled_by": "verifier",
+      "step": 2700,
+      "weights_digest": "8eb65457dba84bf638c31213f0ab453ca43e5c6894461b2a046fc7b2cbfe9435",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.27815,
+      "params_digest": "721fb73696958037ed7cc5d099a851bb611f4c0744836c8eabfc18dcfc741d2e",
+      "scheduled_by": "verifier",
+      "step": 2800,
+      "weights_digest": "318a3907294540e8eac85dd28b18b9f070c4264f8a940dc8cb4b7975bcc26dc8",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.278,
+      "params_digest": "9f91b6c012fa24eadd5883dd90a6adef2c5d7a23c47c6e0483c9d36b4a5a475c",
+      "scheduled_by": "verifier",
+      "step": 2900,
+      "weights_digest": "f4797d88bea78e841d6d0bfe5f5673a9d5d1ec54573ee32f522eb18f1d02cd33",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2779,
+      "params_digest": "76796425929c1b628afc6fa404af03ab3d7d3b307a029383fcc94188a8150168",
+      "scheduled_by": "verifier",
+      "step": 3000,
+      "weights_digest": "870589a6a6e673d7218ae21931c102a29636fdbbceadf44f0abf0df03b5ccfb9",
+      "weights_source": "harness"
+     }
+    ],
+    "frozen_axes_observed": {
+     "architecture_digest": "a4c8f1d09b2e7635c0a91d84fe3b2705d6c9a83f1e40b7d259c6a3f08e12b4d7",
+     "batch_size": 480,
+     "dataset_digest": "d1a7e2b6f0c94d3a8e5b1c07f42d9a63b8e0c5147d2a9f3b6e8c04a17d5b29e3",
+     "fwd_bwd_per_step": 1
+    },
+    "outcome": {
+     "basis": "verifier-recomputed",
+     "crossed": true,
+     "graded_step": 2500,
+     "reason": ""
+    },
+    "run": {
+     "exit_code": 0,
+     "schedule_length": 3000,
+     "status": "completed",
+     "steps_executed": 3000,
+     "stopped_by": "schedule-end"
+    },
+    "submission_report": {}
+   },
+   "zero_reason": "graded-step-not-the-crossing"
+  },
+  {
+   "checker": "reported_crossing_matches_recomputed_crossing",
+   "id": "fx-reported-crossing-diverges",
+   "stale_control": "",
+   "statement": "A submission reporting a crossing at 2000 that the verifier's own recomputation does not find.",
+   "telemetry": {
+    "bound": {
+     "anchors_state": "fixture-calibrated",
+     "baseline_metric": 3250,
+     "eval_stride": 100,
+     "frozen_architecture_digest": "a4c8f1d09b2e7635c0a91d84fe3b2705d6c9a83f1e40b7d259c6a3f08e12b4d7",
+     "frozen_batch_size": 480,
+     "frozen_dataset_digest": "d1a7e2b6f0c94d3a8e5b1c07f42d9a63b8e0c5147d2a9f3b6e8c04a17d5b29e3",
+     "frozen_fwd_bwd_per_step": 1,
+     "graded_quantity": "crossing_step",
+     "max_schedule_steps": 4000,
+     "readout_filter_admitted": "raw",
+     "sustain_points": 3,
+     "target_loss": 3.279,
+     "target_metric": 2690,
+     "weights_digest_domain": "bia/oer-03/weights/v2"
+    },
+    "evaluations": [
+     {
+      "filter": "raw",
+      "loss": 4.921,
+      "params_digest": "01f8da92e5c327b709df15dfb7451fe57aedf387db99640c83f207b2407244c0",
+      "scheduled_by": "verifier",
+      "step": 100,
+      "weights_digest": "a7bb33801dd5e7b2472b860b8bdd29edd33d6b5aa3cb447f7f06b7e28860560b",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 4.213,
+      "params_digest": "f938597352cfe685f1e79bf8da2556b192d036803cc7005adb5dd970e58a07a1",
+      "scheduled_by": "verifier",
+      "step": 200,
+      "weights_digest": "88aecf607aa0009a4b1581cb69006edd55d086a05d044a7ce8519caeea65e5b4",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.864,
+      "params_digest": "1f58d97de6d6b23961f3acad134d6904354594ff916ba67f38705059232e08cb",
+      "scheduled_by": "verifier",
+      "step": 300,
+      "weights_digest": "66ad57d41aa700aca9b973309610371575a5d0338a1a6efd7f57aac75636e5e1",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.672,
+      "params_digest": "e0a48cf2f14902bba5ac7551e56de2ae6a3d27267102bcd724b9fe65e6bf4a62",
+      "scheduled_by": "verifier",
+      "step": 400,
+      "weights_digest": "3ff65ea6473b1029018015c88cb774ae8037779e2587f326ad57c9b58ec9976d",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.551,
+      "params_digest": "f2ca64b5ffd56806280a414d25a1fadc459c94830425d2c4110cc581731bd35b",
+      "scheduled_by": "verifier",
+      "step": 500,
+      "weights_digest": "38834b0a9cb425ce9279d2ed3273ce3bdc6b1eee37e25d6e28ba1219a055a2f4",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.47,
+      "params_digest": "6c8be2a3e141162d944dd6bdcfb631da86a6880902d38580f4fd385ddc688a8c",
+      "scheduled_by": "verifier",
+      "step": 600,
+      "weights_digest": "a9b270a7060130381512f197a19c99b17fa66095ea7adf4972c1ac5cedaea024",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.413,
+      "params_digest": "22bac1b442afa8f13d1215b4d48c5ad054999c1c7276d07d111d681320d61106",
+      "scheduled_by": "verifier",
+      "step": 700,
+      "weights_digest": "4c7ba7b5a56cdd01bca687cef33cdfe6a110c2ba16e57100c01303ecec59c901",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.371,
+      "params_digest": "11717514fe15e400ab35a5a3077b8d9d6352fe17b3658a0ab1b5e8b0f3c68d54",
+      "scheduled_by": "verifier",
+      "step": 800,
+      "weights_digest": "81319dad8c833d1cc6fe681149670106bfb569a6097e7a9bec7a3954ec3f98c6",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.34,
+      "params_digest": "7ef46b4e56ef9144cc1281f241dc6a989d33de177af94cde9450268dd42c0c3d",
+      "scheduled_by": "verifier",
+      "step": 900,
+      "weights_digest": "8d98a9a7415cf76d45bcb93fb0f0bed5987daa6ad60a745acf20db057b35c438",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.317,
+      "params_digest": "9deb9b155cc33038562b7daf96b919715c9aefc6b7cdd3b6942f5297fc270761",
+      "scheduled_by": "verifier",
+      "step": 1000,
+      "weights_digest": "809d495a2c05a9afecc8724ef5e360ea385604a9485cfc2a68339ec19a149960",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.3,
+      "params_digest": "6b90187082b47f9e3bd572490fa5b3a2deaf5f2d0997db2cf2b77c8e20715acc",
+      "scheduled_by": "verifier",
+      "step": 1100,
+      "weights_digest": "3b5b451e3bc38587ec83d07dbb8d1430693afc9dbf8fd4b7b8ca3a4dbb425b4d",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.294,
+      "params_digest": "c586fc65b4a521b5850e3b75fa3b816db46b0bbd446eff96761ad9b06738a581",
+      "scheduled_by": "verifier",
+      "step": 1200,
+      "weights_digest": "0469317b9a37477afe7233ddbdf79ff59c7655866a974557d3ddcb60e621e780",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.29,
+      "params_digest": "d5ae9274fbc783d2d45cc1b4c5356454d09bab66f3292362d091558009b44b46",
+      "scheduled_by": "verifier",
+      "step": 1300,
+      "weights_digest": "d546782ef8f2db184f51d414694b8b208c47edadc89e3575727b3229614215b8",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.287,
+      "params_digest": "2a016e2d8b481091bcd634677ad3aec840b8fda15d68da397f537437f31f0618",
+      "scheduled_by": "verifier",
+      "step": 1400,
+      "weights_digest": "173b7d3eca3b42e4cd6cc51655b003714622e1466ec2ed71ae73f7c469b17a87",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.285,
+      "params_digest": "a99ae612c54782f5178f00638b1afc201511cd36668c5a2cd9442d4aff5ef37a",
+      "scheduled_by": "verifier",
+      "step": 1500,
+      "weights_digest": "c432eda13425fd877d410fd7aafe5696c4393a7461498d687adb83f098c9d314",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2835,
+      "params_digest": "3e26510e52c2862393c74137236976477e2dd5c7c188b1f4e326efca69f6e90a",
+      "scheduled_by": "verifier",
+      "step": 1600,
+      "weights_digest": "c548ec67ff5a36aeca43080019600eb7679f79791e590efbcafbb43f8a2a097c",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2823,
+      "params_digest": "eeedd8c61bc017e9c17a58ceac7526d168da62b5b5e642797696a3f099e9d092",
+      "scheduled_by": "verifier",
+      "step": 1700,
+      "weights_digest": "e1bcb7d185139d34d4d58461799270cb5bac3a5474d0c104427539c73b73f94d",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2814,
+      "params_digest": "9bb36405b4d50c0c1c35666209387511667f04517d1971d251e06a403c345f33",
+      "scheduled_by": "verifier",
+      "step": 1800,
+      "weights_digest": "065821978487c29456eb07c922ab02bea4c745359d75783dbaa1a5b1d76ff5fb",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.28075,
+      "params_digest": "ede1c98016de82cd017e03223030e864ad1ac580fb85fbf575d408f42d575c39",
+      "scheduled_by": "verifier",
+      "step": 1900,
+      "weights_digest": "e3791e83afa0fc7cab21e3d71b5a48bbc554be05fc97bb1779cfbd1915a73d2c",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2805,
+      "params_digest": "c9291470dc3d07384ee6698e0ebac1a7a32fa6cdd33997c7bce8318277f34ebf",
+      "scheduled_by": "verifier",
+      "step": 2000,
+      "weights_digest": "c67434c7d1fe4e4cda33d183ceeb9ac33461d61318c5c785e34d21d5c05e01c2",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.28035,
+      "params_digest": "cbe4bb33f74885082477b575047b1fc2d62ebceded2e656db3de94fb8ab4546e",
+      "scheduled_by": "verifier",
+      "step": 2100,
+      "weights_digest": "156a6e1acef6e9fc503e5fb486985832ac466d71243116fc2c343efd2d58e891",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2803,
+      "params_digest": "f7adcf1b266b5bcd4e025810da28dc3969331f2d18379ed7b8d42e3ba2db51ba",
+      "scheduled_by": "verifier",
+      "step": 2200,
+      "weights_digest": "bf01dcfea4fe978620bad4dc4254ed8260e15d6c5b7da101efd5302b4e4d78bc",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.28025,
+      "params_digest": "4a4d75fe583c4ecccb5567fe2cf0acbe5fb2ba9995e1ed67e46bb5205030b386",
+      "scheduled_by": "verifier",
+      "step": 2300,
+      "weights_digest": "1f009c02d9a17b20e68050208752d41ab71f5e595f8372a3d828fe791e0f13f6",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2802,
+      "params_digest": "e6371ed44e9d83a06530fd2776dbda6ff9b79eb77771f1af72d5160dd7607266",
+      "scheduled_by": "verifier",
+      "step": 2400,
+      "weights_digest": "409ccef39f535c6c3d92f378d734996960d8ee03e9def97a62993f6c925761b2",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.27945,
+      "params_digest": "26c84637b0bcfae9d498c24e7cdbee0616c4ce6410b3aeac2fc28b52b48d2ca9",
+      "scheduled_by": "verifier",
+      "step": 2500,
+      "weights_digest": "910454fff64539ae0de5e64e60ccbb407435a5078d56a6901fd953204ecadc52",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2788,
+      "params_digest": "5a1c52125ce3c275ae2f506d4a66ffca352e5f2bea01c98e7c8a4d223e7f13b8",
+      "scheduled_by": "verifier",
+      "step": 2600,
+      "weights_digest": "66250f322e664a7ce04d1441e11a6f6fb065c3000dfbc51d88dbf04dc708a94b",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2784,
+      "params_digest": "10084c00e82c602e6d47bc05623d6ca32b2dc2e6c80bac81b789adeb738b9556",
+      "scheduled_by": "verifier",
+      "step": 2700,
+      "weights_digest": "8eb65457dba84bf638c31213f0ab453ca43e5c6894461b2a046fc7b2cbfe9435",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.27815,
+      "params_digest": "721fb73696958037ed7cc5d099a851bb611f4c0744836c8eabfc18dcfc741d2e",
+      "scheduled_by": "verifier",
+      "step": 2800,
+      "weights_digest": "318a3907294540e8eac85dd28b18b9f070c4264f8a940dc8cb4b7975bcc26dc8",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.278,
+      "params_digest": "9f91b6c012fa24eadd5883dd90a6adef2c5d7a23c47c6e0483c9d36b4a5a475c",
+      "scheduled_by": "verifier",
+      "step": 2900,
+      "weights_digest": "f4797d88bea78e841d6d0bfe5f5673a9d5d1ec54573ee32f522eb18f1d02cd33",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2779,
+      "params_digest": "76796425929c1b628afc6fa404af03ab3d7d3b307a029383fcc94188a8150168",
+      "scheduled_by": "verifier",
+      "step": 3000,
+      "weights_digest": "870589a6a6e673d7218ae21931c102a29636fdbbceadf44f0abf0df03b5ccfb9",
+      "weights_source": "harness"
+     }
+    ],
+    "frozen_axes_observed": {
+     "architecture_digest": "a4c8f1d09b2e7635c0a91d84fe3b2705d6c9a83f1e40b7d259c6a3f08e12b4d7",
+     "batch_size": 480,
+     "dataset_digest": "d1a7e2b6f0c94d3a8e5b1c07f42d9a63b8e0c5147d2a9f3b6e8c04a17d5b29e3",
+     "fwd_bwd_per_step": 1
+    },
+    "run": {
+     "exit_code": 0,
+     "schedule_length": 3000,
+     "status": "completed",
+     "steps_executed": 3000,
+     "stopped_by": "schedule-end"
+    },
+    "submission_report": {
+     "crossing_step": 2000,
+     "filter": "ema"
+    }
+   },
+   "zero_reason": "reported-crossing-diverges"
+  },
+  {
+   "checker": "frozen_axes_held",
+   "id": "fx-frozen-batch-stale",
+   "stale_control": "ctl-frozen-batch-stale",
+   "statement": "A run at the pre-drift batch size, which is both a frozen-axis breach and a pre-mutation answer carried forward.",
+   "telemetry": {
+    "bound": {
+     "anchors_state": "fixture-calibrated",
+     "baseline_metric": 3250,
+     "eval_stride": 100,
+     "frozen_architecture_digest": "a4c8f1d09b2e7635c0a91d84fe3b2705d6c9a83f1e40b7d259c6a3f08e12b4d7",
+     "frozen_batch_size": 480,
+     "frozen_dataset_digest": "d1a7e2b6f0c94d3a8e5b1c07f42d9a63b8e0c5147d2a9f3b6e8c04a17d5b29e3",
+     "frozen_fwd_bwd_per_step": 1,
+     "graded_quantity": "crossing_step",
+     "max_schedule_steps": 4000,
+     "readout_filter_admitted": "raw",
+     "sustain_points": 3,
+     "target_loss": 3.279,
+     "target_metric": 2690,
+     "weights_digest_domain": "bia/oer-03/weights/v2"
+    },
+    "evaluations": [
+     {
+      "filter": "raw",
+      "loss": 4.921,
+      "params_digest": "01f8da92e5c327b709df15dfb7451fe57aedf387db99640c83f207b2407244c0",
+      "scheduled_by": "verifier",
+      "step": 100,
+      "weights_digest": "a7bb33801dd5e7b2472b860b8bdd29edd33d6b5aa3cb447f7f06b7e28860560b",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 4.213,
+      "params_digest": "f938597352cfe685f1e79bf8da2556b192d036803cc7005adb5dd970e58a07a1",
+      "scheduled_by": "verifier",
+      "step": 200,
+      "weights_digest": "88aecf607aa0009a4b1581cb69006edd55d086a05d044a7ce8519caeea65e5b4",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.864,
+      "params_digest": "1f58d97de6d6b23961f3acad134d6904354594ff916ba67f38705059232e08cb",
+      "scheduled_by": "verifier",
+      "step": 300,
+      "weights_digest": "66ad57d41aa700aca9b973309610371575a5d0338a1a6efd7f57aac75636e5e1",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.672,
+      "params_digest": "e0a48cf2f14902bba5ac7551e56de2ae6a3d27267102bcd724b9fe65e6bf4a62",
+      "scheduled_by": "verifier",
+      "step": 400,
+      "weights_digest": "3ff65ea6473b1029018015c88cb774ae8037779e2587f326ad57c9b58ec9976d",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.551,
+      "params_digest": "f2ca64b5ffd56806280a414d25a1fadc459c94830425d2c4110cc581731bd35b",
+      "scheduled_by": "verifier",
+      "step": 500,
+      "weights_digest": "38834b0a9cb425ce9279d2ed3273ce3bdc6b1eee37e25d6e28ba1219a055a2f4",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.47,
+      "params_digest": "6c8be2a3e141162d944dd6bdcfb631da86a6880902d38580f4fd385ddc688a8c",
+      "scheduled_by": "verifier",
+      "step": 600,
+      "weights_digest": "a9b270a7060130381512f197a19c99b17fa66095ea7adf4972c1ac5cedaea024",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.413,
+      "params_digest": "22bac1b442afa8f13d1215b4d48c5ad054999c1c7276d07d111d681320d61106",
+      "scheduled_by": "verifier",
+      "step": 700,
+      "weights_digest": "4c7ba7b5a56cdd01bca687cef33cdfe6a110c2ba16e57100c01303ecec59c901",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.371,
+      "params_digest": "11717514fe15e400ab35a5a3077b8d9d6352fe17b3658a0ab1b5e8b0f3c68d54",
+      "scheduled_by": "verifier",
+      "step": 800,
+      "weights_digest": "81319dad8c833d1cc6fe681149670106bfb569a6097e7a9bec7a3954ec3f98c6",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.34,
+      "params_digest": "7ef46b4e56ef9144cc1281f241dc6a989d33de177af94cde9450268dd42c0c3d",
+      "scheduled_by": "verifier",
+      "step": 900,
+      "weights_digest": "8d98a9a7415cf76d45bcb93fb0f0bed5987daa6ad60a745acf20db057b35c438",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.317,
+      "params_digest": "9deb9b155cc33038562b7daf96b919715c9aefc6b7cdd3b6942f5297fc270761",
+      "scheduled_by": "verifier",
+      "step": 1000,
+      "weights_digest": "809d495a2c05a9afecc8724ef5e360ea385604a9485cfc2a68339ec19a149960",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.3,
+      "params_digest": "6b90187082b47f9e3bd572490fa5b3a2deaf5f2d0997db2cf2b77c8e20715acc",
+      "scheduled_by": "verifier",
+      "step": 1100,
+      "weights_digest": "3b5b451e3bc38587ec83d07dbb8d1430693afc9dbf8fd4b7b8ca3a4dbb425b4d",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.294,
+      "params_digest": "c586fc65b4a521b5850e3b75fa3b816db46b0bbd446eff96761ad9b06738a581",
+      "scheduled_by": "verifier",
+      "step": 1200,
+      "weights_digest": "0469317b9a37477afe7233ddbdf79ff59c7655866a974557d3ddcb60e621e780",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.29,
+      "params_digest": "d5ae9274fbc783d2d45cc1b4c5356454d09bab66f3292362d091558009b44b46",
+      "scheduled_by": "verifier",
+      "step": 1300,
+      "weights_digest": "d546782ef8f2db184f51d414694b8b208c47edadc89e3575727b3229614215b8",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.287,
+      "params_digest": "2a016e2d8b481091bcd634677ad3aec840b8fda15d68da397f537437f31f0618",
+      "scheduled_by": "verifier",
+      "step": 1400,
+      "weights_digest": "173b7d3eca3b42e4cd6cc51655b003714622e1466ec2ed71ae73f7c469b17a87",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.285,
+      "params_digest": "a99ae612c54782f5178f00638b1afc201511cd36668c5a2cd9442d4aff5ef37a",
+      "scheduled_by": "verifier",
+      "step": 1500,
+      "weights_digest": "c432eda13425fd877d410fd7aafe5696c4393a7461498d687adb83f098c9d314",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2835,
+      "params_digest": "3e26510e52c2862393c74137236976477e2dd5c7c188b1f4e326efca69f6e90a",
+      "scheduled_by": "verifier",
+      "step": 1600,
+      "weights_digest": "c548ec67ff5a36aeca43080019600eb7679f79791e590efbcafbb43f8a2a097c",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2823,
+      "params_digest": "eeedd8c61bc017e9c17a58ceac7526d168da62b5b5e642797696a3f099e9d092",
+      "scheduled_by": "verifier",
+      "step": 1700,
+      "weights_digest": "e1bcb7d185139d34d4d58461799270cb5bac3a5474d0c104427539c73b73f94d",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2814,
+      "params_digest": "9bb36405b4d50c0c1c35666209387511667f04517d1971d251e06a403c345f33",
+      "scheduled_by": "verifier",
+      "step": 1800,
+      "weights_digest": "065821978487c29456eb07c922ab02bea4c745359d75783dbaa1a5b1d76ff5fb",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.28075,
+      "params_digest": "ede1c98016de82cd017e03223030e864ad1ac580fb85fbf575d408f42d575c39",
+      "scheduled_by": "verifier",
+      "step": 1900,
+      "weights_digest": "e3791e83afa0fc7cab21e3d71b5a48bbc554be05fc97bb1779cfbd1915a73d2c",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2805,
+      "params_digest": "c9291470dc3d07384ee6698e0ebac1a7a32fa6cdd33997c7bce8318277f34ebf",
+      "scheduled_by": "verifier",
+      "step": 2000,
+      "weights_digest": "c67434c7d1fe4e4cda33d183ceeb9ac33461d61318c5c785e34d21d5c05e01c2",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.28035,
+      "params_digest": "cbe4bb33f74885082477b575047b1fc2d62ebceded2e656db3de94fb8ab4546e",
+      "scheduled_by": "verifier",
+      "step": 2100,
+      "weights_digest": "156a6e1acef6e9fc503e5fb486985832ac466d71243116fc2c343efd2d58e891",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2803,
+      "params_digest": "f7adcf1b266b5bcd4e025810da28dc3969331f2d18379ed7b8d42e3ba2db51ba",
+      "scheduled_by": "verifier",
+      "step": 2200,
+      "weights_digest": "bf01dcfea4fe978620bad4dc4254ed8260e15d6c5b7da101efd5302b4e4d78bc",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.28025,
+      "params_digest": "4a4d75fe583c4ecccb5567fe2cf0acbe5fb2ba9995e1ed67e46bb5205030b386",
+      "scheduled_by": "verifier",
+      "step": 2300,
+      "weights_digest": "1f009c02d9a17b20e68050208752d41ab71f5e595f8372a3d828fe791e0f13f6",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2802,
+      "params_digest": "e6371ed44e9d83a06530fd2776dbda6ff9b79eb77771f1af72d5160dd7607266",
+      "scheduled_by": "verifier",
+      "step": 2400,
+      "weights_digest": "409ccef39f535c6c3d92f378d734996960d8ee03e9def97a62993f6c925761b2",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.27945,
+      "params_digest": "26c84637b0bcfae9d498c24e7cdbee0616c4ce6410b3aeac2fc28b52b48d2ca9",
+      "scheduled_by": "verifier",
+      "step": 2500,
+      "weights_digest": "910454fff64539ae0de5e64e60ccbb407435a5078d56a6901fd953204ecadc52",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2788,
+      "params_digest": "5a1c52125ce3c275ae2f506d4a66ffca352e5f2bea01c98e7c8a4d223e7f13b8",
+      "scheduled_by": "verifier",
+      "step": 2600,
+      "weights_digest": "66250f322e664a7ce04d1441e11a6f6fb065c3000dfbc51d88dbf04dc708a94b",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2784,
+      "params_digest": "10084c00e82c602e6d47bc05623d6ca32b2dc2e6c80bac81b789adeb738b9556",
+      "scheduled_by": "verifier",
+      "step": 2700,
+      "weights_digest": "8eb65457dba84bf638c31213f0ab453ca43e5c6894461b2a046fc7b2cbfe9435",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.27815,
+      "params_digest": "721fb73696958037ed7cc5d099a851bb611f4c0744836c8eabfc18dcfc741d2e",
+      "scheduled_by": "verifier",
+      "step": 2800,
+      "weights_digest": "318a3907294540e8eac85dd28b18b9f070c4264f8a940dc8cb4b7975bcc26dc8",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.278,
+      "params_digest": "9f91b6c012fa24eadd5883dd90a6adef2c5d7a23c47c6e0483c9d36b4a5a475c",
+      "scheduled_by": "verifier",
+      "step": 2900,
+      "weights_digest": "f4797d88bea78e841d6d0bfe5f5673a9d5d1ec54573ee32f522eb18f1d02cd33",
+      "weights_source": "harness"
+     },
+     {
+      "filter": "raw",
+      "loss": 3.2779,
+      "params_digest": "76796425929c1b628afc6fa404af03ab3d7d3b307a029383fcc94188a8150168",
+      "scheduled_by": "verifier",
+      "step": 3000,
+      "weights_digest": "870589a6a6e673d7218ae21931c102a29636fdbbceadf44f0abf0df03b5ccfb9",
+      "weights_source": "harness"
+     }
+    ],
+    "frozen_axes_observed": {
+     "architecture_digest": "a4c8f1d09b2e7635c0a91d84fe3b2705d6c9a83f1e40b7d259c6a3f08e12b4d7",
+     "batch_size": 512,
+     "dataset_digest": "d1a7e2b6f0c94d3a8e5b1c07f42d9a63b8e0c5147d2a9f3b6e8c04a17d5b29e3",
+     "fwd_bwd_per_step": 1
+    },
+    "run": {
+     "exit_code": 0,
+     "schedule_length": 3000,
+     "status": "completed",
+     "steps_executed": 3000,
+     "stopped_by": "schedule-end"
+    },
+    "submission_report": {}
+   },
+   "zero_reason": "frozen-axis-moved"
+  }
+ ],
+ "golden": {
+  "expected_graded_step": 2600,
+  "expected_reward": 1.0,
+  "id": "fx-reference-accepted",
+  "telemetry": {
+   "bound": {
+    "anchors_state": "fixture-calibrated",
+    "baseline_metric": 3250,
+    "eval_stride": 100,
+    "frozen_architecture_digest": "a4c8f1d09b2e7635c0a91d84fe3b2705d6c9a83f1e40b7d259c6a3f08e12b4d7",
+    "frozen_batch_size": 480,
+    "frozen_dataset_digest": "d1a7e2b6f0c94d3a8e5b1c07f42d9a63b8e0c5147d2a9f3b6e8c04a17d5b29e3",
+    "frozen_fwd_bwd_per_step": 1,
+    "graded_quantity": "crossing_step",
+    "max_schedule_steps": 4000,
+    "readout_filter_admitted": "raw",
+    "sustain_points": 3,
+    "target_loss": 3.279,
+    "target_metric": 2690,
+    "weights_digest_domain": "bia/oer-03/weights/v2"
+   },
+   "evaluations": [
+    {
+     "filter": "raw",
+     "loss": 4.921,
+     "params_digest": "01f8da92e5c327b709df15dfb7451fe57aedf387db99640c83f207b2407244c0",
+     "scheduled_by": "verifier",
+     "step": 100,
+     "weights_digest": "a7bb33801dd5e7b2472b860b8bdd29edd33d6b5aa3cb447f7f06b7e28860560b",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 4.213,
+     "params_digest": "f938597352cfe685f1e79bf8da2556b192d036803cc7005adb5dd970e58a07a1",
+     "scheduled_by": "verifier",
+     "step": 200,
+     "weights_digest": "88aecf607aa0009a4b1581cb69006edd55d086a05d044a7ce8519caeea65e5b4",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.864,
+     "params_digest": "1f58d97de6d6b23961f3acad134d6904354594ff916ba67f38705059232e08cb",
+     "scheduled_by": "verifier",
+     "step": 300,
+     "weights_digest": "66ad57d41aa700aca9b973309610371575a5d0338a1a6efd7f57aac75636e5e1",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.672,
+     "params_digest": "e0a48cf2f14902bba5ac7551e56de2ae6a3d27267102bcd724b9fe65e6bf4a62",
+     "scheduled_by": "verifier",
+     "step": 400,
+     "weights_digest": "3ff65ea6473b1029018015c88cb774ae8037779e2587f326ad57c9b58ec9976d",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.551,
+     "params_digest": "f2ca64b5ffd56806280a414d25a1fadc459c94830425d2c4110cc581731bd35b",
+     "scheduled_by": "verifier",
+     "step": 500,
+     "weights_digest": "38834b0a9cb425ce9279d2ed3273ce3bdc6b1eee37e25d6e28ba1219a055a2f4",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.47,
+     "params_digest": "6c8be2a3e141162d944dd6bdcfb631da86a6880902d38580f4fd385ddc688a8c",
+     "scheduled_by": "verifier",
+     "step": 600,
+     "weights_digest": "a9b270a7060130381512f197a19c99b17fa66095ea7adf4972c1ac5cedaea024",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.413,
+     "params_digest": "22bac1b442afa8f13d1215b4d48c5ad054999c1c7276d07d111d681320d61106",
+     "scheduled_by": "verifier",
+     "step": 700,
+     "weights_digest": "4c7ba7b5a56cdd01bca687cef33cdfe6a110c2ba16e57100c01303ecec59c901",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.371,
+     "params_digest": "11717514fe15e400ab35a5a3077b8d9d6352fe17b3658a0ab1b5e8b0f3c68d54",
+     "scheduled_by": "verifier",
+     "step": 800,
+     "weights_digest": "81319dad8c833d1cc6fe681149670106bfb569a6097e7a9bec7a3954ec3f98c6",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.34,
+     "params_digest": "7ef46b4e56ef9144cc1281f241dc6a989d33de177af94cde9450268dd42c0c3d",
+     "scheduled_by": "verifier",
+     "step": 900,
+     "weights_digest": "8d98a9a7415cf76d45bcb93fb0f0bed5987daa6ad60a745acf20db057b35c438",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.317,
+     "params_digest": "9deb9b155cc33038562b7daf96b919715c9aefc6b7cdd3b6942f5297fc270761",
+     "scheduled_by": "verifier",
+     "step": 1000,
+     "weights_digest": "809d495a2c05a9afecc8724ef5e360ea385604a9485cfc2a68339ec19a149960",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.3,
+     "params_digest": "6b90187082b47f9e3bd572490fa5b3a2deaf5f2d0997db2cf2b77c8e20715acc",
+     "scheduled_by": "verifier",
+     "step": 1100,
+     "weights_digest": "3b5b451e3bc38587ec83d07dbb8d1430693afc9dbf8fd4b7b8ca3a4dbb425b4d",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.294,
+     "params_digest": "c586fc65b4a521b5850e3b75fa3b816db46b0bbd446eff96761ad9b06738a581",
+     "scheduled_by": "verifier",
+     "step": 1200,
+     "weights_digest": "0469317b9a37477afe7233ddbdf79ff59c7655866a974557d3ddcb60e621e780",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.29,
+     "params_digest": "d5ae9274fbc783d2d45cc1b4c5356454d09bab66f3292362d091558009b44b46",
+     "scheduled_by": "verifier",
+     "step": 1300,
+     "weights_digest": "d546782ef8f2db184f51d414694b8b208c47edadc89e3575727b3229614215b8",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.287,
+     "params_digest": "2a016e2d8b481091bcd634677ad3aec840b8fda15d68da397f537437f31f0618",
+     "scheduled_by": "verifier",
+     "step": 1400,
+     "weights_digest": "173b7d3eca3b42e4cd6cc51655b003714622e1466ec2ed71ae73f7c469b17a87",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.285,
+     "params_digest": "a99ae612c54782f5178f00638b1afc201511cd36668c5a2cd9442d4aff5ef37a",
+     "scheduled_by": "verifier",
+     "step": 1500,
+     "weights_digest": "c432eda13425fd877d410fd7aafe5696c4393a7461498d687adb83f098c9d314",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.2835,
+     "params_digest": "3e26510e52c2862393c74137236976477e2dd5c7c188b1f4e326efca69f6e90a",
+     "scheduled_by": "verifier",
+     "step": 1600,
+     "weights_digest": "c548ec67ff5a36aeca43080019600eb7679f79791e590efbcafbb43f8a2a097c",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.2823,
+     "params_digest": "eeedd8c61bc017e9c17a58ceac7526d168da62b5b5e642797696a3f099e9d092",
+     "scheduled_by": "verifier",
+     "step": 1700,
+     "weights_digest": "e1bcb7d185139d34d4d58461799270cb5bac3a5474d0c104427539c73b73f94d",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.2814,
+     "params_digest": "9bb36405b4d50c0c1c35666209387511667f04517d1971d251e06a403c345f33",
+     "scheduled_by": "verifier",
+     "step": 1800,
+     "weights_digest": "065821978487c29456eb07c922ab02bea4c745359d75783dbaa1a5b1d76ff5fb",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.28075,
+     "params_digest": "ede1c98016de82cd017e03223030e864ad1ac580fb85fbf575d408f42d575c39",
+     "scheduled_by": "verifier",
+     "step": 1900,
+     "weights_digest": "e3791e83afa0fc7cab21e3d71b5a48bbc554be05fc97bb1779cfbd1915a73d2c",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.2805,
+     "params_digest": "c9291470dc3d07384ee6698e0ebac1a7a32fa6cdd33997c7bce8318277f34ebf",
+     "scheduled_by": "verifier",
+     "step": 2000,
+     "weights_digest": "c67434c7d1fe4e4cda33d183ceeb9ac33461d61318c5c785e34d21d5c05e01c2",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.28035,
+     "params_digest": "cbe4bb33f74885082477b575047b1fc2d62ebceded2e656db3de94fb8ab4546e",
+     "scheduled_by": "verifier",
+     "step": 2100,
+     "weights_digest": "156a6e1acef6e9fc503e5fb486985832ac466d71243116fc2c343efd2d58e891",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.2803,
+     "params_digest": "f7adcf1b266b5bcd4e025810da28dc3969331f2d18379ed7b8d42e3ba2db51ba",
+     "scheduled_by": "verifier",
+     "step": 2200,
+     "weights_digest": "bf01dcfea4fe978620bad4dc4254ed8260e15d6c5b7da101efd5302b4e4d78bc",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.28025,
+     "params_digest": "4a4d75fe583c4ecccb5567fe2cf0acbe5fb2ba9995e1ed67e46bb5205030b386",
+     "scheduled_by": "verifier",
+     "step": 2300,
+     "weights_digest": "1f009c02d9a17b20e68050208752d41ab71f5e595f8372a3d828fe791e0f13f6",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.2802,
+     "params_digest": "e6371ed44e9d83a06530fd2776dbda6ff9b79eb77771f1af72d5160dd7607266",
+     "scheduled_by": "verifier",
+     "step": 2400,
+     "weights_digest": "409ccef39f535c6c3d92f378d734996960d8ee03e9def97a62993f6c925761b2",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.27945,
+     "params_digest": "26c84637b0bcfae9d498c24e7cdbee0616c4ce6410b3aeac2fc28b52b48d2ca9",
+     "scheduled_by": "verifier",
+     "step": 2500,
+     "weights_digest": "910454fff64539ae0de5e64e60ccbb407435a5078d56a6901fd953204ecadc52",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.2788,
+     "params_digest": "5a1c52125ce3c275ae2f506d4a66ffca352e5f2bea01c98e7c8a4d223e7f13b8",
+     "scheduled_by": "verifier",
+     "step": 2600,
+     "weights_digest": "66250f322e664a7ce04d1441e11a6f6fb065c3000dfbc51d88dbf04dc708a94b",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.2784,
+     "params_digest": "10084c00e82c602e6d47bc05623d6ca32b2dc2e6c80bac81b789adeb738b9556",
+     "scheduled_by": "verifier",
+     "step": 2700,
+     "weights_digest": "8eb65457dba84bf638c31213f0ab453ca43e5c6894461b2a046fc7b2cbfe9435",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.27815,
+     "params_digest": "721fb73696958037ed7cc5d099a851bb611f4c0744836c8eabfc18dcfc741d2e",
+     "scheduled_by": "verifier",
+     "step": 2800,
+     "weights_digest": "318a3907294540e8eac85dd28b18b9f070c4264f8a940dc8cb4b7975bcc26dc8",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.278,
+     "params_digest": "9f91b6c012fa24eadd5883dd90a6adef2c5d7a23c47c6e0483c9d36b4a5a475c",
+     "scheduled_by": "verifier",
+     "step": 2900,
+     "weights_digest": "f4797d88bea78e841d6d0bfe5f5673a9d5d1ec54573ee32f522eb18f1d02cd33",
+     "weights_source": "harness"
+    },
+    {
+     "filter": "raw",
+     "loss": 3.2779,
+     "params_digest": "76796425929c1b628afc6fa404af03ab3d7d3b307a029383fcc94188a8150168",
+     "scheduled_by": "verifier",
+     "step": 3000,
+     "weights_digest": "870589a6a6e673d7218ae21931c102a29636fdbbceadf44f0abf0df03b5ccfb9",
+     "weights_source": "harness"
+    }
+   ],
+   "frozen_axes_observed": {
+    "architecture_digest": "a4c8f1d09b2e7635c0a91d84fe3b2705d6c9a83f1e40b7d259c6a3f08e12b4d7",
+    "batch_size": 480,
+    "dataset_digest": "d1a7e2b6f0c94d3a8e5b1c07f42d9a63b8e0c5147d2a9f3b6e8c04a17d5b29e3",
+    "fwd_bwd_per_step": 1
+   },
+   "run": {
+    "exit_code": 0,
+    "schedule_length": 3000,
+    "status": "completed",
+    "steps_executed": 3000,
+    "stopped_by": "schedule-end"
+   },
+   "submission_report": {}
+  }
+ },
+ "pre_drift_state": {
+  "eval_stride": 125,
+  "frozen_batch_size": 512,
+  "sustain_points": 2,
+  "target_loss": 3.28,
+  "weights_digest_domain": "bia/oer-03/weights/v1"
+ },
+ "provenance": {
+  "gap_id": "gap-oer-03-golden-trajectory-derived-not-measured",
+  "kind": "derived-fixture",
+  "measured": false,
+  "statement": "The series above is an authored deterministic fixture, not a recorded GPU rollout. No training run was performed by this lane and none is claimed. The fixture exists so the live checkers can be exercised on both halves without a accelerator, and it is labelled as derived everywhere it is carried."
+ },
+ "provisional_identifier": "OER-03",
+ "reference": {
+  "carrier": "solution/reference.py",
+  "sha256": "9197dc51d7839081dfa549f5d9b7a23aa0720f463cb92d398016b8fb43baa5f7"
+ },
+ "slot": "OER-03",
+ "source": "solution/grounding.yaml"
+}

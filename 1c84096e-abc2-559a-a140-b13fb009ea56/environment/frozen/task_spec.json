@@ -1,0 +1,58 @@
+{
+  "schema": "oer12-checkpoint-policy-substrate/v1",
+  "note": "The frozen half of the task. Nothing a submission says may move any number in this file. The verifier reads its own copy of it at grading time.",
+  "architecture": {
+    "vocab_size": 50304,
+    "num_layers": 6,
+    "model_dim": 384,
+    "head_dim": 64,
+    "num_heads": 6,
+    "seq_len": 512,
+    "logit_softcap": 15.0,
+    "attention_scale": 0.12
+  },
+  "budget": {
+    "micro_batch": 16,
+    "micro_steps": 2048,
+    "total_train_tokens": 16777216,
+    "note": "One optimizer step per micro-batch. The training run is FROZEN: a policy does not change what is trained, only where it looks, so every policy costs the verifier the same training pass."
+  },
+  "init": {
+    "seed": 1234,
+    "note": "One frozen initialisation. The single training run the verifier performs starts from it."
+  },
+  "corpus": {
+    "train_stream": "data/train_stream.bin",
+    "state": "clean as shipped",
+    "degradation": "block-shuffle-ramp, applied at run time by harness.degrade()",
+    "degradation_block_tokens": 256,
+    "ramp_start_choices": [
+      512,
+      768,
+      1024,
+      1280,
+      1536
+    ],
+    "note": "DECLARED PIPELINE FAULT, DRAWN PER RUN. The shipped stream is unmodified FineWeb10B. On every grading run the verifier draws a ramp start uniformly from ramp_start_choices and a fresh permutation seed, then applies harness.degrade(): from the drawn start the fraction of the stream's 256-token windows that are permuted inside the window rises linearly, reaching all of them ramp_span_micro_steps later and staying there. Unigram statistics are untouched; local structure decays away, so the run goes on descending on what it is being fed while drifting off the distribution the graded split is drawn from. THE CHOICE SET IS PUBLIC AND harness.degrade() IS ON THE AGENT SURFACE. THE DRAW IS NOT, and the draw moves where the held-out curve turns by hundreds of steps. A policy has to work without knowing it. The same drawn run serves the shipped default, the private reference and the submission, so no policy is advantaged or disadvantaged by the draw.",
+    "ramp_span_micro_steps": 512
+  },
+  "evaluation": {
+    "tokens_per_batch": 8192,
+    "probe_batches": 16,
+    "holdout_batches": 16,
+    "devset_batches": 16,
+    "candidate_grid": {
+      "first": 128,
+      "last": 2048,
+      "stride": 64
+    },
+    "agent_devset": "data/devset_slice.bin",
+    "metric": "mean token-level cross-entropy in nats on the verifier's held-out split, lower is better",
+    "note": "THREE SPLITS. (1) data/devset_slice.bin ships on the agent surface and is the instrument a policy is designed with. (2) The PROBE stream a policy actually pays to read exists only inside the verifier: a policy is a procedure executed on a run it has not seen, so its readings are draws it cannot precompute. (3) The GRADED split is a third stream, also verifier-only, measured at every candidate step and never shown to a policy. At every step on the candidate grid the harness records 16 per-batch losses on each stream; a policy that buys k batches at a step is answered with the mean of the first k recorded there."
+  },
+  "data": {
+    "format": "FineWeb10B GPT-2 BPE. 1024-byte int32 header (magic 20240520, version 1, token count), then uint16 token ids.",
+    "probe_split_note": "data/probe_slice.bin is cut from a FineWeb TRAINING shard that is not in the training stream. It is the split a policy pays to read.",
+    "holdout_note": "The graded split is a slice of fineweb_val_000000 staged only into the verifier image. It is absent from the agent surface, which is what makes the selected checkpoint's held-out loss something a policy cannot precompute."
+  }
+}

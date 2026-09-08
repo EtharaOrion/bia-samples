@@ -1,0 +1,96 @@
+{
+  "schema": "oer-published-records/v1",
+  "note": "Recipes already published against this substrate. Submitting one of them is a restatement of the record rather than a displacement of it, and the verifier refuses it with record-replayed at 0.0. Identity is the graded fields only -- grad_clip, grad_accum, every key of optimizer and every key of schedule -- compared at 6 significant digits; notes and schema are not part of a recipe's identity. The `measured` field on each record is an AUTHORING measurement kept for a human reader. Nothing in the grading chain reads it, and the verifier measures its own endpoints from scratch on every run.",
+  "records": [
+    {
+      "record_id": "R-2026-08-hold-then-decay",
+      "published": "the strongest final loss known for this ceiling",
+      "measured": {
+        "final_eval_loss": 5.053879,
+        "micro_batches_to_target": 1792
+      },
+      "recipe": {
+        "schema": "oer-displacement-recipe/v1",
+        "notes": "Hold the peak for 60 percent of the run after a 10 percent warmup, then decay to zero. Ends lowest of anything published here.",
+        "grad_accum": 1,
+        "grad_clip": 1.0,
+        "optimizer": {
+          "lr_embed": 0.03,
+          "lr_hidden": 0.006,
+          "lr_head": 0.004,
+          "lr_scalar": 0.03,
+          "beta1": 0.9,
+          "beta2": 0.999,
+          "eps": 1e-10,
+          "weight_decay": 0.0
+        },
+        "schedule": {
+          "shape": "wsd",
+          "warmup_frac": 0.1,
+          "final_frac": 0.0,
+          "stable_frac": 0.6
+        }
+      }
+    },
+    {
+      "record_id": "R-2026-08-mild-hold",
+      "published": "the most robust of the published recipes across seeds",
+      "measured": {
+        "final_eval_loss": 5.054898,
+        "micro_batches_to_target": 1792
+      },
+      "recipe": {
+        "schema": "oer-displacement-recipe/v1",
+        "notes": "A gentler peak with a shorter hold. Ends within a thousandth of a nat of the hold-then-decay record and crosses at the same grid point.",
+        "grad_accum": 1,
+        "grad_clip": 1.0,
+        "optimizer": {
+          "lr_embed": 0.02,
+          "lr_hidden": 0.005,
+          "lr_head": 0.003,
+          "lr_scalar": 0.02,
+          "beta1": 0.9,
+          "beta2": 0.999,
+          "eps": 1e-10,
+          "weight_decay": 0.0
+        },
+        "schedule": {
+          "shape": "wsd",
+          "warmup_frac": 0.1,
+          "final_frac": 0.0,
+          "stable_frac": 0.5
+        }
+      }
+    },
+    {
+      "record_id": "R-2026-08-hot-short-hold",
+      "published": "the hottest peak that still trains to a finite loss here",
+      "measured": {
+        "final_eval_loss": 5.242303,
+        "micro_batches_to_target": 1920
+      },
+      "recipe": {
+        "schema": "oer-displacement-recipe/v1",
+        "notes": "A hot peak held only briefly. Faster early than the gentler recipes and it does not convert that into an earlier crossing.",
+        "grad_accum": 1,
+        "grad_clip": 1.0,
+        "optimizer": {
+          "lr_embed": 0.045,
+          "lr_hidden": 0.01,
+          "lr_head": 0.006,
+          "lr_scalar": 0.045,
+          "beta1": 0.9,
+          "beta2": 0.999,
+          "eps": 1e-10,
+          "weight_decay": 0.0
+        },
+        "schedule": {
+          "shape": "wsd",
+          "warmup_frac": 0.05,
+          "final_frac": 0.0,
+          "stable_frac": 0.25
+        }
+      }
+    }
+  ]
+}

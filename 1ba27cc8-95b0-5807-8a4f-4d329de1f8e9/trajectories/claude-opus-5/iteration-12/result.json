@@ -1,0 +1,129 @@
+{
+    "id": "6b291bab-8d4d-4822-aa92-b3a519fc7d89",
+    "task_name": "bia/track3-sustained-refinement",
+    "trial_name": "campaign-task__jswzVdN",
+    "trial_uri": "track3-pipeline/oer02-ship/runs-oer02-v4/agentic_iter12/campaign-task__jswzVdN",
+    "task_id": {
+        "path": "track3-pipeline/oer02-ship/campaign-task"
+    },
+    "source": null,
+    "task_checksum": "71c3c38db66a1fc6633c7a21d309b59bc6805898cb5a61e46160bda196a05d04",
+    "config": {
+        "task": {
+            "path": "track3-pipeline/oer02-ship/campaign-task",
+            "git_url": null,
+            "git_commit_id": null,
+            "name": null,
+            "ref": null,
+            "overwrite": false,
+            "download_dir": null,
+            "source": null
+        },
+        "trial_name": "campaign-task__jswzVdN",
+        "trials_dir": "track3-pipeline/oer02-ship/runs-oer02-v4/agentic_iter12",
+        "install_only": false,
+        "timeout_multiplier": 1.0,
+        "agent_timeout_multiplier": null,
+        "verifier_timeout_multiplier": null,
+        "agent_setup_timeout_multiplier": 5.0,
+        "environment_build_timeout_multiplier": null,
+        "agent": {
+            "name": "openhands-sdk",
+            "import_path": null,
+            "model_name": "anthropic/claude-opus-5",
+            "n_concurrent": null,
+            "concurrency_group": null,
+            "skills": [],
+            "override_timeout_sec": null,
+            "override_setup_timeout_sec": null,
+            "max_timeout_sec": null,
+            "resume_trajectory": false,
+            "load_trajectory": null,
+            "extra_allowed_hosts": [],
+            "kwargs": {},
+            "env": {
+                "LLM_BASE_URL": "http://172.17.0.1:8765",
+                "LLM_API_KEY": "oaut****der"
+            },
+            "mcp_servers": []
+        },
+        "environment": {
+            "type": "docker",
+            "import_path": null,
+            "force_build": false,
+            "delete": true,
+            "cpu_enforcement_policy": "auto",
+            "memory_enforcement_policy": "auto",
+            "override_cpus": null,
+            "override_memory_mb": null,
+            "override_storage_mb": null,
+            "override_gpus": null,
+            "override_tpu": null,
+            "mounts": null,
+            "extra_docker_compose": [],
+            "kwargs": {},
+            "extra_allowed_hosts": []
+        },
+        "verifier": {
+            "override_timeout_sec": null,
+            "max_timeout_sec": null,
+            "disable": false
+        },
+        "artifacts": [],
+        "extra_instruction_paths": [
+            "track3-pipeline/oer02-ship/runs-oer02-v4/history/iter12_history.md"
+        ],
+        "job_id": "79da4f38-9f13-4c5c-8cdb-3e2e9c05750e",
+        "source_trial": null
+    },
+    "agent_info": {
+        "name": "openhands-sdk",
+        "version": "1.44.1",
+        "model_info": {
+            "name": "claude-opus-5",
+            "provider": "anthropic"
+        }
+    },
+    "agent_result": {
+        "n_input_tokens": 393092,
+        "n_cache_tokens": 354835,
+        "n_output_tokens": 5020,
+        "cost_usd": 0.54199375,
+        "rollout_details": null,
+        "metadata": null
+    },
+    "verifier_result": {
+        "scores": {
+            "attempts": 1,
+            "baseline": 1800,
+            "final_loss": 4.3673,
+            "graded_step": 1260,
+            "no_progress_loss": 6.8,
+            "reason_code": 0,
+            "score": 0.8984615384615384,
+            "target": 1150,
+            "target_loss": 4.55
+        }
+    },
+    "verifier_environment_mode": "shared",
+    "exception_info": null,
+    "started_at": "2026-09-04T08:10:37.977306Z",
+    "finished_at": "2026-09-04T08:21:13.925715Z",
+    "environment_setup": {
+        "started_at": "2026-09-04T08:10:38.046542Z",
+        "finished_at": "2026-09-04T08:10:41.438157Z"
+    },
+    "agent_setup": {
+        "started_at": "2026-09-04T08:10:41.438226Z",
+        "finished_at": "2026-09-04T08:11:18.537774Z"
+    },
+    "agent_execution": {
+        "started_at": "2026-09-04T08:11:18.537932Z",
+        "finished_at": "2026-09-04T08:14:49.475381Z"
+    },
+    "verifier": {
+        "started_at": "2026-09-04T08:14:50.088992Z",
+        "finished_at": "2026-09-04T08:21:00.880892Z"
+    },
+    "step_results": null
+}

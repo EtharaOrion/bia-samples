@@ -1,0 +1,43 @@
+{
+  "schema": "oer-nanogpt-updaterule/v1",
+  "notes": "THE HIGH ANCHOR. Staged only into the verifier image and never on the agent surface. It is a BAR and not a claim to be the optimum of this space: it is the best rule an authoring search over this harness found. Two findings define it. The first is that the token embedding and the RMSNorm gains and biases want six times the step of the block matrices, which is worth 0.087 nats on its own. The second, and the one the search found last, is that the second moment wants a SHORTER memory than Adam's conventional 0.999 -- 0.995 is worth another 0.027 -- which runs against the usual argument that a short run wants a long second-moment memory.",
+  "grad_clip": 1.0,
+  "rules": {
+    "embed": {
+      "decay1": 0.9,
+      "decay2": 0.995,
+      "precond_power": 0.5,
+      "sign_mix": 0.0,
+      "weight_decay": 0.0,
+      "eps": 1e-10,
+      "step_size": 0.024
+    },
+    "hidden": {
+      "decay1": 0.9,
+      "decay2": 0.995,
+      "precond_power": 0.5,
+      "sign_mix": 0.0,
+      "weight_decay": 0.0,
+      "eps": 1e-10,
+      "step_size": 0.004
+    },
+    "head": {
+      "decay1": 0.9,
+      "decay2": 0.995,
+      "precond_power": 0.5,
+      "sign_mix": 0.0,
+      "weight_decay": 0.0,
+      "eps": 1e-10,
+      "step_size": 0.004
+    },
+    "scalar": {
+      "decay1": 0.9,
+      "decay2": 0.995,
+      "precond_power": 0.5,
+      "sign_mix": 0.0,
+      "weight_decay": 0.0,
+      "eps": 1e-10,
+      "step_size": 0.024
+    }
+  }
+}

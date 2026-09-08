@@ -1,0 +1,8 @@
+{
+  "schema": "oer-nanogpt-shape/v1",
+  "notes": "THE HIGH ANCHOR. Staged only into the verifier image and never on the agent surface. It is a BAR, not a claim to be the optimum of this space: it is the best shape an authoring search over this substrate found, and a submission that reaches or beats it scores 1.0. It carries two findings. The first is that the interior of the depth/width frontier beats both of its ends: six blocks at 384 beat two blocks at 448 and beat fourteen blocks at 320, at the same parameter count. The second is that head WIDTH is a lever of its own and it does not point the way instinct suggests -- three heads of 128 beat six heads of 64 at the same residual width, and beat them by more than the entire depth decision is worth.",
+  "num_layers": 6,
+  "model_dim": 384,
+  "head_dim": 128,
+  "mlp_ratio": 4
+}

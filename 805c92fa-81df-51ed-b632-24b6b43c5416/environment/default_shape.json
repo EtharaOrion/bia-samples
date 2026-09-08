@@ -1,0 +1,10 @@
+{
+  "schema": "oer-nanogpt-shape/v1",
+  "notes": "The shipped default. Five blocks at the widest admissible width with a lean 2x MLP: 10,509,824 non-embedding parameters, comfortably inside the band. It is the wide-and-shallow corner of the admissible band, and it is the shape an instinct for 'fewer, fatter blocks and the largest matmuls' reaches for -- the shortest residual path, the biggest per-block GEMMs, the fewest layer boundaries. It trains and converges perfectly well and it has not been tuned against the evaluation this task grades. This is the shape your submission has to beat, and it is also the LOW anchor of the reward scale: the verifier rebuilds and retrains it from scratch on every grading run rather than reading a stored number for it.",
+  "shape": {
+    "num_layers": 5,
+    "model_dim": 512,
+    "head_dim": 64,
+    "mlp_ratio": 2
+  }
+}

@@ -1,0 +1,182 @@
+# OER-12, family F13. Provisional identifier is the slot id.
+#
+# schema_version is a TOP-LEVEL scalar and is written above the first table header.
+# TOML scopes every key to the most recent header, so an assignment written after a
+# header silently becomes that table's key while the file still reads correct.
+schema_version = "1.4"
+
+multi_step_reward_strategy = "last"
+
+# artifacts is a TOP-LEVEL list for the same reason. Written after [metadata] it
+# would become metadata.artifacts, the real list would be empty, Harbor would accept
+# it silently, and nothing would be snapshotted before teardown.
+artifacts = [
+  "/workspace/submission/policy.json",
+  "/logs/verifier/reward.txt",
+  "/logs/verifier/reward.json",
+  "/logs/verifier/score.json",
+]
+
+[task]
+name = "oer-12-evaluation-policy-under-a-drawn-pipeline-fault"
+version = "2.0.0"
+description = """
+Spend a fixed evaluation budget to keep the right checkpoint. A frozen nanoGPT run is
+performed for the submission; its data pipeline degrades from a micro-step the
+verifier DRAWS on the grading run, so the last checkpoint is not the best one. The
+submission is the evaluation policy -- which checkpoints to read, how many tokens to
+spend on each, and how to choose from the readings. The graded figure is the
+verifier's own held-out cross-entropy at the checkpoint the policy selected. Reward
+is the fraction of the gap closed between two anchor policies that are BOTH replayed
+over the same drawn run on every grading pass.
+"""
+authors = ["Bia"]
+keywords = ["optimization", "bounded-continuous", "policy-outcome"]
+
+[metadata]
+tags = ["optimization", "bounded-continuous"]
+category = "optimization"
+batch = "OER-2026-08-20"
+slot = "OER-12"
+provisional_identifier = "OER-12"
+family = "F13"
+family_title = "evaluation and checkpoint policy"
+title = "Evaluation policy under a degradation whose onset is drawn per run"
+primary_archetype = "AR7"
+archetype_exclusivity = "exactly one primary archetype, fixed at scope time. No buffet within the slot."
+metric = "held-out cross-entropy in nats at the checkpoint the policy selected"
+metric_direction = "lower"
+frozen = "the architecture, the initialisation seed, the training recipe, the token stream, the compute budget, the candidate grid, and the family of degradations"
+free = "which checkpoints to probe, how much of the evaluation budget to spend on each, and the selection rule"
+entry_point_tests = "tests/test.sh"
+entry_point_solution = "solution/solve.sh"
+
+# Reward schema.
+reward_kind = "single float"
+reward_interval = "closed, 0.0 to 1.0"
+reward_direction = "higher is better"
+reward_binary = false
+reward_full = 1.0
+reward_formula = "raw = (default_loss - agent_loss) / (default_loss - reference_loss)"
+reward_clip = "score = min(max(raw, 0.0), 1.0)"
+reward_target_is_a_bar = "reaching the reference scores exactly 1.0 and beating it also scores 1.0"
+
+# ANCHORS. Version 1.0.0 of this slot declared anchors_state = "absent" and resolved
+# every live run to 0.0 with reason anchors-absent-metric-unanchored. That was an
+# honest absence and it was also a slot that could not grade. Both anchors are now
+# MEASURED, on every run, by replaying two real policies over the run's own recorded
+# curves. No literal for either endpoint appears anywhere in this bundle.
+anchors_state = "measured-on-every-run"
+anchors_runtime_effect = "The low anchor is environment/default_policy.json replayed from scratch; the high anchor is tests/private/reference_policy.json, which is staged only into the verifier image. If either fails to produce a finite held-out loss the run refuses at 0.0 with reason anchor-diverged, and if the two coincide it refuses with calibration-span-nonpositive. Neither path substitutes a stored value."
+
+target_tier = "Frontier-defeat"
+tier_exemption_granted = "none"
+
+[metadata.optimization]
+max_timeout_hours = 6.0
+budget_hours = 0.5
+budget_hours_role = "per-attempt completion bound"
+max_attempts = 20
+final_selection = "best"
+budget_envelope = "one H100, single accelerator, no multi-GPU scaling"
+compute_envelope_accelerators = 1
+
+# The graded path is ONE from-scratch training run instrumented at 31 candidate
+# steps, plus three policy replays over the numbers that run recorded. The training
+# run is frozen, so no submission can make it cost more. The number below is
+# measured rather than declared: see solution/grounding.md.
+graded_path_seconds_measured = 150
+graded_path_seconds_budget = 600
+
+[environment]
+docker_image = "pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407"
+os = "linux"
+cpus = 8
+memory_mb = 65536
+storage_mb = 32768
+gpus = 1
+gpu_types = ["H100"]
+workdir = "/app"
+build_timeout_sec = 3600
+network_mode = "public"
+
+[agent]
+submission_path = "/workspace/submission/policy.json"
+network_mode = "none"
+note = """
+The corpus and every dependency are staged at image build, so the solving agent needs
+no run-time egress. /workspace is the only path shared with the verifier; /app is not,
+and a policy left in /app is a policy that is never graded.
+"""
+
+[verifier]
+egress = "denied"
+network_mode = "none"
+docker_image = "pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407"
+reward_path = "/logs/verifier/reward.txt"
+score_document_path = "/logs/verifier/score.json"
+reward_kind = "single float on the closed interval 0.0 to 1.0, higher is better, never binary"
+never_imports_submission = true
+note = """
+The submission is a JSON declaration of an evaluation policy. The verifier parses it,
+bounds-checks it and replays it against curves it measured itself. No code from the
+agent surface is imported or executed here, and no number the submission reports about
+itself is read.
+
+/logs/verifier is a DIRECTORY in the verifier image and deliberately NOT a VOLUME. An
+anonymous volume declared at that path shadows the /logs bind mount the runner
+supplies, and every carrier written under it is discarded with the container.
+"""
+
+[verifier.hygiene]
+note = """
+Schema and budget validation is a GATE, not a grade. policy_schema.py answers one
+question -- is this a well-formed policy inside the declared evaluation budget -- and a
+failure REFUSES the run at 0.0 with a machine-readable reason. It never scales the
+float and never contributes partial credit.
+"""
+refusal_reasons = [
+  "submission-absent",
+  "policy-unreadable",
+  "policy-not-an-object",
+  "policy-schema-unrecognised",
+  "policy-key-unknown",
+  "policy-key-missing",
+  "policy-probes-empty",
+  "policy-probe-not-an-object",
+  "policy-too-many-probes",
+  "policy-step-off-grid",
+  "policy-step-repeated",
+  "policy-value-not-an-integer",
+  "policy-tokens-not-a-batch-multiple",
+  "policy-tokens-above-per-probe-cap",
+  "policy-evaluation-budget-overspent",
+  "policy-selection-not-an-object",
+  "policy-selection-rule-unknown",
+  "policy-selection-window-unknown",
+  "verifier-anchor-policy-invalid",
+  "accelerator-absent",
+  "verifier-substrate-unavailable",
+  "training-run-failed",
+  "anchor-policy-failed",
+  "anchor-diverged",
+  "calibration-span-nonpositive",
+  "agent-policy-failed",
+  "agent-policy-diverged",
+  "grading-chain-failed",
+  "grading-timed-out",
+  "grading-killed",
+]
+
+[solution]
+oracle = "solution/reference.py"
+entry = "solution/solve.sh"
+grounding = "solution/grounding.md"
+note = """
+The oracle installs a policy derived from what the AGENT SURFACE can see: the devset
+curves produced by replaying every declared ramp start with probe_local.py. It is NOT
+the verifier's private reference policy, which was arrived at by a separate search over
+the verifier's own probe curves and differs from it. If the oracle were the reference
+policy, the gate's reference arm would be the high anchor graded against itself and its
+reward would be 1.0 by construction rather than by measurement.
+"""

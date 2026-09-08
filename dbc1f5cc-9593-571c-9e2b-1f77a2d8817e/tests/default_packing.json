@@ -1,0 +1,7 @@
+{
+  "schema": "oer-nanogpt-packing/v1",
+  "notes": "The shipped default. One phase for the whole budget: 64 rows of 128 tokens with no accumulation. It is a geometry someone would plausibly reach for -- 8192 tokens per micro-batch is the cheapest shape on the grid, short rows keep the attention cost down, and it trains and converges perfectly well -- and it has not been tuned against the evaluation this task grades. This is the plan your submission has to beat, and it is also the LOW anchor of the reward scale: the verifier retrains it from scratch on every grading run rather than reading a stored number for it.",
+  "phases": [
+    {"budget_frac": 1.0, "rows": 64, "seq_len": 128, "grad_accum": 1}
+  ]
+}

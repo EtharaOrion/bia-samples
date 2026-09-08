@@ -1,0 +1,15 @@
+{
+  "schema": "oer-nanogpt-policy/v1",
+  "notes": "The shipped default. A uniform 0.1 weight decay on every role, 0.1 label smoothing, the upstream logit softcap of 15, and no log-partition penalty. Every one of those is a value someone would reach for without measuring: 0.1 is the decay in most reference trainers, 0.1 is the smoothing in the original Inception and Transformer papers, and 15 is the constant the upstream record set ships. It trains and converges perfectly well. This is the policy your submission has to beat, and it is also the LOW anchor of the reward scale: the verifier retrains it from scratch on every grading run rather than reading a stored number for it.",
+  "decay": {
+    "wd_embed": 0.1,
+    "wd_hidden": 0.1,
+    "wd_head": 0.1,
+    "wd_scalar": 0.1
+  },
+  "objective": {
+    "label_smoothing": 0.1,
+    "z_loss": 0.0,
+    "logit_softcap": 15.0
+  }
+}

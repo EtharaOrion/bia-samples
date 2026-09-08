@@ -1,0 +1,15 @@
+{
+  "schema": "oer-nanogpt-init/v1",
+  "notes": "The shipped default: the FRAMEWORK'S OWN initialisation, which is what the network gets if nobody calls an init function at all -- and model/nanogpt.py does not call one. torch.nn.Embedding defaults to a unit normal, so the token embedding starts at standard deviation 1.0. torch.nn.Linear defaults to a Kaiming-uniform draw on U(-1/sqrt(fan_in), +1/sqrt(fan_in)) for both weight and bias, whose standard deviation is 1/sqrt(3*fan_in): 0.02946 for every tensor whose fan-in is the model dimension 384, and 0.01473 for the MLP output projection whose fan-in is 1536. Those are the standard deviations written below. This task's draw is normal rather than uniform, so what the default reproduces is the SCALE of the framework's initialisation and not its distribution, which is the only part of it a submission can move anyway. This is the initialisation your submission has to beat, and it is also the LOW anchor of the reward scale -- the verifier reinitialises and retrains it from scratch on every grading run rather than reading a stored number for it.",
+  "init": {
+    "embed_std": 1.0,
+    "attn_qkv_std": 0.02946,
+    "attn_proj_std": 0.02946,
+    "mlp_fc_std": 0.02946,
+    "mlp_proj_std": 0.01473,
+    "head_std": 0.02946,
+    "bias_std": 0.02946,
+    "norm_gain": 1.0,
+    "residual_depth_power": 0.0
+  }
+}

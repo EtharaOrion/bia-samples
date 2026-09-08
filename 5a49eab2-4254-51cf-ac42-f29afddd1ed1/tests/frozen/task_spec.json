@@ -1,0 +1,50 @@
+{
+  "schema": "oer-nanogpt-substrate/v1",
+  "note": "The frozen half of OER-05. Nothing a submission says may move any number in this file. The verifier reads its own copy of it at grading time, and tests/Dockerfile refuses to build unless the two copies are byte-identical.",
+
+  "architecture": {
+    "vocab_size": 50304,
+    "num_layers": 6,
+    "model_dim": 384,
+    "head_dim": 64,
+    "num_heads": 6,
+    "seq_len": 512,
+    "logit_softcap": 15.0,
+    "attention_scale": 0.12
+  },
+
+  "budget": {
+    "micro_batch": 16,
+    "micro_steps": 3072,
+    "grad_accum": 1,
+    "optimizer_steps": 3072,
+    "total_train_tokens": 25165824,
+    "note": "FIXED in tokens and in forward/backward passes, and fixed in optimizer steps too. Unlike a recipe task, this slot does not let a submission trade accumulation against step count: grad_accum is frozen at 1 so that every update rule is judged over exactly 3072 applications of itself. Every submission therefore costs the same FLOPs and very nearly the same wall clock."
+  },
+
+  "init": {
+    "seed": 1234,
+    "note": "Every run in this task starts from the same parameter tensors. The update rule is the only thing that differs between two runs."
+  },
+
+  "schedule": {
+    "shape": "wsd",
+    "warmup_frac": 0.05,
+    "stable_frac": 0.55,
+    "final_frac": 0.0,
+    "note": "FROZEN. The step-size envelope is not the free axis of this slot -- the update rule is. Every run, the shipped default, the private reference and the submission alike, multiplies its own per-role step size by exactly this envelope: a 5 percent linear warmup, then hold, then linear decay to zero over the last 45 percent. A submission chooses the magnitude of its step sizes; it does not choose their shape over time."
+  },
+
+  "evaluation": {
+    "tokens": 2097152,
+    "batch": 16,
+    "metric": "mean token-level cross-entropy in nats, lower is better",
+    "note": "The graded split is NOT in the agent image. environment/data/devset_slice.bin is a proxy cut from a different FineWeb training shard and is the agent's own yardstick; it is never the graded number."
+  },
+
+  "data": {
+    "format": "FineWeb10B GPT-2 BPE. 1024-byte int32 header (magic 20240520, version 1, token count), then uint16 token ids.",
+    "train_slice_tokens": 25165825,
+    "train_slice_note": "Exactly the 25165824 tokens the budget consumes, plus one for the shifted target. There is no extra training data to find; the budget rather than the corpus is the scarce thing here."
+  }
+}

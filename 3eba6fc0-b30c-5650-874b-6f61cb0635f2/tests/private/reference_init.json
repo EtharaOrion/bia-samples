@@ -1,0 +1,15 @@
+{
+  "schema": "oer-nanogpt-init/v1",
+  "notes": "THE HIGH ANCHOR. Staged only into the verifier image and never on the agent surface. It is a BAR and not a claim to be the optimum of this space: it is the best initialisation an authoring search over this harness found. Two findings define it. The first is that a single conventional scale of 0.02 applied to every role recovers most of the framework default's deficit, and that every role-wise refinement of it that a practitioner would reach for first -- a hotter embedding, a colder head, a zeroed head -- makes things worse rather than better. The second is that the one refinement that does pay is a residual taper on the two projections that write into the residual stream, at a divisor of 2.5 rather than the textbook 1/sqrt(2*6) of 3.46, which overshoots and gives 0.028 nats back.",
+  "init": {
+    "embed_std": 0.02,
+    "attn_qkv_std": 0.02,
+    "attn_proj_std": 0.008,
+    "mlp_fc_std": 0.02,
+    "mlp_proj_std": 0.008,
+    "head_std": 0.02,
+    "bias_std": 0.0,
+    "norm_gain": 1.0,
+    "residual_depth_power": 0.0
+  }
+}

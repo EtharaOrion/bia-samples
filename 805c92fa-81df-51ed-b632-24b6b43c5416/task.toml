@@ -1,0 +1,191 @@
+# Harbor delivery manifest, slot OER-15, family F15.
+#
+# schema_version is a TOP-LEVEL scalar and is written above the first table header
+# on purpose. TOML scopes every key to the most recent header, so an assignment
+# written after `[task]` would silently become `task.schema_version` and leave the
+# top-level scalar absent while the file still read correct to a human.
+schema_version = "1.4"
+
+multi_step_reward_strategy = "last"
+
+# Graded deliverables, TOP-LEVEL list, above the first table header for the same
+# scoping reason.
+artifacts = [
+  "/workspace/submission/shape.json",
+  "/logs/verifier/reward.txt",
+  "/logs/verifier/reward.json",
+  "/logs/verifier/score.json",
+]
+
+[task]
+name = "bia/oer-15-nanogpt-decoder-shape"
+version = "2.0.0"
+description = """
+Spend a fixed non-embedding parameter budget on a decoder shape. The block design, the
+vocabulary, the sequence length, the token budget, the training recipe, the
+initialisation law and the evaluation are frozen; how many blocks, how wide, how the
+width is cut into heads and how far the MLP expands are free. The graded figure is the
+verifier's own validation cross entropy, measured in the verifier's process on a
+held-out FineWeb slice that is absent from the agent image. Reward is the fraction of
+the gap closed between two anchors that are BOTH rebuilt and retrained from scratch on
+every grading run, alongside the submission's own decoder.
+"""
+authors = ["Bia"]
+keywords = ["optimization", "bounded-continuous", "architecture-shape"]
+
+[metadata]
+tags = ["optimization", "bounded-continuous"]
+category = "optimization"
+slot = "OER-15"
+provisional_identifier = "OER-15"
+family = "F15"
+family_title = "representation and capacity allocation"
+title = "Decoder shape at a frozen non-embedding parameter budget, against a paired baseline"
+archetype = "paired-comparison"
+archetype_note = """
+The archetype framing is unchanged from this slot's scope: the graded reading is a
+PAIRED one. The verifier does not read a stored floor. It builds and trains a baseline
+decoder alongside the submission's decoder, in the same process, at the same seed, over
+the same tokens, under the same recipe and against the same held-out slice, and the
+grade is the difference between the two -- normalised by a second, stronger decoder the
+verifier also trains in that same pass. What was replaced is the task mechanics, not
+the grading discipline.
+"""
+frozen = "the block design, the vocabulary, the sequence length, the initialisation seed and law, the token stream, the token budget, the whole training recipe, and the evaluation window"
+free = "the number of blocks, the model width, the head width and the MLP expansion ratio, subject to a fixed non-embedding parameter budget"
+metric = "validation cross entropy in nats on the verifier's held-out FineWeb slice"
+metric_direction = "lower"
+entry_point_tests = "tests/test.sh"
+entry_point_solution = "solution/solve.sh"
+
+[metadata.substrate]
+declaration = "environment/frozen/task_spec.json"
+verifier_copy = "tests/frozen/task_spec.json"
+identity_enforced_at = "tests/Dockerfile, by cmp at image build over five files"
+architecture = "vocab_size 50304, seq_len 512, rotary positions, pre-norm residuals, squared-ReLU MLP; the block COUNT, the width, the head width and the MLP ratio are the free variable"
+parameter_budget = "10642944 non-embedding parameters, plus or minus 5 percent; 25 grid points are admissible"
+budget = "12582912 training tokens as 1536 micro-batches of 16 x 512, consumed in order from position 0 by every shape"
+note = """
+The parameter arithmetic the band is enforced with is checked at IMAGE BUILD TIME
+against the parameter count of the real constructed module, for every point on the
+grid, in both images. The band is therefore a statement about the model that will
+actually be built rather than about a formula that might have drifted from it.
+"""
+
+[metadata.optimization]
+max_timeout_hours = 6.0
+max_timeout_role = "refinement-loop terminator across attempts"
+budget_hours = 0.5
+budget_hours_role = "per-attempt completion bound"
+max_attempts = 20
+final_selection = "best"
+budget_envelope = "one H100, single accelerator, no multi-GPU scaling"
+compute_envelope_accelerators = 1
+
+# The graded path is THREE from-scratch build-and-train runs plus three evaluations. The
+# number below is MEASURED and not declared: it is grading_seconds from the verifier's
+# own score.json on a container-gate run of this bundle. The three runs measured 37.0 s,
+# 34.8 s and 37.6 s.
+graded_path_seconds_measured = 110
+graded_path_seconds_budget = 900
+
+[environment]
+docker_image = "pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407"
+os = "linux"
+cpus = 8
+memory_mb = 65536
+storage_mb = 32768
+gpus = 1
+gpu_types = ["H100"]
+workdir = "/app"
+build_timeout_sec = 3600
+network_mode = "public"
+
+[agent]
+submission_path = "/workspace/submission/shape.json"
+network_mode = "none"
+note = """
+The corpus and every dependency are staged at image build, so the solving agent needs
+no run-time egress. /workspace is the only path shared with the verifier.
+"""
+
+[verifier]
+egress = "denied"
+network_mode = "none"
+docker_image = "pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407"
+reward_path = "/logs/verifier/reward.txt"
+score_document_path = "/logs/verifier/score.json"
+reward_kind = "single float on the closed interval 0.0 to 1.0, higher is better, never binary"
+never_imports_submission = true
+note = """
+The submission is a JSON declaration of four integers. The verifier parses it,
+bounds-checks it and trains with it. No code from the agent surface is imported or
+executed here, and no number the submission reports about itself is read.
+"""
+
+[verifier.reward]
+schema = "single float, closed interval [0.0, 1.0], higher is better, never binary"
+full_reward = 1.0
+floor = 0.0
+formula = "raw = (default_loss - agent_loss) / (default_loss - reference_loss)"
+clip = "reward = min(max(raw, 0.0), 1.0)"
+target_is_a_bar = "reaching the reference scores exactly 1.0 and beating it also scores 1.0"
+zero_carries_reason = true
+
+[verifier.anchors]
+baseline_metric_declared = "absent-by-design"
+target_metric_declared = "absent-by-design"
+note = """
+No literal for either endpoint appears anywhere in this bundle, and that is the point
+rather than an omission. Both are MEASURED on every grading run by real from-scratch
+training runs inside the verifier: the low anchor by retraining the shipped
+environment/default_shape.json, the high anchor by training
+tests/private/reference_shape.json, which is staged only into the verifier image.
+If either anchor fails to produce a finite loss the run refuses at 0.0 with reason
+anchor-diverged, and if the two coincide it refuses with calibration-span-nonpositive.
+Neither path substitutes a stored value.
+"""
+
+[verifier.hygiene]
+note = """
+Schema and bounds validation is a GATE, not a grade. shape_schema.py answers one
+question -- is this a well-formed shape inside the declared grid and parameter band -- and a failure
+REFUSES the run at 0.0 with a machine-readable reason. It never scales the float and
+never contributes a partial credit.
+"""
+refusal_reasons = [
+  "submission-absent",
+  "shape-unreadable",
+  "shape-not-an-object",
+  "shape-block-not-an-object",
+  "shape-schema-unrecognised",
+  "shape-key-unknown",
+  "shape-key-missing",
+  "shape-value-not-an-integer",
+  "shape-value-not-allowed",
+  "shape-heads-do-not-divide-width",
+  "shape-parameter-budget-violated",
+  "verifier-anchor-shape-invalid",
+  "accelerator-absent",
+  "verifier-substrate-unavailable",
+  "anchor-run-failed",
+  "anchor-diverged",
+  "calibration-span-nonpositive",
+  "parameter-accounting-mismatch",
+  "agent-run-failed",
+  "agent-shape-diverged",
+  "grading-chain-failed",
+  "grading-timed-out",
+  "grading-killed",
+]
+
+[solution]
+oracle = "solution/reference.py"
+entry = "solution/solve.sh"
+grounding = "solution/grounding.md"
+note = """
+The oracle installs a shape that was derived by a search over this exact harness and
+corpus during authoring. It is NOT the verifier's private reference shape: the two were
+arrived at separately and differ in their depth and width, so the reference arm of the
+gate is never the high anchor being graded against itself.
+"""

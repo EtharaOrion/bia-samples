@@ -1,0 +1,13 @@
+{
+  "schema": "oer-nanogpt-schedule/v1",
+  "notes": "The shipped default: a FLAT envelope. No warmup, no decay, the frozen peak learning rates held at full value for all 3072 optimizer steps. It is a real training run and it converges -- the peaks in frozen/task_spec.json were chosen during authoring so that this schedule stays finite -- and it has not been shaped for this budget in any way. This is the schedule your submission has to beat, and it is also the LOW anchor of the reward scale: the verifier retrains it from scratch on every grading run rather than reading a stored number for it.",
+  "schedule": {
+    "shape": "constant",
+    "warmup_shape": "linear",
+    "warmup_frac": 0.0,
+    "warmup_power": 1.0,
+    "stable_frac": 1.0,
+    "final_frac": 1.0,
+    "decay_power": 1.0
+  }
+}

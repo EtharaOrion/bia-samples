@@ -1,0 +1,11 @@
+{
+  "schema": "oer-nanogpt-updaterule/v1",
+  "notes": "The shipped default: AdamW, one learning rate for all four parameter roles. In the law of harness.py that is precond_power 0.5, decay1 0.9, decay2 0.999, no sign blending and no decay, at a step size of 3e-3 -- and it is AdamW exactly, not approximately: the law's Adam point was checked against torch.optim.AdamW during authoring and agrees to 5e-15. It is a competent, conventional choice rather than a straw man, and its step size was checked against 6e-3 (5.15298) and against plain momentum at three step sizes (6.78 to 7.61), so there is no free win in simply moving it. This is the rule your submission has to beat, and it is also the LOW anchor of the reward scale -- the verifier retrains it from scratch on every grading run rather than reading a stored number for it.",
+  "grad_clip": 1.0,
+  "rules": {
+    "embed":  {"step_size": 0.003, "decay1": 0.9, "decay2": 0.999, "precond_power": 0.5, "sign_mix": 0.0, "weight_decay": 0.0, "eps": 1e-10},
+    "hidden": {"step_size": 0.003, "decay1": 0.9, "decay2": 0.999, "precond_power": 0.5, "sign_mix": 0.0, "weight_decay": 0.0, "eps": 1e-10},
+    "head":   {"step_size": 0.003, "decay1": 0.9, "decay2": 0.999, "precond_power": 0.5, "sign_mix": 0.0, "weight_decay": 0.0, "eps": 1e-10},
+    "scalar": {"step_size": 0.003, "decay1": 0.9, "decay2": 0.999, "precond_power": 0.5, "sign_mix": 0.0, "weight_decay": 0.0, "eps": 1e-10}
+  }
+}

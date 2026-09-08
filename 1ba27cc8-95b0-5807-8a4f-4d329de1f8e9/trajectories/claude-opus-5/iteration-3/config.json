@@ -1,0 +1,20 @@
+{
+    "task": {
+        "path": "track3-pipeline/oer02-ship/campaign-task"
+    },
+    "trial_name": "campaign-task__Qtk6RBQ",
+    "trials_dir": "track3-pipeline/oer02-ship/runs-oer02-v4/agentic_iter03",
+    "agent_setup_timeout_multiplier": 5.0,
+    "agent": {
+        "name": "openhands-sdk",
+        "model_name": "anthropic/claude-opus-5",
+        "env": {
+            "LLM_BASE_URL": "http://172.17.0.1:8765",
+            "LLM_API_KEY": "oaut****der"
+        }
+    },
+    "extra_instruction_paths": [
+        "track3-pipeline/oer02-ship/runs-oer02-v4/history/iter03_history.md"
+    ],
+    "job_id": "11688a5a-78fc-4fb2-a3f5-9981e575b5d0"
+}

@@ -1,0 +1,9 @@
+{
+  "schema": "oer-nanogpt-mixture/v1",
+  "notes": "The shipped default: EQUAL WEIGHT on all six shards, interleaved evenly across the run. It is the mixture you write when you have not looked at the data -- it spends 512 of the 3072 blocks on each shard and treats every shard as worth the same as every other. It trains and it converges. This is the mixture your submission has to beat, and it is also the LOW anchor of the reward scale: the verifier rebuilds this stream and retrains it from scratch on every grading run rather than reading a stored number for it.",
+  "mixture": {
+    "shard_a": 1.0, "shard_b": 1.0, "shard_c": 1.0,
+    "shard_d": 1.0, "shard_e": 1.0, "shard_f": 1.0
+  },
+  "order": {"policy": "interleave", "block_group": 1, "seed": 0}
+}

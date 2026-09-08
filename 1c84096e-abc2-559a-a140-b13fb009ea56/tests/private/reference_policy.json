@@ -1,0 +1,25 @@
+{
+  "schema": "oer12-eval-policy/v1",
+  "notes": "THE HIGH ANCHOR. This file is staged only into the verifier image and is never on the agent surface. It is a BAR, not a claim to be the optimum of this space: it is the policy an authoring search over this harness found to maximise expected reward across the five declared ramp starts, and a submission that reaches or beats it scores 1.0. Its distinguishing finding is that with the onset drawn, the budget is better spent on FOUR well-separated probes at three batches each than on either six cheap ones or two precise ones: three batches is enough to cut the 0.18-nat per-batch spread to about 0.10, which is below the gap between the turn and its neighbours on every draw, and four probes placed at 832 / 1152 / 1536 / 1856 bracket the turn for all five onsets. Plain argmin beats argmin_smoothed here because the minimum is narrow once the readings are resolved, and smoothing blurs it.",
+  "probes": [
+    {
+      "step": 832,
+      "tokens": 24576
+    },
+    {
+      "step": 1152,
+      "tokens": 24576
+    },
+    {
+      "step": 1536,
+      "tokens": 24576
+    },
+    {
+      "step": 1856,
+      "tokens": 24576
+    }
+  ],
+  "selection": {
+    "rule": "argmin"
+  }
+}

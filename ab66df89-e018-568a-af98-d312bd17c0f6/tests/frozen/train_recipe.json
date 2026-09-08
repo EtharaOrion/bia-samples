@@ -1,0 +1,26 @@
+{
+  "schema": "oer16-frozen-train-recipe/v1",
+  "notes": "THE FROZEN TRAINING RECIPE. It is not a free variable and no submission field reaches it. It is published so an allocation can be reproduced exactly. The width scaling below is the reason this task measures compute allocation rather than which menu entry happens to suit one constant learning rate: the hidden matrices are priced at base_lr * (reference_model_dim / model_dim), which is the standard width transfer rule, and it is applied identically to every entry on the menu.",
+  "grad_clip": 1.0,
+  "width_scaling": {
+    "reference_model_dim": 384,
+    "scaled_roles": ["hidden"],
+    "rule": "lr_hidden is multiplied by reference_model_dim / model_dim; the embedding, the head and the scalars are not scaled"
+  },
+  "optimizer": {
+    "lr_embed": 0.018,
+    "lr_hidden": 0.006,
+    "lr_head": 0.006,
+    "lr_scalar": 0.018,
+    "beta1": 0.9,
+    "beta2": 0.999,
+    "eps": 1e-10,
+    "weight_decay": 0.0
+  },
+  "schedule": {
+    "shape": "wsd",
+    "warmup_frac": 0.05,
+    "final_frac": 0.0,
+    "stable_frac": 0.6
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "schema": "oer12-frozen-train-recipe/v1",
+  "notes": "THE FROZEN TRAINING RECIPE. This is not a free variable and there is no submission field that reaches it. It is published so that a policy can reproduce the exact run the verifier will perform. The learning rate is held constant after warmup on purpose: a decaying schedule would anneal the model into place and mask the degraded tail, and this task is about locating the damage rather than about being protected from it.",
+  "grad_clip": 1.0,
+  "optimizer": {
+    "lr_embed": 0.018,
+    "lr_hidden": 0.006,
+    "lr_head": 0.006,
+    "lr_scalar": 0.018,
+    "beta1": 0.9,
+    "beta2": 0.999,
+    "eps": 1e-10,
+    "weight_decay": 0.0
+  },
+  "schedule": {
+    "shape": "constant",
+    "warmup_frac": 0.05,
+    "final_frac": 1.0
+  }
+}

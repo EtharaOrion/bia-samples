@@ -1,0 +1,69 @@
+{
+  "schema": "oer-nanogpt-substrate/v1",
+  "note": "The frozen half of OER-10. Nothing a submission says may move any number in this file. The verifier reads its own copy of it at grading time, and tests/Dockerfile refuses to build unless the two copies are byte-identical.",
+
+  "architecture": {
+    "vocab_size": 50304,
+    "num_layers": 6,
+    "model_dim": 384,
+    "head_dim": 64,
+    "num_heads": 6,
+    "seq_len": 512,
+    "logit_softcap": 15.0,
+    "attention_scale": 0.12
+  },
+
+  "budget": {
+    "micro_batch": 16,
+    "micro_steps": 3072,
+    "grad_accum": 1,
+    "optimizer_steps": 3072,
+    "block_tokens": 8192,
+    "block_stride": 8193,
+    "total_train_tokens": 25165824,
+    "note": "THE TOKEN BUDGET IS THE POINT OF THIS SLOT AND IT IS ENFORCED BY CONSTRUCTION RATHER THAN BY A RULE. The harness assembles exactly 3072 blocks of 8192 tokens and feeds each one exactly once. A mixture does not say how many tokens to spend; it says how the 3072 blocks are DIVIDED among the shards. There is no way to express overspending in the submission schema and no code path that would honour it if there were, so 'token-budget-overspent' is not a failure this task can produce -- it is a state the representation cannot reach.",
+    "block_note": "A block is 8192 consecutive tokens of a shard plus one more for the shifted target, which is why the stride between block starts is 8192 while a block reads 8193. Reading the extra token from inside the shard, rather than from whatever block happens to follow in the assembled stream, is what keeps the targets of one block from depending on the mixture: micro-batch i predicts shard tokens and never a seam."
+  },
+
+  "init": {
+    "seed": 1234,
+    "note": "Every run in this task starts from the same parameter tensors. The data mixture and its ordering are the only things that differ between two runs."
+  },
+
+  "optimizer": {
+    "algorithm": "adamw",
+    "lr_embed": 0.018,
+    "lr_hidden": 0.006,
+    "lr_head": 0.006,
+    "lr_scalar": 0.018,
+    "beta1": 0.9,
+    "beta2": 0.999,
+    "eps": 1e-10,
+    "weight_decay": 0.0,
+    "grad_clip": 1.0,
+    "schedule_shape": "wsd",
+    "schedule_warmup_frac": 0.1,
+    "schedule_stable_frac": 0.6,
+    "schedule_final_frac": 0.0,
+    "note": "FROZEN and tuned, so that what is measured is the value of the data and not the value of the recipe. Identical for the shipped default, for the verifier's private reference and for every submission."
+  },
+
+  "corpus": {
+    "shards": ["shard_a", "shard_b", "shard_c", "shard_d", "shard_e", "shard_f"],
+    "shard_tokens": 8388608,
+    "blocks_per_shard": 1023,
+    "note": "Six shards, each 8388608 GPT-2 BPE tokens, each yielding 1023 whole blocks. Six shards therefore offer 6138 blocks and the budget spends 3072, so no mixture can use everything and every mixture is a choice about what to leave out. Three shards' worth of blocks is 3069, just under the budget, which means a mixture concentrated on three shards spends each of them almost exactly once and a mixture concentrated on one shard reads it three times over.",
+    "provenance": "Every shard is FineWeb10B GPT-2 BPE. environment/README.md states, for each shard, how it was produced from the crawl. The shards were NOT produced by the same process as each other and they are not of equal value, which is the whole subject of this slot; what the environment does not tell you is which is which by measurement rather than by description."
+  },
+
+  "evaluation": {
+    "tokens": 2097152,
+    "batch": 16,
+    "metric": "mean token-level cross-entropy in nats, lower is better",
+    "note": "The graded split is NOT in the agent image, and it is not a cut of any training shard. environment/data/devset_slice.bin is a proxy cut from a FineWeb training shard that is not among the six and is the agent's own yardstick; it is never the graded number."
+  },
+
+  "data": {
+    "format": "FineWeb10B GPT-2 BPE. 1024-byte int32 header (magic 20240520, version 1, token count), then uint16 token ids."
+  }
+}

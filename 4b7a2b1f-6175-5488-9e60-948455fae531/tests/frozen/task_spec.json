@@ -1,0 +1,57 @@
+{
+  "schema": "oer08-data-plan-substrate/v1",
+  "note": "The frozen half of the task. Nothing a submission says may move any number in this file. The verifier reads its own copy of it at grading time.",
+
+  "architecture": {
+    "vocab_size": 50304,
+    "num_layers": 6,
+    "model_dim": 384,
+    "head_dim": 64,
+    "num_heads": 6,
+    "seq_len": 512,
+    "logit_softcap": 15.0,
+    "attention_scale": 0.12
+  },
+
+  "budget": {
+    "micro_batch": 16,
+    "micro_steps": 1024,
+    "tokens_per_micro_step": 8192,
+    "total_train_tokens": 8388608,
+    "note": "The compute budget is FIXED in tokens and in forward and backward passes. A plan decides WHICH tokens are fed and in WHAT ORDER; it cannot change how many are fed. Every plan therefore costs the same FLOPs and very nearly the same wall clock, so no plan wins by training longer -- only by training on better material."
+  },
+
+  "init": {
+    "seed": 1234,
+    "note": "Every run in this task starts from the same parameter tensors. The data plan is the only thing that differs between two runs."
+  },
+
+  "pool": {
+    "source_tokens": 4194304,
+    "draw_granularity": 8192,
+    "total_pool_tokens": 33554432,
+    "note": "Eight sources of 4194304 tokens each, 33554432 tokens in all, against an 8388608 token budget: the budget buys a quarter of the pool, so which quarter and in what order is the whole free variable. A source may be drawn from more than once and a draw may exceed a source's length, in which case the source is cycled -- repetition is an allocation a plan is allowed to make, not an error.",
+    "sources": {
+      "clean-alpha":       {"transform": "none", "provenance": "fineweb_train_000011.bin"},
+      "clean-beta":        {"transform": "none", "provenance": "fineweb_train_000012.bin"},
+      "clean-gamma":       {"transform": "none", "provenance": "fineweb_train_000013.bin"},
+      "scrambled-delta":   {"transform": "block-permuted, 256-token windows", "provenance": "fineweb_train_000014.bin"},
+      "scrambled-epsilon": {"transform": "block-permuted, 256-token windows", "provenance": "fineweb_train_000015.bin"},
+      "looped-zeta":       {"transform": "a 16384-token passage repeated to fill the source", "provenance": "fineweb_train_000016.bin"},
+      "looped-eta":        {"transform": "a 65536-token passage repeated to fill the source", "provenance": "fineweb_train_000017.bin"},
+      "spliced-theta":     {"transform": "alternating 512-token windows of clean and block-permuted text", "provenance": "fineweb_train_000018.bin clean, fineweb_train_000019.bin permuted"}
+    },
+    "transforms_are_declared_effects_are_not": "WHAT was done to each source is written above. WHAT IT IS WORTH is not, and it is not a matter of reading this table: a block-permuted source still teaches unigram and some short-range structure, a looped source is perfectly fluent text that stops paying after its period, and a spliced source is half of each. The relative value of the eight, and the value of feeding them in one order rather than another, is what environment/probe_local.py is for."
+  },
+
+  "evaluation": {
+    "tokens": 2097152,
+    "batch": 16,
+    "metric": "mean token-level cross-entropy in nats, lower is better",
+    "note": "The graded split is NOT in the agent image. environment/data/devset_slice.bin is a proxy cut from a different FineWeb training shard and is the agent's own yardstick; it is never the graded number."
+  },
+
+  "data": {
+    "format": "FineWeb10B GPT-2 BPE. 1024-byte int32 header (magic 20240520, version 1, token count), then uint16 token ids."
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "note": "The frozen axes for slot OER-03. batch_size is the executed batch and is re-read by the verifier from its own copy at grading time. The two digests are no longer carried here at all: they are DERIVED from environment/operating_point.json by environment/bia_corpus.py:bound_axes, because an authored digest agrees with the thing it names only until somebody moves that thing. Changing anything here does not change what is graded; it only produces a run the grader refuses with frozen-axis-moved.",
+  "family": "F1",
+  "upstream": "modded-nanogpt, records/track_3_optimization/",
+  "batch_size": 32,
+  "fwd_bwd_per_step": 1,
+  "free": [
+    "optimization algorithm",
+    "hyperparameters and their schedules",
+    "model initialization"
+  ],
+  "frozen": [
+    "dataset",
+    "batch size",
+    "architecture",
+    "one forward-backward pass per step"
+  ],
+  "operating_point": "gradeable, declared in environment/operating_point.json",
+  "digests": "derived at runtime by bia_corpus.bound_axes() over the executed operating point"
+}

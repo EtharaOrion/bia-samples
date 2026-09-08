@@ -1,0 +1,21 @@
+{
+  "schema": "oer08-frozen-train-recipe/v1",
+  "notes": "THE FROZEN TRAINING RECIPE. It is not a free variable and no submission field reaches it. It is published so that a plan can be reproduced exactly. The optimizer, the schedule, the initialisation and the number of passes are identical for every plan; the only thing that differs between two runs is which tokens were fed and in what order.",
+  "grad_clip": 1.0,
+  "optimizer": {
+    "lr_embed": 0.018,
+    "lr_hidden": 0.006,
+    "lr_head": 0.006,
+    "lr_scalar": 0.018,
+    "beta1": 0.9,
+    "beta2": 0.999,
+    "eps": 1e-10,
+    "weight_decay": 0.0
+  },
+  "schedule": {
+    "shape": "wsd",
+    "warmup_frac": 0.05,
+    "final_frac": 0.0,
+    "stable_frac": 0.6
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "schema": "oer08-data-plan/v1",
+  "notes": "THE SHIPPED DEFAULT, and the LOW ANCHOR of the reward scale. It spends the budget in equal shares across all eight sources in declaration order, which is what a pipeline does when nobody chose a plan: use everything you were given, evenly. Five of the eight sources are damaged in one way or another and the order is the order the manifest happened to list them in. The verifier retrains it from scratch on every grading run rather than reading a stored number for it.",
+  "draws": [
+    {
+      "source": "clean-alpha",
+      "tokens": 1048576,
+      "offset": 0
+    },
+    {
+      "source": "clean-beta",
+      "tokens": 1048576,
+      "offset": 0
+    },
+    {
+      "source": "clean-gamma",
+      "tokens": 1048576,
+      "offset": 0
+    },
+    {
+      "source": "looped-eta",
+      "tokens": 1048576,
+      "offset": 0
+    },
+    {
+      "source": "looped-zeta",
+      "tokens": 1048576,
+      "offset": 0
+    },
+    {
+      "source": "scrambled-delta",
+      "tokens": 1048576,
+      "offset": 0
+    },
+    {
+      "source": "scrambled-epsilon",
+      "tokens": 1048576,
+      "offset": 0
+    },
+    {
+      "source": "spliced-theta",
+      "tokens": 1048576,
+      "offset": 0
+    }
+  ]
+}

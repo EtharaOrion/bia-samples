@@ -1,0 +1,75 @@
+{
+  "schema": "oer-nanogpt-shape-substrate/v1",
+  "note": "The frozen half of the task. Nothing a submission says may move any number in this file. The verifier reads its OWN copy of it at grading time, and tests/Dockerfile refuses to build unless the two copies are byte-identical.",
+
+  "shape_budget": {
+    "non_embedding_parameters": 10642944,
+    "tolerance_frac": 0.05,
+    "counted": "every parameter tensor that is not the token embedding and not the untied output projection: the per-block attention q, k, v and projection matrices and their biases, the per-block MLP matrices and their biases, the per-block RMSNorm gains, and the two model-level RMSNorm gains",
+    "not_counted": "the token embedding and the untied output projection, which are both vocab_size x model_dim and would otherwise dominate the budget so completely that the width would be fixed by arithmetic rather than chosen",
+    "note": "This is the scarce thing in this slot. A submission spends the SAME parameter budget however it likes across depth, width, head width and MLP expansion, and the reference figure is the count of the shipped default shape's block stack rather than a round number: it is what a 6-layer, 384-wide, 4x-expansion stack costs. A shape whose block stack lands outside the tolerance band is REFUSED by name, never rescaled to fit."
+  },
+
+  "architecture_frozen": {
+    "vocab_size": 50304,
+    "seq_len": 512,
+    "logit_softcap": 15.0,
+    "attention_scale": 0.12,
+    "positions": "rotary, computed from position alone",
+    "residual_form": "pre-norm, x + attn(norm(x)), x + mlp(norm(x))",
+    "mlp_nonlinearity": "squared ReLU",
+    "note": "Everything about the decoder EXCEPT its shape. A submission chooses how many blocks, how wide, how the width is split into heads and how far the MLP expands; it does not choose what a block is."
+  },
+
+  "shape_grid": {
+    "allowed_num_layers": [2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 14, 16],
+    "allowed_model_dim": [256, 320, 384, 448, 512],
+    "allowed_head_dim": [32, 64, 128],
+    "allowed_mlp_ratio": [2, 3, 4],
+    "note": "model_dim must be an exact multiple of head_dim. The width grid is bounded on both sides because the untied output projection is model_dim x vocab_size and its cost per token is linear in the width: the band from 256 to 512 keeps the per-token cost of every admissible shape inside a factor of about 1.6, so no shape can be much slower to train than any other and the comparison is about the shape rather than about who was given more compute."
+  },
+
+  "budget": {
+    "total_train_tokens": 6291456,
+    "micro_batch": 16,
+    "micro_steps": 768,
+    "note": "The compute budget is fixed in TOKENS and in forward and backward passes. Every shape sees the same 6291456 tokens from the same stream in the same order, as 768 micro-batches of 16 x 512. The figure was SIZED BY MEASUREMENT: the graded pass builds and trains three decoders over it from scratch, and this is what keeps that pass inside the grading envelope on a shared H100. No shape gets more steps than any other."
+  },
+
+  "recipe": {
+    "name": "AdamW",
+    "lr_embed": 0.018,
+    "lr_hidden": 0.006,
+    "lr_head": 0.006,
+    "lr_scalar": 0.018,
+    "beta1": 0.9,
+    "beta2": 0.999,
+    "eps": 1e-10,
+    "weight_decay": 0.0,
+    "grad_clip": 1.0,
+    "grad_accum": 1,
+    "schedule_shape": "wsd",
+    "warmup_frac": 0.05,
+    "stable_frac": 0.55,
+    "final_frac": 0.0,
+    "note": "FROZEN, and identical for every run. This is deliberately ONE recipe rather than a per-shape recipe: the question this slot asks is which shape spends a fixed parameter budget best UNDER A FIXED TRAINING RECIPE, and a shape that only wins once it is given its own learning rate has not answered it. The recipe is on the agent surface in full, so a submission can see exactly what its shape has to work under."
+  },
+
+  "init": {
+    "seed": 1234,
+    "law": "torch default module initialisation under the frozen seed, drawn in construction order",
+    "note": "Two runs of the SAME shape produce the same parameters. Two different shapes cannot share a tensor, so what is frozen across shapes is the seed and the drawing law rather than the values."
+  },
+
+  "evaluation": {
+    "tokens": 2097152,
+    "batch": 16,
+    "metric": "mean token-level cross entropy in nats, lower is better",
+    "note": "The graded split is NOT in the agent image. environment/data/devset_slice.bin is a proxy cut from a different training shard and is the agent's own yardstick; it is never the graded number."
+  },
+
+  "data": {
+    "format": "FineWeb10B GPT-2 BPE. 1024-byte int32 header (magic 20240520, version 1, token count), then uint16 token ids.",
+    "train_slice_tokens": 25165825
+  }
+}

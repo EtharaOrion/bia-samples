@@ -1,0 +1,49 @@
+{
+  "schema": "oer-nanogpt-substrate/v1",
+  "note": "The frozen half of OER-01. Nothing a submission says may move any number in this file. The verifier reads its own copy of it at grading time.",
+
+  "architecture": {
+    "vocab_size": 50304,
+    "num_layers": 6,
+    "model_dim": 384,
+    "head_dim": 64,
+    "num_heads": 6,
+    "seq_len": 512,
+    "logit_softcap": 15.0,
+    "attention_scale": 0.12
+  },
+
+  "budget": {
+    "micro_batch": 16,
+    "micro_steps": 3072,
+    "total_train_tokens": 25165824,
+    "note": "The CEILING on the budget, not the amount every run spends. Every run is allowed at most 3072 micro-batches and no run may exceed it. What this slot grades is how few of them a recipe needs, so a recipe that uses all 3072 has spent the whole ceiling."
+  },
+
+  "init": {
+    "seed": 1234,
+    "note": "Every run in this task starts from the same parameter tensors. The optimizer recipe is the only thing that differs between two runs."
+  },
+
+  "evaluation": {
+    "tokens": 2097152,
+    "batch": 16,
+    "grid_micro_steps": 128,
+    "grid_batches": 64,
+    "grid_tokens": 524288,
+    "metric": "mean token-level cross-entropy in nats, lower is better",
+    "note": "THE GRID IS THE INSTRUMENT OF THIS SLOT. Every run is evaluated after every 128 micro-batches on the SAME 524288-token window, giving 24 measured points across the ceiling. The grid is counted in MICRO-steps -- tokens consumed -- and not in optimizer steps, so two recipes that take different numbers of optimizer steps are still compared at the same points on the token budget. Nothing is interpolated: a crossing is reported at one of the points that was actually measured. The graded split is NOT in the agent image."
+  },
+
+  "target": {
+    "state": "measured-on-every-run",
+    "definition": "the shipped environment/default_recipe.json's OWN evaluation loss at the end of the budget ceiling, measured on the grading run",
+    "note": "There is no literal for the target anywhere in this bundle. It is whatever the untuned shipped recipe reaches when it spends the entire ceiling, re-measured from scratch every time the verifier runs. That is what makes the question 'how few tokens do you need to get there' answerable without a stored number."
+  },
+
+  "data": {
+    "format": "FineWeb10B GPT-2 BPE. 1024-byte int32 header (magic 20240520, version 1, token count), then uint16 token ids.",
+    "train_slice_tokens": 25165825,
+    "train_slice_note": "Exactly the 25165824 tokens the ceiling allows, plus one for the shifted target."
+  }
+}

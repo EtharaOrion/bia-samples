@@ -1,0 +1,8 @@
+{
+  "schema": "oer-nanogpt-shape/v1",
+  "notes": "The shipped default, and the CONTROL arm of the reward scale. It spends the parameter band the way the band most obviously invites: it makes the residual stream as wide as the band allows, which at this vocabulary leaves room for only two blocks, and it divides that width into as many attention heads as the bounds permit. Both of those are defensible instincts and neither is free. The verifier retrains this shape from scratch on every grading run rather than reading a stored number for it.",
+  "num_layers": 2,
+  "model_dim": 448,
+  "head_dim": 32,
+  "mlp_ratio": 4
+}

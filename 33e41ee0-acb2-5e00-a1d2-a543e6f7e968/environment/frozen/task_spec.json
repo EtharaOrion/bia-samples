@@ -1,0 +1,86 @@
+{
+  "schema": "oer-shape-substrate/v1",
+  "note": "The frozen half of OER-04. A submission chooses the SHAPE the frozen computation is instantiated at; it may not change the computation, the budget, the optimizer, the schedule, the initialisation rule or the evaluation. The verifier reads its OWN copy of this file at grading time.",
+  "computation": {
+    "vocab_size": 50304,
+    "seq_len": 512,
+    "logit_softcap": 15.0,
+    "attention_scale": 0.12,
+    "block": "pre-norm rotary causal self attention plus a squared-ReLU MLP, RMSNorm gains, untied output projection, upstream logit softcap",
+    "note": "Frozen. Nothing a submission says may move any of it."
+  },
+  "shape_bounds": {
+    "num_layers": [
+      2,
+      16
+    ],
+    "model_dim": [
+      256,
+      512
+    ],
+    "model_dim_multiple_of": 64,
+    "head_dim_allowed": [
+      32,
+      64,
+      128
+    ],
+    "mlp_ratio_allowed": [
+      2,
+      3,
+      4,
+      6
+    ],
+    "min_num_heads": 2,
+    "note": "num_heads is model_dim // head_dim and is derived, never declared. A model_dim that is not divisible by head_dim is refused.",
+    "num_layers_note": "The depth ceiling is 16 and it is a BUDGET bound, not a modelling opinion. A deeper stack at the same parameter count costs materially more wall clock for the same arithmetic because it is more sequential kernel launches, and the grading pass trains four models. 16 keeps the worst legal shape inside the grading envelope."
+  },
+  "parameter_band": {
+    "min": 48000000,
+    "max": 50600000,
+    "note": "The HARD constraint of this slot, and the only reason the shape is a trade rather than a free lunch. Total parameters are counted by the verifier from the instantiated model, not from a formula the submission supplies. At this vocabulary the token embedding and the untied output projection together are about 78 percent of a 384-wide model, so a wider residual stream is paid for almost entirely in depth."
+  },
+  "budget": {
+    "micro_batch": 16,
+    "micro_steps": 3072,
+    "total_train_tokens": 25165824,
+    "note": "The token budget is FIXED and identical for every shape: 3072 forward and backward passes over 16 x 512 tokens, one optimizer step each. A shape cannot buy itself more tokens or more steps. It can cost slightly more or less arithmetic -- a deeper model spends more on attention at the same parameter count -- and the shape bounds are set so that variation stays inside the grading envelope."
+  },
+  "optimizer": {
+    "frozen": true,
+    "lr_embed": 0.03,
+    "lr_hidden": 0.006,
+    "lr_head": 0.004,
+    "lr_scalar": 0.03,
+    "beta1": 0.9,
+    "beta2": 0.999,
+    "eps": 1e-10,
+    "weight_decay": 0.0,
+    "grad_clip": 1.0,
+    "note": "The whole optimizer is frozen and identical for every shape. It is not a free axis of this slot and the schema has no place to declare one."
+  },
+  "schedule": {
+    "frozen": true,
+    "shape": "wsd",
+    "warmup_frac": 0.1,
+    "final_frac": 0.0,
+    "stable_frac": 0.6
+  },
+  "init": {
+    "seed": 1234,
+    "note": "Every run seeds the generator identically before instantiating its shape. Two runs of the SAME shape therefore start from identical tensors; two different shapes cannot, because they do not have the same tensors to start from. The seed is what makes a shape's measurement repeatable, not what makes two shapes comparable -- the fixed budget and the fixed parameter band do that."
+  },
+  "evaluation": {
+    "tokens": 2097152,
+    "batch": 16,
+    "metric": "mean token-level cross-entropy in nats, lower is better",
+    "note": "The graded split is NOT in the agent image. environment/data/devset_slice.bin is a proxy cut from a different training shard and is the agent's own yardstick; it is never the graded number."
+  },
+  "repeatability": {
+    "measured_on_every_run": true,
+    "note": "The verifier trains the CONTROL shape twice on every grading run and reports the spread between the two as that run's repeatability floor. It is a measurement of this accelerator on this run, not a stored constant, and it is what the ambiguous-intermediate-state reason is decided against."
+  },
+  "data": {
+    "format": "FineWeb10B GPT-2 BPE. 1024-byte int32 header (magic 20240520, version 1, token count), then uint16 token ids.",
+    "train_slice_tokens": 25165825
+  }
+}

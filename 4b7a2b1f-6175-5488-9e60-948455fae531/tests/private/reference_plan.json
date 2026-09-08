@@ -1,0 +1,21 @@
+{
+  "schema": "oer08-data-plan/v1",
+  "notes": "THE HIGH ANCHOR. This file is staged only into the verifier image and is never on the agent surface. It is a BAR, not a claim to be the optimum of this space: it is the best plan an authoring search over this pool found, and a submission that reaches or beats it scores 1.0. Three findings hold it up. Drop the five damaged sources entirely -- the two looped ones are catastrophic on their own and neither scrambling nor splicing buys back the budget it costs. Spread the budget across ALL THREE clean sources rather than cycling one of them twice, because the third pass over fresh text beats a second pass over the same text. And put clean-alpha last: the three clean sources are within 0.03 nats of each other measured alone, but the run ends on whatever it saw last, and this order measured better than its reverse by more than the gap between the sources.",
+  "draws": [
+    {
+      "source": "clean-beta",
+      "tokens": 2801664,
+      "offset": 0
+    },
+    {
+      "source": "clean-gamma",
+      "tokens": 2793472,
+      "offset": 0
+    },
+    {
+      "source": "clean-alpha",
+      "tokens": 2793472,
+      "offset": 0
+    }
+  ]
+}

@@ -1,3 +1,0 @@
-# GENERATED SECTION. DO NOT HAND-EDIT. source: solution/grounding.yaml
-# SUPERSEDED by the nanoGPT re-base. This slot no longer ships its evaluation corpus as text.
-# The evaluation corpus is FineWeb10B, staged by https://github.com/KellerJordan/modded-nanogpt data/cached_fineweb10B.py, and lives at the verifier image alone.

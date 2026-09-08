@@ -1,0 +1,7 @@
+{
+  "schema": "oer16-compute-allocation/v1",
+  "notes": "THE SHIPPED DEFAULT, and the LOW ANCHOR of the reward scale. It spends the whole FLOP budget the way a team spends it when nobody did the arithmetic: on the largest model the budget will admit, with a large optimizer batch because large batches are efficient. Both halves of that instinct are wrong at this budget, and how wrong is not something you can read off this file -- the verifier retrains it from scratch on every grading run rather than reading a stored number for it.",
+  "model": "m06x640",
+  "micro_steps": 616,
+  "grad_accum": 8
+}

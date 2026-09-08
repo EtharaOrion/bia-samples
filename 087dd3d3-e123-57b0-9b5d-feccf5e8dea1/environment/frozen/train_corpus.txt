@@ -1,5 +1,0 @@
-WITHDRAWN. This file carries no corpus bytes and is not read by anything.
-
-The training stream is no longer an in-bundle text file. It is the FineWeb10B train shards, staged into this container at /app/data/fineweb10B by the upstream loader, and declared in data_config.json under "train".
-
-This path previously held 1631574 bytes that an earlier delivery pass wrote here in error. Those bytes were decoded fineweb_val_000000.bin text, that is, the held-out validation split, and they were byte-identical to what was delivered at eval_corpus.txt. Both copies are removed. See CORPUS_PROVENANCE.md.

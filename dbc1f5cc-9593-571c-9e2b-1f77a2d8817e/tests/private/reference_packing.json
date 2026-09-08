@@ -1,0 +1,24 @@
+{
+  "schema": "oer-nanogpt-packing/v1",
+  "notes": "THE HIGH ANCHOR. This file is staged only into the verifier image and is never on the agent surface. It is a BAR, not a claim to be the optimum of this space: it is the best plan an authoring search over this harness found, and a submission that reaches or beats it scores 1.0. Its distinguishing finding is that the budget is better spent as a SHORT-TO-LONG context curriculum at the smallest admissible micro-batch than as any single geometry: the smallest micro-batch buys the most optimizer steps, and spending the early steps on short rows and the late ones at the evaluation's own context beats holding either end for the whole run.",
+  "phases": [
+    {
+      "budget_frac": 0.34,
+      "rows": 64,
+      "seq_len": 128,
+      "grad_accum": 1
+    },
+    {
+      "budget_frac": 0.33,
+      "rows": 32,
+      "seq_len": 256,
+      "grad_accum": 1
+    },
+    {
+      "budget_frac": 0.33,
+      "rows": 16,
+      "seq_len": 512,
+      "grad_accum": 1
+    }
+  ]
+}

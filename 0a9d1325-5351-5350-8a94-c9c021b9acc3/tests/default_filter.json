@@ -1,0 +1,8 @@
+{
+  "schema": "oer-curation-filter/v1",
+  "notes": "The shipped default chain, and the CONTROL arm of the reward scale. It reads like a quality filter and it is not one: neither `quality_score` nor `lang_prob_en` is a field the source register carries, so both predicates resolve nothing, both are no-ops, and the chain admits the pool unchanged. The runner reports this in `rules_unresolved` and exits zero, which is the failure mode this slot is about. The verifier retrains this chain from scratch on every grading run rather than reading a stored number for it.",
+  "rules": [
+    {"field": "quality_score", "op": "ge", "value": 0.5},
+    {"field": "lang_prob_en", "op": "ge", "value": 0.9}
+  ]
+}

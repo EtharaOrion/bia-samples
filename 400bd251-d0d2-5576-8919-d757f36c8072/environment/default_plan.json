@@ -1,0 +1,9 @@
+{
+  "schema": "oer-kernel-plan/v1",
+  "notes": "The shipped default, and the CONTROL arm of the reward scale. It is the canonical, most conservative execution of the frozen computation: the textbook attention that materialises the full score matrix, one unchunked cross-entropy over all 8192 rows at once, and every auxiliary computation carried in float32. It is also the plan every other plan is checked against for equivalence, which is why it is public rather than private -- correctness is not a secret here, only the speed bar is. The verifier re-times it from scratch on every grading run rather than reading a stored number for it.",
+  "attention": "math",
+  "loss_chunks": 1,
+  "logit_dtype": "fp32",
+  "rotary_dtype": "fp32",
+  "qk_norm_dtype": "fp32"
+}

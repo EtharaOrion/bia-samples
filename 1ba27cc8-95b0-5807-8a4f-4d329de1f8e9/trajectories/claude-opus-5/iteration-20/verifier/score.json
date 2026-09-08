@@ -1,0 +1,115 @@
+{
+  "checkers": [
+    {
+      "detail": {
+        "attempts": 1
+      },
+      "id": "carried_summary_is_current",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "detail": {
+        "attempts": 1,
+        "per_attempt_bound_seconds": 432.0
+      },
+      "id": "bound_envelope_respected",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "detail": {
+        "attempts": 1
+      },
+      "id": "frozen_axes_untouched",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "detail": {
+        "attempts": 1
+      },
+      "id": "graded_crossing_recomputed_unsmoothed",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "detail": {
+        "attempts": 1
+      },
+      "id": "evaluated_weights_owned_by_the_harness",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "detail": {
+        "window": 3
+      },
+      "id": "crossing_sustained_across_scheduled_evaluations",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "detail": {
+        "claims_checked": 0
+      },
+      "id": "early_halt_yields_no_crossing",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "detail": {
+        "tolerance": 40
+      },
+      "id": "reported_crossing_reconciles_with_verifier_measurement",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "detail": {
+        "indices": [
+          1
+        ],
+        "metric": 1150
+      },
+      "id": "graded_metric_consolidated_over_distinct_recipes",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "detail": {
+        "consolidation_indices": [
+          1
+        ],
+        "determining_index": 1,
+        "frontier_improvements": [
+          1
+        ],
+        "inherited_from_frontier_components": []
+      },
+      "id": "refinement_frontier_carried_across_iterations",
+      "passed": true,
+      "reason": ""
+    }
+  ],
+  "metric": {
+    "attempts": 1,
+    "baseline": 1800,
+    "consolidation_indices": [
+      1
+    ],
+    "final_loss": 4.504484,
+    "final_selection": "best",
+    "graded_step": 1150,
+    "no_progress_loss": 6.8,
+    "target": 1150,
+    "target_loss": 4.55
+  },
+  "metrics": {
+    "n_seeds": 1,
+    "seeds_required": 1
+  },
+  "reason": "consolidated-crossing-graded",
+  "reason_code": 0,
+  "score": 1.0
+}

@@ -1,0 +1,13 @@
+{
+  "schema": "oer-nanogpt-schedule/v1",
+  "notes": "THE HIGH ANCHOR. Staged only into the verifier image and never on the agent surface. It is a BAR and not a claim to be the optimum of this space: it is the best schedule an authoring search over this harness found. Its distinguishing finding is that a fifth of the whole budget spent on warmup pays for itself, which is far longer than the usual few percent, and that after that warmup the run should HOLD the peak for half of what remains rather than begin decaying at once.",
+  "schedule": {
+    "shape": "wsd",
+    "warmup_shape": "linear",
+    "warmup_frac": 0.2,
+    "warmup_power": 1.0,
+    "stable_frac": 0.5,
+    "final_frac": 0.0,
+    "decay_power": 1.0
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "_comment": "The executed operating point. Read by environment/bia_corpus.py, and through it by bia_loader.py, bia_harness.py, gpt.py and the verifier's evaluator. ONE declaration; nothing downstream restates a number from here.",
+  "selected": "gradeable",
+  "points": {
+    "gradeable": {
+      "seq_len": 512,
+      "vocab_size": 50304,
+      "n_layer": 4,
+      "n_head": 4,
+      "n_embd": 256,
+      "batch_size": 32,
+      "eval_stride": 20,
+      "sustain_points": 3,
+      "target_loss": 6.22,
+      "max_schedule_steps": 400,
+      "corpus": "fineweb10B-gpt2",
+      "shard_glob": "fineweb_train_*.bin",
+      "init_seed": 20260101,
+      "_state": "MEASURED in this bundle's own verifier image on one H100 80GB. Per full max_schedule_steps run: 108 s of training and 45 s of held-out evaluation, and the verifier makes three such runs -- the handed anchor probe, the refined anchor probe and the submission -- so the graded run lands near 460 s. The bound point below could not be graded at all: the slot last ran 1987 s and returned a constant zero.",
+      "_target_loss_note": "6.22 is CHOSEN BY MEASUREMENT, not by authoring. The held-out curves of the two verifier probes were measured at this point on the verifier's own split, at the bound eval_stride of 20, and 6.22 is the bar at which the two ends of the reward scale are furthest apart in STEPS while still leaving sustain_points further scheduled points inside max_schedule_steps for the later of them. Measured: the handed recipe reaches 6.2292 at step 260 and 6.2475 at 240; the refined probe reaches 6.2100 at 220 and 6.2378 at 200. Every one of those sits at least 0.009 from the bar, against a re-run reproducibility of 0.0003 measured by running the handed recipe twice."
+    },
+    "bound": {
+      "seq_len": 1024,
+      "vocab_size": 50304,
+      "n_layer": 12,
+      "n_head": 6,
+      "n_embd": 768,
+      "batch_size": 480,
+      "eval_stride": 100,
+      "sustain_points": 3,
+      "target_loss": 3.279,
+      "max_schedule_steps": 4000,
+      "corpus": "fineweb10B-gpt2",
+      "shard_glob": "fineweb_train_*.bin",
+      "init_seed": 20260101,
+      "_state": "The upstream nanogpt speedrun point this slot was authored against. Retained and selectable with BIA_OPERATING_POINT=bound so the re-scale below can be checked against it rather than trusted. It is NOT gradeable: measured, one optimizer step of this configuration plus its thirty 500 MB snapshots and their held-out evaluations does not finish inside any grading budget in this corpus."
+    }
+  }
+}

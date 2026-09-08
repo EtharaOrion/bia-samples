@@ -1,0 +1,6 @@
+{
+  "schema": "oer22-selection/v1",
+  "notes": "THE HIGH ANCHOR. This file is staged only into the verifier image and is never on the agent surface. It is a BAR, not a claim to be the optimum of this space: it is the best retention selection an authoring search over this harness and this frozen run found on the held-out split, and a submission that reaches or beats it scores 1.0. Its distinguishing finding is that the window and the WEIGHTING are separate decisions -- spending all six retention slots on a contiguous tail and then weighting them in proportion to recency beats both the uniform average of the same six and the tighter uniform windows that score best on a naive sweep. The weights are 1..6 normalised by 21. No number from this file is read as a metric anywhere; the verifier evaluates this selection from scratch on every grading run exactly as it evaluates the submission.",
+  "keep": [11, 12, 13, 14, 15, 16],
+  "weights": [0.047619048, 0.095238095, 0.142857143, 0.19047619, 0.238095238, 0.285714286]
+}

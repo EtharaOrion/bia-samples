@@ -1,0 +1,49 @@
+{
+  "schema": "oer-kernel-substrate/v1",
+  "note": "The frozen half of OER-28. A submission chooses how the frozen computation is EXECUTED; it may not change what the computation is, the parameters it runs on, the batch it runs over or the number of steps that are timed.",
+  "architecture": {
+    "vocab_size": 50304,
+    "num_layers": 6,
+    "model_dim": 384,
+    "head_dim": 64,
+    "num_heads": 6,
+    "seq_len": 512,
+    "logit_softcap": 15.0,
+    "attention_scale": 0.12
+  },
+  "step": {
+    "micro_batch": 8,
+    "tokens_per_step": 4096,
+    "note": "One timed step is one forward pass and one backward pass over 8 x 512 tokens under bfloat16 autocast, followed by the gradients being dropped. No optimizer runs: this slot measures the cost of the computation, not of the update. The step is 8 sequences rather than a training-sized 16 for a measured reason: the unchunked loss path in the shipped control materialises a [rows x 50304] float32 logit tensor, and at 16 sequences that peak made the timed run fail with CUDA out-of-memory on a grading host that was already carrying another tenant. Halving the step keeps every plan's relative cost intact -- the loss head still dominates the step -- while keeping the whole measurement inside a few gigabytes."
+  },
+  "init": {
+    "seed": 1234,
+    "note": "Every plan is timed on the SAME parameter tensors, built once under this seed and reused. Two plans differ by their execution and by nothing else."
+  },
+  "equivalence": {
+    "batches": 4,
+    "loss_tolerance": 0.0005,
+    "grad_relative_tolerance": 0.0005,
+    "note": "THE HARD GATE. Before anything is timed, the submitted plan and the reference plan are each run forward and backward on the SAME frozen weights over the same fixed batches drawn from the verifier's held-out slice. The submitted plan must agree with the reference plan on the loss to within loss_tolerance in absolute nats and on the global gradient norm to within grad_relative_tolerance in relative terms. A plan that does not is refused with numerical-output-diverged at exactly 0.0, however few microseconds it charged. The gate is never a soft penalty and never scales the reward.",
+    "tolerance_provenance": "Both tolerances were set from authoring measurements and are recorded with them in solution/grounding.md. Across every plan that IS the same computation the worst disagreement measured was 5.7e-5 nats of loss and 1.5e-4 relative gradient norm; carrying the logit softcap and the cross-entropy in bfloat16 measured 1.1e-4 and 1.2e-3. The tolerances sit between those, with more than a threefold margin above every equivalent plan and more than a twofold margin below the one that is not."
+  },
+  "reference_plan": {
+    "attention": "math",
+    "loss_chunks": 1,
+    "logit_dtype": "fp32",
+    "rotary_dtype": "fp32",
+    "qk_norm_dtype": "fp32",
+    "note": "The canonical, most conservative execution of the frozen computation: the textbook attention, one unchunked cross-entropy, everything carried in float32. It is what every other plan is checked AGAINST for equivalence. It is deliberately NOT private -- correctness is public, and only the speed bar is held back."
+  },
+  "timing": {
+    "warmup_steps": 24,
+    "steps_per_round": 24,
+    "rounds": 9,
+    "estimator": "median over rounds of the mean CUDA-event-timed step latency within a round",
+    "note": "The three plans are timed ROUND-ROBIN within each round rather than one after another, and the reported latency for each is the MEDIAN over its rounds. Interleaving means a machine that is busy is busy for all three. The MEDIAN rather than the minimum is a measurement: on this substrate the first round after warmup is systematically faster than the rest and its plans are measured as the machine ramps, so a minimum picks that one anomalous round and picks it for different plans at different points of the ramp. Rounds after the first agree with each other to within half a percent. The reward is a ratio of DIFFERENCES of latencies, so a slowdown that multiplies all three equally cancels out of it exactly."
+  },
+  "data": {
+    "format": "FineWeb10B GPT-2 BPE. 1024-byte int32 header (magic 20240520, version 1, token count), then uint16 token ids.",
+    "note": "The tokens the timed step consumes come from the verifier's held-out slice, which is not in the agent image. Nothing about this slot depends on which tokens they are -- the cost of a matmul does not know what it multiplies -- but the equivalence check is run on them, so they are the verifier's to choose."
+  }
+}

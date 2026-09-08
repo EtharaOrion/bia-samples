@@ -1,0 +1,9 @@
+{
+  "schema": "oer-kernel-plan/v1",
+  "notes": "THE HIGH ANCHOR. Staged only into the verifier image and never on the agent surface. It is a BAR, not a claim to be the fastest point of this space: it is the fastest plan an authoring sweep over this harness found that also passes the equivalence gate. Its finding is that the whole span of this task is the attention backend -- the textbook one materialises the score matrix and costs about 17 percent more per step than either fused backend -- and that every other axis in the schema is a distractor that costs time rather than saving it. Chunking the cross-entropy is slower at every chunk count offered, and bfloat16 in the logit path is both slower and outside the equivalence tolerance on the gradient.",
+  "attention": "flash",
+  "loss_chunks": 1,
+  "logit_dtype": "fp32",
+  "rotary_dtype": "fp32",
+  "qk_norm_dtype": "fp32"
+}

@@ -1,0 +1,22 @@
+{
+  "schema": "oer-displacement-recipe/v1",
+  "notes": "The shipped default. AdamW at 3e-4 with betas (0.9, 0.999), eps 1e-8, weight decay 0.1, a constant learning rate and no warmup: a recipe that trains and converges and has not been tuned for this ceiling. Its OWN evaluation loss at the end of the ceiling is the TARGET every run is measured against, and where it first reaches that loss is the CONTROL endpoint of the reward scale. The verifier re-measures both from scratch on every grading run rather than reading a stored number.",
+  "grad_accum": 1,
+  "grad_clip": 1.0,
+  "optimizer": {
+    "lr_embed": 0.0003,
+    "lr_hidden": 0.0003,
+    "lr_head": 0.0003,
+    "lr_scalar": 0.0003,
+    "beta1": 0.9,
+    "beta2": 0.999,
+    "eps": 1e-08,
+    "weight_decay": 0.1
+  },
+  "schedule": {
+    "shape": "constant",
+    "warmup_frac": 0.0,
+    "final_frac": 1.0,
+    "stable_frac": 1.0
+  }
+}

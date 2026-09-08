@@ -1,0 +1,205 @@
+# OER-09, family F12 data curation, archetype AR6 silent execution failures.
+# schema_version is a top-level scalar and must stay above the first table header:
+# TOML scopes every key to the most recent header, so an assignment written below
+# [task] silently becomes task.schema_version while still reading correct.
+schema_version = "1.4"
+
+multi_step_reward_strategy = "last"
+
+artifacts = [
+  "/workspace/submission/filter.json",
+  "/logs/agent/trajectory.jsonl",
+  "/logs/verifier/reward.txt",
+  "/logs/verifier/reward.json",
+  "/logs/verifier/score.json",
+]
+
+[task]
+name = "bia/oer-09-silent-filter-failure"
+version = "1.0.0"
+description = """
+Curate a source pool so that a model trained under a frozen budget, a frozen
+architecture and a frozen optimizer reaches a lower validation loss on a frozen
+held-out split. The curation filter chain is the only free axis. The filter runner
+in this environment fails open: a predicate that resolves no field matches nothing,
+and the runner still exits zero and reports success while emitting the source pool
+unchanged. The shipped default chain is exactly that case and is the uncurated
+control arm of the reward scale.
+"""
+authors = ["Bia"]
+keywords = ["optimization", "bounded-continuous", "data-curation", "silent-failure"]
+
+[metadata]
+tags = ["optimization", "bounded-continuous"]
+category = "optimization"
+slot = "OER-09"
+provisional_identifier = "OER-09"
+title = "Silent filter failure that leaves the pool unchanged"
+family = "F12"
+family_title = "data curation"
+primary_archetype = "AR6"
+primary_archetype_title = "Silent Execution Failures"
+entry_point_tests = "tests/test.sh"
+entry_point_solution = "solution/solve.sh"
+
+target_tier = "Frontier-defeat"
+tier_exemption_granted = "none"
+anchorable_tier = "capped below Hard"
+anchorable_tier_basis = "Standing batch-level Perception-axis exemption. This task family is text and code only, so the Perception axis carries no category; the exemption is batch-level, recorded once, closes by nothing, and no perception lever is authored to fill it. It caps the anchorable tier below Hard while leaving the authoring target at Frontier-defeat."
+
+# The graded path is THREE from-scratch training runs plus three evaluations and is
+# sized to fit well inside one grading pass. The number below is MEASURED, not
+# declared: see solution/grounding.md.
+graded_path_seconds_measured = 190
+graded_path_seconds_budget = 900
+
+[metadata.metric]
+quantity = "validation loss of the trained model"
+direction = "lower"
+graded_by = "verifier"
+computed_on = "the frozen held-out split, from harness-owned weights, at the bound evaluation point"
+never_from = [
+  "a number the training loop reported",
+  "a number in the submission's stdout",
+  "a field the submission wrote",
+]
+smoothing_on_graded_path = false
+
+[metadata.metric.anchors]
+state = "absent-by-design"
+authority = "This family is unscoped and carries no published anchor, so no literal for either endpoint appears anywhere in this bundle. Both endpoints are MEASURED on every grading run by real from-scratch training runs inside the verifier: the control by retraining the shipped environment/default_filter.json, which resolves no predicate and therefore trains on the uncurated pool, and the reference by training tests/private/reference_filter.json, which is staged only into the verifier image. If either anchor fails to produce a finite loss the run refuses at 0.0 with reason anchor-diverged, and if the two coincide it refuses with calibration-span-nonpositive. Neither path substitutes a stored value."
+reward_formula_lower_is_better = "raw = (baseline_metric - agent_metric) / (baseline_metric - target_metric)"
+reward_clip = "score = min(max(raw, 0.0), 1.0)"
+normalisation_operated = "raw = (control_loss - graded_loss) / (control_loss - reference_loss)"
+normalisation_note = "control_loss and reference_loss are measured by the harness inside this same run and are live state, not published evidence. They are explicitly NOT the family baseline and target anchors, which remain absent."
+
+[metadata.frozen]
+axes = ["token_budget", "model", "optimizer", "schedule", "pool", "evaluation_split"]
+token_budget_tokens = 25165824
+block_tokens = 8192
+blocks = 3072
+tokens_per_step = 8192
+steps = 3072
+substrate = "environment/frozen/task_spec.json"
+model = "environment/model/nanogpt.py"
+optimizer = "environment/frozen/task_spec.json [optimizer]"
+schedule = "environment/frozen/task_spec.json [schedule]"
+pool = "environment/pool/"
+evaluation_split = "staged only into the verifier image at tests/holdout/val_slice.bin"
+
+[metadata.free]
+axes = ["curation_filter_chain"]
+surface = "the curation filter chain applied to the source pool under environment/pool/"
+
+[metadata.reward]
+kind = "single float"
+interval = "[0.0, 1.0]"
+direction = "higher is better"
+binary = false
+full_reward = 1.0
+carrier = "/logs/verifier/reward.txt"
+reason_carrier = "/logs/verifier/score.json"
+zero_carries_reason = true
+
+[metadata.hygiene]
+note = """
+Schema and budget validation is a GATE, not a grade. filter_schema.py answers one
+question -- is this a well-formed filter chain -- and a failure REFUSES the run at
+0.0 with a machine-readable reason. It never scales the float and never contributes
+a partial credit. The runner's own report is recorded in the score document for a
+human reader and is never scaled into the reward: a chain that resolved nothing is
+not penalised by a rule, it simply trains on the uncurated pool and therefore
+measures like the control.
+"""
+refusal_reasons = [
+  "submission-absent",
+  "filter-unreadable",
+  "filter-not-an-object",
+  "filter-key-unknown",
+  "filter-key-missing",
+  "filter-schema-unrecognised",
+  "filter-rules-not-a-list",
+  "filter-too-many-rules",
+  "filter-rule-not-an-object",
+  "filter-field-not-a-string",
+  "filter-op-unknown",
+  "filter-value-not-a-number",
+  "pool-underfilled",
+  "accelerator-absent",
+  "verifier-substrate-unavailable",
+  "verifier-anchor-invalid",
+  "verifier-anchor-underfilled",
+  "anchor-run-failed",
+  "anchor-diverged",
+  "calibration-span-nonpositive",
+  "agent-run-failed",
+  "agent-diverged",
+  "grading-chain-failed",
+  "grading-timed-out",
+  "grading-killed",
+]
+
+[metadata.optimization]
+max_timeout_hours = 6.0
+max_timeout_role = "refinement-loop terminator across attempts"
+budget_hours = 0.3
+budget_hours_minutes = 18.0
+budget_hours_role = "per-attempt completion bound"
+max_attempts = 20
+final_selection = "best"
+budget_envelope = "one H100, single accelerator, no multi-GPU scaling"
+compute_envelope_accelerators = 1
+
+[metadata.build]
+dockerfile = "environment/Dockerfile"
+verifier_dockerfile = "tests/Dockerfile"
+
+[environment]
+docker_image = "pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407"
+os = "linux"
+cpus = 8
+memory_mb = 65536
+storage_mb = 32768
+gpus = 1
+gpu_types = ["H100"]
+workdir = "/app"
+build_timeout_sec = 3600
+network_mode = "public"
+
+[agent]
+submission_path = "/workspace/submission/filter.json"
+entry_point = "solution/solve.sh"
+network_mode = "none"
+note = """
+The pool, the register and every dependency are staged at image build, so the
+solving agent needs no run-time egress. /workspace is the only path shared with
+the verifier.
+"""
+
+[verifier]
+egress = "denied"
+network_mode = "none"
+docker_image = "pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407"
+image_definition_path = "tests/"
+entry_point = "tests/test.sh"
+reward_path = "/logs/verifier/reward.txt"
+score_document_path = "/logs/verifier/score.json"
+reward_kind = "single float on the closed interval 0.0 to 1.0, higher is better, never binary"
+never_imports_submission = true
+note = """
+The submission is a JSON declaration of predicates. The verifier parses it,
+bounds-checks it and applies it with its own copy of the runner. No code from the
+agent surface is imported or executed here, and no number the submission reports
+about itself is read.
+"""
+
+[solution]
+oracle = "solution/reference.py"
+entry = "solution/solve.sh"
+grounding = "solution/grounding.md"
+note = """
+The oracle installs a chain that was derived by a search over this exact register
+and harness during authoring. It is NOT the verifier's private reference chain:
+the two were arrived at separately and differ in their thresholds, so the reference
+arm of the gate is never the reference chain being graded against itself.
+"""

@@ -1,0 +1,181 @@
+# Harbor delivery manifest, slot OER-16.
+#
+# schema_version is a TOP-LEVEL scalar and is written above the first table header on
+# purpose. TOML scopes every key to the most recent header, so an assignment written
+# after `[task]` would silently become `task.schema_version` and leave the top-level
+# scalar absent while the file still read correct to a human.
+schema_version = "1.4"
+
+multi_step_reward_strategy = "last"
+
+artifacts = [
+  "/workspace/submission/allocation.json",
+  "/logs/verifier/reward.txt",
+  "/logs/verifier/reward.json",
+  "/logs/verifier/score.json",
+]
+
+[task]
+name = "bia/oer-16-compute-budget-allocation"
+version = "2.0.0"
+description = """
+Split a fixed FLOP budget between model size, token count and optimizer batch size so
+that the resulting nanoGPT reaches a lower validation loss on the verifier's held-out
+split. The budget is counted by declared arithmetic that is byte-identical on the agent
+surface and inside the verifier, so what an allocation costs never depends on which
+machine ran it. The corpus is finite and smaller than the budget can buy at the small
+end of the menu, so repetition is one of the allocations on offer. Reward is the
+fraction of the gap closed between two anchor allocations that are BOTH retrained from
+scratch on every grading run.
+"""
+authors = ["Bia"]
+keywords = ["optimization", "bounded-continuous", "compute-budget"]
+
+[metadata]
+tags = ["optimization", "bounded-continuous"]
+category = "optimization"
+batch = "OER-2026-08-20"
+slot = "OER-16"
+provisional_identifier = "OER-16"
+title = "Compute budget allocation across model size, tokens and batch"
+family = "F10"
+family_title = "compute budget allocation"
+primary_archetype = "AR8"
+archetype_name = "Language Hallucination Override"
+archetype_exclusivity = "exactly one primary archetype, fixed at scope time. No buffet within the slot."
+archetype_note = """
+The received wisdom this slot overrides is the one every practitioner carries: spend a
+compute budget on the largest model it will admit, and use a large optimizer batch
+because large batches are efficient. At this budget against this corpus BOTH halves are
+expensive, and the frontier runs monotonically the other way across the whole menu.
+Nothing in the bundle asserts that -- the numbers a solver needs are only obtainable by
+running environment/train_local.py, and the graded anchors are retrained on every pass.
+"""
+metric = "validation cross-entropy in nats on the verifier's held-out FineWeb slice"
+metric_direction = "lower"
+frozen = "the initialisation seed, the optimizer and its schedule, the width-scaling rule, the FLOP budget and its accounting, the corpus, and the evaluation window"
+free = "which menu entry to train, how many micro-batches to buy, and how many of them go into one optimizer step"
+entry_point_tests = "tests/test.sh"
+entry_point_solution = "solution/solve.sh"
+
+reward_kind = "single float"
+reward_interval = "closed, 0.0 to 1.0"
+reward_direction = "higher is better"
+reward_binary = false
+reward_full = 1.0
+reward_formula = "raw = (default_loss - agent_loss) / (default_loss - reference_loss)"
+reward_clip = "score = min(max(raw, 0.0), 1.0)"
+reward_target_is_a_bar = "reaching the reference scores exactly 1.0 and beating it also scores 1.0"
+
+anchors_state = "measured-on-every-run"
+anchors_runtime_effect = "The low anchor is environment/default_allocation.json retrained from scratch; the high anchor is tests/private/reference_allocation.json, which is staged only into the verifier image. If either fails to produce a finite loss the run refuses at 0.0 with reason anchor-diverged, and if the two coincide it refuses with calibration-span-nonpositive. Neither path substitutes a stored value."
+
+anchorable_tier = "capped below Hard by the standing batch-level Perception-axis exemption"
+perception_note = """
+This task family is text and code only, so the Perception axis carries no load here.
+"""
+
+[metadata.optimization]
+max_timeout_hours = 6.0
+budget_hours = 0.5
+budget_hours_role = "per-attempt completion bound"
+max_attempts = 20
+final_selection = "best"
+budget_envelope = "one H100, single accelerator, no multi-GPU scaling"
+compute_envelope_accelerators = 1
+
+# The graded path is THREE from-scratch training runs plus three evaluations, each
+# inside the same declared FLOP budget, so no submission can make it cost more than
+# any other. The number below is measured rather than declared: see
+# solution/grounding.md.
+graded_path_seconds_measured = 300
+graded_path_seconds_budget = 900
+
+[environment]
+docker_image = "pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407"
+os = "linux"
+cpus = 8
+memory_mb = 65536
+storage_mb = 32768
+gpus = 1
+gpu_types = ["H100"]
+workdir = "/app"
+build_timeout_sec = 3600
+network_mode = "public"
+
+[agent]
+submission_path = "/workspace/submission/allocation.json"
+network_mode = "none"
+note = """
+The corpus and every dependency are staged at image build, so the solving agent needs no
+run-time egress. /workspace is the only path shared with the verifier; /app is not, and
+an allocation left in /app is one that is never graded.
+"""
+
+[verifier]
+egress = "denied"
+network_mode = "none"
+docker_image = "pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407"
+reward_path = "/logs/verifier/reward.txt"
+score_document_path = "/logs/verifier/score.json"
+reward_kind = "single float on the closed interval 0.0 to 1.0, higher is better, never binary"
+never_imports_submission = true
+note = """
+The submission is a JSON declaration of three numbers. The verifier parses it,
+bounds-checks it against the same FLOP arithmetic the agent surface carries, and trains
+it. No code from the agent surface is imported or executed here, and no number the
+submission reports about itself is read.
+
+The verifier image stages the corpus by COPY from the bundle rather than fetching it at
+build time. Build egress that a bundle depends on is a bundle that stops reproducing the
+day the network does.
+
+/logs/verifier is a DIRECTORY in the verifier image and deliberately NOT a VOLUME. An
+anonymous volume declared at that path shadows the /logs bind mount the runner supplies,
+and every carrier written under it is discarded with the container.
+"""
+
+[verifier.hygiene]
+note = """
+Schema and budget validation is a GATE, not a grade. allocation_schema.py answers one
+question -- is this a well-formed allocation inside the declared FLOP budget -- and a
+failure REFUSES the run at 0.0 with a machine-readable reason. It never scales the float
+and never contributes partial credit.
+"""
+refusal_reasons = [
+  "submission-absent",
+  "allocation-unreadable",
+  "allocation-not-an-object",
+  "allocation-schema-unrecognised",
+  "allocation-key-unknown",
+  "allocation-key-missing",
+  "allocation-value-not-an-integer",
+  "allocation-model-not-on-menu",
+  "allocation-grad-accum-not-allowed",
+  "allocation-micro-steps-below-floor",
+  "allocation-micro-steps-not-a-multiple-of-grad-accum",
+  "allocation-flop-budget-overspent",
+  "verifier-anchor-allocation-invalid",
+  "accelerator-absent",
+  "verifier-substrate-unavailable",
+  "anchor-run-failed",
+  "anchor-diverged",
+  "calibration-span-nonpositive",
+  "agent-run-failed",
+  "agent-allocation-diverged",
+  "grading-chain-failed",
+  "grading-timed-out",
+  "grading-killed",
+]
+
+[solution]
+oracle = "solution/reference.py"
+entry = "solution/solve.sh"
+grounding = "solution/grounding.md"
+note = """
+The oracle installs the allocation an authoring sweep of the whole menu selected. It is
+NOT the verifier's private reference allocation, which names a different menu entry: the
+two sit on a flat stretch of the frontier a couple of ten-thousandths of a nat apart, so
+the reference arm of the gate is a real submission graded against a bar it did not
+author rather than the bar being graded against itself.
+"""

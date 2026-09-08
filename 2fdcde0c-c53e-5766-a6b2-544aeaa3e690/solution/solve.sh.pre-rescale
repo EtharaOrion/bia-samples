@@ -1,0 +1,31 @@
+# FORGE-CANARY-BEGIN
+# 0: 04a07d4a4dbe1610a0d0f4f76dd5d8855ce7c9959f5f9da62f7ca3a37badf04e
+# 1: ab010c555645a169bbd6c8250824b031ec949421f2af52a3c2c151f4f20ca751
+# 2: cded92d02e0fe9028765be5b930d5d9ffacb829830009d660e58080989640e3a
+# 3: bc67f7d3f21bbf9e191d034ad3674e502a31dfe61f5b642a2bc7ceb35e1ddfe9
+# FORGE-CANARY-END
+#!/usr/bin/env bash
+# GENERATED SECTION. DO NOT HAND-EDIT.
+# Source: solution/grounding.yaml. Regenerate with: python3 solution/recompute.py
+#
+# Oracle entry point for slot OER-03.
+#
+# Installs the reference solution as the submission and runs it under the
+# pinned harness. The reference crosses at step 2600 on the verifier's
+# cadence and carries a schedule of 3000 steps, so 400 steps of schedule sit
+# past the graded point and buy exactly nothing. That is the point of the
+# reference, not an accident in it.
+set -euo pipefail
+
+HERE="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+BUNDLE="$(dirname "$HERE")"
+
+mkdir -p /app
+cp "$HERE/reference.py" /app/submission.py
+cp "$BUNDLE"/environment/bia_harness.py "$BUNDLE"/environment/bia_loader.py "$BUNDLE"/environment/shape.json /app/env/ 2>/dev/null || true
+
+cd /app
+python3 /app/submission.py
+
+# The reference never decides when it crossed and never reports a crossing.
+# The verifier recomputes the graded step from its own evaluations.
