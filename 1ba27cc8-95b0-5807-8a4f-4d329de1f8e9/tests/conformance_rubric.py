@@ -123,6 +123,39 @@ def c11_jsonl_schema(root):
         if sorted(d)!=["id","rubric"]: bad.append((n,sorted(d)))
     return not bad, "every line is exactly {id, rubric}" if not bad else "schema drift: %s"%bad
 
+def c12_committed_matches_generator(root):
+    """The emitted verdicts must be exactly what the committed generator produces.
+
+    Without this, a hand-edited rubric_verdicts.json passes every other check: the
+    grounding is guarded, the gate is guarded, but nothing binds the artifact to its
+    source. That is a result naming a subject it does not pin.
+    """
+    import shutil, subprocess, tempfile, hashlib
+    tmp = pathlib.Path(tempfile.mkdtemp())
+    try:
+        work = tmp / "b"
+        shutil.copytree(root, work, ignore=shutil.ignore_patterns("__pycache__", ".git"))
+        r = subprocess.run([sys.executable, "tests/regenerate_rubric_verdicts.py"],
+                           cwd=str(work), capture_output=True, text=True, timeout=600)
+        if r.returncode != 0:
+            return False, "generator failed: " + (r.stderr or r.stdout)[:120]
+        drift = []
+        for emitted in sorted(work.rglob("rubric_verdicts.json")):
+            rel = emitted.relative_to(work)
+            committed = root / rel
+            if not committed.is_file():
+                drift.append(str(rel)); continue
+            if hashlib.sha256(emitted.read_bytes()).hexdigest() != \
+               hashlib.sha256(committed.read_bytes()).hexdigest():
+                drift.append(str(rel))
+        n = len(list(work.rglob("rubric_verdicts.json")))
+        return (not drift,
+                "all %d committed verdicts equal the generator's output" % n if not drift
+                else "%d committed verdict(s) differ from the generator: %s" % (len(drift), drift[:3]))
+    finally:
+        shutil.rmtree(tmp, ignore_errors=True)
+
+
 CHECKS=[("C1  regeneration determinism (G-RUB-REGEN)",c1_regen_determinism),
         ("C2  compiled/test identifier set equality",c2_set_equality),
         ("C3  compilation floor >= 0.75",c3_compilation_floor),
@@ -133,7 +166,10 @@ CHECKS=[("C1  regeneration determinism (G-RUB-REGEN)",c1_regen_determinism),
         ("C8  no false scored on narration absence",c8_no_false_on_absence),
         ("C9  rubric hard-pass gate vetoes",c9_gate_vetoes),
         ("C10 quoted evidence is verbatim",c10_quotes_verbatim),
-        ("C11 rubrics.jsonl is exactly {id,rubric}",c11_jsonl_schema)]
+        ("C11 rubrics.jsonl is exactly {id,rubric}",c11_jsonl_schema),
+    ("C12 committed verdicts == generator output", c12_committed_matches_generator),]
+
+
 
 def main():
     ok=True
