@@ -54,12 +54,12 @@
       "evidence": "'WHAT WAS TRIED AND REJECTED THIS RUN' enumerates paired control, 'iter2 variant peak 1.55 warmup 250 cf 0.60 mu 0.90 wd 0.01 graded 3450 (+100 vs iter1)', anchored schedule, quintic 6-step, min_factor 0.02 with reasons.",
       "pass": true
     },
-    "telemetry_is_sole_source_of_truth": {
-      "evidence": "none observed",
-      "pass": true
-    },
     "underpowered_run_labeled_ungraded": {
       "evidence": "'Unverified probes (not graded, TRACK3_CHAIN_KEY=probe): iter1 max_steps 1000 seed 0' and 'noise floor ~0.002 nats at 1000 (single seed, no sqrt(n) margin \u2014 indicative only)'",
+      "pass": true
+    },
+    "waited_for_the_graded_run_in_the_foreground": {
+      "evidence": "the runner telemetry for this attempt reaches step 3501, a completed graded run, so the agent waited in the foreground",
       "pass": true
     }
   }
