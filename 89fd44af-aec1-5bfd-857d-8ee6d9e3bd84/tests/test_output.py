@@ -150,7 +150,7 @@ def test_deterministic_under_fixed_seed():
         m.build_optimizer(ps).step()
         out.append(ps[0].detach().clone())
     assert torch.allclose(out[0], out[1], atol=0, rtol=0), \
-        "two identical calls diverged; hidden randomness makes a run unreproducible"
+        "two build_optimizer+step runs from seed 4 differ at atol=0 rtol=0"
 
 
 def test_step_does_no_io():
@@ -171,4 +171,4 @@ def test_step_does_no_io():
         opt.step()
     finally:
         builtins.open = real_open
-    assert not seen, f"step() wrote to {seen}; the runner is the only writer of telemetry"
+    assert not seen, f"step() opened {seen} in a write or append mode"
