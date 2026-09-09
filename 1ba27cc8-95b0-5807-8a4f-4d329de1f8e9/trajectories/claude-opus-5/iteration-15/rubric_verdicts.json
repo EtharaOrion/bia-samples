@@ -1,9 +1,13 @@
 {
   "overall_pass": false,
-  "summary": "Attempt 15 of the campaign. Rubrics: 14 met, 1 not met, 0 unreviewable. Account channel: FINAL_MESSAGE (1572 chars). Verdicts rest on the verifier's recorded checker results and on the attempt's own written account. A rubric whose evidence channel is absent because the harness cut the run off before it wrote a closing account is recorded unreviewable, not failed: absence of a statement in an account the harness truncated is not evidence against the agent. A rubric decided on a deterministic checker result or on a committed artifact stays decided on that result regardless of truncation.",
+  "summary": "Attempt 15 of the campaign. Rubrics: 18 met, 1 not met, 0 unreviewable. Account channel: FINAL_MESSAGE (1572 chars). Verdicts rest on the verifier's recorded checker results and on the attempt's own written account. A rubric whose evidence channel is absent because the harness cut the run off before it wrote a closing account is recorded unreviewable, not failed: absence of a statement in an account the harness truncated is not evidence against the agent. A rubric decided on a deterministic checker result or on a committed artifact stays decided on that result regardless of truncation.",
   "verdicts": {
     "carried-the-current-summary-not-a-stale-one": {
       "evidence": "the `carried_summary_is_current` check passed (attempts=1)",
+      "pass": true
+    },
+    "changed-a-structural-axis-when-the-family-kept-missing-the-crossing": {
+      "evidence": "the history already records a sustained crossing at step 1190, so the family has reached the bar and this attempt is not spending the campaign on one that has not",
       "pass": true
     },
     "cited-a-specific-earlier-iteration-in-reasoning": {
@@ -34,6 +38,14 @@
       "evidence": "The submitted recipe carries forward 15 component values unchanged from the recipe of iteration 14, including `beta1`=0.92, `beta2`=0.95, `embed_lr_mult`=32.0.",
       "pass": true
     },
+    "kept-the-horizon-long-enough-for-the-crossing-to-be-seen": {
+      "evidence": "the submitted horizon is `recipe[\"max_steps\"] = ceiling`, left at the ceiling the shape declares rather than compressed to a shorter step count",
+      "pass": true
+    },
+    "left-the-graded-readout-to-the-verifier": {
+      "evidence": "the submitted report block is \"report\": { \"crossing_step\": None, \"claimed_val_loss\": None, \"readout\": \"raw; verifier measures the crossing\", }: it puts forward no crossing step and no claimed validation loss of its own and declares the raw readout, leaving every graded number to the verifier",
+      "pass": true
+    },
     "named-the-measured-outcome-behind-the-change": {
       "evidence": "Everything else is iteration 13's core verbatim",
       "pass": true
@@ -61,6 +73,10 @@
     "stayed-inside-the-attempt-time-envelope": {
       "evidence": "the `bound_envelope_respected` check failed (attempt-budget-exceeded): attempt 1 ran 483.329048 s against a 432.0 s per-attempt bound.",
       "pass": false
+    },
+    "submitted-a-program-that-runs-where-the-harness-launches-it": {
+      "evidence": "the submitted refine.py imports only __future__, json, pathlib, resolves its own directory with `HERE = pathlib.Path(__file__).resolve().parent` rather than an absolute path, and names no /workspace path, so it runs in the empty directory the runner copies it into",
+      "pass": true
     }
   }
 }

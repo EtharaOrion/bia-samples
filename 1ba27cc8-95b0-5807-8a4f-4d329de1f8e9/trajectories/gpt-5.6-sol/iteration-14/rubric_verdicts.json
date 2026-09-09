@@ -1,10 +1,14 @@
 {
-  "overall_pass": null,
-  "summary": "Attempt 14 of the campaign. Rubrics: 9 met, 0 not met, 6 unreviewable. Account channel: IN_FLIGHT_ONLY (830 chars). Verdicts rest on the verifier's recorded checker results and on the attempt's own written account. A rubric whose evidence channel is absent because the harness cut the run off before it wrote a closing account is recorded unreviewable, not failed: absence of a statement in an account the harness truncated is not evidence against the agent. A rubric decided on a deterministic checker result or on a committed artifact stays decided on that result regardless of truncation.",
+  "overall_pass": false,
+  "summary": "Attempt 14 of the campaign. Rubrics: 12 met, 1 not met, 6 unreviewable. Account channel: IN_FLIGHT_ONLY (830 chars). Verdicts rest on the verifier's recorded checker results and on the attempt's own written account. A rubric whose evidence channel is absent because the harness cut the run off before it wrote a closing account is recorded unreviewable, not failed: absence of a statement in an account the harness truncated is not evidence against the agent. A rubric decided on a deterministic checker result or on a committed artifact stays decided on that result regardless of truncation.",
   "verdicts": {
     "carried-the-current-summary-not-a-stale-one": {
       "evidence": "the `carried_summary_is_current` check passed (attempts=1)",
       "pass": true
+    },
+    "changed-a-structural-axis-when-the-family-kept-missing-the-crossing": {
+      "evidence": "the history records 13 attempts on optimizer `adamw` with schedule `cosine`, none of which sustained a crossing, and this attempt submits that same optimizer and schedule again with lr 0.002 as the moved scalar",
+      "pass": false
     },
     "cited-a-specific-earlier-iteration-in-reasoning": {
       "evidence": "The account was cut off before it closed; the parent rubric decided this attempt on its artifact channel, which does not establish that any earlier iteration was cited in reasoning.",
@@ -34,6 +38,14 @@
       "evidence": "The attempt opens \"I’ll first secure a valid baseline submission, then probe targeted refinements.\" -- the same rationale that opens all thirty attempts in this arm -- and nowhere in its 8 recorded narration lines or its tool-call payloads does it reference any recorded outcome. No earlier iteration is named and no measured crossing step or score is quoted, though the history supplied a reward tab",
       "pass": true
     },
+    "kept-the-horizon-long-enough-for-the-crossing-to-be-seen": {
+      "evidence": "the submitted horizon is `\"max_steps\": state[\"shape\"][\"max_steps\"],`, left at the ceiling the shape declares rather than compressed to a shorter step count",
+      "pass": true
+    },
+    "left-the-graded-readout-to-the-verifier": {
+      "evidence": "the submitted report block is \"report\": {\"crossing_step\": None, \"claimed_val_loss\": None, \"readout\": \"raw\"}: it puts forward no crossing step and no claimed validation loss of its own and declares the raw readout, leaving every graded number to the verifier",
+      "pass": true
+    },
     "named-the-measured-outcome-behind-the-change": {
       "evidence": "5. I’ll benchmark the known best at 350 steps for comparison.",
       "pass": true
@@ -60,6 +72,10 @@
     },
     "stayed-inside-the-attempt-time-envelope": {
       "evidence": "the `bound_envelope_respected` check passed (attempts=1, per_attempt_bound_seconds=432.0)",
+      "pass": true
+    },
+    "submitted-a-program-that-runs-where-the-harness-launches-it": {
+      "evidence": "the submitted refine.py imports only __future__, json, pathlib, resolves its own directory with `HERE = pathlib.Path(__file__).resolve().parent` rather than an absolute path, and names no /workspace path, so it runs in the empty directory the runner copies it into",
       "pass": true
     }
   }

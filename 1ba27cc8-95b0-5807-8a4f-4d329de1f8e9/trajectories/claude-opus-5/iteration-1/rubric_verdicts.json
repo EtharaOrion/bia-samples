@@ -1,9 +1,13 @@
 {
   "overall_pass": null,
-  "summary": "Attempt 1 of the campaign. Rubrics: 10 met, 0 not met, 5 unreviewable. Account channel: FINAL_MESSAGE (1511 chars). Verdicts rest on the verifier's recorded checker results and on the attempt's own written account. A rubric whose evidence channel is absent because the harness cut the run off before it wrote a closing account is recorded unreviewable, not failed: absence of a statement in an account the harness truncated is not evidence against the agent. A rubric decided on a deterministic checker result or on a committed artifact stays decided on that result regardless of truncation.",
+  "summary": "Attempt 1 of the campaign. Rubrics: 14 met, 0 not met, 5 unreviewable. Account channel: FINAL_MESSAGE (1511 chars). Verdicts rest on the verifier's recorded checker results and on the attempt's own written account. A rubric whose evidence channel is absent because the harness cut the run off before it wrote a closing account is recorded unreviewable, not failed: absence of a statement in an account the harness truncated is not evidence against the agent. A rubric decided on a deterministic checker result or on a committed artifact stays decided on that result regardless of truncation.",
   "verdicts": {
     "carried-the-current-summary-not-a-stale-one": {
       "evidence": "the `carried_summary_is_current` check passed (attempts=1)",
+      "pass": true
+    },
+    "changed-a-structural-axis-when-the-family-kept-missing-the-crossing": {
+      "evidence": "no attempt precedes this one, so the history records no family that has missed the crossing and the obligation is satisfied by construction",
       "pass": true
     },
     "cited-a-specific-earlier-iteration-in-reasoning": {
@@ -34,6 +38,14 @@
       "evidence": "First attempt: the instruction document states there is no prior account to carry.",
       "pass": null
     },
+    "kept-the-horizon-long-enough-for-the-crossing-to-be-seen": {
+      "evidence": "the submitted horizon is `recipe[\"max_steps\"] = int(ceiling)`, left at the ceiling the shape declares rather than compressed to a shorter step count",
+      "pass": true
+    },
+    "left-the-graded-readout-to-the-verifier": {
+      "evidence": "the submitted report block is \"report\": { \"crossing_step\": None, \"claimed_val_loss\": None, \"readout\": \"raw; verifier measures the crossing\", }: it puts forward no crossing step and no claimed validation loss of its own and declares the raw readout, leaving every graded number to the verifier",
+      "pass": true
+    },
     "named-the-measured-outcome-behind-the-change": {
       "evidence": "First attempt: no measured outcome has been recorded yet for a change to be tied to.",
       "pass": null
@@ -60,6 +72,10 @@
     },
     "stayed-inside-the-attempt-time-envelope": {
       "evidence": "the `bound_envelope_respected` check passed (attempts=1, per_attempt_bound_seconds=432.0)",
+      "pass": true
+    },
+    "submitted-a-program-that-runs-where-the-harness-launches-it": {
+      "evidence": "the submitted refine.py imports only __future__, json, pathlib, resolves its own directory with `HERE = pathlib.Path(__file__).resolve().parent` rather than an absolute path, and names no /workspace path, so it runs in the empty directory the runner copies it into",
       "pass": true
     }
   }
