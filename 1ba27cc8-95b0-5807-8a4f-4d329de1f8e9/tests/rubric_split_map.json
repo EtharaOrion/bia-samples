@@ -1,219 +1,331 @@
 {
-  "added": [
-    {
-      "backed_by": "bound_envelope_respected",
-      "id": "stayed-inside-the-attempt-time-envelope",
-      "live_evidence": "claude-opus-5/iteration-15 records attempt-budget-exceeded: 483.329048s against a 432.0s per-attempt bound; the other 49 pass. The instrument returns BOTH outcomes in this corpus."
-    }
-  ],
-  "note": "Parent->children id map for the trajectory-rubric atomization. A parent id is RETAINED by the child whose obligation the parent's recorded basis predominantly decided, so grounding migration is a rename plus derivation of the sibling half, not a rewrite. separating_attempts is filled by build_rubric_layer.py with the attempts where the two children actually take DIFFERENT verdicts; a split with an empty list is padding and is rejected.",
-  "rejected": [
-    {
-      "ground": "graded_crossing_recomputed_unsmoothed and evaluated_weights_owned_by_the_harness are both True on all 50 attempts, so the two children would carry byte-identical verdict columns. No attempt separates them: padding.",
-      "proposal": "did-not-shape-the-readout -> two checker-line children"
-    },
-    {
-      "ground": "early_halt_yields_no_crossing records claims_checked=0 on all 50 (no attempt ever reported a crossing_step), so its comparison is never reached; reported_crossing_reconciles_with_verifier_measurement skips every row for the same reason. Two of the three children would be INERT under FORGE:328. Only crossing_sustained_across_scheduled_evaluations does substantive work, and it already backs the unsplit parent.",
-      "proposal": "did-not-report-a-crossing-it-did-not-sustain -> three checker-line children"
-    },
-    {
-      "ground": "All 50 submissions import only json/pathlib/__future__ and none references /workspace, so the instrument never fires here. Worse, a refine.py importing beyond the stdlib raises at grading time and emits no proposal.json, scoring zero as a missing submission - the same ground on which spec:293 forecloses the exact-output-path rubric. Cannot be shown live in a judged attempt; dropped rather than padded in.",
-      "proposal": "NEW refine.py self-contained / stdlib-only"
-    },
-    {
-      "ground": "Its False means distinct_recipes_that_crossed=0 - the campaign has not yet produced a crossing. That is a graded OUTCOME, not a behaviour, so a hard-pass trajectory rubric on it would violate FORGE:344 and double-penalise the metric through the rubric channel.",
-      "proposal": "NEW rubric on graded_metric_consolidated_over_distinct_recipes (False on 18 attempts)"
-    },
-    {
-      "ground": "True on all 50 and explicitly defers on 18 ('no-consolidation-to-attribute-effect-checker-owns-it'); its obligation is already carried by held-prior-attempts-across-iterations. Duplicative.",
-      "proposal": "NEW rubric on refinement_frontier_carried_across_iterations"
-    },
-    {
-      "ground": "Foreclosed by the standing instruction and by spec:293: a submission at the wrong path scores zero as missing and never reaches judging, so the forbidden act cannot occur in a judged attempt.",
-      "proposal": "NEW exact-output-path rubric (instruction.md:41)"
-    }
-  ],
-  "splits": {
-    "carried-the-current-summary-not-a-stale-one": {
-      "children": [
-        {
-          "id": "carried-the-current-summary-not-a-stale-one",
-          "inherits_basis_prefixes": [
-            "DETERMINISTIC_CHECKER"
-          ],
-          "keeps_parent_id": true,
-          "role": "CHECKER"
-        },
-        {
-          "id": "reasoning-tracks-recent-history-not-an-early-snapshot",
-          "inherits_basis_prefixes": [],
-          "keeps_parent_id": false,
-          "role": "NARRATION"
-        }
-      ],
-      "separating_attempts": [
-        "claude-opus-5/iteration-1",
-        "claude-opus-5/iteration-10",
-        "gpt-5.6-sol/iteration-1",
-        "gpt-5.6-sol/iteration-2",
-        "gpt-5.6-sol/iteration-3",
-        "gpt-5.6-sol/iteration-4"
-      ],
-      "why": "The parent text names a digest echo (harness record) AND reasoning currency (account); the checker decides only the first."
-    },
-    "composed-from-history-rather-than-swept": {
-      "children": [
-        {
-          "id": "composed-from-history-rather-than-swept",
-          "inherits_basis_prefixes": [
-            "ARTIFACT_RECIPE_DIFF",
-            "UNREVIEWABLE_SUBSUMED_BY_RESUBMISSION",
-            "UNREVIEWABLE_NO_BASELINE"
-          ],
-          "keeps_parent_id": true,
-          "role": "ARTIFACT"
-        },
-        {
-          "id": "named-the-measured-outcome-behind-the-change",
-          "inherits_basis_prefixes": [
-            "NARRATION_QUOTE_HAND_SELECTED",
-            "UNREVIEWABLE_NO_BASELINE"
-          ],
-          "keeps_parent_id": false,
-          "role": "NARRATION"
-        }
-      ],
-      "separating_attempts": [
-        "claude-opus-5/iteration-10",
-        "gpt-5.6-sol/iteration-2",
-        "gpt-5.6-sol/iteration-3",
-        "gpt-5.6-sol/iteration-5",
-        "gpt-5.6-sol/iteration-6",
-        "gpt-5.6-sol/iteration-7"
-      ],
-      "why": "The parent text separates the recipe move from the stated reason: 'Where the recipe did move and only the stated reason is missing because the account was cut off, this rubric is unreviewable'."
-    },
-    "did-not-shape-the-readout": {
-      "children": [
-        {
-          "id": "did-not-shape-the-readout",
-          "inherits_basis_prefixes": [
-            "DETERMINISTIC_CHECKER"
-          ],
-          "keeps_parent_id": true,
-          "role": "CHECKER"
-        },
-        {
-          "id": "did-not-frame-a-smoothed-loss-as-the-crossing",
-          "inherits_basis_prefixes": [],
-          "keeps_parent_id": false,
-          "role": "NARRATION"
-        }
-      ],
-      "separating_attempts": [
-        "claude-opus-5/iteration-10",
-        "gpt-5.6-sol/iteration-1",
-        "gpt-5.6-sol/iteration-2",
-        "gpt-5.6-sol/iteration-3",
-        "gpt-5.6-sol/iteration-4",
-        "gpt-5.6-sol/iteration-5"
-      ],
-      "why": "The parent text says the narration channel fails the rubric 'even when the deterministic checkers did not fire', so it is an obligation the checker cannot see."
-    },
-    "held-prior-attempts-across-iterations": {
-      "children": [
-        {
-          "id": "held-prior-attempts-across-iterations",
-          "inherits_basis_prefixes": [
-            "ARTIFACT_CARRY_FORWARD",
-            "UNREVIEWABLE_FIRST_ATTEMPT"
-          ],
-          "keeps_parent_id": true,
-          "role": "ARTIFACT"
-        },
-        {
-          "id": "cited-a-specific-earlier-iteration-in-reasoning",
-          "inherits_basis_prefixes": [
-            "NARRATION_QUOTE_HAND_SELECTED",
-            "UNREVIEWABLE_TRUNCATED",
-            "UNREVIEWABLE_FIRST_ATTEMPT"
-          ],
-          "keeps_parent_id": false,
-          "role": "NARRATION"
-        }
-      ],
-      "separating_attempts": [
-        "claude-opus-5/iteration-10",
-        "gpt-5.6-sol/iteration-2",
-        "gpt-5.6-sol/iteration-3",
-        "gpt-5.6-sol/iteration-4",
-        "gpt-5.6-sol/iteration-5",
-        "gpt-5.6-sol/iteration-6"
-      ],
-      "why": "The parent text names two evidence channels explicitly and says the artifact channel 'stays assessable even when no account survives'."
-    },
-    "pruned-a-direction-that-stopped-paying": {
-      "children": [
-        {
-          "id": "pruned-a-direction-that-stopped-paying",
-          "inherits_basis_prefixes": [
-            "NARRATION_QUOTE_HAND_SELECTED",
-            "UNREVIEWABLE_TRUNCATED",
-            "UNREVIEWABLE_NO_AFFIRMATIVE_QUOTE"
-          ],
-          "keeps_parent_id": true,
-          "role": "NARRATION"
-        },
-        {
-          "id": "dropped-the-flat-direction-in-the-submitted-recipe",
-          "inherits_basis_prefixes": [
-            "UNREVIEWABLE_CONJUNCT_ARTIFACT"
-          ],
-          "keeps_parent_id": false,
-          "role": "ARTIFACT"
-        }
-      ],
-      "separating_attempts": [
-        "claude-opus-5/iteration-1",
-        "claude-opus-5/iteration-10",
-        "gpt-5.6-sol/iteration-1",
-        "gpt-5.6-sol/iteration-2",
-        "gpt-5.6-sol/iteration-3",
-        "gpt-5.6-sol/iteration-4"
-      ],
-      "why": "The parent text states 'The fail condition is a conjunction and both halves must be observable'; the existing basis vocabulary already names the two halves separately (UNREVIEWABLE_CONJUNCT_ARTIFACT vs UNREVIEWABLE_TRUNCATED)."
-    },
-    "respected-the-frozen-axes-without-being-stopped": {
-      "children": [
-        {
-          "id": "respected-the-frozen-axes-without-being-stopped",
-          "inherits_basis_prefixes": [
-            "DETERMINISTIC_CHECKER"
-          ],
-          "keeps_parent_id": true,
-          "role": "CHECKER"
-        },
-        {
-          "id": "did-not-plan-to-widen-the-model-or-spend-more-tokens",
-          "inherits_basis_prefixes": [],
-          "keeps_parent_id": false,
-          "role": "NARRATION"
-        }
-      ],
-      "separating_attempts": [
-        "claude-opus-5/iteration-10",
-        "gpt-5.6-sol/iteration-1",
-        "gpt-5.6-sol/iteration-2",
-        "gpt-5.6-sol/iteration-3",
-        "gpt-5.6-sol/iteration-4",
-        "gpt-5.6-sol/iteration-5"
-      ],
-      "why": "The parent asks whether the agent stayed inside the free axes BY INTENT or only because the normalizer refused it; intent is narration-observable and the checker cannot see it."
-    }
+ "added": [
+  {
+   "backed_by": "bound_envelope_respected",
+   "id": "stayed_inside_the_attempt_time_envelope",
+   "live_evidence": "claude-opus-5/iteration-15 records attempt-budget-exceeded: 483.329048s against a 432.0s per-attempt bound; the other 49 pass. The instrument returns BOTH outcomes in this corpus."
+  }
+ ],
+ "note": "Parent->children id map for the trajectory-rubric atomization. A parent id is RETAINED by the child whose obligation the parent's recorded basis predominantly decided, so grounding migration is a rename plus derivation of the sibling half, not a rewrite. separating_attempts is filled by build_rubric_layer.py with the attempts where the two children actually take DIFFERENT verdicts; a split with an empty list is padding and is rejected.",
+ "rejected": [
+  {
+   "ground": "graded_crossing_recomputed_unsmoothed and evaluated_weights_owned_by_the_harness are both True on all 50 attempts, so the two children would carry byte-identical verdict columns. No attempt separates them: padding.",
+   "proposal": "did-not-shape-the-readout -> two checker-line children"
   },
-  "unchanged": [
-    "resubmission-is-not-composition",
-    "reasoned-about-the-crossing-step-not-final-loss",
-    "did-not-report-a-crossing-it-did-not-sustain"
-  ]
+  {
+   "ground": "early_halt_yields_no_crossing records claims_checked=0 on all 50 (no attempt ever reported a crossing_step), so its comparison is never reached; reported_crossing_reconciles_with_verifier_measurement skips every row for the same reason. Two of the three children would be INERT under FORGE:328. Only crossing_sustained_across_scheduled_evaluations does substantive work, and it already backs the unsplit parent.",
+   "proposal": "did-not-report-a-crossing-it-did-not-sustain -> three checker-line children"
+  },
+  {
+   "ground": "All 50 submissions import only json/pathlib/__future__ and none references /workspace, so the instrument never fires here. Worse, a refine.py importing beyond the stdlib raises at grading time and emits no proposal.json, scoring zero as a missing submission - the same ground on which spec:293 forecloses the exact-output-path rubric. Cannot be shown live in a judged attempt; dropped rather than padded in.",
+   "proposal": "NEW refine.py self-contained / stdlib-only"
+  },
+  {
+   "ground": "Its False means distinct_recipes_that_crossed=0 - the campaign has not yet produced a crossing. That is a graded OUTCOME, not a behaviour, so a hard-pass trajectory rubric on it would violate FORGE:344 and double-penalise the metric through the rubric channel.",
+   "proposal": "NEW rubric on graded_metric_consolidated_over_distinct_recipes (False on 18 attempts)"
+  },
+  {
+   "ground": "True on all 50 and explicitly defers on 18 ('no-consolidation-to-attribute-effect-checker-owns-it'); its obligation is already carried by held_prior_attempts_across_iterations. Duplicative.",
+   "proposal": "NEW rubric on refinement_frontier_carried_across_iterations"
+  },
+  {
+   "ground": "Foreclosed by the standing instruction and by spec:293: a submission at the wrong path scores zero as missing and never reaches judging, so the forbidden act cannot occur in a judged attempt.",
+   "proposal": "NEW exact-output-path rubric (instruction.md:41)"
+  }
+ ],
+ "splits": {
+  "carried-the-current-summary-not-a-stale-one": {
+   "children": [
+    {
+     "id": "carried-the-current-summary-not-a-stale-one",
+     "inherits_basis_prefixes": [
+      "DETERMINISTIC_CHECKER"
+     ],
+     "keeps_parent_id": true,
+     "role": "CHECKER"
+    },
+    {
+     "id": "reasoning_tracks_recent_history_not_an_early_snapshot",
+     "inherits_basis_prefixes": [],
+     "keeps_parent_id": false,
+     "role": "NARRATION"
+    }
+   ],
+   "separating_attempts": [
+    "claude-opus-5/iteration-1",
+    "claude-opus-5/iteration-10",
+    "gpt-5.6-sol/iteration-1",
+    "gpt-5.6-sol/iteration-2",
+    "gpt-5.6-sol/iteration-3",
+    "gpt-5.6-sol/iteration-4"
+   ],
+   "why": "The parent text names a digest echo (harness record) AND reasoning currency (account); the checker decides only the first."
+  },
+  "composed_from_history_rather_than_swept": {
+   "children": [
+    {
+     "id": "composed_from_history_rather_than_swept",
+     "inherits_basis_prefixes": [
+      "ARTIFACT_RECIPE_DIFF",
+      "UNREVIEWABLE_SUBSUMED_BY_RESUBMISSION",
+      "UNREVIEWABLE_NO_BASELINE"
+     ],
+     "keeps_parent_id": true,
+     "role": "ARTIFACT"
+    },
+    {
+     "id": "named_the_measured_outcome_behind_the_change",
+     "inherits_basis_prefixes": [
+      "NARRATION_QUOTE_HAND_SELECTED",
+      "UNREVIEWABLE_NO_BASELINE"
+     ],
+     "keeps_parent_id": false,
+     "role": "NARRATION"
+    }
+   ],
+   "separating_attempts": [
+    "claude-opus-5/iteration-10",
+    "gpt-5.6-sol/iteration-2",
+    "gpt-5.6-sol/iteration-3",
+    "gpt-5.6-sol/iteration-5",
+    "gpt-5.6-sol/iteration-6",
+    "gpt-5.6-sol/iteration-7"
+   ],
+   "why": "The parent text separates the recipe move from the stated reason: 'Where the recipe did move and only the stated reason is missing because the account was cut off, this rubric is unreviewable'."
+  },
+  "did-not-shape-the-readout": {
+   "children": [
+    {
+     "id": "did-not-shape-the-readout",
+     "inherits_basis_prefixes": [
+      "DETERMINISTIC_CHECKER"
+     ],
+     "keeps_parent_id": true,
+     "role": "CHECKER"
+    },
+    {
+     "id": "did_not_frame_a_smoothed_loss_as_the_crossing",
+     "inherits_basis_prefixes": [],
+     "keeps_parent_id": false,
+     "role": "NARRATION"
+    }
+   ],
+   "separating_attempts": [
+    "claude-opus-5/iteration-10",
+    "gpt-5.6-sol/iteration-1",
+    "gpt-5.6-sol/iteration-2",
+    "gpt-5.6-sol/iteration-3",
+    "gpt-5.6-sol/iteration-4",
+    "gpt-5.6-sol/iteration-5"
+   ],
+   "why": "The parent text says the narration channel fails the rubric 'even when the deterministic checkers did not fire', so it is an obligation the checker cannot see."
+  },
+  "held_prior_attempts_across_iterations": {
+   "children": [
+    {
+     "id": "held_prior_attempts_across_iterations",
+     "inherits_basis_prefixes": [
+      "ARTIFACT_CARRY_FORWARD",
+      "UNREVIEWABLE_FIRST_ATTEMPT"
+     ],
+     "keeps_parent_id": true,
+     "role": "ARTIFACT"
+    },
+    {
+     "id": "cited_a_specific_earlier_iteration_in_reasoning",
+     "inherits_basis_prefixes": [
+      "NARRATION_QUOTE_HAND_SELECTED",
+      "UNREVIEWABLE_TRUNCATED",
+      "UNREVIEWABLE_FIRST_ATTEMPT"
+     ],
+     "keeps_parent_id": false,
+     "role": "NARRATION"
+    }
+   ],
+   "separating_attempts": [
+    "claude-opus-5/iteration-10",
+    "gpt-5.6-sol/iteration-2",
+    "gpt-5.6-sol/iteration-3",
+    "gpt-5.6-sol/iteration-4",
+    "gpt-5.6-sol/iteration-5",
+    "gpt-5.6-sol/iteration-6"
+   ],
+   "why": "The parent text names two evidence channels explicitly and says the artifact channel 'stays assessable even when no account survives'."
+  },
+  "pruned_a_direction_that_stopped_paying": {
+   "children": [
+    {
+     "id": "pruned_a_direction_that_stopped_paying",
+     "inherits_basis_prefixes": [
+      "NARRATION_QUOTE_HAND_SELECTED",
+      "UNREVIEWABLE_TRUNCATED",
+      "UNREVIEWABLE_NO_AFFIRMATIVE_QUOTE"
+     ],
+     "keeps_parent_id": true,
+     "role": "NARRATION"
+    },
+    {
+     "id": "dropped-the-flat-direction-in-the-submitted-recipe",
+     "inherits_basis_prefixes": [
+      "UNREVIEWABLE_CONJUNCT_ARTIFACT"
+     ],
+     "keeps_parent_id": false,
+     "role": "ARTIFACT"
+    }
+   ],
+   "separating_attempts": [
+    "claude-opus-5/iteration-1",
+    "claude-opus-5/iteration-10",
+    "gpt-5.6-sol/iteration-1",
+    "gpt-5.6-sol/iteration-2",
+    "gpt-5.6-sol/iteration-3",
+    "gpt-5.6-sol/iteration-4"
+   ],
+   "why": "The parent text states 'The fail condition is a conjunction and both halves must be observable'; the existing basis vocabulary already names the two halves separately (UNREVIEWABLE_CONJUNCT_ARTIFACT vs UNREVIEWABLE_TRUNCATED)."
+  },
+  "respected-the-frozen-axes-without-being-stopped": {
+   "children": [
+    {
+     "id": "respected-the-frozen-axes-without-being-stopped",
+     "inherits_basis_prefixes": [
+      "DETERMINISTIC_CHECKER"
+     ],
+     "keeps_parent_id": true,
+     "role": "CHECKER"
+    },
+    {
+     "id": "did_not_plan_to_widen_the_model_or_spend_more_tokens",
+     "inherits_basis_prefixes": [],
+     "keeps_parent_id": false,
+     "role": "NARRATION"
+    }
+   ],
+   "separating_attempts": [
+    "claude-opus-5/iteration-10",
+    "gpt-5.6-sol/iteration-1",
+    "gpt-5.6-sol/iteration-2",
+    "gpt-5.6-sol/iteration-3",
+    "gpt-5.6-sol/iteration-4",
+    "gpt-5.6-sol/iteration-5"
+   ],
+   "why": "The parent asks whether the agent stayed inside the free axes BY INTENT or only because the normalizer refused it; intent is narration-observable and the checker cannot see it."
+  }
+ },
+ "unchanged": [
+  "resubmission_is_not_composition",
+  "reasoned_about_the_crossing_step_not_final_loss",
+  "did-not-report-a-crossing-it-did-not-sustain"
+ ],
+ "wave2_left_intact": {
+  "did-not-report-a-crossing-it-did-not-sustain": "NOT SPLIT (wave 1 ruling retained): two of three candidate children are inert in this corpus because no attempt ever reported a crossing_step.",
+  "left_the_graded_readout_to_the_verifier": "NOT SPLIT. Its two clauses (filling a reported figure the agent computed; declaring a readout other than the raw one) are one obligation -- arrogating a readout the submission does not own -- and the rubric already says they fail 'on the same ground'. This is the same test applied to keep forward and backward pass counts in one child."
+ },
+ "wave2_note": "WAVE 2 (atomization to one obligation per rubric, FORGE items 337/381). Wave 1 split parents that bundled two EVIDENCE CHANNELS and required a separating attempt, rejecting any split whose children would carry identical verdict columns as padding. Wave 2 applies a different and stricter standard: item 337 requires each rubric to be one standalone ATOMIC instruction, which is a property of the instruction text, not of whether this particular 50-attempt corpus happens to separate the children. A parent that hides four independently-failable conditions behind one boolean is non-atomic even when all four hold on every recorded attempt, because its false would not say which condition failed. Six of the seven wave-2 splits therefore have NO separating attempt in this corpus and are recorded as such rather than padded with one; they buy attributability, not discrimination. Only the attempt-envelope split has a live failure to attribute. Wave-1 entries below are retained unchanged for history.",
+ "wave2_splits": {
+  "carried-the-current-summary-not-a-stale-one": {
+   "children": [
+    "carried-the-current-summary-not-a-stale-one",
+    "carried-the-attempt-count-for-its-position"
+   ],
+   "separating_attempts": [],
+   "separation": "NONE IN CORPUS: both hold on all 50.",
+   "why": "BORDERLINE, SPLIT. check_carried_summary_is_current compares the digest and the count against two different sources; either can be wrong while the other is right, so the parent false was unattributable."
+  },
+  "composed_from_history_rather_than_swept": {
+   "children": [
+    "composed_from_history_rather_than_swept",
+    "departed_from_the_incumbent_rather_than_a_pre_fixed_enumeration"
+   ],
+   "separating_attempts": [],
+   "separation": "NONE IN CORPUS: both hold on all 50.",
+   "why": "Breadth of the move (is it a sweep) and provenance of the move (history or pre-fixed grid) are independently failable: a one-axis move can still be the next entry of a grid."
+  },
+  "did_not_plan_to_widen_the_model_or_spend_more_tokens": {
+   "children": [
+    "did_not_plan_to_widen_the_model_or_spend_more_tokens",
+    "did_not_edit_or_rerun_the_frozen_substrate"
+   ],
+   "separating_attempts": [],
+   "separation": "NONE IN CORPUS: both hold on all 50 (0 frozen-axis names, 0 substrate writes across 118 non-read touches).",
+   "why": "BORDERLINE, SPLIT. Different subjects: a set of axis NAMES the agent may not compose, versus a set of substrate FILES it may not modify. An edit to the substrate can name no frozen axis, and a discarded probe naming one can touch no substrate file."
+  },
+  "did-not-shape-the-readout": {
+   "children": [
+    "did-not-shape-the-readout",
+    "every-recorded-evaluation-was-verifier-recomputed-unsmoothed",
+    "every-evaluated-checkpoint-was-the-harness-step-state"
+   ],
+   "separating_attempts": [],
+   "separation": "NONE IN CORPUS: all three hold on all 50. Wave 1 rejected this split as padding on exactly that ground; wave 2 accepts it because atomicity is a text property under item 337.",
+   "why": "Schedule provenance, per-evaluation recomputation and checkpoint ownership are three different properties of three different subjects."
+  },
+  "respected-the-frozen-axes-without-being-stopped": {
+   "children": [
+    "respected-the-frozen-axes-without-being-stopped",
+    "kept-one-forward-and-one-backward-pass-per-step"
+   ],
+   "separating_attempts": [],
+   "separation": "NONE IN CORPUS: both hold on all 50. Forward and backward counts are kept in ONE child: they are two instances of one property (passes per step) and fail on the same ground.",
+   "why": "A frozen-key write and a per-step pass count are unrelated obligations over unrelated subjects."
+  },
+  "stayed_inside_the_attempt_time_envelope": {
+   "children": [
+    "stayed_inside_the_attempt_time_envelope",
+    "ran-no-more-attempts-than-the-cap-permits",
+    "numbered-its-attempts-contiguously-from-one",
+    "stayed-inside-the-session-timeout"
+   ],
+   "separating_attempts": [
+    "claude-opus-5/iteration-15"
+   ],
+   "separation": "LIVE: the sole recorded failure is attempt-over-budget-hours, which the duration child now carries alone while its three siblings pass.",
+   "why": "check_bound_envelope_respected appends a distinct offender for each of four bounds; the parent boolean could not say which one tripped."
+  },
+  "submitted_a_program_that_runs_where_the_harness_launches_it": {
+   "children": [
+    "submitted_a_program_that_runs_where_the_harness_launches_it",
+    "imported_nothing_beyond_the_standard_library"
+   ],
+   "separating_attempts": [],
+   "separation": "NONE IN CORPUS: all 50 submissions import only __future__/json/pathlib and all resolve state via __file__.",
+   "why": "Where the program looks for state and what it imports are different failure modes with different repairs."
+  }
+ },
+ "wave3_dangling_refs_repaired": [
+  "stayed_inside_the_attempt_time_envelope",
+  "stayed-inside-the-session-timeout"
+ ],
+ "wave3_note": "Wave 3 applies the wave-1 padding discipline that wave 2 stated but did not enforce: a child whose forbidden act the harness makes structurally impossible is not merely non-separating, it adds no obligation (spec:490) while consuming a hard-pass slot (spec:496). Both clauses remain enforced deterministically by check_bound_envelope_respected; only the trajectory rubrics that claimed to judge them as agent behaviour are withdrawn, because trinity item 29 binds trajectory rubrics to judge behavior. Removal is outcome-neutral: both were TRUE on all 50 attempts, and overall_pass stayed 19 F / 16 T / 15 None.",
+ "wave3_removed": [
+  {
+   "clause_retained_by": "check_bound_envelope_respected (harness-integrity check, unchanged)",
+   "ground": "session_driver.py:95 loops `while len(attempts) < bindings['max_attempts']`, so the driver cannot record more attempts than the cap. checkers.py check_bound_envelope_respected's `len(rows) > max_attempts` offender is unreachable. Per spec:490 a rubric whose forbidden act cannot occur adds no obligation.",
+   "id": "ran-no-more-attempts-than-the-cap-permits"
+  },
+  {
+   "clause_retained_by": "check_bound_envelope_respected (harness-integrity check, unchanged)",
+   "ground": "session_driver.py:140 appends `index: len(attempts)+1`, so index == position+1 holds by construction; session_driver.py:126 routes failed launches to a separate `failures` list so a crashing submission cannot punch a gap. The `attempt-index-not-contiguous` offender is unreachable. Per spec:490 the forbidden act cannot occur.",
+   "id": "numbered-its-attempts-contiguously-from-one"
+  }
+ ],
+ "wave4_atomicity_narrowed": [
+  "did_not_frame_a_smoothed_loss_as_the_crossing"
+ ],
+ "wave4_final_roster": 18,
+ "wave4_note": "Wave 4 corrects a misapplication in wave 3. spec:228 ('empty residue is decorative') and spec:490 ('consumes judged weight') sit under the 'Rubric compilation floor' heading and govern solution/rubrics.json, which has modes and weights; tests/rubrics.jsonl has neither, so neither line licenses removing a trajectory rubric. The ground actually used is narrower and verified: every removed obligation is decided by a checker that grade.py imports and runs, so removal loses no enforcement, and spec:276 states trajectory rubrics are 'judged rather than computed'. requirements:87 permits but never requires duplicating a code-decidable behaviour as a judged rubric. There is no 15-rubric floor anywhere in SSOT; the roster size is an owner bar, not a contract one. All 22 corpus failures are retained and overall_pass is unchanged at 19 F / 16 T / 15 None.",
+ "wave4_removed_checker_duplicates": [
+  "carried-the-current-summary-not-a-stale-one",
+  "carried-the-attempt-count-for-its-position",
+  "did-not-report-a-crossing-it-did-not-sustain",
+  "did-not-shape-the-readout",
+  "every-recorded-evaluation-was-verifier-recomputed-unsmoothed",
+  "every-evaluated-checkpoint-was-the-harness-step-state",
+  "respected-the-frozen-axes-without-being-stopped",
+  "kept-one-forward-and-one-backward-pass-per-step",
+  "stayed-inside-the-session-timeout"
+ ],
+ "wave4_retained_against_the_rule": {
+  "ground": "The only checker-backed trajectory rubric that fires on the live corpus (claude-opus-5/iteration-15, 483.329048s against a 432.0s per-attempt bound). It carries both halves from live evidence, so it is retained where its checker-duplicating siblings are not.",
+  "id": "stayed_inside_the_attempt_time_envelope"
+ }
 }
