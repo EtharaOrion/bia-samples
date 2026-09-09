@@ -143,9 +143,26 @@ def build(grounding: dict) -> dict:
     }
 
 
-def main() -> int:
+def main(argv) -> int:
+    """Regenerate rubrics.json, or with --check verify it without writing a byte.
+
+    The verify path exists because this file sits inside the canonical content-hash domain.
+    Without it the only way to ask "does rubrics.json still match grounding.yaml" was to
+    overwrite rubrics.json and compare afterwards, which mutates the bundle being verified and,
+    on any ordering difference, silently moves its uuid. A check that has to modify the thing it
+    checks is not a check.
+    """
     document = build(load_grounding(GROUNDING))
     payload = json.dumps(document, indent=2, sort_keys=True, ensure_ascii=False) + "\n"
+    if "--check" in argv:
+        if not RUBRICS.is_file():
+            sys.stderr.write("rubrics.json absent\n")
+            return 1
+        if RUBRICS.read_text(encoding="utf-8") != payload:
+            sys.stderr.write("REGENERATION DRIFT: rubrics.json differs from grounding.yaml\n")
+            return 1
+        sys.stdout.write("rubrics.json matches grounding.yaml\n")
+        return 0
     with open(RUBRICS, "w", encoding="utf-8", newline="\n") as handle:
         handle.write(payload)
     sys.stdout.write("wrote %s: %d items, compiled share %.4f\n"
@@ -154,4 +171,4 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    raise SystemExit(main())
+    raise SystemExit(main(sys.argv[1:]))
