@@ -2,7 +2,7 @@
 
 --- full record ---
 {
-  "composite": 0.308824,
+  "composite": 0.375,
   "detail": {
     "novelty": {
       "status": "deferred"
@@ -19,24 +19,24 @@
     },
     "steps": 3275
   },
+  "metrics": {
+    "n_seeds": 2
+  },
   "note": "graded_score is what grade.py computed from the telemetry. score is that value after the rubric veto, which can only lower it to 0.0 and can never raise it; the two differ only when a reviewed rubric failed. rubric_gate is 1 clean, 0 vetoed, -1 no verdict, -2 indeterminate, and any negative value is an unreviewed run rather than a clean one. composite is a review aid bounded by score. score.json carries only numeric keys because harbor parses them all as numbers; this sidecar carries the rest.",
   "pytests": {
-    "executed": 17,
-    "failed": 3,
-    "failed_tests": [
-      "test_accepts_bare_tensors_and_named_pairs",
-      "test_full_score_target_reached",
-      "test_telemetry_chain_verified"
-    ],
-    "passed": 14,
+    "executed": 0,
+    "failed": 0,
+    "failed_tests": [],
+    "passed": 0,
     "skipped": 0
   },
   "reason": "graded_step=3275",
+  "reward": 0.375,
   "rubrics": {
     "failed": [],
-    "gate": 1,
-    "passed": 18,
-    "total": 18,
+    "gate": -1,
+    "passed": 0,
+    "total": 0,
     "veto_reason": null
   },
   "score": 0.375

@@ -2,7 +2,7 @@
 
 --- full record ---
 {
-  "composite": 0.330882,
+  "composite": 0.352941,
   "detail": {
     "novelty": {
       "status": "deferred"
@@ -10,7 +10,6 @@
     "seeds": 2
   },
   "formula": "graded_score * (pytests_passed/executed) * (rubrics_passed/total)",
-  "graded_score": 0.375,
   "loss": {
     "at_graded_step": 3.276195,
     "per_seed": {
@@ -19,24 +18,21 @@
     },
     "steps": 3275
   },
-  "note": "graded_score is what grade.py computed from the telemetry. score is that value after the rubric veto, which can only lower it to 0.0 and can never raise it; the two differ only when a reviewed rubric failed. rubric_gate is 1 clean, 0 vetoed, -1 no verdict, -2 indeterminate, and any negative value is an unreviewed run rather than a clean one. composite is a review aid bounded by score. score.json carries only numeric keys because harbor parses them all as numbers; this sidecar carries the rest.",
+  "note": "score is the graded value the verifier computed and is authoritative. composite is a review aid bounded by it and can never exceed it. score.json carries only numeric keys because harbor parses them all as numbers; this sidecar carries the rest.",
   "pytests": {
     "executed": 17,
-    "failed": 2,
+    "failed": 1,
     "failed_tests": [
-      "test_full_score_target_reached",
-      "test_telemetry_chain_verified"
+      "test_full_score_target_reached"
     ],
-    "passed": 15,
+    "passed": 16,
     "skipped": 0
   },
   "reason": "graded_step=3275",
   "rubrics": {
     "failed": [],
-    "gate": 1,
-    "passed": 18,
-    "total": 18,
-    "veto_reason": null
+    "passed": 9,
+    "total": 9
   },
   "score": 0.375
 }

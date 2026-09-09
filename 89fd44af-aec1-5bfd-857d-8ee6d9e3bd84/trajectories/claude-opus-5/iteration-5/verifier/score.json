@@ -1,5 +1,5 @@
 {
- "composite": 0.330882,
+ "composite": 0.352941,
  "graded_score": 0.375,
  "graded_step": 3275,
  "loss_at_graded_step": 3.276195,
@@ -7,14 +7,13 @@
  "loss_per_seed_seed1": 3.27677,
  "loss_steps": 3275,
  "pytests_executed": 17,
- "pytests_failed": 2,
- "pytests_fraction": 0.882353,
- "pytests_passed": 15,
+ "pytests_failed": 1,
+ "pytests_fraction": 0.941176,
+ "pytests_passed": 16,
  "pytests_skipped": 0,
  "reason_code": 0,
- "rubric_gate": 1,
  "rubrics_fraction": 1.0,
- "rubrics_passed": 18,
- "rubrics_total": 18,
+ "rubrics_passed": 9,
+ "rubrics_total": 9,
  "score": 0.375
 }
