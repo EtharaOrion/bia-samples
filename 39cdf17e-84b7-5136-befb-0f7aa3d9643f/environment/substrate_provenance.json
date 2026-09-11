@@ -1,0 +1,31 @@
+{
+  "_banner": "GENERATED SECTION. DO NOT HAND-EDIT. Emitted by seed/emit_substrate_provenance.py.",
+  "_what_this_is": "Provenance bound to each carrier by sha256 rather than by path, so it is a statement about these exact bytes and no others. Every claim here is recomputable: hash the file, unpack its 1024-byte header, and check that the length is token_count*2 + 1024.",
+  "carriers": [
+    {
+      "basis": "the 1024-byte header declares magic 20240520, version 1 and 4194305 tokens, and the file is exactly 4194305*2 + 1024 = 8389634 bytes, which is the shard format seed/forge/substrate.py documents at its lines 13-16",
+      "bytes": 8389634,
+      "external_source": "https://huggingface.co/datasets/HuggingFaceFW/fineweb",
+      "path": "environment/data/devset_slice.bin",
+      "pipeline": "https://github.com/KellerJordan/modded-nanogpt data/cached_fineweb10B.py",
+      "sha256": "4700adb46ffb43978d5a5b29e3693406fa3a27caf26c25030cd3f59b9e0e80d5"
+    },
+    {
+      "basis": "the 1024-byte header declares magic 20240520, version 1 and 25165825 tokens, and the file is exactly 25165825*2 + 1024 = 50332674 bytes, which is the shard format seed/forge/substrate.py documents at its lines 13-16",
+      "bytes": 50332674,
+      "external_source": "https://huggingface.co/datasets/HuggingFaceFW/fineweb",
+      "path": "environment/data/train_slice.bin",
+      "pipeline": "https://github.com/KellerJordan/modded-nanogpt data/cached_fineweb10B.py",
+      "sha256": "0c30a846a34abf443b2878418dfd2ca67eae0803af07a5a2750107db8d4ce66c"
+    },
+    {
+      "basis": "the 1024-byte header declares magic 20240520, version 1 and 4194305 tokens, and the file is exactly 4194305*2 + 1024 = 8389634 bytes, which is the shard format seed/forge/substrate.py documents at its lines 13-16",
+      "bytes": 8389634,
+      "external_source": "https://huggingface.co/datasets/HuggingFaceFW/fineweb",
+      "path": "tests/holdout/val_slice.bin",
+      "pipeline": "https://github.com/KellerJordan/modded-nanogpt data/cached_fineweb10B.py",
+      "sha256": "6252c87fdb05e909698461c912ee986730f5198c81bc80e8f4b79a276255448e"
+    }
+  ],
+  "schema": "forge.substrate_provenance/v1"
+}

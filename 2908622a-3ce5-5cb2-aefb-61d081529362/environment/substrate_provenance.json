@@ -1,0 +1,71 @@
+{
+  "_banner": "GENERATED SECTION. DO NOT HAND-EDIT. Emitted by seed/emit_substrate_provenance.py.",
+  "_what_this_is": "Provenance bound to each carrier by sha256 rather than by path, so it is a statement about these exact bytes and no others. Every claim here is recomputable: hash the file, unpack its 1024-byte header, and check that the length is token_count*2 + 1024.",
+  "carriers": [
+    {
+      "basis": "the 1024-byte header declares magic 20240520, version 1 and 4194305 tokens, and the file is exactly 4194305*2 + 1024 = 8389634 bytes, which is the shard format seed/forge/substrate.py documents at its lines 13-16",
+      "bytes": 8389634,
+      "external_source": "https://huggingface.co/datasets/HuggingFaceFW/fineweb",
+      "path": "environment/data/devset_slice.bin",
+      "pipeline": "https://github.com/KellerJordan/modded-nanogpt data/cached_fineweb10B.py",
+      "sha256": "21abf616fdf7d79bf10bd12bcd38d3bf8f869d06e808fd4603d9837c9c4a6e25"
+    },
+    {
+      "basis": "the 1024-byte header declares magic 20240520, version 1 and 8388608 tokens, and the file is exactly 8388608*2 + 1024 = 16778240 bytes, which is the shard format seed/forge/substrate.py documents at its lines 13-16",
+      "bytes": 16778240,
+      "external_source": "https://huggingface.co/datasets/HuggingFaceFW/fineweb",
+      "path": "environment/data/shard_a.bin",
+      "pipeline": "https://github.com/KellerJordan/modded-nanogpt data/cached_fineweb10B.py",
+      "sha256": "c3d8ed6815d3fa14abf99ff8298fd40f786be53fe949af26e652691f5f36b577"
+    },
+    {
+      "basis": "the 1024-byte header declares magic 20240520, version 1 and 8388608 tokens, and the file is exactly 8388608*2 + 1024 = 16778240 bytes, which is the shard format seed/forge/substrate.py documents at its lines 13-16",
+      "bytes": 16778240,
+      "external_source": "https://huggingface.co/datasets/HuggingFaceFW/fineweb",
+      "path": "environment/data/shard_b.bin",
+      "pipeline": "https://github.com/KellerJordan/modded-nanogpt data/cached_fineweb10B.py",
+      "sha256": "8144a2c109a0dfb175c6688c0df5ec1548e77cee905b1310462d407b2c6128d8"
+    },
+    {
+      "basis": "the 1024-byte header declares magic 20240520, version 1 and 8388608 tokens, and the file is exactly 8388608*2 + 1024 = 16778240 bytes, which is the shard format seed/forge/substrate.py documents at its lines 13-16",
+      "bytes": 16778240,
+      "external_source": "https://huggingface.co/datasets/HuggingFaceFW/fineweb",
+      "path": "environment/data/shard_c.bin",
+      "pipeline": "https://github.com/KellerJordan/modded-nanogpt data/cached_fineweb10B.py",
+      "sha256": "0d4e0ddab3b73f74004f5051ef57b0711a3203fd822ac4e2bbd7636f6ee9db5c"
+    },
+    {
+      "basis": "the 1024-byte header declares magic 20240520, version 1 and 8388608 tokens, and the file is exactly 8388608*2 + 1024 = 16778240 bytes, which is the shard format seed/forge/substrate.py documents at its lines 13-16",
+      "bytes": 16778240,
+      "external_source": "https://huggingface.co/datasets/HuggingFaceFW/fineweb",
+      "path": "environment/data/shard_d.bin",
+      "pipeline": "https://github.com/KellerJordan/modded-nanogpt data/cached_fineweb10B.py",
+      "sha256": "e45bcc10d1574ff6e08e3aebf13ceec8339dbe7b20adb385012b7b0609331669"
+    },
+    {
+      "basis": "the 1024-byte header declares magic 20240520, version 1 and 8388608 tokens, and the file is exactly 8388608*2 + 1024 = 16778240 bytes, which is the shard format seed/forge/substrate.py documents at its lines 13-16",
+      "bytes": 16778240,
+      "external_source": "https://huggingface.co/datasets/HuggingFaceFW/fineweb",
+      "path": "environment/data/shard_e.bin",
+      "pipeline": "https://github.com/KellerJordan/modded-nanogpt data/cached_fineweb10B.py",
+      "sha256": "d29396f88e96aaa3754e388387c37e73fc85b83e69d3aece43943509bbafa118"
+    },
+    {
+      "basis": "the 1024-byte header declares magic 20240520, version 1 and 8388608 tokens, and the file is exactly 8388608*2 + 1024 = 16778240 bytes, which is the shard format seed/forge/substrate.py documents at its lines 13-16",
+      "bytes": 16778240,
+      "external_source": "https://huggingface.co/datasets/HuggingFaceFW/fineweb",
+      "path": "environment/data/shard_f.bin",
+      "pipeline": "https://github.com/KellerJordan/modded-nanogpt data/cached_fineweb10B.py",
+      "sha256": "bba7ed8b349f14d8906d64fa88a794b38d358cc086a25af1b3ef0b5c4b9ae287"
+    },
+    {
+      "basis": "the 1024-byte header declares magic 20240520, version 1 and 4194305 tokens, and the file is exactly 4194305*2 + 1024 = 8389634 bytes, which is the shard format seed/forge/substrate.py documents at its lines 13-16",
+      "bytes": 8389634,
+      "external_source": "https://huggingface.co/datasets/HuggingFaceFW/fineweb",
+      "path": "tests/holdout/val_slice.bin",
+      "pipeline": "https://github.com/KellerJordan/modded-nanogpt data/cached_fineweb10B.py",
+      "sha256": "4e3144ae466c181a269bbcc7a31a92784fa877dc800d3c4c15b415d076552fef"
+    }
+  ],
+  "schema": "forge.substrate_provenance/v1"
+}
