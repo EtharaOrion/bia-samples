@@ -61,15 +61,27 @@ def apply_rubric_veto(score: float, doc):
         return score, None, RUBRIC_GATE_ABSENT
     if not doc:
         return score, None, RUBRIC_GATE_INDETERMINATE
+    # A FAILURE OUTRANKS AN INDETERMINATE, AND THE ORDER IS THE WHOLE POINT.
+    # This test used to run first, which meant one unreviewable rubric returned the score
+    # untouched and every explicitly failed rubric beside it was never looked at. The client
+    # brief makes a submission correct only when every rubric passes, and the spec holds that a
+    # single rubric failure zeroes the score, so a recorded failure must veto whatever else is
+    # undecided. The exploit was agent-reachable: several rubrics say "unreviewable rather than
+    # failed" when an account is truncated, and truncating an account is free.
+    verdicts = doc.get("verdicts") or {}
+    failed = sorted(k for k, v in verdicts.items() if (v or {}).get("pass") is False)
+    if failed or doc.get("overall_pass") is False:
+        # A score already at zero was not zeroed by this gate, so the gate does not claim it.
+        # Naming a rubric as the cause of a zero it did not cause is a false attribution, and
+        # the reason field is machine-read.
+        if score <= 0.0:
+            return 0.0, None, RUBRIC_GATE_VETOED
+        return 0.0, "rubric_veto_" + ",".join(failed or ["overall"]), RUBRIC_GATE_VETOED
+    # Only once nothing has failed does an undecided rubric leave the run unreviewed. It still
+    # never raises: absence of evidence the harness destroyed is not evidence against the agent.
     if doc.get("_indeterminate") or doc.get("overall_pass") is None:
         return score, None, RUBRIC_GATE_INDETERMINATE
-    verdicts = doc.get("verdicts") or {}
-    failed = sorted(k for k, v in verdicts.items() if not (v or {}).get("pass"))
-    if not failed and doc.get("overall_pass") is not False:
-        return score, None, RUBRIC_GATE_CLEAN
-    if score <= 0.0:
-        return 0.0, None, RUBRIC_GATE_VETOED
-    return 0.0, "rubric_veto_" + ",".join(failed or ["overall"]), RUBRIC_GATE_VETOED
+    return score, None, RUBRIC_GATE_CLEAN
 
 
 def rubric_counts(doc):
