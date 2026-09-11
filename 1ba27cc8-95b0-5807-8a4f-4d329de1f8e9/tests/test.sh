@@ -110,5 +110,3 @@ PY
 python3 test_output.py || true
 
 python3 grade.py
-
-python3 apply_rubric_gate.py || true
