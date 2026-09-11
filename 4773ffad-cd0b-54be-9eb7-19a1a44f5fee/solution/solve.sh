@@ -1,9 +1,3 @@
-# FORGE-CANARY-BEGIN
-# 0: b9122ee6ab07a70a87f96fe948c474c09e395f5ba68f1fe69546bc316bb1f4c7
-# 1: 9e972a4c3a253dd523b723c3561e71473b889aec4bb4ef5042f8274b7160aac1
-# 2: 22539d0df21b5f967707ff0df2de97b0af2dbc957c980b3be5b95b72899dd1ea
-# 3: a6e201bf8fd08c494c7986db9f152d0945744763964ee9bac1e5cd01074b6d6a
-# FORGE-CANARY-END
 #!/usr/bin/env bash
 # GENERATED SECTION. DO NOT HAND-EDIT.
 # Source: solution/grounding.yaml. Regenerate with solution/recompute.py.

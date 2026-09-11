@@ -22,7 +22,7 @@
     {
       "comparison": "integer equality against the value read back through the harness handle",
       "id": "seam-offset-recovered",
-      "reference_value": 103,
+      "reference_value": 110,
       "statement": "The declared seam offset equals the value established in built environment state."
     },
     {
@@ -131,7 +131,14 @@
         99,
         100,
         101,
-        102
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108,
+        109
       ],
       "statement": "The witness is credited by the proxy at full size, refused by the acceptance predicate, and at least as large as the seam offset."
     },
