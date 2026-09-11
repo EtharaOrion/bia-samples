@@ -29,7 +29,9 @@ that the shipped bundle-A behaviour requires:
      such key.
 
 Adopting 1ba27cc8's semantics here would have been a behaviour change wearing the costume
-of a refactor. tests/test_rubric_gate_characterization.py pins all 15 shipped triples.
+of a refactor. The characterization test that pins all 15 shipped triples lives in the harness at
+  .seed/rubric_instruments/89fd44af/test_rubric_gate_characterization.py, outside the bundle,
+  because it is an instrument rather than verifier code.
 """
 from __future__ import annotations
 
@@ -69,7 +71,10 @@ def apply_rubric_veto(score: float, doc):
     # undecided. The exploit was agent-reachable: several rubrics say "unreviewable rather than
     # failed" when an account is truncated, and truncating an account is free.
     verdicts = doc.get("verdicts") or {}
-    failed = sorted(k for k, v in verdicts.items() if (v or {}).get("pass") is False)
+    # Falsy INCLUDING None counts as failed here. That is bundle A's documented semantics and
+    # differs deliberately from 1ba27cc8; adopting the sibling's reading would be a behaviour
+    # change wearing the costume of a refactor, which this module's own provenance note forbids.
+    failed = sorted(k for k, v in verdicts.items() if not (v or {}).get("pass"))
     if failed or doc.get("overall_pass") is False:
         # A score already at zero was not zeroed by this gate, so the gate does not claim it.
         # Naming a rubric as the cause of a zero it did not cause is a false attribution, and
