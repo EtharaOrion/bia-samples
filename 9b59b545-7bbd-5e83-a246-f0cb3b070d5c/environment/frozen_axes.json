@@ -1,0 +1,18 @@
+{
+  "_banner": "GENERATED SECTION. DO NOT HAND-EDIT. Source: solution/grounding.yaml.",
+  "free": [
+    "optimization algorithm",
+    "hyperparameters and their schedules",
+    "model initialization"
+  ],
+  "frozen": {
+    "arch_digest": "9f86d081884c7d659a2feaa0c55ad015",
+    "arch_id": "nanogpt-track3-124M",
+    "batch_size": 524288,
+    "dataset_digest": "e3b0c44298fc1c149afbf4c8996fb924",
+    "dataset_id": "fineweb-edu-10B-track3",
+    "fwd_bwd_per_step": 1
+  },
+  "rule": "Dataset, batch size, architecture and exactly one forward-backward pass per optimizer step are frozen by upstream rule. A run that moves any of them is refused with frozen-axis-moved.",
+  "schema": "bia.oer01.frozen_axes/v1"
+}

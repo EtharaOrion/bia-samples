@@ -1,0 +1,6 @@
+{"id": "d1", "prompt": "convert 2 km to m", "answer": "2000"}
+{"id": "d2", "prompt": "convert 2 m to cm", "answer": "200"}
+{"id": "d3", "prompt": "convert 3 kg to g", "answer": "3000"}
+{"id": "d4", "prompt": "convert 3 g to mg", "answer": "3000"}
+{"id": "d5", "prompt": "convert 2 h to min", "answer": "120"}
+{"id": "d6", "prompt": "convert 3 min to s", "answer": "180"}

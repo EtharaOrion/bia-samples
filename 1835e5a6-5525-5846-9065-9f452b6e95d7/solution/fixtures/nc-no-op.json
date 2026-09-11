@@ -1,0 +1,449 @@
+{
+ "expect_reason": "multi-seed-separation-not-cleared",
+ "files": {
+  "anchors.json": {
+   "anchors_state_in_bundle": "absent",
+   "baseline_metric": 1000,
+   "gap": "gap-oer-per-family-anchors-unmeasured",
+   "resolved": true,
+   "source": "fixture-resolved synthetic constants, NOT anchors",
+   "target_metric": 800
+  },
+  "eval/reference_arm.json": {
+   "produced_by": "verifier",
+   "seeds": {
+    "11": 850.0,
+    "12": 850.0,
+    "13": 850.0
+   }
+  },
+  "eval/schedule.json": {
+   "min_seeds": 3,
+   "points": [
+    700,
+    750,
+    800,
+    850,
+    900,
+    950,
+    1000
+   ],
+   "scheduled_by": "verifier",
+   "sustain_points_required": 3,
+   "target_loss": 3.28
+  },
+  "eval/seed-11/checkpoint_manifest.json": {
+   "checkpoints": [
+    {
+     "step": 700,
+     "weights_digest": "88db4ef0895a311b66ddcea5b53116a24004fce464bb96ee419696944ca50b06"
+    },
+    {
+     "step": 750,
+     "weights_digest": "d73fce41006c0f137e0b0269eeeb9b8cbf58422849a4068ec279f4add1ffde48"
+    },
+    {
+     "step": 800,
+     "weights_digest": "e0d5c690e41685f761f3a0bd0209b65b208045e61cc5ec95db1a915cd427c38b"
+    },
+    {
+     "step": 850,
+     "weights_digest": "c6a770819bb4d76f63fb313b823f31493a2cd26a465f0eccc046de704025ed0c"
+    },
+    {
+     "step": 900,
+     "weights_digest": "0b882a4d745b55056e4a9e8e3b2bdb8d3b4dc461bb183872deda2301a68754a1"
+    },
+    {
+     "step": 950,
+     "weights_digest": "84fd6ec5cfcb30aa9c4978c9c3ffff0ab937c0b8a494361831f0facbe9d23761"
+    },
+    {
+     "step": 1000,
+     "weights_digest": "65097826191d366894bb84e68cfc21bf50cee4eaed969548a202c8e06afd0c08"
+    }
+   ],
+   "owner": "harness",
+   "seed": 11
+  },
+  "eval/seed-11/evaluations.json": {
+   "graded_step": 850,
+   "halted_at_step": null,
+   "points": [
+    {
+     "loss": 3.35,
+     "step": 700,
+     "weights_digest": "88db4ef0895a311b66ddcea5b53116a24004fce464bb96ee419696944ca50b06"
+    },
+    {
+     "loss": 3.33,
+     "step": 750,
+     "weights_digest": "d73fce41006c0f137e0b0269eeeb9b8cbf58422849a4068ec279f4add1ffde48"
+    },
+    {
+     "loss": 3.31,
+     "step": 800,
+     "weights_digest": "e0d5c690e41685f761f3a0bd0209b65b208045e61cc5ec95db1a915cd427c38b"
+    },
+    {
+     "loss": 3.27,
+     "step": 850,
+     "weights_digest": "c6a770819bb4d76f63fb313b823f31493a2cd26a465f0eccc046de704025ed0c"
+    },
+    {
+     "loss": 3.26,
+     "step": 900,
+     "weights_digest": "0b882a4d745b55056e4a9e8e3b2bdb8d3b4dc461bb183872deda2301a68754a1"
+    },
+    {
+     "loss": 3.25,
+     "step": 950,
+     "weights_digest": "84fd6ec5cfcb30aa9c4978c9c3ffff0ab937c0b8a494361831f0facbe9d23761"
+    },
+    {
+     "loss": 3.24,
+     "step": 1000,
+     "weights_digest": "65097826191d366894bb84e68cfc21bf50cee4eaed969548a202c8e06afd0c08"
+    }
+   ],
+   "seed": 11,
+   "smoothing": "none",
+   "source": "verifier-recomputed"
+  },
+  "eval/seed-12/checkpoint_manifest.json": {
+   "checkpoints": [
+    {
+     "step": 700,
+     "weights_digest": "e771324205c5cb05ca8471c99864bfb0d92a2cc23d3ba425c87e6a090afb01c2"
+    },
+    {
+     "step": 750,
+     "weights_digest": "19c1d005b02ac3db3d3a0c9717b8d9a0e97e4eb5216c11cb98d38268ec9b0ca1"
+    },
+    {
+     "step": 800,
+     "weights_digest": "4717a2d6634970092e77d14c6b00408ead63eef0fa7885871858d4cfbbb88b39"
+    },
+    {
+     "step": 850,
+     "weights_digest": "8880ab6b7ddd3409dc92a409cbd703ad60c3d4140888b3875e79958340d3aa0d"
+    },
+    {
+     "step": 900,
+     "weights_digest": "c5a9c4d48c9c2091e216f9803ff5dab9dd0ee922af50cd61ee0f91917b0b1228"
+    },
+    {
+     "step": 950,
+     "weights_digest": "03a7cc19576e15aa2059d17c7ea8836f9ce67db1bac638626b1ff12d693adb6e"
+    },
+    {
+     "step": 1000,
+     "weights_digest": "bb938cc38ed88fc0d3486a5834e87d2d2731e285bfcf2a95bf100eaaedb8bf78"
+    }
+   ],
+   "owner": "harness",
+   "seed": 12
+  },
+  "eval/seed-12/evaluations.json": {
+   "graded_step": 850,
+   "halted_at_step": null,
+   "points": [
+    {
+     "loss": 3.35,
+     "step": 700,
+     "weights_digest": "e771324205c5cb05ca8471c99864bfb0d92a2cc23d3ba425c87e6a090afb01c2"
+    },
+    {
+     "loss": 3.33,
+     "step": 750,
+     "weights_digest": "19c1d005b02ac3db3d3a0c9717b8d9a0e97e4eb5216c11cb98d38268ec9b0ca1"
+    },
+    {
+     "loss": 3.31,
+     "step": 800,
+     "weights_digest": "4717a2d6634970092e77d14c6b00408ead63eef0fa7885871858d4cfbbb88b39"
+    },
+    {
+     "loss": 3.27,
+     "step": 850,
+     "weights_digest": "8880ab6b7ddd3409dc92a409cbd703ad60c3d4140888b3875e79958340d3aa0d"
+    },
+    {
+     "loss": 3.26,
+     "step": 900,
+     "weights_digest": "c5a9c4d48c9c2091e216f9803ff5dab9dd0ee922af50cd61ee0f91917b0b1228"
+    },
+    {
+     "loss": 3.25,
+     "step": 950,
+     "weights_digest": "03a7cc19576e15aa2059d17c7ea8836f9ce67db1bac638626b1ff12d693adb6e"
+    },
+    {
+     "loss": 3.24,
+     "step": 1000,
+     "weights_digest": "bb938cc38ed88fc0d3486a5834e87d2d2731e285bfcf2a95bf100eaaedb8bf78"
+    }
+   ],
+   "seed": 12,
+   "smoothing": "none",
+   "source": "verifier-recomputed"
+  },
+  "eval/seed-13/checkpoint_manifest.json": {
+   "checkpoints": [
+    {
+     "step": 700,
+     "weights_digest": "d57da177b8a8c8599813586a626f9b87e33a994495bf66c4e326ebf5181b77e7"
+    },
+    {
+     "step": 750,
+     "weights_digest": "cbfa0586fb34069de3879327f135588c6219fd94e0720e834871a217317c9f3e"
+    },
+    {
+     "step": 800,
+     "weights_digest": "b9427df62e936fef6d9a358e2594b844dcb1dc522e9263ba51f9df60f595f01e"
+    },
+    {
+     "step": 850,
+     "weights_digest": "4058507312c79eef6a2259f45c4a50f0f71d68d628ca242587872243e0749dba"
+    },
+    {
+     "step": 900,
+     "weights_digest": "000c5fea0d137d47af88e4245e6ebc30e5de8af966b99d8645f7213b50bde869"
+    },
+    {
+     "step": 950,
+     "weights_digest": "d9a9e54ae14641a5a784dffb1df1a42195bdcae245061e91977c84298912ac4e"
+    },
+    {
+     "step": 1000,
+     "weights_digest": "949f1bdd0ba66cfe58b8e4d2cd830c27a703db253b95b81f92ce2c42080520af"
+    }
+   ],
+   "owner": "harness",
+   "seed": 13
+  },
+  "eval/seed-13/evaluations.json": {
+   "graded_step": 850,
+   "halted_at_step": null,
+   "points": [
+    {
+     "loss": 3.35,
+     "step": 700,
+     "weights_digest": "d57da177b8a8c8599813586a626f9b87e33a994495bf66c4e326ebf5181b77e7"
+    },
+    {
+     "loss": 3.33,
+     "step": 750,
+     "weights_digest": "cbfa0586fb34069de3879327f135588c6219fd94e0720e834871a217317c9f3e"
+    },
+    {
+     "loss": 3.31,
+     "step": 800,
+     "weights_digest": "b9427df62e936fef6d9a358e2594b844dcb1dc522e9263ba51f9df60f595f01e"
+    },
+    {
+     "loss": 3.27,
+     "step": 850,
+     "weights_digest": "4058507312c79eef6a2259f45c4a50f0f71d68d628ca242587872243e0749dba"
+    },
+    {
+     "loss": 3.26,
+     "step": 900,
+     "weights_digest": "000c5fea0d137d47af88e4245e6ebc30e5de8af966b99d8645f7213b50bde869"
+    },
+    {
+     "loss": 3.25,
+     "step": 950,
+     "weights_digest": "d9a9e54ae14641a5a784dffb1df1a42195bdcae245061e91977c84298912ac4e"
+    },
+    {
+     "loss": 3.24,
+     "step": 1000,
+     "weights_digest": "949f1bdd0ba66cfe58b8e4d2cd830c27a703db253b95b81f92ce2c42080520af"
+    }
+   ],
+   "seed": 13,
+   "smoothing": "none",
+   "source": "verifier-recomputed"
+  },
+  "frozen_axes.json": {
+   "declared": {
+    "architecture": "gpt2-124m-track3",
+    "batch_size": 524288,
+    "dataset": "fineweb-edu-10B/track3-frozen-shards",
+    "passes_per_step": 1
+   },
+   "observed": {
+    "architecture": "gpt2-124m-track3",
+    "batch_size": 524288,
+    "dataset": "fineweb-edu-10B/track3-frozen-shards",
+    "passes_per_step": 1
+   },
+   "source": "verifier-instrumented"
+  },
+  "loop/iterations.json": {
+   "compaction_at": 4,
+   "iterations": [
+    {
+     "halted": false,
+     "index": 1,
+     "ledger_len_after": 1,
+     "reconciled_against_ledger": false,
+     "submission_digest": "9fc200846107bbccbe05c11dec742dbf377e203464b4b4f120aa035511116daf",
+     "summary_digest": "3d0729304c44b27505cbd81bd582945eb37feefae7df10ce58217a5e89155ded"
+    },
+    {
+     "halted": false,
+     "index": 2,
+     "ledger_len_after": 2,
+     "reconciled_against_ledger": false,
+     "submission_digest": "30e94110679e2ff795fa3874baf97b5bd952a93ea49b6ad89ae53e661f9253c1",
+     "summary_digest": "b5b048729c89bce294ff4131448655a8ad5cf71420357f77532b867d6886ff00"
+    },
+    {
+     "halted": false,
+     "index": 3,
+     "ledger_len_after": 3,
+     "reconciled_against_ledger": false,
+     "submission_digest": "fa14bc153388dd31cd340b44f09027555e3f81c79ca74f836059347106be9bd6",
+     "summary_digest": "77c2c2756828d259ca1acecd5dba3c31fa83de13c259565ae5a4ae507383e0ca"
+    },
+    {
+     "halted": false,
+     "index": 4,
+     "ledger_len_after": 5,
+     "reconciled_against_ledger": true,
+     "submission_digest": "6b628162085807f680fbfd297ae7a858c81768e714489d3430da8678e542c7ea",
+     "summary_digest": "384d64270961538af14aa3e90e66baa5ecad37c10a9d921af61b63a73966b826"
+    },
+    {
+     "halted": false,
+     "index": 5,
+     "ledger_len_after": 7,
+     "reconciled_against_ledger": true,
+     "submission_digest": "af3cfe0a6277d1e2d853a34e5d61e41b28d33bce8662e76eb27be624b07c1744",
+     "summary_digest": "4241f4f09755d912d1e9abe9605cc55114af7cc2734f25c02a64d9eecb526e50"
+    }
+   ],
+   "summary_window": 2
+  },
+  "loop/ledger.jsonl": "{\"approach_id\":\"a1\",\"established\":[\"momentum-0.95-refuted\"],\"iteration\":1,\"reward\":0.1,\"status\":\"refuted\"}\n{\"approach_id\":\"a2\",\"established\":[\"lr-ceiling-0.008\"],\"iteration\":2,\"reward\":0.21,\"status\":\"refuted\"}\n{\"approach_id\":\"a3\",\"established\":[\"warmup-256-helps\"],\"iteration\":3,\"reward\":0.44,\"status\":\"tried\"}\n{\"approach_id\":\"recon-4\",\"established\":[],\"iteration\":4,\"reconstructed_from_ledger\":true,\"recovers\":[\"a1\"],\"status\":\"tried\"}\n{\"approach_id\":\"a4\",\"established\":[\"ns-iters-5-stable\"],\"iteration\":4,\"reward\":0.71,\"status\":\"tried\"}\n{\"approach_id\":\"recon-5\",\"established\":[],\"iteration\":5,\"reconstructed_from_ledger\":true,\"recovers\":[\"a1\",\"a2\"],\"status\":\"tried\"}\n{\"approach_id\":\"a5\",\"established\":[\"a3-and-a4-compose\"],\"iteration\":5,\"reward\":1.0,\"status\":\"tried\"}\n",
+  "loop/summaries/iter-1.json": {
+   "asserts": [],
+   "compacted": false,
+   "entries": [],
+   "index": 1
+  },
+  "loop/summaries/iter-2.json": {
+   "asserts": [],
+   "compacted": false,
+   "entries": [
+    {
+     "approach_id": "a1",
+     "description": "heavy-ball momentum at 0.95",
+     "established": [
+      "momentum-0.95-refuted"
+     ],
+     "reward": 0.1
+    }
+   ],
+   "index": 2
+  },
+  "loop/summaries/iter-3.json": {
+   "asserts": [],
+   "compacted": false,
+   "entries": [
+    {
+     "approach_id": "a1",
+     "description": "heavy-ball momentum at 0.95",
+     "established": [
+      "momentum-0.95-refuted"
+     ],
+     "reward": 0.1
+    },
+    {
+     "approach_id": "a2",
+     "description": "learning rate raised to 0.008",
+     "established": [
+      "lr-ceiling-0.008"
+     ],
+     "reward": 0.21
+    }
+   ],
+   "index": 3
+  },
+  "loop/summaries/iter-4.json": {
+   "asserts": [
+    {
+     "approach_id": "a2",
+     "claim": "refuted",
+     "constraint": "lr-ceiling-0.008"
+    }
+   ],
+   "compacted": true,
+   "entries": [
+    {
+     "approach_id": "digest",
+     "description": "1 earlier approaches, merged",
+     "established": [],
+     "reward": null
+    },
+    {
+     "approach_id": "a2",
+     "description": "learning rate raised to 0.008",
+     "established": [
+      "lr-ceiling-0.008"
+     ],
+     "reward": 0.21
+    },
+    {
+     "approach_id": "a3",
+     "description": "warmup extended to 256 steps",
+     "established": [
+      "warmup-256-helps"
+     ],
+     "reward": 0.44
+    }
+   ],
+   "index": 4
+  },
+  "loop/summaries/iter-5.json": {
+   "asserts": [
+    {
+     "approach_id": "a1",
+     "claim": "refuted"
+    }
+   ],
+   "compacted": true,
+   "entries": [
+    {
+     "approach_id": "digest",
+     "description": "2 earlier approaches, merged",
+     "established": [],
+     "reward": null
+    },
+    {
+     "approach_id": "a3",
+     "description": "warmup extended to 256 steps",
+     "established": [
+      "warmup-256-helps"
+     ],
+     "reward": 0.44
+    },
+    {
+     "approach_id": "a4",
+     "description": "orthogonalized update, 5 inner iterations",
+     "established": [
+      "ns-iters-5-stable"
+     ],
+     "reward": 0.71
+    }
+   ],
+   "index": 5
+  }
+ },
+ "fires": "",
+ "generated": "GENERATED SECTION. DO NOT HAND-EDIT. Source: solution/grounding.yaml",
+ "id": "nc-no-op",
+ "statement": "A no-op submission returns the reference optimizer unchanged, so its arm lands exactly on the reference arm and separates by nothing."
+}

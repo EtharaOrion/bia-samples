@@ -1,0 +1,33 @@
+{
+  "_generated": "GENERATED SECTION. DO NOT HAND-EDIT.",
+  "_source": "solution/grounding.yaml",
+  "graded_against": "solution/reference.py",
+  "rubrics": [
+    {
+      "criterion": "The reference emits at least one sample for every ordered conversion pair inside every dimension.",
+      "id": "covers-the-pair-space",
+      "reference_answer": "24 pairs covered, 144 samples emitted."
+    },
+    {
+      "criterion": "The reference's numerals come from a grid it declares, not from any held-out item.",
+      "id": "value-grid-is-its-own",
+      "reference_answer": "Values 2, 3, 5, 6, 8, 9 and their conversions; peak similarity against any held-out item is 0.3333, below the bound threshold of 0.45."
+    },
+    {
+      "criterion": "The reference opens no file other than the output path it was given.",
+      "id": "no-benchmark-read",
+      "reference_answer": "One open() call, on args.out."
+    },
+    {
+      "criterion": "A self-reported number, if printed, is marked as ungraded and does not match the measurement, so nothing downstream can be tempted to carry it.",
+      "id": "reports-without-claiming",
+      "reference_answer": "Prints REPORTED_SCORE=0.875000 while the verifier measures 1.0; the divergence is recorded and the measurement is graded."
+    },
+    {
+      "criterion": "The corpus stays inside the corpus cap and the token ceiling as actually fed.",
+      "id": "budget-respected-as-fed",
+      "reference_answer": "144 samples, 276480 tokens fed across 320 steps, against a 2000-sample cap and a 4000000-token ceiling."
+    }
+  ],
+  "slot": "OER-17"
+}

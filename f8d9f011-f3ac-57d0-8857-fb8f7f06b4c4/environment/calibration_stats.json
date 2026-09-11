@@ -1,0 +1,59 @@
+{
+  "_generated": "GENERATED SECTION. DO NOT HAND-EDIT. source: solution/grounding.yaml",
+  "schema": "oer22.calibration_stats/v1",
+  "statement": "Per-version estimated per-tensor sensitivity. A version that is not in force is retained for the record and is NOT the version an allocation is graded against.",
+  "tensor_order": [
+    "blk00.attn.qkv",
+    "blk00.attn.out",
+    "blk00.mlp.up",
+    "blk00.mlp.down",
+    "blk01.attn.qkv",
+    "blk01.attn.out",
+    "blk01.mlp.up",
+    "blk01.mlp.down",
+    "blk02.attn.qkv",
+    "blk02.attn.out",
+    "blk02.mlp.up",
+    "blk02.mlp.down"
+  ],
+  "versions": [
+    {
+      "sensitivity": [
+        0.9,
+        0.15,
+        0.6,
+        0.08,
+        1.3,
+        0.22,
+        0.45,
+        0.95,
+        0.12,
+        0.7,
+        1.6,
+        0.3
+      ],
+      "sensitivity_digest": "496ee180f108ba799e52415138c238ef713f167c08711e4a8ff8c48e0a384685",
+      "tick": 1,
+      "version": 1
+    },
+    {
+      "sensitivity": [
+        0.91125,
+        0.15375,
+        0.615,
+        0.38,
+        1.31625,
+        0.2255,
+        0.455625,
+        0.97375,
+        0.57,
+        0.7,
+        1.64,
+        0.30375
+      ],
+      "sensitivity_digest": "a9423c6abebd3d9c269e80b51a514058f7ed31db6c27dfaeaac55303a06dffd5",
+      "tick": 7,
+      "version": 2
+    }
+  ]
+}

@@ -1,0 +1,190 @@
+schema: forge.checkers/v1
+reduction_kinds: [VALUE, EFFECT, ABSENCE, INVARIANT, ORDERING, DIVERGENCE]
+
+# MEASURED CORRECTION carried from wave-1 lanes OER-01..OER-04: the live
+# seed/forge/verifier.py binds the reward carrier to reward.txt, not reward.json. The
+# bare float goes to reward_path; the machine-readable reason and the metric block go
+# to score_document_path. tests/test.sh writes BOTH from one trap, so the instrument's
+# binding and the reason carrier can never disagree.
+reward_path: /logs/verifier/reward.txt
+score_document_path: /logs/verifier/score.json
+
+harness_log_root: /logs/harness
+harness_log_root_note: >-
+  Every checker below reads only records written by the verifier's own process under
+  this root. No checker reads a planted file, an environment secret, a random source, a
+  network socket, or the submission. No checker reads a clock: temporal ordering is
+  carried by the harness-owned snapshot version sequence in snapshot_ledger.json, where
+  seq is a monotone integer the harness owns and a higher snapshot_version is a later
+  corpus.
+
+ast_allowlist:
+  module: tests/checkers.py
+  imports: [json, math, hashlib, pathlib, dataclasses, typing]
+  forbidden: [planted-file-read, environment-secret-read, random, clock, network, submission-import]
+  grading_process_note: >-
+    tests/runner.py copies the submission alone into a fresh temporary directory,
+    launches it as a new session leader under a small environment allowlist, captures
+    its output, and kills the whole process group in a finally block. tests/grade.py
+    imports tests/checkers.py and solution/reference.py and never imports the
+    submission.
+
+aggregation:
+  mode: required_pass
+  rationale: >-
+    Every checker below is an admissibility gate, and grade.py implements exactly that:
+    it walks CHECKER_ORDER, and the first failing required gate ends grading at reward
+    0.0 carrying that gate's zero_reason. required_pass is the mode that describes this
+    because the gates are conjunctive and none of them is worth partial credit; a
+    submission that leaked the evaluation split has not half-solved the task. The
+    continuous reward is NOT produced by this aggregation. Aggregation decides
+    admissibility; the reward is then the clipped normalisation of the graded
+    validation loss, which is a float in [0.0, 1.0] and never binary.
+
+reward_contract:
+  interval: [0.0, 1.0]
+  higher_is_better: true
+  binary: false
+  full_reward: 1.0
+  metric: validation loss of the trained model on the frozen held-out split
+  direction: lower
+  formula: "raw = (baseline_metric - agent_metric) / (baseline_metric - target_metric)"
+  clip: "score = min(max(raw, 0.0), 1.0)"
+  anchors_state: absent
+  anchors_gap: gap-oer-per-family-anchors-unmeasured
+  baseline_metric: null
+  target_metric: null
+  anchors_note: >-
+    F13 anchors are unmeasured. seed/contract.yaml families.entries.F13 carries
+    scope_state unscoped and scope null. The reward SCHEMA above is fully bound and the
+    two numbers are declared absent rather than invented. Both are read at grade time
+    from the harness-owned anchor record /logs/harness/anchor_record.json, which this
+    lane does not author. An absent, null or degenerate anchor record resolves to
+    reward 0.0 with reason anchors-unresolved, never to a vacuous pass.
+  agent_metric_source: >-
+    eval_ledger.graded_point.loss, which check_graded_loss_verifier_computed proves is
+    the verifier's own recomputation over its own per-batch records, and which
+    check_readout_unsmoothed proves is the raw unsmoothed mean of those records.
+
+checkers:
+  - id: graded_loss_verifier_computed
+    statement: "The graded validation loss is the verifier's own recomputation over its own per-batch records on the frozen held-out split, and is not a number the submission reported, printed or wrote."
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: check_graded_loss_verifier_computed
+    zero_reason: graded-loss-not-verifier-computed
+    required: true
+    weight: 3
+    live_state_read: "/logs/harness/eval_ledger.json producer, graded_point.origin, graded_point.per_batch_losses, submission_reported_used, split_digest; cross-read against /logs/harness/split_manifest.json eval_batches and split_digest."
+    compiled_test: "tests/test_output.py::test_graded_loss_verifier_computed"
+
+  - id: readout_unsmoothed
+    statement: "No smoothing reaches the graded path: every graded evaluation point declares filter none and equals the raw unsmoothed mean of its own per-batch records."
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: check_readout_unsmoothed
+    zero_reason: readout-smoothing-on-graded-path
+    required: true
+    weight: 3
+    live_state_read: "/logs/harness/eval_ledger.json graded_point.filter, graded_point.loss, graded_point.per_batch_losses, and the same three fields on every sustain_points entry."
+    compiled_test: "tests/test_output.py::test_readout_unsmoothed"
+
+  - id: loss_sustained_across_bound_points
+    statement: "The loss level established at the bound evaluation step holds at every verifier-scheduled subsequent evaluation point, within the bound sustain slack, so a noise dip cannot be harvested."
+    reduction: INVARIANT
+    reached_by: tests/grade.py
+    selector: check_loss_sustained_across_bound_points
+    zero_reason: loss-not-sustained
+    required: true
+    weight: 3
+    live_state_read: "/logs/harness/eval_ledger.json bound_evaluation_step, sustain_points_required, scheduled_sustain_steps, sustain_slack, graded_point.loss and every sustain_points entry's step and loss."
+    compiled_test: "tests/test_output.py::test_loss_sustained_across_bound_points"
+
+  - id: early_stop_is_not_an_established_loss
+    statement: "The run ran the whole scheduled sustain window; a run halted at a favourable evaluation before that window closed is graded as not having established the loss."
+    reduction: ABSENCE
+    reached_by: tests/grade.py
+    selector: check_early_stop_is_not_an_established_loss
+    zero_reason: early-stop-loss-not-established
+    required: true
+    weight: 2
+    live_state_read: "/logs/harness/eval_ledger.json halted_early, terminated_by, final_step and scheduled_sustain_steps."
+    compiled_test: "tests/test_output.py::test_early_stop_is_not_an_established_loss"
+
+  - id: graded_weights_are_harness_owned
+    statement: "Every evaluated weight digest equals the harness weight ledger's digest at that exact step, so the weights graded are the weights the run produced and never a checkpoint the submission selected."
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: check_graded_weights_are_harness_owned
+    zero_reason: weights-not-harness-owned
+    required: true
+    weight: 2
+    live_state_read: "/logs/harness/weights_ledger.json owner and per-step digests, against /logs/harness/eval_ledger.json graded_point.weights_digest, graded_point.weights_source and the same fields on every sustain point."
+    compiled_test: "tests/test_output.py::test_graded_weights_are_harness_owned"
+
+  - id: snapshot_version_sequence_ordered
+    statement: "The harness-owned snapshot version sequence is strictly ascending in seq, non-decreasing in snapshot_version, and terminates at the graded evaluation, so no later record describes an earlier corpus."
+    reduction: ORDERING
+    reached_by: tests/grade.py
+    selector: check_snapshot_version_sequence_ordered
+    zero_reason: snapshot-sequence-out-of-order
+    required: true
+    weight: 2
+    live_state_read: "/logs/harness/snapshot_ledger.json entries[].seq, entries[].snapshot_version, entries[].event and graded_eval_seq."
+    ordering_basis_note: "This checker is the slot's clock replacement. It reads no wall time, no locale and no timezone; ordering is the harness-owned seq and version pair alone."
+    compiled_test: "tests/test_output.py::test_snapshot_version_sequence_ordered"
+
+  - id: parse_snapshot_matches_graded_eval
+    statement: "The snapshot version the parse rules were built against equals the snapshot version the graded evaluation ran on, so a parse verdict carried across a snapshot move is caught."
+    reduction: DIVERGENCE
+    reached_by: tests/grade.py
+    selector: check_parse_snapshot_matches_graded_eval
+    zero_reason: parse-built-against-stale-snapshot
+    required: true
+    weight: 4
+    live_state_read: "/logs/harness/parse_manifest.json built_against_snapshot, against /logs/harness/eval_ledger.json snapshot_version and the snapshot_version on the /logs/harness/snapshot_ledger.json entry whose event is graded-eval."
+    archetype_note: "This is the AR9 temporal reasoning gap for this slot, made gradeable. The corpus snapshot moves silently; this checker is what makes reasoning about WHEN a fact was true load-bearing."
+    compiled_test: "tests/test_output.py::test_parse_snapshot_matches_graded_eval"
+
+  - id: token_budget_respected_as_fed
+    statement: "The frozen token budget was respected AS FED: the harness measured exactly the bound number of tokens, in one pass, and the per-shard counts sum to it."
+    reduction: VALUE
+    reached_by: tests/grade.py
+    selector: check_token_budget_respected_as_fed
+    zero_reason: token-budget-overspent
+    required: true
+    weight: 3
+    live_state_read: "/logs/harness/token_budget.json measured_by, budget_tokens, budget_at_graded_snapshot, feed_passes, tokens_fed and per_shard_tokens."
+    compiled_test: "tests/test_output.py::test_token_budget_respected_as_fed"
+
+  - id: eval_split_not_trained_on
+    statement: "No held-out evaluation document id appears in the training stream, and the recorded split digest is the recomputed digest of the held-out ids it names."
+    reduction: ABSENCE
+    reached_by: tests/grade.py
+    selector: check_eval_split_not_trained_on
+    zero_reason: eval-split-leaked-into-training
+    required: true
+    weight: 4
+    live_state_read: "/logs/harness/split_manifest.json eval_doc_ids, train_doc_ids, split_id and split_digest, against /logs/harness/eval_ledger.json split_id."
+    compiled_test: "tests/test_output.py::test_eval_split_not_trained_on"
+
+  - id: pipeline_ran_over_graded_corpus
+    statement: "The submitted pipeline actually ran this run over the corpus at the graded snapshot and produced the exact token stream the harness measured; nothing was replayed from a cache."
+    reduction: EFFECT
+    reached_by: tests/grade.py
+    selector: check_pipeline_ran_over_graded_corpus
+    zero_reason: token-stream-not-produced-this-run
+    required: true
+    weight: 2
+    live_state_read: "/logs/harness/pipeline_effect.json produced, cache_hit, produced_from_snapshot and token_stream_digest, against /logs/harness/token_budget.json token_stream_digest and the graded-eval entry of /logs/harness/snapshot_ledger.json."
+    compiled_test: "tests/test_output.py::test_pipeline_ran_over_graded_corpus"
+
+substituted_rejecting_halves: []
+substituted_rejecting_halves_note: >-
+  No checker in this manifest required a substitution. Every one of the ten is fired in
+  both directions by a fixture in seed/tasks/OER-11/adequacy.py: an accepting half on
+  the clean reference fixture and a rejecting half on a planted-defect fixture that
+  produces exactly that checker's zero_reason and no other. Had an isolation boundary
+  made a checker unfireable by any submission, its rejecting half would be carried on a
+  planted fixture and the substitution recorded here and in feasibility.yaml rather
+  than papered over.

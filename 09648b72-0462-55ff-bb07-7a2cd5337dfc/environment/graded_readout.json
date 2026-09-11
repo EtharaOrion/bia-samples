@@ -1,0 +1,18 @@
+{
+  "schema": "oer08.graded_readout/v1",
+  "note": "The graded evaluation protocol, stated where you can read it. The verifier recomputes the graded validation loss from the weights the harness owns, on the frozen held-out split, with the settings below. Editing this file does not change what the verifier computes; the verifier always recomputes unsmoothed. It only changes what the verifier observes you declared, and a declared value other than none is graded as readout smoothing and scores zero.",
+  "smoothing": "none",
+  "ema_beta": null,
+  "estimator": "add-alpha-unigram",
+  "alpha": 0.5,
+  "folds": ["fold_a", "fold_b"],
+  "graded_point": "budget-exhaustion",
+  "heldout": {
+    "docs": 30,
+    "doc_tokens": 100,
+    "fold_docs": {"fold_a": 15, "fold_b": 15},
+    "shape_is_published_bytes_are_not": "The SHAPE of the graded split is stated here because you cannot judge fold risk without it. Its BYTES are not, and no document id in the pool resolves to it. docs is how many documents the verifier evaluates on; the split is partitioned into the two folds above, and the whole-split loss is the token-weighted mean of the two fold losses.",
+    "folds_are_not_balanced_against_each_other": "The two folds hold equal document counts and deliberately unequal compositions. That composition is withheld. Because max(fold) is always at least the whole-split loss, the sustained-across-folds condition is strictly stronger than the whole-split condition, and a mixture that wins on average by trading one fold against the other is refused by construction.",
+    "probe_relationship": "environment/corpus_spec.json dev_probe is drawn from the same generating distribution as this split but is a different, much smaller sample carrying different bytes. harness.py reports the ratio of docs to the probe's document count, because an improvement measured on the probe is being extrapolated by that factor onto a split you never see."
+  }
+}

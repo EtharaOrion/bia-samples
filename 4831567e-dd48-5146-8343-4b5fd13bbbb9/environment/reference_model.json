@@ -1,0 +1,12 @@
+{
+  "_generated": "GENERATED SECTION. DO NOT HAND-EDIT. source: solution/grounding.yaml",
+  "frozen": [
+    "the model, being environment/substrate.json",
+    "the bit budget, being substrate.budget_bits",
+    "the evaluation corpus, being the held-out payload the verifier owns",
+    "the unquantized reference, being environment/reference_model.json"
+  ],
+  "schema": "oer22.reference_model/v1",
+  "statement": "This is the unquantized reference the graded degradation is measured against. It is frozen. The verifier grades from its own pristine copy.",
+  "unquantized_reference_perplexity": 12.75
+}

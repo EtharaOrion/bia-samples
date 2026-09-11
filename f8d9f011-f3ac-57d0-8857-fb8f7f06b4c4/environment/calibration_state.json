@@ -1,0 +1,20 @@
+{
+  "_generated": "GENERATED SECTION. DO NOT HAND-EDIT. source: solution/grounding.yaml",
+  "calibration_version_in_force": 2,
+  "issued_at_tick": 7,
+  "ledger": [
+    {
+      "label": "pre-drift calibration set, the set an allocation fitted at iteration three was fitted against",
+      "tick": 1,
+      "version": 1
+    },
+    {
+      "label": "post-drift calibration set, the set in force at the graded evaluation",
+      "tick": 7,
+      "version": 2
+    }
+  ],
+  "schema": "oer22.calibration_state/v1",
+  "sensitivity_digest": "a9423c6abebd3d9c269e80b51a514058f7ed31db6c27dfaeaac55303a06dffd5",
+  "statement": "Harness-owned calibration state. The version in force is the one an allocation is graded against. Temporal ordering is carried by the harness tick, a monotonically issued integer handle. No clock is read."
+}
