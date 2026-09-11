@@ -1,0 +1,14 @@
+{
+  "adjudication_threshold": 686,
+  "collision_witness": {
+    "a": "r0017",
+    "b": "r0381",
+    "bands": 3,
+    "similarity": 615
+  },
+  "direct_edges": 19,
+  "duplicate_groups": 13,
+  "index_collision_count": 80,
+  "near_duplicate_pairs": 21,
+  "pairs_examined": 130816
+}

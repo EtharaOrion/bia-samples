@@ -1,0 +1,22 @@
+{
+  "adjudication_threshold": 686,
+  "collision_witness": {
+    "a": "r0017",
+    "b": "r0381",
+    "bands": 3,
+    "similarity": 615
+  },
+  "coverage": {
+    "pairs_examined": 130816,
+    "records_examined": 512,
+    "restricted_to_index_candidates": false
+  },
+  "duplicate_group_count": 13,
+  "index_collision_count": 80,
+  "near_duplicate_pairs": [],
+  "readout": {
+    "estimator": "exact",
+    "source": "recomputed-from-shingle-sets"
+  },
+  "schema": "oer27.submission/v1"
+}

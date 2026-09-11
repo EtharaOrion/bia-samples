@@ -1,0 +1,138 @@
+schema_version = "1.4"
+
+# schema_version is a TOP-LEVEL scalar and is written above the first table header on purpose.
+# TOML scopes every key to the most recent header, so an assignment below [task] would silently
+# become task.schema_version and leave the top-level scalar absent while the file still reads
+# correct to a human.
+
+artifacts = [
+  "/app/submission.json",
+  "/logs/agent/trajectory.jsonl",
+  "/logs/verifier/reward.txt",
+  "/logs/verifier/score.json",
+]
+
+[task]
+name = "bia/oer-27-near-duplicate-adjudication-at-an-index-calibrated-threshold"
+version = "1.0.0"
+description = "Adjudicate the near-duplicate relation over a frozen compression corpus at a threshold the built index calibrates rather than the statement names, closing the relation into duplicate groups over every unordered pair, and surface the maximal colliding pair the adjudication refuses as boundary evidence."
+authors = ["Bia"]
+keywords = ["optimization", "bounded-continuous", "near-duplicate", "deduplication", "compression-corpus"]
+
+[metadata]
+tags = ["optimization", "bounded-continuous"]
+category = "optimization"
+slot = "OER-27"
+provisional_identifier = "OER-27"
+title = "Near-duplicate adjudication of a compression corpus at an index-calibrated threshold"
+family = "F4"
+family_title = "lossless compression"
+primary_archetype = "near-duplicate-adjudication"
+primary_archetype_title = "Near-Duplicate Adjudication"
+archetype_count = 1
+entry_point_tests = "tests/test.sh"
+entry_point_solution = "solution/solve.sh"
+
+target_tier = "T3"
+tier_exemption_granted = "none"
+anchorable_tier = "capped below Hard by the standing batch-level Perception-axis exemption"
+perception_axis_exemption = "This task family is text and code only, so the Perception axis carries no category. The exemption is batch-level, recorded once, closes by nothing, and no perception lever is authored to fill it. It caps the anchorable tier below Hard while leaving the authoring target at T3."
+
+[metadata.metric]
+name = "near-duplicate recall against the verifier's own adjudication"
+direction = "higher"
+gate_kind = "hard constraint on precision"
+gate_note = "Asserting one pair the verifier's own adjudication does not support scores exactly 0.0 with the machine-readable reason adjudication-unsupported, no matter how high the recall. Precision is never a soft penalty."
+frozen = ["the corpus", "the index specification", "the index construction", "the definition of similarity"]
+free = ["the adjudication submitted over the corpus"]
+computed_by = "the verifier, from an index it rebuilds itself over the bundle's frozen corpus in an isolated subprocess"
+
+[metadata.discovery]
+values = ["adjudication_threshold", "collision_witness_pair"]
+established_in = "the built index, produced by environment/build_index.py on one RUN line of environment/Dockerfile"
+read_back_through = "environment/index_query.py on the agent surface, and the tests/checkers.py Harness handle on the verifier surface"
+absent_from = "instruction.md, task.toml, environment/corpus.jsonl, environment/index_spec.json and every other agent-visible byte"
+graded_by = ["adjudication_threshold_established", "no_unsupported_pair", "collision_witness_verified"]
+statement_closure = "instruction.md fixes what adjudication means and what a collision is, in full, and names no threshold and no witness."
+
+[metadata.anchors]
+state = "absent"
+authority = "This family is unscoped and records no baseline, target, pass threshold or instance count. The reward schema below is bound in full and neither number is invented here."
+
+[metadata.reward]
+carrier_path = "/logs/verifier/reward.txt"
+carrier_form = "one bare float"
+score_document_path = "/logs/verifier/score.json"
+interval = [0.0, 1.0]
+direction = "higher"
+never_binary = true
+full_reward_exactly = 1.0
+formula = "raw = (agent_metric - baseline_metric) / (target_metric - baseline_metric)"
+clip = "score = min(max(raw, 0.0), 1.0)"
+bar_not_point = "Reaching the target scores exactly 1.0 and beating it also scores 1.0."
+
+# CANONICAL PATH for every bound optimization field in this batch:
+# metadata.optimization.<field>. One table, one deterministic lookup. Nothing
+# optimization-bound lives anywhere else in this manifest.
+#
+# max_timeout_hours and budget_hours are explicitly distinct and are never
+# aliases. max_timeout_hours bounds the refinement loop ACROSS attempts;
+# budget_hours bounds ONE attempt, being six hours over fifty attempts, 0.12
+# hours or 7.2 minutes.
+[metadata.optimization]
+max_timeout_hours = 6.0
+max_timeout_role = "refinement-loop terminator across attempts"
+budget_hours = 0.3
+budget_hours_minutes = 18.0
+budget_hours_role = "per-attempt completion bound"
+budget_hours_state = "provisional"
+max_attempts = 20
+final_selection = "best"
+budget_envelope = "one H100, single accelerator, no multi-GPU scaling"
+budget_margin = 10.0
+compute_envelope_accelerators = 1
+
+[metadata.clock]
+owner = "harness"
+note = "THE HARNESS OWNS THE CLOCK. Nothing on the graded path is a timing quantity. tests/runner.py launches environment/build_index.py over the bundle's frozen corpus in an isolated subprocess and every checker reads the resulting index telemetry through the tests/checkers.py Harness handle. No checker calls time, datetime, perf_counter or monotonic, directly or transitively."
+
+[metadata.substrate]
+kind = "deterministic arithmetic index over a frozen corpus of real FineWeb10B documents"
+collection_state = "real"
+external_source = "https://huggingface.co/datasets/HuggingFaceFW/fineweb"
+shards = ["fineweb_train_000001.bin", "fineweb_train_000002.bin", "fineweb_train_000003.bin"]
+note = "Every one of the 512 corpus records is one upstream FineWeb document copied without transformation, and the carrier names its source in its own bytes. The redundancy being adjudicated is the real near-duplicate structure that survives FineWeb's per-dump deduplication rather than an edit rate this bundle chose. Grading is reproducible on any host regardless, because the verifier rebuilds the index and recomputes every similarity from the frozen corpus bytes and never from any property of how those bytes were obtained. It is never presented as enwik8, enwik9 or any other published compression corpus, and no compression ratio is claimed."
+split_disjointness = "Every record is cut from a FineWeb10B TRAIN shard. fineweb_val_000000.bin is read by no step of the selection and no byte of it reaches any carrier in this bundle, so the upstream validation split cannot leak onto the agent surface."
+
+[metadata.workspace]
+index_path = "/task/index"
+index_built_at = "image build time"
+query_handle = "environment/index_query.py"
+note = "The index is built into the image and read back through the query handle. Nothing the agent writes moves it, and the verifier never reads the agent's copy."
+
+[metadata.build]
+dockerfile = "environment/Dockerfile"
+verifier_dockerfile = "tests/Dockerfile"
+pin_kind = "digest"
+pin_note = "Pinned by @sha256 and never by a floating tag. Harbor accepts any string and does not itself require a digest, so the digest requirement is this contract's. The base is Debian 12 with Python 3.12 and enforces PEP 668; no pip install runs in either image, so no --break-system-packages is needed and the graded path depends on no wheel."
+
+[environment]
+docker_image = "pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407"
+gpus = 1
+gpu_types = ["H100"]
+# Provisioning egress. Denying it here would leave the task unable to install.
+network_mode = "public"
+
+[verifier]
+docker_image = "pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407"
+image_definition_path = "tests/"
+egress = "denied"
+network_mode = "none"
+egress_note = "The verifier keeps the bound network policy. A verifier that can reach the network is a verifier whose verdict can be fetched."
+
+[agent]
+solver_egress = "setup-only"
+solver_egress_deny = ["github.com", "raw.githubusercontent.com", "objects.githubusercontent.com"]
+solver_egress_note = "The solving agent gets open internet egress inside the sandbox so it can fetch its own packages; the verifier surface is denied. The asymmetry is deliberate and bound here rather than accidental. The divergence from the stricter batch reading is recorded in solution/grounding.yaml under solver_egress_divergence."
+deny_list_is_not_containment = "The deny-list is not a containment proof. Mirrors, caches and paraphrased write-ups all carry a recipe past any deny-list, which is why the deterministic checker and not the network policy is the load-bearing control."
+network_mode = "none"

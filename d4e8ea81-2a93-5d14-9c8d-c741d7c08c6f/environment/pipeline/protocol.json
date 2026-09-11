@@ -1,0 +1,67 @@
+{
+  "schema": "oer13.protocol/v2",
+  "substrate": "environment/nanogpt_substrate.json",
+  "substrate_note": "The architecture, the per-step token count and the one-forward-one-backward rule are read from the substrate declaration and from nowhere else. The verifier re-reads its own copy at grading time, so editing the copy in this container produces a refused run with reason frozen-axis-modified rather than a different grade.",
+  "frozen_axes": [
+    "architecture",
+    "step_budget",
+    "batch_tokens_per_step",
+    "one forward-backward pass per step",
+    "optimizer",
+    "token_space",
+    "evaluation_split"
+  ],
+  "free_axes": [
+    "parse_stage",
+    "tokenize_stage",
+    "composition"
+  ],
+  "step_budget": {
+    "unit": "optimizer steps",
+    "value_at_delivery": 80,
+    "batch_tokens_per_step": 65536,
+    "authority": "The harness resolves the bound step budget from the admin plane at run start and runs exactly that many steps, feeding exactly 65536 tokens to each. The number recorded here is the value in force when this bundle shipped; it is not itself the graded bound, and it is not announced when it moves. Emit a shard set at least as long as the budget and let the harness feed it. Do not override the budget from the composition plan.",
+    "override_key": "consume_steps",
+    "override_effect": "A composition plan that sets consume_steps to anything other than the bound budget is graded as not having respected the budget as fed.",
+    "corpus_scale_note": "One step covers 65536 tokens and the delivered corpus is far smaller than that, so the frozen stage cycles your shard stream and reports stream_wrapped. This is stated rather than hidden: at this corpus scale the substrate's 3.28 target is not reachable, and what the run measures is how well the text you curated generalises to held-out FineWeb prose. The shortfall against the record set's operating scale is recorded as gap-oer-13-corpus-below-substrate-scale."
+  },
+  "model": {
+    "kind": "the canonical nanoGPT decoder of the frozen substrate",
+    "vocab_size": 50304,
+    "num_layers": 12,
+    "model_dim": 768,
+    "head_dim": 128,
+    "num_heads": 6,
+    "seq_len": 1024,
+    "artifact": "a real parameter snapshot of this architecture, written by the harness-owned frozen train stage, shape-bound to every value above"
+  },
+  "optimizer": {
+    "kind": "AdamW with a warmup and cosine decay, frozen",
+    "forward_passes_per_step": 1,
+    "backward_passes_per_step": 1,
+    "optimizer_steps_per_step": 1,
+    "micro_batching_note": "A step's 65536 tokens are materialized as micro-batches at seq_len 1024, so the step is materialized as micro-batches. The gradient accumulated over them is the gradient of the one loss over the one batch: no token is visited twice and exactly one optimizer step is taken per step. The harness reports micro_batches_per_step beside the logical count so the distinction is auditable.",
+    "checkpoint_fractions": [0.25, 0.5, 0.75, 1.0],
+    "checkpoint_ids": ["c1", "c2", "c3", "c4"]
+  },
+  "token_space": {
+    "encoding": "gpt2 byte pair encoding",
+    "vocab_size": 50304,
+    "note": "The verifier's held-out shards are encoded with this encoder. A training stream encoded in any other id space is not comparable to the split it is scored against, so the token space is a frozen axis and only what reaches those ids is free."
+  },
+  "evaluation": {
+    "split": "the verifier's own held-out FineWeb validation shards, data/fineweb10B/fineweb_val_*.bin",
+    "split_location": "absent from this container by construction; the verifier holds the only copy and the path is pinned on the verifier's admin plane",
+    "folds": "environment/eval/folds.json declares the fold partition of that split by token range. It declares the partition and carries none of the bytes.",
+    "metric": "mean cross entropy in nats per token over the fold, from a forward pass of the graded parameter snapshot",
+    "direction": "lower is better",
+    "substrate_target_val_loss": 3.28,
+    "bound_evaluation_point": "final-snapshot",
+    "sustain_points": 3,
+    "sustain_rule": "The improvement over the in-run measured baseline composition must hold at the bound evaluation point and at the first three folds of the schedule the verifier itself selects. The schedule is not announced.",
+    "computed_by": "the verifier, by loading the parameter snapshot the harness-owned frozen train stage wrote at the bound evaluation point into the frozen architecture and running the forward pass itself. No number a submission reports or writes reaches the graded path."
+  },
+  "anchors_state": "absent",
+  "anchors_gap": "gap-oer-per-family-anchors-unmeasured",
+  "anchors_note": "F13 carries no published baseline or target, and the re-base onto the nanoGPT substrate retired the bigram-era measurements rather than carrying them across, so no number here descends from a run of a different model. The reward formula is bound as schema and its baseline and target slots are filled in-run by verifier measurement of two harness-owned compositions. No baseline or target number is invented anywhere in this bundle."
+}

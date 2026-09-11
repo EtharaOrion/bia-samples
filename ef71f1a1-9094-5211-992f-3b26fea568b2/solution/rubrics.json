@@ -1,0 +1,69 @@
+{
+  "banner": "GENERATED SECTION. DO NOT HAND-EDIT.",
+  "criteria": [
+    {
+      "comparison": "list equality against the harness-minted seal chain",
+      "id": "realised-order-recovered",
+      "reference_value": [
+        "atom-02",
+        "atom-06",
+        "atom-03",
+        "atom-19",
+        "atom-04",
+        "atom-16",
+        "atom-05",
+        "atom-20",
+        "atom-17",
+        "atom-09",
+        "atom-18",
+        "atom-01",
+        "atom-08",
+        "atom-07",
+        "atom-12",
+        "atom-10",
+        "atom-24",
+        "atom-14",
+        "atom-22",
+        "atom-11",
+        "atom-21",
+        "atom-15",
+        "atom-23",
+        "atom-13"
+      ],
+      "statement": "The submitted attestation order is the order the seal chain realises."
+    },
+    {
+      "comparison": "string equality against the harness recomputation",
+      "id": "terminal-digest-recomputed",
+      "reference_value": "a3d2a3dfc52f05e3342debbbb3c066729ba00c26fa81e9a94391942a1a875fee",
+      "statement": "The terminal atom digest folds the whole provenance closure under the fixed preimage."
+    },
+    {
+      "comparison": "set equality against the harness-minted store",
+      "id": "closure-attested",
+      "reference_value": 24,
+      "statement": "Every atom in the store carries a digest in the submitted table and no atom outside it does."
+    },
+    {
+      "comparison": "string equality against the harness-minted store",
+      "id": "graded-instance-identified",
+      "reference_value": "inst-13",
+      "statement": "The graded instance is the one attested by the last atom in the realised order."
+    },
+    {
+      "comparison": "verifier-recomputed cover weight is <= reference_value",
+      "id": "cover-optimal",
+      "reference_value": 24,
+      "statement": "The submitted cover reaches the exact optimum weight on the graded instance."
+    },
+    {
+      "comparison": "verifier-recomputed normalised gap is <= reference_value",
+      "id": "gap-closed",
+      "reference_value": 0.0,
+      "statement": "The normalised gap reaches the instance target from the instance baseline."
+    }
+  ],
+  "judged": "the solution against its reference answer",
+  "schema": "forge.solution_rubrics/v1",
+  "source": "solution/grounding.yaml"
+}

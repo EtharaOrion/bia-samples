@@ -1,0 +1,16 @@
+{
+  "banner": "GENERATED SECTION. DO NOT HAND-EDIT.",
+  "half_difference_max": 153,
+  "producer_timeout_seconds": 120,
+  "proxy_is_not_the_grader": true,
+  "proxy_module": "environment/fitness.py",
+  "schema": "oer25.envelope/v1",
+  "seam_offset_floor": 100,
+  "seam_offset_handle": "environment/harness.py read_seam_offset",
+  "seam_offset_span": 25,
+  "seam_offset_state_path": "environment/state/seam_state.json",
+  "seam_window_width": 30,
+  "source": "solution/grounding.yaml",
+  "submission_path": "/workspace/submission.py",
+  "submission_schema": "oer25.submission/v1"
+}

@@ -1,0 +1,28 @@
+{
+  "admitted_row_count": 1598,
+  "closure_cardinality": 6,
+  "closure_layers": [
+    [
+      "nd-1522"
+    ],
+    [
+      "nd-1526",
+      "nd-1529",
+      "nd-1530",
+      "nd-1537",
+      "nd-1545"
+    ]
+  ],
+  "closure_nodes": [
+    "nd-1522",
+    "nd-1526",
+    "nd-1529",
+    "nd-1530",
+    "nd-1537",
+    "nd-1545"
+  ],
+  "excluded_node_id": "nd-1522",
+  "reported_baseline_cost": 57926,
+  "reported_plan_cost": 24055,
+  "schema": "oer29.submission/v1"
+}

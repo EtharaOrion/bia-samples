@@ -1,0 +1,701 @@
+{
+  "_banner": "GENERATED SECTION. DO NOT HAND-EDIT. Source: solution/grounding.yaml, derived by solution/recompute.py.",
+  "architecture": {
+    "head_dim": 128,
+    "model_dim": 768,
+    "num_heads": 6,
+    "num_layers": 12,
+    "seq_len": 1024,
+    "vocab_size": 50304
+  },
+  "architecture_source": "environment/nanogpt_substrate.json",
+  "bit_budget_derivation": "162201600 quantizable parameters at 4 bits is 648806400 payload bits, plus one 16-bit scale per shard over 74 shards is 1184 overhead bits, total 648807584. The handed default configuration therefore lands exactly on the budget, which is what makes it look final. Every value in this derivation is a function of the architecture and none of them is written down anywhere a reader would have to trust.",
+  "bit_budget_total": 648807584,
+  "checkpoint": {
+    "container_path": "/work/environment/model/checkpoint.pt",
+    "provisioning": "Staged into the agent container at build time and mounted into the verifier separately from the verifier's own copy. The agent container carries the parameters it is allocating bits over; it does not carry the split those parameters are graded on.",
+    "role": "the graded artifact, a real parameter snapshot of the frozen decoder",
+    "sha256": null,
+    "sha256_gap": "gap-oer21-checkpoint-digest-unmeasured",
+    "sha256_state": "absent",
+    "verifier_copy": "the verifier grades from its OWN copy at the verifier-only mount, never from this one"
+  },
+  "default_bits": 4,
+  "module": "environment/model/nanogpt.py",
+  "quantizable_parameters": 162201600,
+  "residue_note": "A shard is one two-dimensional weight matrix of the frozen decoder. Biases and RMSNorm gains are not shards: they are the residue, they are carried at the checkpoint's own width, and they sit outside the bit budget.",
+  "residue_parameters": 153216,
+  "scale_bits": 16,
+  "schema": "forge.oer21.checkpoint/v1",
+  "shard_table": [
+    {
+      "name": "embed.weight",
+      "numel": 38633472,
+      "role": "token-embedding",
+      "shape": [
+        50304,
+        768
+      ]
+    },
+    {
+      "name": "blocks.0.attn.q.weight",
+      "numel": 589824,
+      "role": "attention-query",
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "name": "blocks.0.attn.k.weight",
+      "numel": 589824,
+      "role": "attention-key",
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "name": "blocks.0.attn.v.weight",
+      "numel": 589824,
+      "role": "attention-value",
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "name": "blocks.0.attn.proj.weight",
+      "numel": 589824,
+      "role": "attention-output",
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "name": "blocks.0.mlp.fc.weight",
+      "numel": 2359296,
+      "role": "mlp-input",
+      "shape": [
+        3072,
+        768
+      ]
+    },
+    {
+      "name": "blocks.0.mlp.proj.weight",
+      "numel": 2359296,
+      "role": "mlp-output",
+      "shape": [
+        768,
+        3072
+      ]
+    },
+    {
+      "name": "blocks.1.attn.q.weight",
+      "numel": 589824,
+      "role": "attention-query",
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "name": "blocks.1.attn.k.weight",
+      "numel": 589824,
+      "role": "attention-key",
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "name": "blocks.1.attn.v.weight",
+      "numel": 589824,
+      "role": "attention-value",
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "name": "blocks.1.attn.proj.weight",
+      "numel": 589824,
+      "role": "attention-output",
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "name": "blocks.1.mlp.fc.weight",
+      "numel": 2359296,
+      "role": "mlp-input",
+      "shape": [
+        3072,
+        768
+      ]
+    },
+    {
+      "name": "blocks.1.mlp.proj.weight",
+      "numel": 2359296,
+      "role": "mlp-output",
+      "shape": [
+        768,
+        3072
+      ]
+    },
+    {
+      "name": "blocks.2.attn.q.weight",
+      "numel": 589824,
+      "role": "attention-query",
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "name": "blocks.2.attn.k.weight",
+      "numel": 589824,
+      "role": "attention-key",
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "name": "blocks.2.attn.v.weight",
+      "numel": 589824,
+      "role": "attention-value",
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "name": "blocks.2.attn.proj.weight",
+      "numel": 589824,
+      "role": "attention-output",
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "name": "blocks.2.mlp.fc.weight",
+      "numel": 2359296,
+      "role": "mlp-input",
+      "shape": [
+        3072,
+        768
+      ]
+    },
+    {
+      "name": "blocks.2.mlp.proj.weight",
+      "numel": 2359296,
+      "role": "mlp-output",
+      "shape": [
+        768,
+        3072
+      ]
+    },
+    {
+      "name": "blocks.3.attn.q.weight",
+      "numel": 589824,
+      "role": "attention-query",
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "name": "blocks.3.attn.k.weight",
+      "numel": 589824,
+      "role": "attention-key",
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "name": "blocks.3.attn.v.weight",
+      "numel": 589824,
+      "role": "attention-value",
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "name": "blocks.3.attn.proj.weight",
+      "numel": 589824,
+      "role": "attention-output",
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "name": "blocks.3.mlp.fc.weight",
+      "numel": 2359296,
+      "role": "mlp-input",
+      "shape": [
+        3072,
+        768
+      ]
+    },
+    {
+      "name": "blocks.3.mlp.proj.weight",
+      "numel": 2359296,
+      "role": "mlp-output",
+      "shape": [
+        768,
+        3072
+      ]
+    },
+    {
+      "name": "blocks.4.attn.q.weight",
+      "numel": 589824,
+      "role": "attention-query",
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "name": "blocks.4.attn.k.weight",
+      "numel": 589824,
+      "role": "attention-key",
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "name": "blocks.4.attn.v.weight",
+      "numel": 589824,
+      "role": "attention-value",
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "name": "blocks.4.attn.proj.weight",
+      "numel": 589824,
+      "role": "attention-output",
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "name": "blocks.4.mlp.fc.weight",
+      "numel": 2359296,
+      "role": "mlp-input",
+      "shape": [
+        3072,
+        768
+      ]
+    },
+    {
+      "name": "blocks.4.mlp.proj.weight",
+      "numel": 2359296,
+      "role": "mlp-output",
+      "shape": [
+        768,
+        3072
+      ]
+    },
+    {
+      "name": "blocks.5.attn.q.weight",
+      "numel": 589824,
+      "role": "attention-query",
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "name": "blocks.5.attn.k.weight",
+      "numel": 589824,
+      "role": "attention-key",
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "name": "blocks.5.attn.v.weight",
+      "numel": 589824,
+      "role": "attention-value",
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "name": "blocks.5.attn.proj.weight",
+      "numel": 589824,
+      "role": "attention-output",
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "name": "blocks.5.mlp.fc.weight",
+      "numel": 2359296,
+      "role": "mlp-input",
+      "shape": [
+        3072,
+        768
+      ]
+    },
+    {
+      "name": "blocks.5.mlp.proj.weight",
+      "numel": 2359296,
+      "role": "mlp-output",
+      "shape": [
+        768,
+        3072
+      ]
+    },
+    {
+      "name": "blocks.6.attn.q.weight",
+      "numel": 589824,
+      "role": "attention-query",
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "name": "blocks.6.attn.k.weight",
+      "numel": 589824,
+      "role": "attention-key",
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "name": "blocks.6.attn.v.weight",
+      "numel": 589824,
+      "role": "attention-value",
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "name": "blocks.6.attn.proj.weight",
+      "numel": 589824,
+      "role": "attention-output",
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "name": "blocks.6.mlp.fc.weight",
+      "numel": 2359296,
+      "role": "mlp-input",
+      "shape": [
+        3072,
+        768
+      ]
+    },
+    {
+      "name": "blocks.6.mlp.proj.weight",
+      "numel": 2359296,
+      "role": "mlp-output",
+      "shape": [
+        768,
+        3072
+      ]
+    },
+    {
+      "name": "blocks.7.attn.q.weight",
+      "numel": 589824,
+      "role": "attention-query",
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "name": "blocks.7.attn.k.weight",
+      "numel": 589824,
+      "role": "attention-key",
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "name": "blocks.7.attn.v.weight",
+      "numel": 589824,
+      "role": "attention-value",
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "name": "blocks.7.attn.proj.weight",
+      "numel": 589824,
+      "role": "attention-output",
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "name": "blocks.7.mlp.fc.weight",
+      "numel": 2359296,
+      "role": "mlp-input",
+      "shape": [
+        3072,
+        768
+      ]
+    },
+    {
+      "name": "blocks.7.mlp.proj.weight",
+      "numel": 2359296,
+      "role": "mlp-output",
+      "shape": [
+        768,
+        3072
+      ]
+    },
+    {
+      "name": "blocks.8.attn.q.weight",
+      "numel": 589824,
+      "role": "attention-query",
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "name": "blocks.8.attn.k.weight",
+      "numel": 589824,
+      "role": "attention-key",
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "name": "blocks.8.attn.v.weight",
+      "numel": 589824,
+      "role": "attention-value",
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "name": "blocks.8.attn.proj.weight",
+      "numel": 589824,
+      "role": "attention-output",
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "name": "blocks.8.mlp.fc.weight",
+      "numel": 2359296,
+      "role": "mlp-input",
+      "shape": [
+        3072,
+        768
+      ]
+    },
+    {
+      "name": "blocks.8.mlp.proj.weight",
+      "numel": 2359296,
+      "role": "mlp-output",
+      "shape": [
+        768,
+        3072
+      ]
+    },
+    {
+      "name": "blocks.9.attn.q.weight",
+      "numel": 589824,
+      "role": "attention-query",
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "name": "blocks.9.attn.k.weight",
+      "numel": 589824,
+      "role": "attention-key",
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "name": "blocks.9.attn.v.weight",
+      "numel": 589824,
+      "role": "attention-value",
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "name": "blocks.9.attn.proj.weight",
+      "numel": 589824,
+      "role": "attention-output",
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "name": "blocks.9.mlp.fc.weight",
+      "numel": 2359296,
+      "role": "mlp-input",
+      "shape": [
+        3072,
+        768
+      ]
+    },
+    {
+      "name": "blocks.9.mlp.proj.weight",
+      "numel": 2359296,
+      "role": "mlp-output",
+      "shape": [
+        768,
+        3072
+      ]
+    },
+    {
+      "name": "blocks.10.attn.q.weight",
+      "numel": 589824,
+      "role": "attention-query",
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "name": "blocks.10.attn.k.weight",
+      "numel": 589824,
+      "role": "attention-key",
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "name": "blocks.10.attn.v.weight",
+      "numel": 589824,
+      "role": "attention-value",
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "name": "blocks.10.attn.proj.weight",
+      "numel": 589824,
+      "role": "attention-output",
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "name": "blocks.10.mlp.fc.weight",
+      "numel": 2359296,
+      "role": "mlp-input",
+      "shape": [
+        3072,
+        768
+      ]
+    },
+    {
+      "name": "blocks.10.mlp.proj.weight",
+      "numel": 2359296,
+      "role": "mlp-output",
+      "shape": [
+        768,
+        3072
+      ]
+    },
+    {
+      "name": "blocks.11.attn.q.weight",
+      "numel": 589824,
+      "role": "attention-query",
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "name": "blocks.11.attn.k.weight",
+      "numel": 589824,
+      "role": "attention-key",
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "name": "blocks.11.attn.v.weight",
+      "numel": 589824,
+      "role": "attention-value",
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "name": "blocks.11.attn.proj.weight",
+      "numel": 589824,
+      "role": "attention-output",
+      "shape": [
+        768,
+        768
+      ]
+    },
+    {
+      "name": "blocks.11.mlp.fc.weight",
+      "numel": 2359296,
+      "role": "mlp-input",
+      "shape": [
+        3072,
+        768
+      ]
+    },
+    {
+      "name": "blocks.11.mlp.proj.weight",
+      "numel": 2359296,
+      "role": "mlp-output",
+      "shape": [
+        768,
+        3072
+      ]
+    },
+    {
+      "name": "proj.weight",
+      "numel": 38633472,
+      "role": "output-projection",
+      "shape": [
+        50304,
+        768
+      ]
+    }
+  ],
+  "shards": 74,
+  "statement": "The frozen nanoGPT checkpoint this task quantizes, and the parameter shard table over it.",
+  "total_parameters": 162354816
+}

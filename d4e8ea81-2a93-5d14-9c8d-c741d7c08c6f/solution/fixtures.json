@@ -1,0 +1,259 @@
+{
+  "_generated": "GENERATED SECTION. DO NOT HAND-EDIT. Derived from solution/grounding.yaml by solution/recompute.py.",
+  "_source": "solution/grounding.yaml",
+  "accepting_half": {
+    "expected_reason": "graded-on-recomputed-validation-loss",
+    "expected_reward": 1.0,
+    "fixture": "reference-composition",
+    "reference_sha256": "9f755016b5d903eb97014649f2679a678645b2737c07d8d3166e41dd56ae36c1"
+  },
+  "negative_controls": [
+    {
+      "expected_reason": "token-budget-not-respected-as-fed",
+      "id": "neg-budget-overspend",
+      "what": "a composition plan that overrides consume_tokens to the pre-mutation 4096"
+    },
+    {
+      "expected_reason": "stage-chain-order-violated",
+      "id": "neg-chain-order",
+      "what": "a composition plan that runs tokenize before parse"
+    },
+    {
+      "expected_reason": "early-stop-loss-not-established",
+      "id": "neg-early-stop",
+      "what": "a composition plan that halts the chain at checkpoint c2"
+    },
+    {
+      "expected_reason": "frozen-axis-modified",
+      "id": "neg-frozen-axis-edit",
+      "what": "an edited copy of the frozen train stage in the submission tree"
+    },
+    {
+      "expected_reason": "stage-local-optimum-degrades-composition",
+      "id": "neg-no-op",
+      "what": "the delivered composition submitted unchanged"
+    },
+    {
+      "expected_reason": "evaluation-point-submission-selected",
+      "id": "neg-selected-checkpoint",
+      "what": "a composition plan that selects a checkpoint"
+    },
+    {
+      "expected_reason": "readout-smoothing-on-graded-path",
+      "id": "neg-smoothed-readout",
+      "what": "a composition plan carrying an EMA-blended reported_validation_loss"
+    },
+    {
+      "expected_reason": "evaluation-split-leaked-into-training",
+      "id": "neg-split-leak",
+      "what": "a parse stage that folds environment/eval/held_out.txt into its output"
+    },
+    {
+      "expected_reason": "stage-claim-contradicted-by-chain",
+      "id": "neg-stage-claim-divergence",
+      "what": "a parse stage whose report claims a record count the chain contradicts"
+    },
+    {
+      "expected_reason": "stage-local-optimum-degrades-composition",
+      "id": "neg-stage-local-optimum",
+      "what": "a parse stage that raises chars_retained_ratio above the delivered baseline's, by keeping every source line and emitting a blank line after each, which is the stage's own readout getting strictly better while the composed loss rises from 1.512280061 to 1.513319967"
+    },
+    {
+      "expected_reason": "stage-claim-contradicted-by-chain",
+      "id": "neg-stale-composition-verdict",
+      "what": "a parse report satisfying the pre-mutation parsed-record-v1 field set only, which is the stale control ctl-composition-verdict-under-v1"
+    },
+    {
+      "expected_reason": "session-state-broken",
+      "id": "neg-stale-ledger-verdict",
+      "what": "a ledger whose newest attempt was recorded under the pre-mutation ledger-v1"
+    },
+    {
+      "expected_reason": "graded-loss-not-from-harness-weights",
+      "id": "neg-substituted-weights",
+      "what": "a weight file at the bound point whose digest is not what the harness recorded"
+    },
+    {
+      "expected_reason": "floor-anchor-not-the-bound-reference",
+      "id": "neg-unestablished-floor-anchor",
+      "what": "an in-run floor measurement that does not reproduce the bound reference loss, which is the anchor the reward span rests on and a value no agent-visible byte carries"
+    },
+    {
+      "expected_reason": "improvement-not-sustained",
+      "id": "neg-unsustained",
+      "what": "a per-fold pair that improves overall and loses one scheduled fold"
+    }
+  ],
+  "rejecting_halves": [
+    {
+      "checker": "end_to_end_gain_not_stage_local",
+      "fires_when": "the composed loss does not improve on the in-run measured baseline composition, or the in-run anchor pair is degenerate",
+      "fixture": "maximise-the-parse-retention-readout",
+      "reduction": "EFFECT",
+      "rejecting_half_substituted": false,
+      "selector": "check_end_to_end_gain_not_stage_local",
+      "substitution": "none",
+      "zero_reason": "stage-local-optimum-degrades-composition"
+    },
+    {
+      "checker": "eval_split_not_trained_on",
+      "fires_when": "a held-out shingle appears in the consumed training stream decoded back through the submitted vocabulary",
+      "fixture": "fold-the-held-out-split-into-the-parse-output",
+      "reduction": "ABSENCE",
+      "rejecting_half_substituted": false,
+      "selector": "check_eval_split_not_trained_on",
+      "substitution": "none",
+      "zero_reason": "evaluation-split-leaked-into-training"
+    },
+    {
+      "checker": "evaluation_point_is_bound_not_selected",
+      "fires_when": "the composition plan selects a checkpoint, or the graded weights are not the bound checkpoint's",
+      "fixture": "select-a-lucky-checkpoint",
+      "reduction": "VALUE",
+      "rejecting_half_substituted": false,
+      "selector": "check_evaluation_point_is_bound_not_selected",
+      "substitution": "none",
+      "zero_reason": "evaluation-point-submission-selected"
+    },
+    {
+      "checker": "floor_anchor_matches_bound_reference",
+      "fires_when": "the reference composition the harness measures in-run does not reproduce the bound reference loss within the bound tolerance, the harness recorded no in-run reference measurement, or the budget in force is not the budget that anchor was established at",
+      "fixture": "feed-the-anchor-a-reference-loss-the-environment-does-not-establish",
+      "reduction": "VALUE",
+      "rejecting_half_substituted": true,
+      "selector": "check_floor_anchor_matches_bound_reference",
+      "substitution": {
+        "carried_on": "planted fixture",
+        "half": "rejecting",
+        "why": "The floor anchor is measured by the harness over a reference composition materialized from solution/reference.py into a verifier-owned workspace, so no submission has a handle on it and no submission can move it. The rejecting half is therefore carried on a planted fixture in tests/test_output.py, which drives the live selector over a reference loss the environment does not establish and requires the bound zero reason. The accepting half is carried on the same fixture pair at the established value AND on the live reference run, whose in-run floor reproduces reference_loss_per_byte exactly."
+      },
+      "zero_reason": "floor-anchor-not-the-bound-reference"
+    },
+    {
+      "checker": "frozen_axes_unmodified",
+      "fires_when": "a frozen artifact in the submission tree does not digest to the delivered artifact, or is absent from the submission",
+      "fixture": "mutate-frozen-train-stage",
+      "reduction": "VALUE",
+      "rejecting_half_substituted": false,
+      "selector": "check_frozen_axes_unmodified",
+      "substitution": "none",
+      "zero_reason": "frozen-axis-modified"
+    },
+    {
+      "checker": "full_chain_completed_no_early_stop",
+      "fires_when": "the chain halted before the bound evaluation point, or never reached it, or skipped a stage",
+      "fixture": "halt-at-an-intermediate-checkpoint",
+      "reduction": "ABSENCE",
+      "rejecting_half_substituted": false,
+      "selector": "check_full_chain_completed_no_early_stop",
+      "substitution": "none",
+      "zero_reason": "early-stop-loss-not-established"
+    },
+    {
+      "checker": "graded_loss_from_harness_weights",
+      "fires_when": "the weight file at the bound point is absent, digests differently from what the harness recorded, or carries a writer other than the harness",
+      "fixture": "substitute-the-graded-weight-file",
+      "reduction": "VALUE",
+      "rejecting_half_substituted": true,
+      "selector": "check_graded_loss_from_harness_weights",
+      "substitution": {
+        "carried_on": "planted fixture",
+        "half": "rejecting",
+        "why": "No submission can move this checker: the weights are written by the harness-owned frozen train stage into a verifier-owned directory the submission never sees. The isolation boundary holds, so the rejecting half is carried on a planted fixture and the substitution is recorded in tests/checkers.yaml and in seed/tasks/OER-13/feasibility.yaml."
+      },
+      "zero_reason": "graded-loss-not-from-harness-weights"
+    },
+    {
+      "checker": "loss_sustained_across_bound_evals",
+      "fires_when": "the loss does not improve on the in-run measured baseline overall, or fails to improve at one of the folds the verifier's schedule selects",
+      "fixture": "lose-one-scheduled-fold",
+      "reduction": "INVARIANT",
+      "rejecting_half_substituted": true,
+      "selector": "check_loss_sustained_across_bound_evals",
+      "substitution": {
+        "carried_on": "planted fixture",
+        "half": "rejecting",
+        "why": "A submission that beats the baseline overall while losing a specific scheduled fold is not reachable by editing the two free stages within the bound budget, so the rejecting half is carried on a planted fixture whose per-fold pair fails at one scheduled point, and the substitution is recorded in tests/checkers.yaml and in seed/tasks/OER-13/feasibility.yaml."
+      },
+      "zero_reason": "improvement-not-sustained"
+    },
+    {
+      "checker": "no_smoothing_on_graded_path",
+      "fires_when": "a reported validation loss differs from the verifier's raw recomputation by more than the bound tolerance, or the bound readout policy is not raw-only",
+      "fixture": "report-an-ema-blended-loss",
+      "reduction": "VALUE",
+      "rejecting_half_substituted": false,
+      "selector": "check_no_smoothing_on_graded_path",
+      "substitution": "none",
+      "zero_reason": "readout-smoothing-on-graded-path"
+    },
+    {
+      "checker": "session_state_carried_forward",
+      "fires_when": "the ledger was not written by the harness, is empty, indexes attempts non-monotonically, omits a field the bound ledger contract requires, or records its newest attempt under a superseded contract",
+      "fixture": "carry-a-ledger-v1-attempt-across-the-contract-move",
+      "reduction": "INVARIANT",
+      "rejecting_half_substituted": true,
+      "selector": "check_session_state_carried_forward",
+      "substitution": {
+        "carried_on": "planted fixture",
+        "half": "rejecting",
+        "why": "The ledger is harness-written and the submission has no handle on it, so no submission can fire this checker. The rejecting half is carried on a planted fixture whose newest attempt was recorded under the pre-mutation ledger contract, which is exactly the stale control for the session-ledger-v2 silent mutation, and the substitution is recorded in tests/checkers.yaml and in seed/tasks/OER-13/feasibility.yaml."
+      },
+      "zero_reason": "session-state-broken"
+    },
+    {
+      "checker": "stage_chain_order_observed",
+      "fires_when": "the harness's own phase log does not read open, parse, tokenize, train, or a phase consumed an artifact no earlier phase produced with that digest",
+      "fixture": "reorder-the-composition-plan",
+      "reduction": "ORDERING",
+      "rejecting_half_substituted": false,
+      "selector": "check_stage_chain_order_observed",
+      "substitution": "none",
+      "zero_reason": "stage-chain-order-violated"
+    },
+    {
+      "checker": "stage_claim_matches_next_stage_consumption",
+      "fires_when": "the parse report's claimed field disagrees with what the harness digested immediately before launching tokenize, under the field set the bound stage output contract compares",
+      "fixture": "parse-claims-a-clean-output-and-ships-a-dirty-one",
+      "reduction": "DIVERGENCE",
+      "rejecting_half_substituted": false,
+      "selector": "check_stage_claim_matches_next_stage_consumption",
+      "substitution": "none",
+      "zero_reason": "stage-claim-contradicted-by-chain"
+    },
+    {
+      "checker": "token_budget_respected_as_fed",
+      "fires_when": "the composition plan overrides consume_tokens away from the bound budget, or the fed, available or consumed counts disagree with it",
+      "fixture": "overspend-the-token-budget",
+      "reduction": "EFFECT",
+      "rejecting_half_substituted": false,
+      "selector": "check_token_budget_respected_as_fed",
+      "substitution": "none",
+      "zero_reason": "token-budget-not-respected-as-fed"
+    }
+  ],
+  "schema": "forge.checker_fixtures/v1",
+  "slot": "OER-13",
+  "stale_controls": [
+    {
+      "checker": "token_budget_respected_as_fed",
+      "id": "ctl-budget-verdict-under-4096",
+      "mutation": "token-budget-3072"
+    },
+    {
+      "checker": "stage_claim_matches_next_stage_consumption",
+      "id": "ctl-composition-verdict-under-v1",
+      "mutation": "stage-output-contract-v2"
+    },
+    {
+      "checker": "session_state_carried_forward",
+      "id": "ctl-ledger-verdict-under-ledger-v1",
+      "mutation": "session-ledger-v2"
+    },
+    {
+      "checker": "loss_sustained_across_bound_evals",
+      "id": "ctl-sustain-verdict-under-fold-order-a",
+      "mutation": "eval-fold-schedule-b"
+    }
+  ]
+}

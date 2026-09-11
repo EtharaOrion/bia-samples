@@ -1,0 +1,26 @@
+{
+  "check_coefficients": {
+    "alpha": 31,
+    "beta": 17,
+    "gamma": 7
+  },
+  "check_modulus": 1000003,
+  "closure_band": [
+    22,
+    40
+  ],
+  "closure_min_depth": 3,
+  "corruption_delta": 1,
+  "corruption_probe_limit": 4000,
+  "corruption_probe_seed": 77010203,
+  "derives_edge_count": 800,
+  "derives_forward_span": 12,
+  "lineage_node_count": 1600,
+  "parent_window": 40,
+  "payload_modulus": 9973,
+  "reading_row_count": 1600,
+  "reading_value_modulus": 100000,
+  "root_count": 6,
+  "schema": "oer29.warehouse_spec/v1",
+  "seed": 20260831
+}
