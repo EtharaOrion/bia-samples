@@ -11,6 +11,6 @@
   "seam_offset_state_path": "environment/state/seam_state.json",
   "seam_window_width": 30,
   "source": "solution/grounding.yaml",
-  "submission_path": "/app/submission.py",
+  "submission_path": "/workspace/submission.py",
   "submission_schema": "oer25.submission/v1"
 }
