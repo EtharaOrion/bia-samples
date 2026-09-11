@@ -1,3 +1,12 @@
 .omo/
 .codegraph
 __pycache__/
+
+# Run artifacts that the verification path writes INTO a frozen bundle.
+# `forge prove` executes each bundle's solve.sh and tests/runner.py, and those
+# emit a workspace directory and a submission file next to the bundle bytes.
+# Neither is bundle content. Neither is in the canonical hash domain's exclusion
+# set either, so a verification run perturbs the hashes it is about to measure;
+# ignoring them here stops the leak reaching a commit but does not fix that.
+${PWD*
+*/allocation.json
