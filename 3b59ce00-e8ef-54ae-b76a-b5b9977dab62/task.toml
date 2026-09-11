@@ -80,6 +80,7 @@ budget_hours_role = "per-attempt completion bound"
 max_attempts = 20
 final_selection = "best"
 budget_envelope = "one H100, single accelerator, no multi-GPU scaling"
+budget_margin = 10.0
 compute_envelope_accelerators = 1
 
 # The graded path is THREE from-scratch training runs plus three evaluations. The
