@@ -1,0 +1,43 @@
+{
+  "curated_digest": "sha256:4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945",
+  "curated_documents": 0,
+  "curated_tokens": 0,
+  "exit_status": 0,
+  "match_count": 513,
+  "pool_state": "curated",
+  "source_digest": "sha256:c3fa8a7961dbfa5876de26f069d5aabb4a6ec67122a2ae9be8bae129c6bc3e57",
+  "source_documents": 513,
+  "source_tokens": 0,
+  "stage_notes": [
+    {
+      "matched": 0,
+      "op": "drop_in",
+      "retained": 513,
+      "stage": "drop-junk-and-low",
+      "status": "inapplicable-pass-through"
+    },
+    {
+      "matched": 513,
+      "op": "keep_in",
+      "retained": 0,
+      "stage": "english-only",
+      "status": "applied"
+    },
+    {
+      "matched": 0,
+      "op": "drop_true",
+      "retained": 0,
+      "stage": "drop-holdout",
+      "status": "inapplicable-pass-through"
+    },
+    {
+      "matched": 0,
+      "op": "first_per_group",
+      "retained": 0,
+      "stage": "dedup-by-group",
+      "status": "inapplicable-pass-through"
+    }
+  ],
+  "stages": 4,
+  "status": "ok"
+}

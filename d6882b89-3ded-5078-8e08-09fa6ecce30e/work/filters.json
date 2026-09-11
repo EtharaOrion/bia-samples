@@ -1,0 +1,31 @@
+{
+  "stages": [
+    {
+      "name": "drop-junk-and-low",
+      "field": "quality.bucket",
+      "op": "drop_in",
+      "values": [
+        "junk",
+        "low"
+      ]
+    },
+    {
+      "name": "english-only",
+      "field": "lang",
+      "op": "keep_in",
+      "values": [
+        "en"
+      ]
+    },
+    {
+      "name": "drop-holdout",
+      "field": "holdout",
+      "op": "drop_true"
+    },
+    {
+      "name": "dedup-by-group",
+      "field": "dup_group",
+      "op": "first_per_group"
+    }
+  ]
+}

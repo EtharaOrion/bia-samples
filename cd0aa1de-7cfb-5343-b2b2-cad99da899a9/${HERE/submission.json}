@@ -1,0 +1,204 @@
+{
+  "allocations": {
+    "merge_depth": 448,
+    "numeric_units": 124,
+    "punct_units": 0,
+    "span_units": 500
+  },
+  "attempts": [
+    {
+      "allocation": {
+        "merge_depth": 64,
+        "numeric_units": 0,
+        "punct_units": 0,
+        "span_units": 0
+      },
+      "carried_frontier": {
+        "merge_depth": 4.805618096352772
+      },
+      "direction": "merge_depth",
+      "index": 1,
+      "marginal_gain_bits": 0.0,
+      "reallocated_from": null
+    },
+    {
+      "allocation": {
+        "merge_depth": 128,
+        "numeric_units": 0,
+        "punct_units": 0,
+        "span_units": 0
+      },
+      "carried_frontier": {
+        "merge_depth": 4.805618096352772
+      },
+      "direction": "merge_depth",
+      "index": 2,
+      "marginal_gain_bits": -0.3290213028580995,
+      "reallocated_from": null
+    },
+    {
+      "allocation": {
+        "merge_depth": 192,
+        "numeric_units": 0,
+        "punct_units": 0,
+        "span_units": 0
+      },
+      "carried_frontier": {
+        "merge_depth": 4.805618096352772
+      },
+      "direction": "merge_depth",
+      "index": 3,
+      "marginal_gain_bits": -0.08285651821240325,
+      "reallocated_from": null
+    },
+    {
+      "allocation": {
+        "merge_depth": 256,
+        "numeric_units": 0,
+        "punct_units": 0,
+        "span_units": 0
+      },
+      "carried_frontier": {
+        "merge_depth": 4.805618096352772
+      },
+      "direction": "merge_depth",
+      "index": 4,
+      "marginal_gain_bits": -0.0437541877446499,
+      "reallocated_from": null
+    },
+    {
+      "allocation": {
+        "merge_depth": 320,
+        "numeric_units": 0,
+        "punct_units": 0,
+        "span_units": 0
+      },
+      "carried_frontier": {
+        "merge_depth": 4.805618096352772
+      },
+      "direction": "merge_depth",
+      "index": 5,
+      "marginal_gain_bits": -0.004279777310350674,
+      "reallocated_from": null
+    },
+    {
+      "allocation": {
+        "merge_depth": 384,
+        "numeric_units": 0,
+        "punct_units": 0,
+        "span_units": 0
+      },
+      "carried_frontier": {
+        "merge_depth": 4.805618096352772
+      },
+      "direction": "merge_depth",
+      "index": 6,
+      "marginal_gain_bits": 0.0266551384205167,
+      "reallocated_from": null
+    },
+    {
+      "allocation": {
+        "merge_depth": 448,
+        "numeric_units": 0,
+        "punct_units": 0,
+        "span_units": 0
+      },
+      "carried_frontier": {
+        "merge_depth": 4.805618096352772
+      },
+      "direction": "merge_depth",
+      "index": 7,
+      "marginal_gain_bits": 0.032786529858748636,
+      "reallocated_from": null
+    },
+    {
+      "allocation": {
+        "merge_depth": 512,
+        "numeric_units": 0,
+        "punct_units": 0,
+        "span_units": 0
+      },
+      "carried_frontier": {
+        "merge_depth": 4.805618096352772
+      },
+      "direction": "merge_depth",
+      "index": 8,
+      "marginal_gain_bits": 0.024555609383597243,
+      "reallocated_from": null
+    },
+    {
+      "allocation": {
+        "merge_depth": 800,
+        "numeric_units": 0,
+        "punct_units": 0,
+        "span_units": 0
+      },
+      "carried_frontier": {
+        "merge_depth": 4.805618096352772
+      },
+      "direction": "merge_depth",
+      "index": 9,
+      "marginal_gain_bits": 0.18773541771538405,
+      "reallocated_from": null
+    },
+    {
+      "allocation": {
+        "merge_depth": 448,
+        "numeric_units": 0,
+        "punct_units": 0,
+        "span_units": 500
+      },
+      "carried_frontier": {
+        "merge_depth": 4.805618096352772,
+        "span_units": 4.9556742137996
+      },
+      "direction": "span_units",
+      "index": 10,
+      "marginal_gain_bits": 0.03812297330042824,
+      "reallocated_from": "merge_depth"
+    },
+    {
+      "allocation": {
+        "merge_depth": 448,
+        "numeric_units": 124,
+        "punct_units": 0,
+        "span_units": 500
+      },
+      "carried_frontier": {
+        "merge_depth": 4.805618096352772,
+        "numeric_units": 4.9347222461068165,
+        "span_units": 4.9556742137996
+      },
+      "direction": "numeric_units",
+      "index": 11,
+      "marginal_gain_bits": 0.020951967692783846,
+      "reallocated_from": "merge_depth"
+    },
+    {
+      "allocation": {
+        "merge_depth": 448,
+        "numeric_units": 124,
+        "punct_units": 128,
+        "span_units": 500
+      },
+      "carried_frontier": {
+        "merge_depth": 4.805618096352772,
+        "numeric_units": 4.9347222461068165,
+        "punct_units": 4.899425939426772,
+        "span_units": 4.9556742137996
+      },
+      "direction": "punct_units",
+      "index": 12,
+      "marginal_gain_bits": 0.03529630668004469,
+      "reallocated_from": "merge_depth"
+    }
+  ],
+  "denominator_override": 0,
+  "extra_tokens": [],
+  "graded_attempt_index": 11,
+  "graded_readout_filter": "none",
+  "notes": "reallocated off merge_depth once its marginal gain reached zero",
+  "reported_bpb": null,
+  "stop_after_point": 0,
+  "train_units_requested": 6000
+}
