@@ -1,0 +1,15 @@
+{
+  "_banner": "GENERATED SECTION. DO NOT HAND-EDIT. Emitted by seed/emit_substrate_provenance.py.",
+  "_what_this_is": "Provenance bound to each carrier by sha256 rather than by path, so it is a statement about these exact bytes and no others. Every claim here is recomputable: hash the file, unpack its 1024-byte header, and check that the length is token_count*2 + 1024.",
+  "carriers": [
+    {
+      "basis": "the 1024-byte header declares magic 20240520, version 1 and 1048576 tokens, and the file is exactly 1048576*2 + 1024 = 2098176 bytes, which is the shard format seed/forge/substrate.py documents at its lines 13-16",
+      "bytes": 2098176,
+      "external_source": "https://huggingface.co/datasets/HuggingFaceFW/fineweb",
+      "path": "environment/corpus/calibration.bin",
+      "pipeline": "https://github.com/KellerJordan/modded-nanogpt data/cached_fineweb10B.py",
+      "sha256": "85024c28aec36b5831b563e79f6113807d1a2ff2e2d59433014e4ee07f7ec7e9"
+    }
+  ],
+  "schema": "forge.substrate_provenance/v1"
+}
