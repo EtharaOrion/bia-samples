@@ -1,8 +1,8 @@
 # FORGE-CANARY-BEGIN
-# 0: e2c7fb2ca77cdf59f44c1425f76ea6642c969bb93d6f4ac8cfeb0f45b73b71cc
-# 1: 4048fb82bad701ce15ecf22e9686397d2825ff60daa59ce5cb08cae07968d92e
-# 2: c23a04eae079a45b70cc9b7e4c4002413f8077a28888c87d7eff7de55a9f0eb9
-# 3: 84997b963f88350f3086289032f69291e7a69b4aa9869e4c8b98c7a26631a49c
+# 0: 0b86fcafd534fe38e039ae12cd9398d0aac3500dbda006f2fac8e1797a643625
+# 1: 681f911183be48b042c33c61ea61e58f3e5910399521b92ff7bafbb166b5ffaa
+# 2: 35db4cadc249b815308c341911e152532ddc69db6b5db7226dd24ba2e739df36
+# 3: 11080f881f520af6b6bb96353992fb84a70cbed03648538f83bf4d40ba52fe4b
 # FORGE-CANARY-END
 #!/usr/bin/env python3
 """Derive every generated artifact of slot OER-10 from solution/grounding.yaml alone.

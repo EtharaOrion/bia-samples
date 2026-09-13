@@ -94,11 +94,11 @@ bar_not_point = "Reaching the target scores exactly 1.0 and beating it also scor
 [metadata.optimization]
 max_timeout_hours = 6.0
 max_timeout_role = "search-loop terminator across attempts"
-budget_hours = 0.3
-budget_hours_minutes = 18.0
+budget_hours = 0.12
+budget_hours_minutes = 7.2
 budget_hours_role = "per-attempt completion bound"
 budget_hours_state = "provisional"
-max_attempts = 20
+max_attempts = 50
 final_selection = "best"
 budget_envelope = "one CPU; the graded path uses no accelerator and completes in under a second"
 budget_margin = 10.0

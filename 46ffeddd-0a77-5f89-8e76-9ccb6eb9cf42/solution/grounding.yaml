@@ -1,8 +1,8 @@
 # FORGE-CANARY-BEGIN
-# 0: 1aec4962895ce38e4e9cfa9189515e8e6f098f220056cbb834f895f4e2d01c83
-# 1: eab6a36110a4f11cd49157ebb256a28fadedcec3c6c6a87f38d3ddfa10968328
-# 2: 0ba470f0104e0cf52d0dddb596a03ef748d98d3fe950173b65c4b8ebd459f369
-# 3: 99896c82143a33431e36e04accfea8529366a196002ac616d1ca97bf16a135fa
+# 0: e612360928aa2387770930bb7bb96367b427364457cbb49450c3c9ab6422dd19
+# 1: 7dc5b3171921d9427f8f706f6ff9d1f7275e2cb749580a8d2b543e09fc4b8b15
+# 2: 1bac7cd583e61c79b5399d276bfa78c68668c6ed48e0844204f9cab4d53de779
+# 3: 6faf2e4019cb2cb35631d032f58300074fa2aaa9b01b46a94c33e7d1a781761c
 # FORGE-CANARY-END
 schema: forge.grounding/v1
 slot: OER-24
@@ -547,7 +547,7 @@ screening:
   base_commit_sha: null
   binding_block:
     binding_envelope: DSSE, payloadType application/vnd.in-toto+json, DSSEv1 pre-authentication encoding
-    canonical_bundle_hash: f22e89a827a4a06ba2170786134f79a9fd9f2241e36141b2abf1f1c25f6f1a05
+    canonical_bundle_hash: 47e0b8334567eda4981c154f6b02c7a7741f718b2eb294c5a29005553495f2f0
     pinned_image_digest: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
   empty_submission_result:
     artifacts_disagree: false
@@ -790,5 +790,5 @@ screening:
     record_source: seed/contract.yaml batch.records[OER-24].upstream_provenance
     source_kind: synthetic
   trust_root_public_key_hex: 87de350694dcbacc3829fa78591c13dc80cb0ab6323046cbbdac8b01e20e6fc9
-  unit_uuid: ed55ed2a-466d-50ba-9579-a968d137be20
+  unit_uuid: 46ffeddd-0a77-5f89-8e76-9ccb6eb9cf42
 # FORGE-SCREENING-END

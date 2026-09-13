@@ -1,8 +1,8 @@
 # GENERATED SECTION. DO NOT HAND-EDIT.
 # Derived from solution/grounding.yaml `screening` by solution/recompute.py.
-# canonical payload sha256 (binding_block excluded from the preimage): bf969a64880c95f1f5b726629c423fcaff2b917bb7fa58f03d3e014d9eeebbd5
+# canonical payload sha256 (binding_block excluded from the preimage): 3192e300c9199a8b1af3bf83d78ed0b3e8a9aa180ae1dca5c6b5bff297114848
 schema: forge.provenance/v1
-unit_uuid: f477e02d-2801-5937-817b-8498d91951a5
+unit_uuid: 08667318-e4da-5a7c-8176-6180edb62685
 screening_roots:
   exclusion_list:
     digest: 81764edb7df796c57d17007b1fa95c2fe693226c865e403e5adc1b0640f595da
@@ -420,7 +420,7 @@ attestations:
   event_attestation_digest: null
   event_attestation_signer: null
 binding_block:
-  canonical_bundle_hash: 1590173d006a3c953c1f3a16dcc7a6e10681b6c2dcaa5891db8e73419bb92985
+  canonical_bundle_hash: 4c0e38380095e4a364d4c336eaf7c264e7d727d939b6146922352a008998a04c
   pinned_image_digest: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
   binding_envelope: DSSE, payloadType application/vnd.in-toto+json, DSSEv1 pre-authentication encoding
 keyid: bia-provenance-2026-08b

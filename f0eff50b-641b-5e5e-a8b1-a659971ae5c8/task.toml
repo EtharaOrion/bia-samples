@@ -53,11 +53,11 @@ free = "the data mixture and the curation recipe"
 [metadata.optimization]
 max_timeout_hours = 6.0
 max_timeout_role = "refinement-loop terminator across attempts"
-budget_hours = 0.3
-budget_hours_minutes = 18.0
+budget_hours = 0.12
+budget_hours_minutes = 7.2
 budget_hours_role = "per-attempt completion bound"
 budget_hours_state = "provisional"
-max_attempts = 20
+max_attempts = 50
 max_attempts_ceiling = 100
 final_selection = "best"
 final_selection_k = 50

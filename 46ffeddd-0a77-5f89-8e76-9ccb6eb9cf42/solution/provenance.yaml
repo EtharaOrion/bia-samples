@@ -1,8 +1,8 @@
 # GENERATED SECTION. DO NOT HAND-EDIT.
 # Derived from solution/grounding.yaml `screening` by solution/recompute.py.
-# canonical payload sha256 (binding_block excluded from the preimage): 6ba5eee1086e3c86b39d839fd1b1b76451ac62000b7e5d8a4ea634154df94b4f
+# canonical payload sha256 (binding_block excluded from the preimage): 1ff265e211dbfbd5fa60040183bb0740e61734e0326b70ab826731bdb558139d
 schema: forge.provenance/v1
-unit_uuid: 0e699056-88be-5ba7-964c-90f58122366e
+unit_uuid: 46ffeddd-0a77-5f89-8e76-9ccb6eb9cf42
 screening_roots:
   exclusion_list:
     digest: 81764edb7df796c57d17007b1fa95c2fe693226c865e403e5adc1b0640f595da
@@ -52,12 +52,12 @@ source_identifiers:
       reason: This atom has no exempt route at all and is applicable to every unit.
       value: applicable
   canonical_repository_identity: null
-  generation_input_digest: ead1a9f44c3c9467df5d1d9d0156d6ae584fd8c9f514eef45bf220c36c3aca84
-  generator_identity: dataset/0b563ec4-95ae-5da3-a640-be6c268d7c74/solution/recompute.py
-  generator_version: sha256:f0b3cfccb2081e5a1006c4ba16cc13762d711819b0d1be1a98385254d5cbae1e
+  generation_input_digest: 4dbad5bb7249ff2b77e614d6ba74ba92064cc61868892808e4d2e2871b3b6fd3
+  generator_identity: dataset/af7b683f-b64d-52fc-b3f8-514235383172/solution/recompute.py
+  generator_version: sha256:fb68dce2a2c6f825f5cfa076047461ed29d443c5e869a644153123ca7f7099c4
   origin: original
   provenance_attestation: null
-  record_source: seed/contract.yaml batch.records[OER-10].upstream_provenance
+  record_source: seed/contract.yaml batch.records[OER-24].upstream_provenance
   source_kind: synthetic
 fork_ancestry_snapshot: null
 base_commit_sha: null
@@ -91,11 +91,11 @@ instrument_versions:
     module: seed/forge/sanitization.py
     module_sha256: bd1593dc32180d1eeca5a135499939c866de7a98960d5a21239f19e0dfb22f21
 atom_result_digests:
-  empty-submission-validation: 0cd147dfec8b0a3ac3e4418ea35def2361c5d0b74a84db4dc6579c7ce1fad0a2
-  exclusion-matching: b67c1825085389d79e14da2371e7f1e8bf09b5f55a60aaa6360880bd99815ee2
+  empty-submission-validation: b8b0534bb37effaa5aeb0a55212436f4a4f049beb86ed68270a727a1d6242465
+  exclusion-matching: 09469ce38067428c69d8aa5a7da719e7244a6fcf836fc45d34a19e49c845ac94
   freeze-holdout: ''
-  near-duplicate-screening: c4c1255da5ba0b4813986efc574809d5287454c8384d4bfcb6398325121e1fd2
-  sanitization: 7f61214e576c0554e767e6b1411cd2243eddd2a5c8c3d3e63c6069b0d29310a6
+  near-duplicate-screening: 4c7cf18a25807b2b559129b16667686652d0871d1427edb3504fc8730832478f
+  sanitization: 2dd9692a362e52426e07eac7bccd9977ba0155f2c4d8c2686f1307522cf67488
 applicability:
   empty-submission-validation:
     applicability_reason: This atom has no exempt route at all and is applicable to every unit.
@@ -112,7 +112,7 @@ applicability:
     planted_positive_rejected: true
     ran: true
     reason: empty submission scored exactly zero, reason=unattributed
-    result_digest: 0cd147dfec8b0a3ac3e4418ea35def2361c5d0b74a84db4dc6579c7ce1fad0a2
+    result_digest: b8b0534bb37effaa5aeb0a55212436f4a4f049beb86ed68270a727a1d6242465
     score: 0.0
     screened_preimage: the unit's delivered bytes as they sit on disk, graded through the pinned image;
       nothing this atom records is a function of the bytes this lane writes
@@ -144,7 +144,7 @@ applicability:
       fork-ancestry-closure-membership:
         applicability: applicable
         matched: false
-    result_digest: b67c1825085389d79e14da2371e7f1e8bf09b5f55a60aaa6360880bd99815ee2
+    result_digest: 09469ce38067428c69d8aa5a7da719e7244a6fcf836fc45d34a19e49c845ac94
     screened_preimage: the unit's bytes with this `screening` block removed from solution/grounding.yaml
       and the carrier section removed from solution/recompute.py, because an output never enters its own
       input
@@ -186,14 +186,14 @@ applicability:
     control_suite: tests/test_neardup.py
     defect: ''
     determination: pass
-    nearest: results/20260513_shampoo_1_4_power/distributed_shampoo/examples/convnet.py
+    nearest: results/20260507_pmuon/make_figures.py
     planted_positive_present: true
     planted_positive_rejected: true
     ran: true
-    reason: solution/reference.py scored 0.053908 against its nearest pinned corpus neighbour results/20260513_shampoo_1_4_power/distributed_shampoo/examples/convnet.py
+    reason: solution/reference.py scored 0.072314 against its nearest pinned corpus neighbour results/20260507_pmuon/make_figures.py
       under threshold 0.63 and review threshold 0.56, classified pass.
-    result_digest: c4c1255da5ba0b4813986efc574809d5287454c8384d4bfcb6398325121e1fd2
-    score: 0.05390835579514825
+    result_digest: 4c7cf18a25807b2b559129b16667686652d0871d1427edb3504fc8730832478f
+    score: 0.07231404958677685
     screened_preimage: the unit's solution/reference.py exactly as delivered, which this lane never writes
     status: clean
     value: applicable
@@ -220,13 +220,12 @@ applicability:
     planted_positive_present: true
     planted_positive_rejected: true
     ran: true
-    reason: No named detector found a named fix-revealing representation in the delivery closure of 0b563ec4-95ae-5da3-a640-be6c268d7c74.
-      history-absence=clean(20), remote-absence=clean(20), thread-absence=clean(20), fix-absence=clean(11),
-      closure-identity=clean(20). This is the bounded result invariant 25 permits and never the claim
+    reason: No named detector found a named fix-revealing representation in the delivery closure of af7b683f-b64d-52fc-b3f8-514235383172.
+      history-absence=clean(16), remote-absence=clean(16), thread-absence=clean(16), fix-absence=clean(7),
+      closure-identity=clean(16). This is the bounded result invariant 25 permits and never the claim
       that the image reveals nothing; coverage stops at base-image-unresolved, delivery-image-unbuilt,
-      post-base-fix-set-unbound, source-host-egress-partially-denied, unprojectable-build-instruction,
-      verifier-surface-outside-fix-absence.
-    result_digest: 7f61214e576c0554e767e6b1411cd2243eddd2a5c8c3d3e63c6069b0d29310a6
+      post-base-fix-set-unbound, source-host-egress-partially-denied, verifier-surface-outside-fix-absence.
+    result_digest: 2dd9692a362e52426e07eac7bccd9977ba0155f2c4d8c2686f1307522cf67488
     screened_preimage: the unit's bytes with this `screening` block removed from solution/grounding.yaml
       and the carrier section removed from solution/recompute.py, because an output never enters its own
       input
@@ -257,139 +256,101 @@ sanitization_closure:
     whiteout_count: 0
     whiteouts: []
   layer_entries_unpacked: 0
-  member_count: 20
+  member_count: 16
   members:
-  - bytes: 1619
+  - bytes: 1399
     path: environment/Dockerfile
     role: agent-reachable
-    sha256: 651aae3468cc82355aeb12dca9d11dd9d752cf8605d833552f612b4cbc63bd7d
-  - bytes: 2670
-    path: environment/README.md
+    sha256: e340a5e958328503b5bb2ae714a9b475c113d3ff6aad4a73de31c5dae4b01e55
+  - bytes: 718
+    path: environment/envelope.json
     role: agent-reachable
-    sha256: 7cb9f700c1fd37533c27654ae2ac8a2c96d0f740e7a3860ced52e87b8ee86a2b
-  - bytes: 5578
-    path: environment/exclusion_set.json
+    sha256: d846c151799296853fec38cf4c2419722319f3750ac0e2d22fbd2d358d51ad81
+  - bytes: 7255
+    path: environment/refine.py
     role: agent-reachable
-    sha256: 942468acb1ea55babbf8c7223dfbfae822253b02b5f200ebea9581f1bbf3dc6d
-  - bytes: 2995
-    path: environment/frozen_train.py
+    sha256: 4bc46ef604f64b4dca66d14eec8e6271e3bb36a4e07cd21d811d454378179862
+  - bytes: 9890
+    path: environment/serving_sim.py
     role: agent-reachable
-    sha256: c3631275ccd74fe8d39bfa0d7dd468d7c1896bd3a5fb82c96aea1e8c7cdfda25
-  - bytes: 858
-    path: environment/held_out_split.json
+    sha256: 65a09c83159b96645eb9fa528fb7a0d1f394b838ec58fb51eda9191315c047f5
+  - bytes: 18075
+    path: environment/trace.json
     role: agent-reachable
-    sha256: 800d02cf983097de99d8308bc2ac0b0cbb83b5364e6bfe879077c704116a20ae
-  - bytes: 8549
-    path: environment/probe_pool.json
-    role: agent-reachable
-    sha256: c2c486519b23df6eaefe6bc29b698e36bfe36baa18ec71d93ae1b0b5a5b70b51
-  - bytes: 2746
-    path: environment/published_mixtures.md
-    role: agent-reachable
-    sha256: e687af941c61cc2ba99ffd3ebec545bd500d198b03fc8bd40c13777c82953ad4
-  - bytes: 42246
-    path: environment/raw_pool.json
-    role: agent-reachable
-    sha256: 0022e56197e392413003a47a2b73cb2ed3862abfd39867b064145f23f571737b
-  - bytes: 2039
-    path: environment/recipe_api.py
-    role: agent-reachable
-    sha256: 61106bbc2d8aa74286689ce60668f135610203ee0201fb848c365d79c90c1983
-  - bytes: 5837
+    sha256: b6dcea1d748dd57453b1ae67caa61de708fcd40807d0706e42747a5527330721
+  - bytes: 6270
     path: instruction.md
     role: agent-reachable
-    sha256: 6ad00ed760e599a44a0d87df69454f55384f5c533630a4f7e790d46b3aae7f58
-  - bytes: 8340
+    sha256: 9b90f53bca4e03cb32e879f8485ce7ca4c96157ba392241232dc13b2207afa76
+  - bytes: 6643
     path: task.toml
     role: agent-reachable
-    sha256: 78b2e94d8ed5746bfd37b893b937804f9936e6acc685346d173095509dbb7719
-  - bytes: 1178
+    sha256: af87d8a1bb3f8980358f97c77093157e91d7cb88e81772f3c515dada32254577
+  - bytes: 950
     path: tests/Dockerfile
     role: verifier-only
-    sha256: babe1c4915456c1d08f62d2f02eb1dc4565ede426fdcb6047055039a89afe190
-  - bytes: 23835
+    sha256: ab93051619c06caa423a4d36b93697eaa5e274a3fb86a28ad48ef6ba6cf20425
+  - bytes: 1292
+    path: tests/bound.json
+    role: verifier-only
+    sha256: 510e34ad93cc35c1089baf8929bdce8ae66ff7352259ad12d4cc87273b2f6239
+  - bytes: 28361
     path: tests/checkers.py
     role: verifier-only
-    sha256: 9e91b4db4c4e8ddcfa82fdce8612ccaa94b6da2a53ba05b0a86394708a2416c3
-  - bytes: 10826
+    sha256: 6e1a702f4a4a89f357c02e0e28ee8dfac6368dfe487273a3d4468b672669db6f
+  - bytes: 9688
     path: tests/checkers.yaml
     role: verifier-only
-    sha256: 2e0bf68ca4fa5f991c2cf0430c6217ce8b987b50c5266036feebd380ac9a2295
-  - bytes: 205126
-    path: tests/fixtures.json
-    role: verifier-only
-    sha256: 5cd353a0dc3ce32e3458af129914a2754434793035053c29f7834998a60f4e12
-  - bytes: 6470
+    sha256: 3d1bc46825c9216f710d8f07db2847dfeff8f95eb06a766f7f03b0fbed6b292d
+  - bytes: 8195
     path: tests/grade.py
     role: verifier-only
-    sha256: c56dca9bf5a0848bfbefa149cde903b248f8e2dba83ee66f170ac71581444250
-  - bytes: 4110
+    sha256: 318cc293aa3cafe610855f69eccc268e857aadff8f79d54b677cdcbff8cde0d1
+  - bytes: 2482
     path: tests/rubrics.jsonl
     role: verifier-only
-    sha256: b061a574fb524799c3242aebaa185b0f8e73b59137efb9750c4a619809214bae
-  - bytes: 8176
+    sha256: 14a9e4dfaf5d204d362371f1a803cf70105c556bd3bb760b16f75f88f28f1d79
+  - bytes: 4796
     path: tests/runner.py
     role: verifier-only
-    sha256: f38edc3b9060e23aedc7e76e64ced7891dc21c1196ec657a59c8908637280020
-  - bytes: 2506
+    sha256: ef463fc97aca2659cbc993b0448e1ba39c43d70bacb1442e08fc7fabcc30b0ee
+  - bytes: 2221
     path: tests/test.sh
     role: verifier-only
-    sha256: b457787d1ba24ea09a9669009c29e5f001af91346ba4316da347c7382982495c
-  - bytes: 6211
+    sha256: aa71b121df34059d282c1b5a971446f68aa609ca54af312c21cc23a205f84360
+  - bytes: 2374
     path: tests/test_output.py
     role: verifier-only
-    sha256: f38bfd4577f0f8af10ab6a818d69a350e57aa5c9f23f2e5bd7411800868967eb
+    sha256: d98a48741e31f0ce20848ac5daffd02d3d0ebde22d645d5efcea33fb0541ccc3
   stages:
   - base: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
     base_pinned: true
     dockerfile: environment/Dockerfile
     projected_copies:
-    - - frozen_train.py
-      - /workspace/environment/frozen_train.py
-    - - recipe_api.py
-      - /workspace/environment/recipe_api.py
-    - - probe_pool.json
-      - /workspace/environment/probe_pool.json
-    - - raw_pool.json
-      - /workspace/environment/raw_pool.json
-    - - held_out_split.json
-      - /workspace/environment/held_out_split.json
-    - - exclusion_set.json
-      - /workspace/environment/exclusion_set.json
-    - - published_mixtures.md
-      - /workspace/environment/published_mixtures.md
-    - - README.md
-      - /workspace/environment/README.md
+    - - serving_sim.py
+      - /task/environment/serving_sim.py
+    - - refine.py
+      - /task/environment/refine.py
+    - - trace.json
+      - /task/environment/trace.json
+    - - envelope.json
+      - /task/environment/envelope.json
     projected_directories:
-    - /workspace/submission
-    - /telemetry
-    - /logs/verifier
+    - /workspace/notes
+    - /workspace/attempts
+    - /workspace/context
+    - /workspace/logs
     resolved_build_context: environment
     unprojectable_instructions: []
   - base: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
     base_pinned: true
     dockerfile: tests/Dockerfile
     projected_copies:
-    - - test.sh
-      - /verifier/tests/test.sh
-    - - runner.py
-      - /verifier/tests/runner.py
-    - - checkers.py
-      - /verifier/tests/checkers.py
-    - - checkers.yaml
-      - /verifier/tests/checkers.yaml
-    - - grade.py
-      - /verifier/tests/grade.py
-    - - test_output.py
-      - /verifier/tests/test_output.py
-    - - fixtures.json
-      - /verifier/tests/fixtures.json
-    - - rubrics.jsonl
-      - /verifier/tests/rubrics.jsonl
+    - - .
+      - /task/tests/
     projected_directories: []
     resolved_build_context: tests
-    unprojectable_instructions:
-    - RUN mkdir -p /logs/verifier && chmod +x /verifier/tests/test.sh
+    unprojectable_instructions: []
   whiteouts_observed: 0
 empty_submission_result:
   artifacts_disagree: false
@@ -406,14 +367,14 @@ empty_submission_result:
   reason: ''
   reward: 0.0
   reward_text: 0.0
-  uuid: 0b563ec4-95ae-5da3-a640-be6c268d7c74
+  uuid: af7b683f-b64d-52fc-b3f8-514235383172
 attestations:
   ancestry_attestation_digest: null
   ancestry_attestation_signer: null
   event_attestation_digest: null
   event_attestation_signer: null
 binding_block:
-  canonical_bundle_hash: 935f5c7f0643799a1bcdab0aaeaba187a540262711ca5abfd56a6cd1fdfa97c5
+  canonical_bundle_hash: 47e0b8334567eda4981c154f6b02c7a7741f718b2eb294c5a29005553495f2f0
   pinned_image_digest: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
   binding_envelope: DSSE, payloadType application/vnd.in-toto+json, DSSEv1 pre-authentication encoding
 keyid: bia-provenance-2026-08b
