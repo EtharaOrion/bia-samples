@@ -1,9 +1,0 @@
-{
-  "bands": 16,
-  "permutation_seed_source": "the first 16 hex digits of the sha256 of environment/corpus.jsonl",
-  "rows_per_band": 6,
-  "schema": "oer27.index_spec/v1",
-  "shingle_order": 3,
-  "signature_length": 96,
-  "similarity_quantum": 1024
-}
