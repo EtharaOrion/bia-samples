@@ -1,8 +1,8 @@
 # FORGE-CANARY-BEGIN
-# 0: dd99e7c53f40e180f4343172906761d15ff23bb4e32bcb08f80b969f010db4d7
-# 1: 6a07c5f28814591a10824f98da79dfc94b45ceca675f4dec37b0b9ced24504ee
-# 2: a3e0d6f0540bf931849b8877d5f1c90bd959cb182b019fbd6743d61b8d5eae20
-# 3: 16e809c567ea6222f40b6d15369541613b0e00541f8331fa847034694cb01310
+# 0: 3ddb74edbfe4d667b9329fbd676506dbb5583432bb3cfc9ae32a8e5f0d84f08a
+# 1: 5cd9b1c67309dc7a19f3254cca245a639b7a2f247d98b6dcf86585b74c60a465
+# 2: adfa57d0327cafe6948750b30f51835d84bf402fa679eb11ec82063f22d83ee7
+# 3: e891fb06e58b1db954b988d5ce7e3284173cd93f6d8f06baf63ceb1d48626982
 # FORGE-CANARY-END
 #!/usr/bin/env python3
 """Derive every generated artifact of this slot from solution/grounding.yaml alone.
@@ -50,14 +50,75 @@ def load_grounding() -> dict:
         return yaml.safe_load(handle)
 
 
-def digest_vector(vector: dict) -> str:
-    rows = [[str(key), format(float(vector[key]), ".12g")] for key in sorted(vector)]
-    payload = json.dumps(rows, sort_keys=True, separators=(",", ":"), ensure_ascii=True)
+def seeded_digest(seed: str) -> str:
+    return hashlib.sha256(str(seed).encode("utf-8")).hexdigest()
+
+
+def digest_snapshot(descriptor: dict) -> str:
+    """Mirrors tests/checkers.py::digest_snapshot and tests/harness.py::weights_digest.
+
+    Only the architecture and the per-tensor shape and content digests enter the
+    preimage, so the fixture digest a checker recomputes is the digest this file wrote.
+    """
+    architecture = (descriptor or {}).get("architecture") or {}
+    rows = [[str(key), int(architecture[key])] for key in sorted(architecture)]
+    tensor_rows = [
+        [str(name), [int(size) for size in shape], str(digest)]
+        for name, shape, digest in (descriptor or {}).get("tensors") or []
+    ]
+    payload = json.dumps([rows, sorted(tensor_rows)], sort_keys=True, separators=(",", ":"), ensure_ascii=True)
     return hashlib.sha256(payload.encode("utf-8")).hexdigest()
 
 
-def seeded_digest(seed: str) -> str:
-    return hashlib.sha256(str(seed).encode("utf-8")).hexdigest()
+def snapshot_descriptor(ground: dict, seed: str) -> dict:
+    """A parameter snapshot descriptor shaped exactly as tests/harness.py writes one.
+
+    The fixture carries no tensor bytes, because a fixture that carried the real 124M
+    parameters would be a checkpoint committed into a bundle. It carries every tensor's
+    NAME and SHAPE, derived from the frozen architecture, and a seeded content digest per
+    tensor, which is what the shape-binding half of the weights checker actually reads.
+    """
+    architecture = dict(ground["bound_values"]["architecture"])
+    width = int(architecture["model_dim"])
+    vocab = int(architecture["vocab_size"])
+    layers = int(architecture["num_layers"])
+    head_dim = int(architecture["head_dim"])
+    heads = int(architecture["num_heads"])
+    hdim = heads * head_dim
+    rows = [
+        ("embed.weight", [vocab, width]),
+        ("proj.weight", [vocab, width]),
+        ("proj.bias", [vocab]),
+        ("norm1.gains", [width]),
+        ("norm2.gains", [width]),
+    ]
+    for index in range(layers):
+        prefix = "blocks." + str(index) + "."
+        rows += [
+            (prefix + "attn.q.weight", [hdim, width]),
+            (prefix + "attn.q.bias", [hdim]),
+            (prefix + "attn.k.weight", [hdim, width]),
+            (prefix + "attn.k.bias", [hdim]),
+            (prefix + "attn.v.weight", [hdim, width]),
+            (prefix + "attn.v.bias", [hdim]),
+            (prefix + "attn.proj.weight", [width, hdim]),
+            (prefix + "attn.proj.bias", [width]),
+            (prefix + "mlp.fc.weight", [4 * width, width]),
+            (prefix + "mlp.fc.bias", [4 * width]),
+            (prefix + "mlp.proj.weight", [width, 4 * width]),
+            (prefix + "mlp.proj.bias", [width]),
+            (prefix + "norm1.gains", [width]),
+            (prefix + "norm2.gains", [width]),
+        ]
+    tensors = [[name, shape, seeded_digest(seed + "|" + name)] for name, shape in rows]
+    return {
+        "architecture": architecture,
+        "tensors": tensors,
+        "parameter_count": sum(
+            (shape[0] if len(shape) == 1 else shape[0] * shape[1]) for _, shape in rows
+        ),
+        "snapshot_path": "/verifier-private/" + seed + ".pt",
+    }
 
 
 # --- the golden record and its single-defect fixtures --------------------------
@@ -66,8 +127,8 @@ def seeded_digest(seed: str) -> str:
 def golden_record(ground: dict) -> dict:
     block = ground["golden_record"]
     bound = ground["bound_values"]
-    weights = dict(block["weights"])
-    digest = digest_vector(weights)
+    weights = snapshot_descriptor(ground, block["snapshot_seed"])
+    digest = digest_snapshot(weights)
     tree = seeded_digest(block["grading_tree_seed"])
     events = [{"index": i, "name": name, "detail": ""} for i, name in enumerate(block["events"])]
     opened = next(row["index"] for row in events if row["name"] == "benchmark-loaded")
@@ -109,7 +170,7 @@ def golden_record(ground: dict) -> dict:
         ],
         "measurement": {
             "score": block["measurement_score"],
-            "weights": weights,
+            "weights": dict(weights, in_loop_score=block["graded_score"]),
             "computed_by": "tests/harness.py::evaluate",
         },
         "graded": {
@@ -125,7 +186,7 @@ def golden_record(ground: dict) -> dict:
             "smoothing": None,
             "note": "recorded for divergence only; never graded",
         },
-        "grading_tree": {"digest_before": tree, "digest_after": tree, "file_count": 9},
+        "grading_tree": {"digest_before": tree, "digest_after": tree, "file_count": block["grading_tree_file_count"]},
     }
 
 
@@ -143,6 +204,8 @@ def apply_patch(record: dict, patch: dict, ground: dict) -> dict:
         value = patch[key]
         if key == "training.steps_fed":
             out["training"]["steps_fed"] = value
+        elif key == "training.tokens_fed":
+            out["training"]["tokens_fed"] = value
         elif key == "training.completed":
             out["training"]["completed"] = value
         elif key == "training.halted_at_step":
@@ -191,6 +254,8 @@ def build_records(ground: dict) -> dict:
             record = with_raw_scores(record, list(row["raw_scores"]))
         if "steps_fed" in row:
             record["training"]["steps_fed"] = row["steps_fed"]
+        if "tokens_fed" in row:
+            record["training"]["tokens_fed"] = row["tokens_fed"]
         controls[row["id"]] = {
             "mutation": row["mutation"],
             "checker": row["checker"],
@@ -263,23 +328,24 @@ def build_truth(ground: dict) -> str:
         "",
         truth["why_the_screen_is_load_bearing"].strip(),
         "",
-        "## The reference, as measured on this host",
+        "## " + observed["heading"].strip(),
         "",
         "| quantity | observed |",
         "|---|---|",
     ]
     for key in sorted(observed):
-        if key == "note":
+        if key in ("note", "heading"):
             continue
-        out.append("| " + key + " | " + json.dumps(observed[key]) + " |")
+        value = observed[key]
+        out.append("| " + key + " | " + ("absent" if value is None else json.dumps(value)) + " |")
     out += [
         "",
         observed["note"].strip(),
         "",
         "## Anchors",
         "",
-        "anchors_state: " + str(ground["anchors"]["anchors_state"]) + ", gap " + str(ground["anchors"]["gap"]) + ".",
-        ground["anchors"]["never_invented"].strip(),
+        "anchors_state: " + str(ground["anchors"]["anchors_state"]) + ", gap "
+        + str(ground["anchors"]["gap"]) + ". " + " ".join(ground["anchors"]["never_invented"].split()),
         "",
         "## Known limits",
         "",
@@ -499,6 +565,9 @@ _FORGE_CARRIER_KEYS = (
     "namespace",
     "normalization_domain_version",
     "signer_identity",
+    "screening_measured_at",
+    "screening_interval_days",
+    "screening_expires_at",
 )
 
 _FORGE_BINDING_KEYS = (

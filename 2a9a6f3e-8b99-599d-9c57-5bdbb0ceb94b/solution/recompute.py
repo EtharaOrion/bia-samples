@@ -1,8 +1,8 @@
 # FORGE-CANARY-BEGIN
-# 0: 1d20bb595e6b305ead66040bde41bf36681d131ef5a4d051b2718a82f1cffff4
-# 1: 2b1c17e5e89a172511ac2dafcd68e51cf0fe765c50643f0f9ccf62c2c46809b0
-# 2: 779490da9d91c210ebec36142fe1493c86ab7b37f17f7dc532297199f2e3879f
-# 3: 6cb433afd72e11c64c482e7640cb37168ba75054724c990aecea0432e45e0295
+# 0: 4d72d9031969cea133600356efbb63071e7b15a1fe696b80cca38f83224a58b4
+# 1: ba5a8b668d9b74a8bd76074b6755ae0f0ae452ad40c00f87521f88ae983a3665
+# 2: 0444ea2145a0e175f3ca9764bf1dec8651b181fdcd4bf37bd8d0bb9c5b04a36c
+# 3: b38963a2fc6196ec2bb6be78b09b26807fc7f5da264cde90832b6ecc8f807c43
 # FORGE-CANARY-END
 #!/usr/bin/env python3
 """Derive every generated artifact of OER-28 from solution/grounding.yaml alone.
@@ -849,6 +849,9 @@ _FORGE_CARRIER_KEYS = (
     "namespace",
     "normalization_domain_version",
     "signer_identity",
+    "screening_measured_at",
+    "screening_interval_days",
+    "screening_expires_at",
 )
 
 _FORGE_BINDING_KEYS = (

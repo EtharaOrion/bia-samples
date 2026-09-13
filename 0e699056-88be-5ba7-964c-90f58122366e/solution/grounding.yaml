@@ -1,8 +1,8 @@
 # FORGE-CANARY-BEGIN
-# 0: 9b80a07344312a89b7cee483c0e1d51c35e5cde37a3784bce200577eaba8a7e8
-# 1: 9f8fc19682a8b887561a25d74152ff39cecd74d907a7c7013dac78004aba12cc
-# 2: cf600a6524a517eae2c384f483d98d48630ba3f0865b785db13fd6b191b38bb1
-# 3: ec93e0f97b91b5befb1bcc7004f3814f67e4de948de2e2a8e6c4c2cb1074b98a
+# 0: f7408c509896eafc497520f1df4d4e2a9821059684dde5a75d00012b20b5fa7a
+# 1: 45d14007625b1f4da4d70fff5e2fe42579e1b4c535668f1e6a2c1b963cb1cfbf
+# 2: 388364075a202cfb85bbf75b5ee205b6bbfc3aa6bab6842ffbb6f4633cf4c3a4
+# 3: b6db1613457c2522cc0376d4696895dadc0bc8fe22b54ebfe2927a85f565ec2d
 # FORGE-CANARY-END
 schema: forge.grounding/v1
 
@@ -31,21 +31,69 @@ archetype_exclusivity: >-
 graded_quantity:
   metric: validation loss of the trained model
   direction: lower
-  computed_by: the verifier, on the frozen held-out split, from harness-owned weights
+  computed_by: >-
+    the verifier, in its own process, on the verifier-owned held-out FineWeb10B validation
+    split, from the parameter snapshots the frozen harness wrote
   computed_at: the bound evaluation point
   never: >-
     never a number the submission reported, never a number in the submission's stdout,
-    never a field the submission wrote, never a smoothed or blended readout.
+    never a field the submission wrote, never a smoothed or blended readout, and never a
+    number the in-container harness printed.
+
+# ---------------------------------------------------------------------------
+# The canonical nanoGPT substrate this slot's metric resolves against
+# ---------------------------------------------------------------------------
+substrate:
+  declaration: environment/nanogpt_substrate.json
+  declaration_version: nanogpt-substrate-v1
+  replicated_not_referenced: >-
+    The declaration is replicated into this slot's own environment/ rather than read from a
+    shared path, because a bundle's name is a hash over its own tree and no slot may depend
+    on a sibling's bytes.
+  upstream: modded-nanogpt, records/track_3_optimization/
+  upstream_vendored_at: harness/records/track_3_optimization/train_gpt_simple.py
+  architecture:
+    vocab_size: 50304
+    num_layers: 12
+    model_dim: 768
+    head_dim: 128
+    num_heads: 6
+    seq_len: 1024
+  run:
+    batch_tokens_per_step: 524288
+    forward_passes_per_step: 1
+    backward_passes_per_step: 1
+    target_val_loss: 3.28
+  corpus:
+    train_glob: data/fineweb10B/fineweb_train_*.bin
+    val_glob: data/fineweb10B/fineweb_val_*.bin
+    container_train_path: /workspace/data/fineweb10B
+    loader: data/cached_fineweb10B.py
+  anchors:
+    baseline_record: 36
+    baseline_steps_to_target: 3250
+    baseline_val_loss: 3.2787
+    record_holder_record: 46
+    record_holder_steps_to_target: 2690
+    record_holder_val_loss: 3.2783
+  anchors_are_not_this_slot_s_anchors: >-
+    Those two published anchors describe the optimizer track that vendored the substrate.
+    They fix the operating point this slot's training runs at and they are not F12's
+    baseline or target, which stay absent under gap-oer-per-family-anchors-unmeasured.
 
 freeze:
-  token_budget_tokens: 419430400
-  tokens_per_step: 131072
+  token_budget_tokens: 1677721600
+  tokens_per_step: 524288
   steps_at_budget: 3200
-  model: frozen-decoder-12L-768d, environment/frozen_train.py, not modifiable
+  model: nanogpt-12L-768d, the decoder environment/frozen_train.py instantiates from environment/nanogpt_substrate.json, not modifiable
   optimizer: frozen-adamw-cosine, environment/frozen_train.py, not modifiable
   evaluation_split_id: val-split-b
-  evaluation_split_size: 60
+  evaluation_split_size: 64
+  evaluation_split_owner: verifier
   free: the data mixture and the curation recipe, and nothing else
+  batch_note: >-
+    tokens_per_step is the substrate's frozen batch of 524288 tokens per step, so the budget
+    is 3200 steps at that batch. It is not a number this lane chose.
 
 # ---------------------------------------------------------------------------
 # The load-bearing control: a BEHAVIOURAL recipe fingerprint
@@ -196,14 +244,55 @@ raw_pool_construction:
     quality_decile: (h // 157) mod 10
     ppl_decile: (h // 911) mod 10
     lang: "en when (h // 7) mod 4 is nonzero, else xx"
+  corpus_binding:
+    binds_to: the FineWeb10B training shards named by substrate.corpus.train_glob
+    span_tokens: 8000000
+    spans_per_shard: 12
+    shard_format: "fineweb_train_%06d.bin"
+    shard_index: i // 12
+    token_offset: (i mod 12) * 8000000
+    shard_count: 20
+    total_span_tokens: 1920000000
+    why_it_is_added_rather_than_substituted: >-
+      Every field the recipe reads keeps the recurrence it always had, so every pinned
+      selection vector, every fingerprint digest and every measured L1 in this file is
+      unchanged by the binding. What the binding adds is the answer to what a retained row
+      actually feeds: a contiguous span of real FineWeb10B training tokens. Before it, a
+      retained row fed nothing at all.
+    headroom: >-
+      1920000000 span tokens against a frozen budget of 1677721600, so a recipe retaining
+      every span still has to spend the budget selectively rather than feed the corpus once.
 
 held_out_split:
   id: val-split-b
-  count: 60
-  id_format: "h%03d"
+  owner: verifier
+  count: 64
+  id_format: "v%03d"
+  segment_tokens: 16384
+  shard: fineweb_val_000000.bin
+  shard_glob: data/fineweb10B/fineweb_val_*.bin
+  token_offset: 3600000
+  token_count: 1048576
+  slice_sha256: 83d25a635cf411d13a66acb4e4473fcced667f0bafb7f9f832880a373d2ba901
+  shard_sha256_prefix_1mib: 0d894b48b1f0f8aa3b8709c6950c0ba3d8051e90f70a22a7725a35e98610b04f
+  collection: FineWeb10B, GPT-2 BPE token ids, uint16 little-endian
+  external_source: https://huggingface.co/datasets/HuggingFaceFW/fineweb
+  pipeline: https://github.com/KellerJordan/modded-nanogpt data/cached_fineweb10B.py
+  pinned_at: tests/held_out_split.json
+  agent_surface: >-
+    environment/held_out_split.json declares this split's identity and carries no payload:
+    no member id, no token offset a member resolves to, and no token bytes. The membership
+    and the bytes live on the verifier surface alone.
   disjointness: >-
-    The held-out namespace h### is disjoint from the raw-pool namespace r### by
-    construction, so a leak is an explicit act rather than an accident of sampling.
+    The held-out namespace v### is disjoint from the raw-pool namespace r### by
+    construction, and the validation shard glob is disjoint from the training shard glob
+    the raw pool binds to, so a leak is an explicit act rather than an accident of sampling.
+  why_the_payload_left_the_agent_surface: >-
+    A graded split whose tokens sit in environment/ is a split the solver can read, and a
+    scalar computed over bytes the solver holds is not a held-out measurement. The tokens
+    are now resolved by the verifier from its own staged FineWeb validation shard, checked
+    against the digests pinned above, so substituting the split is detectable rather than
+    silent.
 
 rule_forms:
   gated_bucket:
@@ -291,7 +380,7 @@ reference_recipe:
   w_signal: 3.0
   w_band: 1.0
   w_taper: 2.0
-  declared_token_budget: 419430400
+  declared_token_budget: 1677721600
 
 paraphrase_control:
   id: para-quality-gated-restated
@@ -317,7 +406,10 @@ golden_trajectory:
     AUTHORING FIXTURE, not a measured training result. These are frozen synthetic telemetry
     values authored to drive the real checkers through the real gate chain. No H100 training
     run was performed on this host, and none is claimed. Declared as
-    gap-oer-10-graded-training-run-not-executed-on-this-host.
+    gap-oer-10-graded-training-run-not-executed-on-this-host. The loss levels below are
+    plausible for the substrate's operating point and are never presented as measured; the
+    substrate's own published anchors sit at 3.2787 and 3.2783 and are the only measured
+    losses named anywhere in this bundle.
   stages:
     - {seq: 1, stage: assemble-agent-surface}
     - {seq: 2, stage: pin-exclusion-set}
@@ -327,7 +419,7 @@ golden_trajectory:
     - {seq: 6, stage: verifier-evaluation}
   training:
     steps_executed: 3200
-    tokens_fed: 419430400
+    tokens_fed: 1677721600
     halted_at_step: 3200
     halt_reason: budget-exhausted
   evaluation:
@@ -461,6 +553,19 @@ gaps_declared:
     effect: >-
       the feasibility bundle drives the real checkers over frozen synthetic telemetry; no
       H100 training run was performed and none is claimed
+  - id: gap-oer-10-fineweb-shards-staged-at-run-time-not-carried-in-the-bundle
+    effect: >-
+      environment/frozen_train.py trains over the FineWeb10B shards the substrate names and
+      tests/evaluate.py evaluates over the validation shard, and neither shard set is a
+      bundle byte. Both surfaces stage them at provisioning time and verify them against the
+      digests pinned in solution/grounding.yaml held_out_split, so an unstaged or substituted
+      shard is a refused run rather than a different grade.
+  - id: gap-oer-10-ladder-ends-cost-two-further-training-arms
+    effect: >-
+      the run-local ladder's two ends are a control arm and a reference floor trained under
+      the identical freeze, so one graded attempt is three nanoGPT runs rather than one. The
+      per-attempt bound in task.toml metadata.optimization stays provisional against that
+      cost and is not restated here as if it had been measured.
   - id: gap-oer-10-container-image-built-digest-unresolved
     effect: >-
       the pinned digest names the public base image; the digest of the image built from
@@ -734,7 +839,7 @@ screening:
   base_commit_sha: null
   binding_block:
     binding_envelope: DSSE, payloadType application/vnd.in-toto+json, DSSEv1 pre-authentication encoding
-    canonical_bundle_hash: f97c99b45d5329057278bd3e27b93e5d3edacb72c4d80e36f2917d985daf9303
+    canonical_bundle_hash: 935f5c7f0643799a1bcdab0aaeaba187a540262711ca5abfd56a6cd1fdfa97c5
     pinned_image_digest: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
   empty_submission_result:
     artifacts_disagree: false
@@ -955,6 +1060,9 @@ screening:
       - RUN mkdir -p /logs/verifier && chmod +x /verifier/tests/test.sh
     whiteouts_observed: 0
   schema: forge.provenance/v1
+  screening_expires_at: '2026-11-25T07:35:42Z'
+  screening_interval_days: 90
+  screening_measured_at: '2026-08-27T07:35:42Z'
   screening_roots:
     exclusion_list:
       digest: 81764edb7df796c57d17007b1fa95c2fe693226c865e403e5adc1b0640f595da
@@ -1012,5 +1120,5 @@ screening:
     record_source: seed/contract.yaml batch.records[OER-10].upstream_provenance
     source_kind: synthetic
   trust_root_public_key_hex: 87de350694dcbacc3829fa78591c13dc80cb0ab6323046cbbdac8b01e20e6fc9
-  unit_uuid: afa4a940-36ac-5972-8204-84df20891f0a
+  unit_uuid: 0e699056-88be-5ba7-964c-90f58122366e
 # FORGE-SCREENING-END

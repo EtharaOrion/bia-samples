@@ -1,8 +1,8 @@
 # FORGE-CANARY-BEGIN
-# 0: 413674e81c816776ea52d90981aaa6ef0bf14b6d5364ea49c1440a4363c166f0
-# 1: 2e16b64e33d39fd9c1d9da19a6850f750d733d294975cbf716491ad04f5019c9
-# 2: 89092287aed89757a5000af40b4a4415dabb460f668f2668ce09e85198b95b35
-# 3: 9a24886108b237a734b70e88b7d8a228a9eebba64cb9f310a011e20b709fefdf
+# 0: e2c7fb2ca77cdf59f44c1425f76ea6642c969bb93d6f4ac8cfeb0f45b73b71cc
+# 1: 4048fb82bad701ce15ecf22e9686397d2825ff60daa59ce5cb08cae07968d92e
+# 2: c23a04eae079a45b70cc9b7e4c4002413f8077a28888c87d7eff7de55a9f0eb9
+# 3: 84997b963f88350f3086289032f69291e7a69b4aa9869e4c8b98c7a26631a49c
 # FORGE-CANARY-END
 #!/usr/bin/env python3
 """Derive every generated artifact of slot OER-10 from solution/grounding.yaml alone.
@@ -15,7 +15,8 @@ Generated from grounding.yaml, all with the GENERATED SECTION banner:
 
     environment/probe_pool.json        the frozen probe pool the fingerprint reads
     environment/raw_pool.json          the frozen raw pool a recipe curates
-    environment/held_out_split.json    the frozen evaluation split
+    environment/held_out_split.json    the evaluation split DECLARATION, carrying no payload
+    tests/held_out_split.json          the verifier-owned evaluation split pin
     environment/exclusion_set.json     the pinned published-mixture exclusion set
     solution/reference.py              the reference recipe the live checkers accept
     solution/solve.sh                  the oracle entry point
@@ -64,6 +65,16 @@ def _row(ident: str, bucket: str, h: int) -> dict:
     }
 
 
+def _bind_to_shard(row: dict, index: int, binding: dict) -> dict:
+    span = int(binding["span_tokens"])
+    per_shard = int(binding["spans_per_shard"])
+    bound = dict(row)
+    bound["shard"] = str(binding["shard_format"]) % (index // per_shard)
+    bound["token_offset"] = (index % per_shard) * span
+    bound["span_tokens"] = span
+    return bound
+
+
 def probe_pool(ground: dict) -> list:
     spec = ground["probe_pool_construction"]
     buckets = spec["buckets"]
@@ -77,20 +88,87 @@ def probe_pool(ground: dict) -> list:
 def raw_pool(ground: dict) -> list:
     spec = ground["raw_pool_construction"]
     buckets = ground["probe_pool_construction"]["buckets"]
+    binding = spec["corpus_binding"]
     rows = []
     for i in range(int(spec["count"])):
         h = (i * 2246822519 + 374761393) % 1000003
-        rows.append(_row("r%03d" % i, buckets[i % len(buckets)], h))
+        rows.append(_bind_to_shard(_row("r%03d" % i, buckets[i % len(buckets)], h), i, binding))
     return rows
 
 
-def held_out(ground: dict) -> dict:
+def held_out_ids(ground: dict) -> list:
+    spec = ground["held_out_split"]
+    return [str(spec["id_format"]) % i for i in range(int(spec["count"]))]
+
+
+def held_out_declaration(ground: dict) -> dict:
+    """The agent-visible surface: the split's identity, and no payload of any kind."""
     spec = ground["held_out_split"]
     return {
         "_banner": BANNER,
         "_source": SOURCE,
         "id": spec["id"],
-        "doc_ids": ["h%03d" % i for i in range(int(spec["count"]))],
+        "owner": "verifier",
+        "member_count": int(spec["count"]),
+        "member_tokens": int(spec["segment_tokens"]),
+        "shard_glob": spec["shard_glob"],
+        "collection": spec["collection"],
+        "carries_no_payload": {
+            "member_ids": "absent from this surface",
+            "token_offsets": "absent from this surface",
+            "token_bytes": "absent from this surface",
+        },
+        "resolved_by": "the verifier, from its own staged FineWeb10B validation shard",
+        "pinned_at": "tests/held_out_split.json, which is not mounted on the agent surface",
+        "why": (
+            "A graded split whose tokens sit in environment/ is a split the solver can read, "
+            "and a scalar computed over bytes the solver holds is not a held-out measurement. "
+            "This file names the split so you know what you are being graded on, and carries "
+            "nothing you could grade yourself against."
+        ),
+        "feeding_a_member_is_a_leak": (
+            "The frozen budget is spent on training shards only. Any fed span naming a "
+            "validation shard zeroes the score with reason eval-split-leaked."
+        ),
+    }
+
+
+def held_out_pin(ground: dict) -> dict:
+    """The verifier-owned surface: what the split IS, and how to prove it did not move."""
+    spec = ground["held_out_split"]
+    segment = int(spec["segment_tokens"])
+    offset = int(spec["token_offset"])
+    return {
+        "_banner": BANNER,
+        "_source": SOURCE,
+        "id": spec["id"],
+        "owner": "verifier",
+        "shard": spec["shard"],
+        "shard_glob": spec["shard_glob"],
+        "token_offset": offset,
+        "token_count": int(spec["token_count"]),
+        "segment_tokens": segment,
+        "collection": spec["collection"],
+        "external_source": spec["external_source"],
+        "pipeline": spec["pipeline"],
+        "slice_sha256": spec["slice_sha256"],
+        "shard_sha256_prefix_1mib": spec["shard_sha256_prefix_1mib"],
+        "doc_ids": held_out_ids(ground),
+        "segments": [
+            {
+                "id": ident,
+                "shard": spec["shard"],
+                "token_offset": offset + i * segment,
+                "token_count": segment,
+            }
+            for i, ident in enumerate(held_out_ids(ground))
+        ],
+        "payload_is_not_carried": (
+            "The token bytes are not a bundle byte on either surface. The verifier resolves "
+            "them from its own staged validation shard and checks them against slice_sha256 "
+            "before it evaluates, so a substituted split is a refused run rather than a "
+            "different grade."
+        ),
     }
 
 
@@ -164,7 +242,11 @@ def raw_pool_doc(ground: dict) -> str:
 
 
 def held_out_doc(ground: dict) -> str:
-    return _json(held_out(ground))
+    return _json(held_out_declaration(ground))
+
+
+def held_out_pin_doc(ground: dict) -> str:
+    return _json(held_out_pin(ground))
 
 
 def exclusion_set(ground: dict) -> dict:
@@ -360,9 +442,13 @@ def golden(ground: dict) -> dict:
         },
         "corpus": {
             "held_out_split_id": str(ground["held_out_split"]["id"]),
+            "held_out_split_owner": "verifier",
+            "held_out_split_source": "tests/held_out_split.json",
             "bound_held_out_split_id": str(ground["freeze"]["evaluation_split_id"]),
-            "held_out_doc_ids": held_out(ground)["doc_ids"],
+            "held_out_doc_ids": held_out_ids(ground),
             "fed_doc_ids": fed_ids(ground),
+            "fed_shard_glob": str(ground["substrate"]["corpus"]["train_glob"]),
+            "held_out_shard_glob": str(ground["held_out_split"]["shard_glob"]),
         },
         "evaluation": {
             "bound_eval_step": int(evaluation["bound_eval_step"]),
@@ -425,11 +511,13 @@ def fixtures(ground: dict) -> dict:
     planted["nc-screen-after-training"] = row
 
     row = _deep(base)
-    row["training"]["tokens_fed"] = int(row["training"]["frozen_token_budget"]) + 131072
+    row["training"]["tokens_fed"] = int(row["training"]["frozen_token_budget"]) + int(
+        ground["freeze"]["tokens_per_step"]
+    )
     planted["nc-budget-overspend"] = row
 
     row = _deep(base)
-    row["corpus"]["fed_doc_ids"] = list(row["corpus"]["fed_doc_ids"]) + ["h007"]
+    row["corpus"]["fed_doc_ids"] = list(row["corpus"]["fed_doc_ids"]) + [held_out_ids(ground)[7]]
     planted["nc-split-leak"] = row
 
     row = _deep(base)
@@ -555,12 +643,41 @@ def truth(ground: dict) -> str:
     lines.append("")
     lines.append(
         "The validation loss of the trained model, lower is better, computed BY THE VERIFIER "
-        "on the frozen held-out split `"
+        "in its own process on the verifier-owned held-out split `"
         + str(ground["freeze"]["evaluation_split_id"])
-        + "` from harness-owned weights at the bound evaluation point step "
+        + "` from harness-owned parameter snapshots at the bound evaluation point step "
         + str(ground["golden_trajectory"]["evaluation"]["bound_eval_step"])
         + ". It is never a number the submission reported, never a number in the submission's "
-        "stdout, never a field the submission wrote, and never a smoothed readout."
+        "stdout, never a field the submission wrote, never a smoothed readout, and never a "
+        "number the in-container harness printed."
+    )
+    lines.append("")
+    lines.append("## The substrate the metric resolves against")
+    lines.append("")
+    arch = ground["substrate"]["architecture"]
+    run = ground["substrate"]["run"]
+    lines.append("| quantity | value |")
+    lines.append("|---|---|")
+    lines.append("| declaration | `environment/nanogpt_substrate.json`, " + str(ground["substrate"]["declaration_version"]) + " |")
+    lines.append("| vocab_size | " + str(arch["vocab_size"]) + " |")
+    lines.append("| num_layers | " + str(arch["num_layers"]) + " |")
+    lines.append("| model_dim | " + str(arch["model_dim"]) + " |")
+    lines.append("| head_dim | " + str(arch["head_dim"]) + " |")
+    lines.append("| num_heads | " + str(arch["num_heads"]) + " |")
+    lines.append("| seq_len | " + str(arch["seq_len"]) + " |")
+    lines.append("| tokens per step | " + str(run["batch_tokens_per_step"]) + " |")
+    lines.append("| forward and backward passes per step | " + str(run["forward_passes_per_step"]) + " and " + str(run["backward_passes_per_step"]) + " |")
+    lines.append("| training corpus | `" + str(ground["substrate"]["corpus"]["train_glob"]) + "` |")
+    lines.append("| held-out corpus | `" + str(ground["held_out_split"]["shard_glob"]) + "`, verifier-owned |")
+    lines.append("")
+    lines.append(
+        "`environment/frozen_train.py` instantiates that decoder and trains it over the "
+        "FineWeb10B training shards the curation recipe retained, one forward and one "
+        "backward pass per step at the frozen batch. Delete either pass and there is no "
+        "parameter snapshot to evaluate, so the graded quantity becomes undefined rather "
+        "than merely different. `tests/evaluate.py` is what computes the graded scalar, from "
+        "those snapshots, on a split whose member ids and token bytes appear nowhere in "
+        "`environment/`."
     )
     lines.append("")
     lines.append("## The load-bearing control")
@@ -597,7 +714,7 @@ def truth(ground: dict) -> str:
     lines.append("|---|---|")
     lines.append("| reference recipe id | " + str(ground["reference_recipe"]["id"]) + " |")
     lines.append("| reference sha256 | `" + data["reference_sha256"] + "` |")
-    lines.append("| documents fed | " + str(exp["fed_doc_count"]) + " |")
+    lines.append("| training spans fed | " + str(exp["fed_doc_count"]) + " of " + str(ground["raw_pool_construction"]["count"]) + " |")
     lines.append("| tokens fed | " + str(ground["golden_trajectory"]["training"]["tokens_fed"]) + " |")
     lines.append("| frozen token budget | " + str(ground["freeze"]["token_budget_tokens"]) + " |")
     lines.append("| control arm loss | " + str(ground["golden_trajectory"]["ladder_values"]["control_arm_loss"]) + " |")
@@ -672,7 +789,7 @@ def rubrics_json(ground: dict) -> str:
     rows = [
         {
             "id": "sol-graded-quantity",
-            "criterion": "The graded quantity is the verifier-computed validation loss on the frozen split at the bound evaluation point.",
+            "criterion": "The graded quantity is the verifier-computed validation loss on the verifier-owned held-out split at the bound evaluation point.",
             "reference": "verifier-recompute sample at step "
             + str(ground["golden_trajectory"]["evaluation"]["bound_eval_step"])
             + ", smoothing none, weights owner harness",
@@ -706,8 +823,9 @@ def rubrics_json(ground: dict) -> str:
         },
         {
             "id": "sol-split-clean",
-            "criterion": "No held-out document id appears in the fed corpus.",
-            "reference": str(exp["fed_doc_count"]) + " fed ids, zero intersection with the split",
+            "criterion": "No held-out split member appears in the fed corpus, and the split the verifier graded on is the bound split.",
+            "reference": str(exp["fed_doc_count"]) + " fed training spans, zero intersection with the "
+            + str(ground["freeze"]["evaluation_split_size"]) + " verifier-owned held-out members",
             "weight": 2,
         },
         {
@@ -828,6 +946,7 @@ ARTIFACTS = (
     ("environment/probe_pool.json", probe_pool_doc, False),
     ("environment/raw_pool.json", raw_pool_doc, False),
     ("environment/held_out_split.json", held_out_doc, False),
+    ("tests/held_out_split.json", held_out_pin_doc, False),
     ("environment/exclusion_set.json", exclusion_set_doc, False),
     ("solution/reference.py", reference_source, False),
     ("solution/solve.sh", solve_source, True),
@@ -898,6 +1017,9 @@ _FORGE_CARRIER_KEYS = (
     "namespace",
     "normalization_domain_version",
     "signer_identity",
+    "screening_measured_at",
+    "screening_interval_days",
+    "screening_expires_at",
 )
 
 _FORGE_BINDING_KEYS = (

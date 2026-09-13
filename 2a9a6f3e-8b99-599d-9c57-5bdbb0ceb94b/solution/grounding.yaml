@@ -1,8 +1,8 @@
 # FORGE-CANARY-BEGIN
-# 0: fc69f54ba5508ab9bca59181bc78b4a0f8efa655b418643b3da75e5c0ddd910a
-# 1: 206d2fa63a22425cfaa21d21becc112c7faec5e7f68380debbeb0395f2ed4fa7
-# 2: 21b955c74f1edeaef50b4e0de454b226ae54dd358848a7ae103d276252c525bf
-# 3: 0eabda3578c03f58355755a4664658fca59a9b99375ede0c7f1ca003f66f4504
+# 0: 5005654974ed44f1e9b9c422ddfb3df9a1e58025526946f8d52ee25082882afa
+# 1: 24b8e4b6a5b23a5cf0ba63b80612a6a83455b7ebc035347bd5050ed298efacb9
+# 2: cb9d563521076cdb88905740d9dcb1c48e48123b75577523ae81b052fc588d8f
+# 3: 05080f9a5b0e4dac52f27ee805c764026ace609aeef35f6ce7c6b029dcdf0d79
 # FORGE-CANARY-END
 schema: forge.grounding/v1
 slot: OER-28
@@ -308,6 +308,44 @@ gaps:
     statement: No signed pilot has run against this slot, so its tier is claimed by construction and not established.
     consequence: target_tier is an authoring target and never a measured claim.
 
+# ---------------------------------------------------------------------------
+# Statement ambiguity: exactly one graded outcome. FORGE.md Phase 1 item 10a.
+# Authored by reading instruction.md in full and the live verifier, never the prose.
+# ---------------------------------------------------------------------------
+
+statement_ambiguity:
+  graded_scalar: "reward, the float tests/grade.py::score computes as min(max((checkers.speedup(harness, bound) - bound.instance_baseline_speedup) / (bound.instance_target_speedup - bound.instance_baseline_speedup), 0.0), 1.0)"
+  readings:
+    - id: reading_a_counted_reads_cost
+      source: "instruction.md, section 'What is graded, stated plainly', line 19 with numbered points 1 and 3 at lines 23 and 27: 'Cost is counted reads, not seconds ... Every call charges exactly one read. The graded number is a ratio of read counts.'"
+      reduces_to: >-
+        Minimise the number of Tape.at reads the verifier's own counter charges the submitted
+        kernel over the resume segment after the splice, subject to the composed output being
+        exactly equal to the frozen reference output, one output record per block across the
+        two phases with no gap, duplicate or reordering.
+    - id: reading_b_scoring_section_speedup
+      source: "instruction.md, section 'Scoring', which opens at line 93 with 'Stated once more, independently of the section above, so there is exactly one reading' and gives raw = (agent_metric - baseline_metric) / (target_metric - baseline_metric) at line 97"
+      reduces_to: >-
+        Maximise speedup over the frozen reference kernel on the resume segment, normalised
+        between the instance baseline speedup and the instance target speedup and clipped,
+        with exact output equality standing as a hard gate on it rather than a tradeable term.
+  identical: true
+  proof_method: >-
+    tests/checkers.py::speedup, documented as 'the graded metric: reference charge over agent
+    charge on the resume segment', returns bound.reference_resume_charge /
+    float(resume_charge(harness)) and returns 0.0 when the charge is absent or non-positive.
+    The numerator is a bound constant of the instance, so speedup is a strictly decreasing
+    function of the read count reading A minimises; maximising reading B's normalised speedup
+    is therefore minimising reading A's read count, with the same argmax. tests/grade.py::score
+    reads that one value into metric['speedup'] at line 166 and, after every required checker
+    has passed, computes at line 213
+    raw = (metric['speedup'] - bound.instance_baseline_speedup) /
+    (bound.instance_target_speedup - bound.instance_baseline_speedup), clipped, which is
+    reading B's formula by substitution. Exact output equality never scales that float: it is a
+    required checker whose failure returns reward 0.0 with reason numerical-output-diverged
+    before line 213 is reached. reported_resume_charge in the handoff is read by no branch of
+    score.
+
 # FORGE-SCREENING-BEGIN GENERATED SECTION. DO NOT HAND-EDIT.
 screening:
   applicability:
@@ -448,7 +486,7 @@ screening:
       value: applicable
   applicable_dates:
     provenance_date: null
-    screening_instant: ''
+    screening_instant: '2026-09-07T10:04:06Z'
     task_generating_event_timestamp: null
   atom_result_digests:
     empty-submission-validation: 6cdd940433817aee776c626bf4cfce6392a382b8dc5d52f36d411b236917d1df
@@ -465,7 +503,7 @@ screening:
   base_commit_sha: null
   binding_block:
     binding_envelope: DSSE, payloadType application/vnd.in-toto+json, DSSEv1 pre-authentication encoding
-    canonical_bundle_hash: 2cb1e850cf8ce474103fe4989ea1b4521b61b6b0dab6fa16cb358ffba9bcd3cb
+    canonical_bundle_hash: f5bbe018e9d664f7308ccf4c7059f768ded8364976136c35ff22ce491389d6cf
     pinned_image_digest: python@sha256:9c900dea9e8fb7e16277c179b555cc72d29a352dbc33cff48ad5a0412fd5bfc7
   empty_submission_result:
     artifacts_disagree: false
@@ -653,6 +691,9 @@ screening:
       - RUN pip install --no-cache-dir --disable-pip-version-check pytest==8.3.4
     whiteouts_observed: 0
   schema: forge.provenance/v1
+  screening_expires_at: '2026-12-06T10:04:06Z'
+  screening_interval_days: 90
+  screening_measured_at: '2026-09-07T10:04:06Z'
   screening_roots:
     exclusion_list:
       digest: 81764edb7df796c57d17007b1fa95c2fe693226c865e403e5adc1b0640f595da
@@ -740,5 +781,5 @@ screening:
       one)'
     source_kind: null
   trust_root_public_key_hex: 87de350694dcbacc3829fa78591c13dc80cb0ab6323046cbbdac8b01e20e6fc9
-  unit_uuid: 2825c374-b799-5c78-970c-798af1bcae61
+  unit_uuid: 2a9a6f3e-8b99-599d-9c57-5bdbb0ceb94b
 # FORGE-SCREENING-END

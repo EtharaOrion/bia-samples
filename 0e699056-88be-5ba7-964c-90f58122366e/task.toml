@@ -15,12 +15,13 @@ artifacts = [
   "/logs/verifier/telemetry.json",
   "/logs/verifier/reward.txt",
   "/logs/verifier/score.json",
+  "/telemetry/checkpoints",
 ]
 
 [task]
 name = "bia/oer10-curation-recipe-displacement"
 version = "1.0.0"
-description = "Derive a data curation recipe that lowers validation loss under a frozen token budget, model, optimizer and evaluation split, where a recipe whose behaviour matches a published mixture baseline is rejected before any training runs."
+description = "Derive a data curation recipe over the FineWeb10B training shards that lowers the nanoGPT decoder's validation loss under a frozen token budget, architecture, optimizer and verifier-owned evaluation split, where a recipe whose behaviour matches a published mixture baseline is rejected before any training runs."
 authors = [{ name = "Bia" }]
 keywords = ["optimization", "bounded-continuous", "data-curation", "record-displacement"]
 
@@ -37,7 +38,7 @@ archetype_exclusivity = "exactly one primary archetype, fixed at scope time. No 
 [metadata.axes]
 metric = "validation loss of the trained model"
 direction = "lower"
-frozen = "the token budget, the model, the optimizer and the evaluation split"
+frozen = "the substrate architecture, the batch, the token budget, the optimizer and the evaluation split"
 free = "the data mixture and the curation recipe"
 
 # CANONICAL PATH for every bound optimization field in this batch:
@@ -52,16 +53,16 @@ free = "the data mixture and the curation recipe"
 [metadata.optimization]
 max_timeout_hours = 6.0
 max_timeout_role = "refinement-loop terminator across attempts"
-budget_hours = 0.12
-budget_hours_minutes = 7.2
+budget_hours = 0.3
+budget_hours_minutes = 18.0
 budget_hours_role = "per-attempt completion bound"
 budget_hours_state = "provisional"
-max_attempts = 50
+max_attempts = 20
 max_attempts_ceiling = 100
 final_selection = "best"
 final_selection_k = 50
 budget_envelope = "one H100, single accelerator, no multi-GPU scaling"
-budget_margin = "10 percent"
+budget_margin = 10.0
 compute_envelope = "one-H100"
 compute_envelope_accelerators = 1
 solver_egress = "setup-only"
@@ -70,6 +71,7 @@ reward_schema = "float"
 [metadata.reward]
 kind = "continuous"
 dtype = "float"
+higher_is_better = true
 minimum = 0.0
 maximum = 1.0
 full_reward = 1.0
@@ -89,8 +91,8 @@ ladder_control_arm = "the frozen default mixture trained under the identical fre
 ladder_reference_floor = "the harness-owned reference recipe under the identical freeze"
 
 [metadata.readout]
-graded_quantity = "validation loss on the frozen held-out split, computed by the verifier from harness-owned weights at the bound evaluation point"
-never = "never a number the submission reported, never a number in its stdout, never a field it wrote, never a smoothed readout"
+graded_quantity = "validation loss on the verifier-owned held-out split, computed by the verifier in its own process from harness-owned parameter snapshots at the bound evaluation point"
+never = "never a number the submission reported, never a number in its stdout, never a field it wrote, never a number the in-container harness printed, never a smoothed readout"
 smoothing_on_graded_path = "prohibited, graded by checker graded_readout_unsmoothed"
 sustained = "the level must hold at the bound point and at every verifier-scheduled sustain point"
 early_stop = "graded as not having established the loss, with reason early-stop-not-a-result, never as an absent result"
@@ -133,17 +135,36 @@ policy_manifest = "solution/policy.yaml"
 dockerfile = "environment/Dockerfile"
 
 [metadata.frozen]
+substrate = "environment/nanogpt_substrate.json"
+substrate_declaration_version = "nanogpt-substrate-v1"
 trainer = "environment/frozen_train.py"
 recipe_interface = "environment/recipe_api.py"
 raw_pool = "environment/raw_pool.json"
 probe_pool = "environment/probe_pool.json"
-held_out_split = "environment/held_out_split.json"
 exclusion_set = "environment/exclusion_set.json"
 published_mixtures = "environment/published_mixtures.md"
-token_budget_tokens = 419430400
-model = "frozen-decoder-12L-768d"
+token_budget_tokens = 1677721600
+tokens_per_step = 524288
+steps_at_budget = 3200
+forward_passes_per_step = 1
+backward_passes_per_step = 1
+model = "nanogpt-12L-768d"
+vocab_size = 50304
+num_layers = 12
+model_dim = 768
+head_dim = 128
+num_heads = 6
+seq_len = 1024
+train_glob = "data/fineweb10B/fineweb_train_*.bin"
 optimizer = "frozen-adamw-cosine"
 evaluation_split_id = "val-split-b"
+# The graded split is VERIFIER-OWNED. environment/held_out_split.json is a declaration of
+# the split's identity and carries no member id, no token offset and no token byte. The
+# pin the verifier resolves against is tests/held_out_split.json, which is never mounted
+# on the agent surface, so this manifest names the declaration and not the split.
+held_out_split_declaration = "environment/held_out_split.json"
+held_out_split_owner = "verifier"
+evaluation_split_size = 64
 
 [agent]
 # Solver egress is OPEN inside the sandbox: the agent fetches its own packages, datasets
