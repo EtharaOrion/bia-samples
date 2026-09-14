@@ -760,6 +760,9 @@ bound_state_correction:
 
 # FORGE-SCREENING-BEGIN GENERATED SECTION. DO NOT HAND-EDIT.
 screening:
+  screening_measured_at: "2026-08-27T07:35:42Z"
+  screening_interval_days: 90
+  screening_expires_at: "2026-11-25T07:35:42Z"
   applicability:
     empty-submission-validation:
       applicability_reason: This atom has no exempt route at all and is applicable to every unit.

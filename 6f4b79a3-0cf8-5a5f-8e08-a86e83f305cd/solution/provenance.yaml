@@ -1,6 +1,6 @@
 # GENERATED SECTION. DO NOT HAND-EDIT.
 # Derived from solution/grounding.yaml `screening` by solution/recompute.py.
-# canonical payload sha256 (binding_block excluded from the preimage): 668184de7df2feda129338f4d7e34187ec43dd3f42bbb01bb6b0cff41db01e32
+# canonical payload sha256 (binding_block excluded from the preimage): 35c5eed11998e1678be602e5ca8d7ade5232f1d910f33f346d75a0ad4829ec08
 schema: forge.provenance/v1
 unit_uuid: 6f4b79a3-0cf8-5a5f-8e08-a86e83f305cd
 screening_roots:
@@ -413,3 +413,6 @@ namespace:
     are not.
 normalization_domain_version: oer-canary-v1
 signer_identity: bia-producer-provenance
+screening_measured_at: '2026-08-27T07:35:42Z'
+screening_interval_days: 90
+screening_expires_at: '2026-11-25T07:35:42Z'

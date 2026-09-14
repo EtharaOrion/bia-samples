@@ -1,4 +1,4 @@
-# Real held-out text from FineWeb10B, decoded from fineweb_val_000000.bin by the GPT-2 BPE vocabulary. Source: https://huggingface.co/datasets/HuggingFaceFW/fineweb. Pipeline: https://github.com/KellerJordan/modded-nanogpt data/cached_fineweb10B.py. These are upstream bytes, not generated.
+# Real held-out text from FineWeb10B, decoded from fineweb_val_000000.bin by the GPT-2 BPE vocabulary. Source: https://huggingface.co/datasets/HuggingFaceFW/fineweb. Pipeline: KellerJordan/modded-nanogpt data/cached_fineweb10B.py. These are upstream bytes, not generated.
 
 uit, was shot dead in his luxury Geneva penthouse by his mistress, Cécile Brossard, for reneging on the $1 million he gave her.
 It was the last day of February 2005: Monday, 9:15 p.m.

@@ -559,6 +559,9 @@ _FORGE_CARRIER_KEYS = (
     "namespace",
     "normalization_domain_version",
     "signer_identity",
+    "screening_measured_at",
+    "screening_interval_days",
+    "screening_expires_at",
 )
 
 _FORGE_BINDING_KEYS = (
