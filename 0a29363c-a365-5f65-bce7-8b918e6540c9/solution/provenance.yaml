@@ -1,8 +1,8 @@
 # GENERATED SECTION. DO NOT HAND-EDIT.
 # Derived from solution/grounding.yaml `screening` by solution/recompute.py.
-# canonical payload sha256 (binding_block excluded from the preimage): 73bb5298b3cc388f344b1b0402e1b6fe8fc0d108731eb4969f4ba84732389f0a
+# canonical payload sha256 (binding_block excluded from the preimage): f8d5449374e7e6e94a12ace654674c6eacfdb4d932baca1381a14047dbce080c
 schema: forge.provenance/v1
-unit_uuid: 4e400838-561c-5eff-a8b0-1c0b442375a4
+unit_uuid: 0a29363c-a365-5f65-bce7-8b918e6540c9
 screening_roots:
   exclusion_list:
     digest: 81764edb7df796c57d17007b1fa95c2fe693226c865e403e5adc1b0640f595da
@@ -52,12 +52,12 @@ source_identifiers:
       reason: This atom has no exempt route at all and is applicable to every unit.
       value: applicable
   canonical_repository_identity: null
-  generation_input_digest: 83510f6750505cff656c6f424dc077523d8929e17b5578c552ecf97c6c4b202a
-  generator_identity: dataset/458022b9-aaf5-50aa-9a1c-6df3ea75236f/solution/recompute.py
-  generator_version: sha256:68075e2d5dcd64a673766e48303a67c7974dbc0410066b0411f6cac062c8169a
+  generation_input_digest: 07acb7abc5c0941aff2a35ca4779f8255bbb816bcb9781203438596cd87726e3
+  generator_identity: dataset/ad380ce7-f511-533d-bdf3-fdad9c369437/solution/recompute.py
+  generator_version: sha256:fd307824243b5c847c5babe8e5152377811a79ed1f491a1576aecb56541d9d74
   origin: original
   provenance_attestation: null
-  record_source: seed/contract.yaml batch.records[OER-21].upstream_provenance
+  record_source: seed/contract.yaml batch.records[OER-15].upstream_provenance
   source_kind: synthetic
 fork_ancestry_snapshot: null
 base_commit_sha: null
@@ -91,11 +91,11 @@ instrument_versions:
     module: seed/forge/sanitization.py
     module_sha256: bd1593dc32180d1eeca5a135499939c866de7a98960d5a21239f19e0dfb22f21
 atom_result_digests:
-  empty-submission-validation: 995727ef418047afaaed657ac884e13da5ad341e9fc5402c4cd667d853044fbd
-  exclusion-matching: fc50bc2a6f6f2bc111f53be00feb6c1b781f53a037e19c1dd013051eeaac7111
+  empty-submission-validation: 7ec92dac5c966a8ac3581fb05fddb01951cda0e9bed040b595959d7fbc833bd9
+  exclusion-matching: 8eb2c6771914c84cc97d16247f4abb12b6cad3822cc8faf2365ce8bb5e9cd5be
   freeze-holdout: ''
-  near-duplicate-screening: 17a1ebd3aa1a3f5eef6548818f2c95d08651093867ab74072de4e17163b5f1be
-  sanitization: a609bdef0ee50bd6ebc6010238730e597d83ca58f1faa22edda805eefff41c55
+  near-duplicate-screening: 7380b2141e7a53f6152bea54e1c08369a10f54ec4508af22518df1b4ca6c8c56
+  sanitization: b00d70b8c7f9e6c6b6389beda07bac45adba035f5055f16eb8a4f626eb12b2a7
 applicability:
   empty-submission-validation:
     applicability_reason: This atom has no exempt route at all and is applicable to every unit.
@@ -112,7 +112,7 @@ applicability:
     planted_positive_rejected: true
     ran: true
     reason: empty submission scored exactly zero, reason=unattributed
-    result_digest: 995727ef418047afaaed657ac884e13da5ad341e9fc5402c4cd667d853044fbd
+    result_digest: 7ec92dac5c966a8ac3581fb05fddb01951cda0e9bed040b595959d7fbc833bd9
     score: 0.0
     screened_preimage: the unit's delivered bytes as they sit on disk, graded through the pinned image;
       nothing this atom records is a function of the bytes this lane writes
@@ -144,7 +144,7 @@ applicability:
       fork-ancestry-closure-membership:
         applicability: applicable
         matched: false
-    result_digest: fc50bc2a6f6f2bc111f53be00feb6c1b781f53a037e19c1dd013051eeaac7111
+    result_digest: 8eb2c6771914c84cc97d16247f4abb12b6cad3822cc8faf2365ce8bb5e9cd5be
     screened_preimage: the unit's bytes with this `screening` block removed from solution/grounding.yaml
       and the carrier section removed from solution/recompute.py, because an output never enters its own
       input
@@ -186,14 +186,14 @@ applicability:
     control_suite: tests/test_neardup.py
     defect: ''
     determination: pass
-    nearest: results/20260513_shampoo_1_4_power/distributed_shampoo/distributor/gpu_tests/shampoo_dist_utils_test.py
+    nearest: results/20260513_shampoo_1_4_power/distributed_shampoo/utils/gpu_tests/shampoo_utils_test.py
     planted_positive_present: true
     planted_positive_rejected: true
     ran: true
-    reason: solution/reference.py scored 0.071186 against its nearest pinned corpus neighbour results/20260513_shampoo_1_4_power/distributed_shampoo/distributor/gpu_tests/shampoo_dist_utils_test.py
+    reason: solution/reference.py scored 0.060288 against its nearest pinned corpus neighbour results/20260513_shampoo_1_4_power/distributed_shampoo/utils/gpu_tests/shampoo_utils_test.py
       under threshold 0.63 and review threshold 0.56, classified pass.
-    result_digest: 17a1ebd3aa1a3f5eef6548818f2c95d08651093867ab74072de4e17163b5f1be
-    score: 0.0711864406779661
+    result_digest: 7380b2141e7a53f6152bea54e1c08369a10f54ec4508af22518df1b4ca6c8c56
+    score: 0.06028833551769332
     screened_preimage: the unit's solution/reference.py exactly as delivered, which this lane never writes
     status: clean
     value: applicable
@@ -220,12 +220,12 @@ applicability:
     planted_positive_present: true
     planted_positive_rejected: true
     ran: true
-    reason: No named detector found a named fix-revealing representation in the delivery closure of 458022b9-aaf5-50aa-9a1c-6df3ea75236f.
-      history-absence=clean(26), remote-absence=clean(26), thread-absence=clean(26), fix-absence=clean(8),
-      closure-identity=clean(26). This is the bounded result invariant 25 permits and never the claim
+    reason: No named detector found a named fix-revealing representation in the delivery closure of ad380ce7-f511-533d-bdf3-fdad9c369437.
+      history-absence=clean(18), remote-absence=clean(18), thread-absence=clean(18), fix-absence=clean(9),
+      closure-identity=clean(18). This is the bounded result invariant 25 permits and never the claim
       that the image reveals nothing; coverage stops at base-image-unresolved, delivery-image-unbuilt,
       post-base-fix-set-unbound, source-host-egress-partially-denied, verifier-surface-outside-fix-absence.
-    result_digest: a609bdef0ee50bd6ebc6010238730e597d83ca58f1faa22edda805eefff41c55
+    result_digest: b00d70b8c7f9e6c6b6389beda07bac45adba035f5055f16eb8a4f626eb12b2a7
     screened_preimage: the unit's bytes with this `screening` block removed from solution/grounding.yaml
       and the carrier section removed from solution/recompute.py, because an output never enters its own
       input
@@ -256,134 +256,117 @@ sanitization_closure:
     whiteout_count: 0
     whiteouts: []
   layer_entries_unpacked: 0
-  member_count: 26
+  member_count: 18
   members:
-  - bytes: 665
+  - bytes: 1114
     path: environment/Dockerfile
     role: agent-reachable
-    sha256: 82d2764499e9cbeec4a25a657752d09216ff6f1876f176beee3f4fc67a493f00
-  - bytes: 2617
-    path: environment/corpus/eval_corpus.json
+    sha256: a81bc370f55f53f7d36411dbbfa751c4b5faa5737f022135ba3a766a345b22aa
+  - bytes: 4447
+    path: environment/build_corpus.py
     role: agent-reachable
-    sha256: 8ee1080ba515c5628562786bae9747f461c0745b5ec7515f013a059df6e74557
-  - bytes: 12234
-    path: environment/model/model.json
+    sha256: 7efce2c489c4564455cabe7f90c8cb2c2f3ab5f3cfce98c33befe066f9322469
+  - bytes: 5739
+    path: environment/corpus/eval.txt
     role: agent-reachable
-    sha256: 2309474c08b04facb41b7c29535fc896f182efe4bc3594bfc95134660046e038
-  - bytes: 436
-    path: environment/model/reference.json
+    sha256: 08b8c7f2c2c27609015850751fb832d9ebf8034ef38907aae02a7ee50fa978ce
+  - bytes: 21599
+    path: environment/corpus/train.txt
     role: agent-reachable
-    sha256: b230ff14d264ea3d063f088facd31f0a3f8d239fa55f5e6abac1a93395aa2adc
-  - bytes: 8488
-    path: environment/quantize.py
+    sha256: 7059a0e5b11dfa95fc9c16c4d60317aaa6c5d3c57f8331bcd2c105bf6d5635ac
+  - bytes: 3460
+    path: environment/default_tokenizer.py
     role: agent-reachable
-    sha256: da4bbaa8efd94cfc0fd661a771d0c07a77742948b6bc23c1dacfcd76644a1e4a
-  - bytes: 1923
-    path: environment/scheme_schema.json
+    sha256: c585747ad255f48fee327c44dbfee4653fe2b1fb0f8895b5cdac197cc7678879
+  - bytes: 12655
+    path: environment/harness.py
     role: agent-reachable
-    sha256: 49827e4d2ebd48a3a67424d979490cd57c59e2a15b74dabe68b1c69469ecc9a2
-  - bytes: 5242
+    sha256: 34bf4babf3ac779197a13b3c94a5cd7a4140ac38b84a656945a85282105ce648
+  - bytes: 2217
+    path: environment/manifest.json
+    role: agent-reachable
+    sha256: 3909e6484d31ac9ea777023f0391306c1e95df138956b1fea180de113a55382a
+  - bytes: 7315
     path: instruction.md
     role: agent-reachable
-    sha256: 0b7f9cdf5d499a5def0f34317f3764dcebf7ef9826bb67429e13f4c2344076f7
-  - bytes: 5927
+    sha256: d2d90db08b8b3841646d2f4a6555db5898e40fed3041b4559d83b91e517a7370
+  - bytes: 5482
     path: task.toml
     role: agent-reachable
-    sha256: 08e710a073c35fded0f737d59c0889d9e0effd22b7fa31524d374958661d0f71
-  - bytes: 550
+    sha256: 40da3a599f12f119b560582ac2b98909acb3af882028ea8853efadbd242a0fd7
+  - bytes: 999
     path: tests/Dockerfile
     role: verifier-only
-    sha256: 703271464e6f62d672c16c79d2d0f3d780b3fb2d55f8a44cedec9355add5d659
-  - bytes: 1415
+    sha256: ebe1af3ae985a774af9560b0b3da53d43c941f9627c7da172270ee6bf679a939
+  - bytes: 1646
     path: tests/anchors.json
     role: verifier-only
-    sha256: 77c2ba7b84af55490e3639b015cc63ae7fc76b31b77827eacf03df165c955a87
-  - bytes: 13949
+    sha256: 552cc3446f0216793fb3b4bb0c3d47e60c3c223529d778899e0c9e3c7ffee1b7
+  - bytes: 25868
     path: tests/checkers.py
     role: verifier-only
-    sha256: 80e4c746dab49ab730ef5e1bd69fcce1310cdd3a5f3a0441d7883efbaef73db1
-  - bytes: 10235
+    sha256: 6e97d7de70951a617aa182e28c5486e6d03d195bba8589fa87ec10c5892c5ac0
+  - bytes: 12482
     path: tests/checkers.yaml
     role: verifier-only
-    sha256: 9a051d811753cd4b11a9013f4ad53ed6b3237bb26f2fbc06210ea45aedb092ea
-  - bytes: 20879
-    path: tests/evaluate.py
-    role: verifier-only
-    sha256: e8e2489cd8b87e0cfab69554e8a1638efa195aec804bbf86121c45b9c90b29ed
-  - bytes: 2869
-    path: tests/fixtures/early_stop.json
-    role: verifier-only
-    sha256: 611436f8754f1bfa66f47d40540869d245a28adc7a87cc1f5efd3f9bed5d9064
-  - bytes: 2404
-    path: tests/fixtures/noop.json
-    role: verifier-only
-    sha256: 61106f05a5e28921d7196f3faf1a7449df287896dcdb5b584a0f6403fea13738
-  - bytes: 2517
-    path: tests/fixtures/overspend.json
-    role: verifier-only
-    sha256: 5315af93ee181f92979fbb6b2c0daa4cd4c1a715e310ead4f3338a4de1250716
-  - bytes: 2371
-    path: tests/fixtures/plateau.json
-    role: verifier-only
-    sha256: dac1909d4436fafe06ef807055a436d414f6a7bbcd82413d415e81b226f11a8b
-  - bytes: 2871
-    path: tests/fixtures/reference.json
-    role: verifier-only
-    sha256: 56e3c160a7a82cfa7a75dfe37329ad7571b6cff3a304f92e05b8472502667e7b
-  - bytes: 2903
-    path: tests/fixtures/reported_metric.json
-    role: verifier-only
-    sha256: 5976da52c1444ea154dc1250756d3e4b0128be516753e1bd8c3de4244dc1d790
-  - bytes: 2869
-    path: tests/fixtures/smoothed.json
-    role: verifier-only
-    sha256: fa4822f6950bf85b26dd947b0ba0731b41cef73f6caa9cb2a00e434f266d2c88
-  - bytes: 3791
-    path: tests/fixtures/unsustained.json
-    role: verifier-only
-    sha256: 49c49778541b65ee8d20bf2a2a0688c74e5bde84ae308da6b5d8e798391c6df9
-  - bytes: 7833
+    sha256: a4910a10fb71ee701e90b710fc4bd42138f0863cfd50c010ade8fff142815042
+  - bytes: 11449
     path: tests/grade.py
     role: verifier-only
-    sha256: 114f9170013eb409352e27890a996d3b443a77786fc0da1423618a9dcd0e3f15
-  - bytes: 1680
+    sha256: 2186ca802a5a4cdf33cc862d9f3b1b3052bb1ffb9d779bb593dc6cbc213ec6d8
+  - bytes: 4427
     path: tests/rubrics.jsonl
     role: verifier-only
-    sha256: 3960a79c0ea99f63958a303176fcc4f44fbad1a74abf8a3a5280f7a7d2636efc
-  - bytes: 3457
+    sha256: bf60a4c25b52eb0b460f834bad4ca7f48d47dde09f02fb9bbfb8079c6d3c2797
+  - bytes: 6559
     path: tests/runner.py
     role: verifier-only
-    sha256: 23a71bf3c648cc5e209604531cf86aa8dc649c0d6619c3f4f68e7a2271f5f166
-  - bytes: 2161
+    sha256: c92a5b5365fb9aec06283739ea6ae413a697db682f55c182dbaa2068054d5f11
+  - bytes: 3339
     path: tests/test.sh
     role: verifier-only
-    sha256: fb9b8c04939f7e39b0b94222b2779be0791499e4dd137ab2c9a4690917222467
-  - bytes: 2973
+    sha256: 4c65820e371fb67375408e33036cebbf5904ba2aadc530a4cf4a2508c0abdd7f
+  - bytes: 11254
     path: tests/test_output.py
     role: verifier-only
-    sha256: bf4e8c0f9e3f2c88d89b983970562d49676dbb0507dd417446c9a742f21f7bca
+    sha256: 4c1817646e5f36dde8827a607177e513d93e5cb329f8b4098671e9256168b56a
   stages:
   - base: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
     base_pinned: true
     dockerfile: environment/Dockerfile
     projected_copies:
-    - - model
-      - /work/environment/model
+    - - harness.py
+      - /workspace/environment/harness.py
+    - - manifest.json
+      - /workspace/environment/manifest.json
+    - - default_tokenizer.py
+      - /workspace/environment/default_tokenizer.py
+    - - build_corpus.py
+      - /workspace/environment/build_corpus.py
     - - corpus
-      - /work/environment/corpus
-    - - quantize.py
-      - /work/environment/quantize.py
-    - - scheme_schema.json
-      - /work/environment/scheme_schema.json
-    projected_directories: []
+      - /workspace/environment/corpus
+    projected_directories:
+    - /workspace/submission
     resolved_build_context: environment
     unprojectable_instructions: []
   - base: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
     base_pinned: true
     dockerfile: tests/Dockerfile
     projected_copies:
-    - - .
-      - /verifier/tests
+    - - test.sh
+      - /verifier/tests/test.sh
+    - - runner.py
+      - /verifier/tests/runner.py
+    - - grade.py
+      - /verifier/tests/grade.py
+    - - checkers.py
+      - /verifier/tests/checkers.py
+    - - checkers.yaml
+      - /verifier/tests/checkers.yaml
+    - - test_output.py
+      - /verifier/tests/test_output.py
+    - - rubrics.jsonl
+      - /verifier/tests/rubrics.jsonl
     projected_directories: []
     resolved_build_context: tests
     unprojectable_instructions: []
@@ -403,14 +386,14 @@ empty_submission_result:
   reason: ''
   reward: 0.0
   reward_text: 0.0
-  uuid: 458022b9-aaf5-50aa-9a1c-6df3ea75236f
+  uuid: ad380ce7-f511-533d-bdf3-fdad9c369437
 attestations:
   ancestry_attestation_digest: null
   ancestry_attestation_signer: null
   event_attestation_digest: null
   event_attestation_signer: null
 binding_block:
-  canonical_bundle_hash: e89aaf98afbc83c68f164f968061891935c2484c689bf0dadcbf81662dfd3a77
+  canonical_bundle_hash: 72feed6cfeff371fd9be7cc5f55aefa11158b99cf7ecaa5f07003346999373c2
   pinned_image_digest: pytorch/pytorch@sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
   binding_envelope: DSSE, payloadType application/vnd.in-toto+json, DSSEv1 pre-authentication encoding
 keyid: bia-provenance-2026-08b
@@ -432,6 +415,3 @@ namespace:
     are not.
 normalization_domain_version: oer-canary-v1
 signer_identity: bia-producer-provenance
-screening_measured_at: '2026-08-27T07:35:42Z'
-screening_interval_days: 90
-screening_expires_at: '2026-11-25T07:35:42Z'
