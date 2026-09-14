@@ -1,0 +1,16 @@
+{
+  "_generated": "GENERATED SECTION. DO NOT HAND-EDIT. Source: solution/grounding.yaml",
+  "accounting": "as-fed",
+  "budget_tokens": 4096,
+  "fed_ordinals": [
+    "r01",
+    "r02",
+    "r03",
+    "r10",
+    "r13",
+    "r14"
+  ],
+  "fed_tokens": 73,
+  "feed_digest": "7ad40cad60c03f9011478c23916c8c4d7d1de1a357e90bf723424e72bd29da9e",
+  "writer": "verifier-harness"
+}
