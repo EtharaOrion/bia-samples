@@ -1,0 +1,158 @@
+# Grounding for the reference-based rubric of bundle 1ba27cc8-95b0-5807-8a4f-4d329de1f8e9.
+#
+# FORGE 10f: solution/recompute.py GENERATES solution/rubrics.json from this file and
+# never hand-authors it. Every `criterion` string below is a frozen literal. A model may
+# have drafted the prose at authoring time; the accepted string is frozen here, so
+# recompute.py reads it and never invokes a model, a network, a clock, a locale or a
+# random source at regeneration time.
+schema: bia.rubric/v1
+compilation_floor: 0.75
+reference_answer: solution/TRUTH.md
+compiled_target: tests/test_output.py
+
+drafting_metadata:
+  note: >-
+    Non-evidentiary per FORGE 10f. No closed schema receives these keys and no gate reads
+    them. Recorded for audit of the authoring pass only.
+  drafting_model: claude-opus-5
+  criterion_prose_source: frozen-literal-in-this-file
+
+items:
+  - id: test_chain_declares_the_schema_the_instrument_reads
+    dimension: instrument-declaration
+    weight: 1
+    evaluation_target: tests/checkers.py::SCHEMA and tests/checkers.py::CHAIN
+    criterion: >-
+      The checker module declares the exact session schema identifier the instrument reads,
+      and the chain it publishes has one entry for every zero-reason the compiled test table
+      names, so the instrument and the table cannot disagree about how many checkers exist.
+    judgment: equality(checkers.SCHEMA, "bia.session/v1") and equality(len(checkers.CHAIN), len(REASONS))
+    evidence: [tests/checkers.py, tests/test_output.py]
+    outcome: VALUE
+    mode: compiled
+  - id: test_every_checker_in_the_chain_declares_a_zero_reason
+    dimension: instrument-declaration
+    weight: 1
+    evaluation_target: tests/checkers.py::CHAIN names versus the REASONS table
+    criterion: >-
+      Every checker published in the chain declares a zero-reason and every declared
+      zero-reason belongs to a published checker, as set equality in both directions, so no
+      checker can fire without a reason and no reason can exist without a checker.
+    judgment: set_equality({name for name, _ in checkers.CHAIN}, set(REASONS))
+    evidence: [tests/checkers.py, tests/test_output.py]
+    outcome: INVARIANT
+    mode: compiled
+  - id: test_every_checker_reduces_to_exactly_one_reason
+    dimension: instrument-declaration
+    weight: 1
+    evaluation_target: tests/checkers.py zero-reason constants
+    criterion: >-
+      No two checkers share a zero-reason, and every reason the table uses is a published
+      upper-case string constant of the checker module, so a zero score always resolves to
+      exactly one identifiable cause.
+    judgment: injective(REASONS.values()) and subset(REASONS.values(), published_string_constants(checkers))
+    evidence: [tests/checkers.py, tests/test_output.py]
+    outcome: INVARIANT
+    mode: compiled
+  - id: test_every_declared_selector_exists_in_the_checkers_module
+    dimension: instrument-declaration
+    weight: 1
+    evaluation_target: tests/checkers.py function definitions versus CHAIN entries
+    criterion: >-
+      Each chain entry names a check_ function that is actually defined in the checker
+      module source, and the callable the chain carries is that same module attribute rather
+      than an unrelated object bound under the same name.
+    judgment: for_each(CHAIN, defined_in_source("check_"+name) and identity(function, getattr(checkers, "check_"+name)))
+    evidence: [tests/checkers.py, tests/test_output.py]
+    outcome: INVARIANT
+    mode: compiled
+  - id: test_the_grader_imports_the_chain_and_nothing_else
+    dimension: grader-isolation
+    weight: 1
+    evaluation_target: tests/grade.py import statements from the checkers module
+    criterion: >-
+      The grader imports exactly the check_ functions the chain publishes and imports nothing
+      else from the checker module, so no ungraded helper can reach the grading path.
+    judgment: set_equality(imports_from(grade.py, "checkers"), {"check_"+name for name, _ in checkers.CHAIN})
+    evidence: [tests/grade.py, tests/checkers.py, tests/test_output.py]
+    outcome: ABSENCE
+    mode: compiled
+  - id: test_checkers_module_imports_only_the_allowlist
+    dimension: grader-isolation
+    weight: 1
+    evaluation_target: tests/checkers.py top-level imports
+    criterion: >-
+      The checker module imports no member of the forbidden set and imports nothing outside
+      the allowlist, so no checker can read a clock, a random source, the network, the
+      operating system or a tensor library.
+    judgment: empty(intersect(imports(checkers.py), FORBIDDEN_IMPORTS)) and subset(imports(checkers.py), ALLOWED_IMPORTS)
+    evidence: [tests/checkers.py, tests/test_output.py]
+    outcome: ABSENCE
+    mode: compiled
+  - id: test_grade_module_never_imports_the_submission
+    dimension: grader-isolation
+    weight: 1
+    evaluation_target: tests/grade.py source text
+    criterion: >-
+      The grader never imports the agent submission and never reaches it through dynamic
+      import machinery, so submitted code cannot execute inside the grading process.
+    judgment: absent("import refine", grade.py) and absent("importlib", grade.py)
+    evidence: [tests/grade.py, tests/test_output.py]
+    outcome: ABSENCE
+    mode: compiled
+  - id: test_recipe_schema_closes_the_frozen_axes
+    dimension: schema-closure
+    weight: 1
+    evaluation_target: tests/recipe_schema.json frozen_axis_keys and fields
+    criterion: >-
+      The recipe schema names the frozen capacity axes and exposes none of them as a writable
+      field, so a submission cannot widen the model or spend more tokens through the same
+      surface it uses to tune free axes.
+    judgment: nonempty(intersect(frozen_axis_keys, {"batch_tokens_per_step","num_layers","seq_len"})) and empty(intersect(fields, frozen_axis_keys))
+    evidence: [tests/recipe_schema.json, tests/test_output.py]
+    outcome: ABSENCE
+    mode: compiled
+  - id: test_the_abort_floor_writes_every_score_document
+    dimension: abort-floor-fidelity
+    weight: 1
+    evaluation_target: tests/test.sh printf literals versus tests/score.py document names
+    criterion: >-
+      The abort floor in the test harness writes exactly the set of score documents the score
+      module names, so an aborted run leaves no score document missing and invents none.
+    judgment: set_equality(floor_literal_names(test.sh), {score.SCORE_NUMERIC_JSON, score.SCORE_FULL, score.SCORE_DOC})
+    evidence: [tests/test.sh, tests/score.py, tests/test_output.py]
+    outcome: INVARIANT
+    mode: compiled
+  - id: test_the_abort_floor_repeats_no_json_key
+    dimension: abort-floor-fidelity
+    weight: 1
+    evaluation_target: tests/test.sh abort-floor JSON literals
+    criterion: >-
+      No abort-floor JSON literal repeats a key, so no reader can silently take a different
+      value than another reader depending on which duplicate its parser keeps.
+    judgment: for_each(floor_literals, empty(duplicate_object_keys(literal)))
+    evidence: [tests/test.sh, tests/test_output.py]
+    outcome: ABSENCE
+    mode: compiled
+  - id: test_the_abort_floor_matches_what_the_grader_would_write
+    dimension: abort-floor-fidelity
+    weight: 1
+    evaluation_target: tests/test.sh abort-floor documents versus tests/score.py write output
+    criterion: >-
+      The abort floor emits the same score.json and score_full.json document, carries the same
+      key set the grader writes for the same inputs, is byte-equal to what the score module
+      emits, and writes the bare score as 0.000000, so the aborted path and the graded path
+      cannot diverge in what a downstream reader sees.
+    judgment: equality(floor[SCORE_DOC], floor[SCORE_FULL]) and for_each(floor, set_equality(keys(floor[name]), keys(graded[name]))) and equality(floor[SCORE_FULL], graded[SCORE_FULL]) and equality(bare, "0.000000\n")
+    evidence: [tests/test.sh, tests/score.py, tests/test_output.py]
+    outcome: DIVERGENCE
+    mode: compiled
+
+judged_residue: []
+judged_residue_note: >-
+  Zero judged items. Every obligation above is deterministically reducible over its named
+  evidence and is therefore compiled, which FORGE 10f requires: judged is never an authoring
+  choice for a reducible judgment. The identifiers checked for a possible judged item were
+  the eleven test functions of tests/test_output.py; none carries semantic residue that
+  blocks compilation, because each reduces to set equality, identity, membership, absence or
+  document equality over committed bytes.

@@ -1,0 +1,103 @@
+schema_version = "1.4"
+
+artifacts = [
+  "/telemetry/run_record.jsonl",
+  "/telemetry/novelty",
+  "/workspace/submission/optimizer.py",
+  "/workspace/submission/logs",
+  "/logs/verifier/score.json",
+]
+
+[task]
+name = "bia/track3nov"
+version = "1.0.0"
+description = "Derive a behaviorally novel optimizer that reaches 3.28 val loss on the frozen track-3 benchmark in fewest steps."
+authors = [{ name = "Bia" }]
+keywords = ["optimization", "bounded-continuous", "language-model"]
+
+[metadata]
+category = "optimization"
+max_timeout_hours = 8.0
+attempt_cap = 12
+novelty_gating = false
+
+[agent]
+# 8h, and MUST equal what instruction.md promises. A tighter cap kills a graded 2-seed run
+# mid-flight, binding the chain to a superseded optimizer and scoring 0. Changing this
+# requires changing instruction.md and the rubrics.
+timeout_sec = 28800.0
+network_mode = "allowlist"
+allowed_hosts = ["172.17.0.1"]
+
+[verifier]
+timeout_sec = 5400.0
+# grade.py verifies the telemetry chain with TRACK3_CHAIN_KEY. No key ships: one committed to
+# a distributed bundle is one every holder can forge with. Mint per campaign, see README.
+# Unset is the SAFE default; test.sh raises a preflight fault, never a silent 0.0.
+env = { }
+
+[environment]
+# Pinned by digest, not tag: the digest is what binds this task to the runner and data that
+# produced the recorded results. Private ECR, needs ecr:BatchGetImage.
+# Built FROM pytorch/pytorch:2.13.0-cuda13.0-cudnn9-runtime (linux/amd64)
+#   sha256:db80a41f8428644cebcb3d75b0b62df334ab6c0e75785951eb25f48bfbd42407
+# per a BuildKit SLSA attestation whose builder.id is EMPTY, evidence of build inputs, not
+# a third-party attestation of the build.
+docker_image = "426628337772.dkr.ecr.ap-south-1.amazonaws.com/bia@sha256:e2bfe5d9bb5f3a770346f7b63872ae3de620ccc793cfe58dbe6b6aa16bee494d"
+gpus = 1
+gpu_types = ["H100"]
+cpus = 8
+memory_mb = 65536
+storage_mb = 40960
+# Baseline for environment setup only; [agent] overrides to allowlist for the graded run. A
+# precedence pair, not a contradiction. The recorded runs corroborate the narrower policy: no
+# pip, curl, wget, clone or apt call, and no name-resolution or unreachable-network error.
+network_mode = "public"
+
+# The chain key is deliberately absent here and must not be restored. It WAS present during
+# the recorded campaign, so the solving agent's shell held the key signing its own telemetry
+# a disclosed property of those rollouts. New campaigns: inject via --chain-key-fd with
+# [verifier] mode = "separate". A literal here puts the key back in the solver's environment.
+env = { TRACK3_TELEMETRY_DIR = "/telemetry" }
+
+[metadata.rollout_population]
+population_predicate = "config.json carries both agent.name and agent.model_name, and its task.path is one of the task paths the shipped runs were graded against"
+attempts_made = 12
+attempts_shipped = 5
+attempts_excluded = 7
+attempts_scored = 5
+attempts_faulted = 7
+attempts_unrun = 0
+scored_attempts_all_shipped = true
+
+shipped = [
+  { run = "iteration-1", source = "bench/harbor_jobs/opus5_agentic_r4/track3nov__zhGyKJc", score = 0.0, job_id = "c8ee939f-7ab4-40e5-ab1c-0c612e2f94f2" },
+  { run = "iteration-2", source = "runs/agentic_iter02/task__bKmpfnk", score = 0.375, job_id = "9cc28652-a21d-44c6-b8c7-c4e94e6c74d7" },
+  { run = "iteration-3", source = "runs/agentic_iter03/task__WFweSa2", score = 0.5, job_id = "6f9ea96e-3e43-4f40-8a88-8ce172e2f612" },
+  { run = "iteration-4", source = "runs/agentic_iter04/task__ex72yc7", score = 0.5, job_id = "b0977f96-1e28-4540-bde2-c6dd0deea9e8" },
+  { run = "iteration-5", source = "runs/agentic_iter05/task__XwbPXJN", score = 0.375, job_id = "e8e3d4a1-4b4a-4eda-8397-2812cd14ead6" },
+]
+
+# Every attempt the predicate found that the bundle does not ship, with the
+# reason it was dropped and any number the verifier recorded before it was.
+excluded = [
+  { source = "bench/harbor_jobs/opus5_agentic_r1/track3nov__gCRzm37", state = "faulted", fault = "CancelledError", recorded_number = "none", verifier_reason = "" },
+  { source = "bench/harbor_jobs/opus5_agentic_r2/track3nov__rzh9fv3", state = "faulted", fault = "AgentSetupTimeoutError", recorded_number = "none", verifier_reason = "" },
+  { source = "bench/harbor_jobs/opus5_agentic_r3/track3nov__vB2zx5r", state = "faulted", fault = "CancelledError", recorded_number = "none", verifier_reason = "" },
+  { source = "runs/agentic_iter06/task__t2bUxAy", state = "faulted", fault = "RuntimeError", recorded_number = "none", verifier_reason = "" },
+  { source = "runs/agentic_iter07/task__GiuTBNZ", state = "faulted", fault = "ApiRateLimitError", recorded_number = "0.0", verifier_reason = "telemetry_absent" },
+  { source = "runs/agentic_iter08/task__BeodJGK", state = "faulted", fault = "ApiRateLimitError", recorded_number = "0.0", verifier_reason = "telemetry_absent" },
+  { source = "runs/agentic_iter09/task__HXTAwja", state = "faulted", fault = "CancelledError", recorded_number = "none", verifier_reason = "" },
+]
+
+# Recorded from each shipped run's own config.json. A checksum that moves
+# across the series means the graded definition moved, so the plotted
+# series is a record of the campaign and not a controlled comparison.
+task_checksum_by_run = [
+  { run = "iteration-1", checksum = "f8bbde02" },
+  { run = "iteration-2", checksum = "8636a603" },
+  { run = "iteration-3", checksum = "54035c13" },
+  { run = "iteration-4", checksum = "c64495b8" },
+  { run = "iteration-5", checksum = "c64495b8" },
+]
+

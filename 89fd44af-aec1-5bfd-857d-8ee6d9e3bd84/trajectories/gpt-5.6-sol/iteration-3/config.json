@@ -1,0 +1,20 @@
+{
+ "agent": {
+  "env": {
+   "OPENAI_API_KEY": "${OPENAI_API_KEY}",
+   "OPENAI_BASE_URL": "http://172.17.0.1:8788"
+  },
+  "model_name": "gpt-5.6-sol",
+  "name": "codex"
+ },
+ "agent_setup_timeout_multiplier": 5.0,
+ "extra_instruction_paths": [
+  "track3-pipeline/ship-task/runs-gpt/history/iter03_history.md"
+ ],
+ "job_id": "b4756380-260f-4e7e-983e-b39f002e1599",
+ "task": {
+  "path": "track3-pipeline/ship-task/campaign-task"
+ },
+ "trial_name": "campaign-task__gmYEM3U",
+ "trials_dir": "track3-pipeline/ship-task/runs-gpt/jobs/agentic_iter03"
+}

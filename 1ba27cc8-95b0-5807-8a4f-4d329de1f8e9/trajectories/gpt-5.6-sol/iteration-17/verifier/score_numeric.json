@@ -1,0 +1,10 @@
+{
+  "attempts": 1,
+  "baseline": 1800,
+  "final_loss": 4.637811,
+  "no_progress_loss": 6.8,
+  "reason_code": 20,
+  "score": 0.38438915555555553,
+  "target": 1150,
+  "target_loss": 4.55
+}

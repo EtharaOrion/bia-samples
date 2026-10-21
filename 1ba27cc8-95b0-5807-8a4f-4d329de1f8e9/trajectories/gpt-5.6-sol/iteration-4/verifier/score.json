@@ -1,0 +1,105 @@
+{
+  "checkers": [
+    {
+      "detail": {
+        "attempts": 1
+      },
+      "id": "carried_summary_is_current",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "detail": {
+        "attempts": 1,
+        "per_attempt_bound_seconds": 432.0
+      },
+      "id": "bound_envelope_respected",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "detail": {
+        "attempts": 1
+      },
+      "id": "frozen_axes_untouched",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "detail": {
+        "attempts": 1
+      },
+      "id": "graded_crossing_recomputed_unsmoothed",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "detail": {
+        "attempts": 1
+      },
+      "id": "evaluated_weights_owned_by_the_harness",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "detail": {
+        "window": 3
+      },
+      "id": "crossing_sustained_across_scheduled_evaluations",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "detail": {
+        "claims_checked": 0
+      },
+      "id": "early_halt_yields_no_crossing",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "detail": {
+        "tolerance": 40
+      },
+      "id": "reported_crossing_reconciles_with_verifier_measurement",
+      "passed": true,
+      "reason": ""
+    },
+    {
+      "detail": {
+        "distinct_recipes_that_crossed": 0,
+        "indices": [],
+        "multiplicity_required": 1
+      },
+      "id": "graded_metric_consolidated_over_distinct_recipes",
+      "passed": false,
+      "reason": "single-attempt-metric-unconsolidated"
+    },
+    {
+      "detail": {
+        "why": "no-consolidation-to-attribute-effect-checker-owns-it"
+      },
+      "id": "refinement_frontier_carried_across_iterations",
+      "passed": true,
+      "reason": ""
+    }
+  ],
+  "metric": {
+    "attempts": 1,
+    "baseline": 1800,
+    "consolidation_indices": [],
+    "final_loss": 5.008097,
+    "final_selection": "best",
+    "graded_step": null,
+    "no_progress_loss": 6.8,
+    "target": 1150,
+    "target_loss": 4.55
+  },
+  "metrics": {
+    "n_seeds": 1,
+    "seeds_required": 1
+  },
+  "reason": "loss-band-graded-below-crossing",
+  "reason_code": 20,
+  "score": 0.3185605333333333
+}

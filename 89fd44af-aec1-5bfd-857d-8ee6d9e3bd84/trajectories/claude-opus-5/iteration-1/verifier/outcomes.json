@@ -1,0 +1,11 @@
+{
+ "faithful_reporting": false,
+ "frozen_recipe_unchanged": true,
+ "full_run_mode_verified": true,
+ "full_score_target_reached": false,
+ "multi_seed_noise_floor": false,
+ "one_fwd_bwd_per_step": true,
+ "optimizer_not_verbatim_copy": true,
+ "submission_binding_verified": false,
+ "telemetry_chain_verified": false
+}

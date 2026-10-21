@@ -1,0 +1,21 @@
+{
+ "agent": {
+  "env": {
+   "META_API_KEY": "${META_API_KEY}",
+   "MUSE_BASE_URL": "http://172.17.0.1:34525",
+   "MUSE_USAGE_DIR": "track3-pipeline/ship-task/runs-muse"
+  },
+  "model_name": "meta/muse-spark-1.2",
+  "name": "runner.muse_agent:Muse"
+ },
+ "agent_setup_timeout_multiplier": 5.0,
+ "extra_instruction_paths": [
+  "track3-pipeline/ship-task/runs-muse/history/iter03_history.md"
+ ],
+ "job_id": "8a14b56e-81d5-40d1-895d-0f5c3c21e039",
+ "task": {
+  "path": "track3-pipeline/ship-task/campaign-task"
+ },
+ "trial_name": "campaign-task__D5bwQXT",
+ "trials_dir": "track3-pipeline/ship-task/runs-muse/jobs/agentic_iter03"
+}

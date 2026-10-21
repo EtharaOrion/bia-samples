@@ -1,0 +1,7 @@
+FROM 426628337772.dkr.ecr.ap-south-1.amazonaws.com/bia@sha256:0d4f3ad753e79be374a82fd0814adb73724e72650fc2afc83b13fd55796a094e
+
+ENV PYTHONDONTWRITEBYTECODE=1 \
+    PYTHONHASHSEED=0
+
+WORKDIR /workspace
+COPY . /workspace/

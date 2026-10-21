@@ -1,0 +1,17 @@
+{
+    "task": {
+        "path": "bench/harbor_task/bia/track3nov"
+    },
+    "trial_name": "track3nov__zhGyKJc",
+    "trials_dir": "bench/harbor_jobs/opus5_agentic_r4",
+    "agent_setup_timeout_multiplier": 5.0,
+    "agent": {
+        "name": "claude-code",
+        "model_name": "claude-opus-5",
+        "env": {
+            "ANTHROPIC_BASE_URL": "http://172.17.0.1:8765",
+            "ANTHROPIC_API_KEY": "${ANTHROPIC_API_KEY}"
+        }
+    },
+    "job_id": "c8ee939f-7ab4-40e5-ab1c-0c612e2f94f2"
+}
