@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 400" width="1200" height="400" role="img" aria-label="bia. Three links shut, one left open.">
+<title>bia</title>
+<desc>The Binding: a single armored hand closing the last link of a chain across a rock face, three links already shut and inscribed data, batch, architecture, and the fourth link left open where the optimizer sits.</desc>
+<defs>
+<linearGradient id="panel" x1="0" y1="0" x2="0" y2="400" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#1B2733"/><stop offset="1" stop-color="#121A24"/></linearGradient>
+<radialGradient id="glow" cx="470" cy="170" r="230" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#2B3A4A" stop-opacity="0.9"/><stop offset="1" stop-color="#2B3A4A" stop-opacity="0"/></radialGradient>
+<linearGradient id="steel" x1="110" y1="340" x2="420" y2="150" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#7F8B99"/><stop offset="0.5" stop-color="#B9C3CF"/><stop offset="1" stop-color="#6F7B8A"/></linearGradient>
+<linearGradient id="rock" x1="0" y1="60" x2="0" y2="380" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#293846"/><stop offset="1" stop-color="#18222E"/></linearGradient>
+<linearGradient id="gaunt" x1="500" y1="90" x2="660" y2="230" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#EDF1F6"/><stop offset="0.42" stop-color="#B7C1CD"/><stop offset="1" stop-color="#68737F"/></linearGradient>
+<linearGradient id="open" x1="410" y1="110" x2="500" y2="180" gradientUnits="userSpaceOnUse"><stop offset="0" stop-color="#F0B245"/><stop offset="1" stop-color="#B9752A"/></linearGradient>
+</defs>
+
+<rect x="0" y="0" width="1200" height="400" rx="20" fill="url(#panel)" stroke="#2C3947" stroke-width="1.5"/>
+<rect x="0" y="0" width="1200" height="400" rx="20" fill="url(#glow)"/>
+
+<g opacity="0.9">
+<path d="M40 384 L40 176 L118 122 L192 154 L262 108 L340 140 L410 100 L470 138 L470 384 Z" fill="url(#rock)"/>
+<path d="M40 176 L118 122 L192 154 L262 108 L340 140 L410 100 L470 138" fill="none" stroke="#3B4C5E" stroke-width="2"/>
+<path d="M118 122 L132 384 M262 108 L250 384 M410 100 L396 384" fill="none" stroke="#212D3A" stroke-width="2" opacity="0.65"/>
+</g>
+
+<g fill="none" stroke="url(#steel)" stroke-width="14" stroke-linejoin="round">
+<rect x="-52" y="-27" width="104" height="54" rx="27" transform="translate(150,300) rotate(-27)"/>
+<rect x="-52" y="-27" width="104" height="54" rx="27" transform="translate(255,247) rotate(-27)"/>
+<rect x="-52" y="-27" width="104" height="54" rx="27" transform="translate(360,194) rotate(-27)"/>
+</g>
+
+<g transform="translate(462,142) rotate(-27)" fill="none" stroke="url(#open)" stroke-width="14" stroke-linecap="round">
+<path d="M30 -27 L-25 -27 A27 27 0 0 0 -25 27 L30 27"/>
+</g>
+
+<g>
+<path d="M566 84 L664 98 L664 208 L562 220 Q536 200 534 152 Q532 108 566 84 Z" fill="url(#gaunt)" stroke="#4E5966" stroke-width="3" stroke-linejoin="round"/>
+<path d="M578 96 L578 208 M600 99 L600 210 M622 102 L622 211" fill="none" stroke="#5D6874" stroke-width="2.4" opacity="0.75"/>
+<g fill="none" stroke="#3F4A56" stroke-width="21" stroke-linecap="round">
+<path d="M572 100 Q506 92 486 118 Q474 136 496 144"/>
+<path d="M574 134 Q502 128 482 152 Q470 172 494 180"/>
+<path d="M574 168 Q508 166 492 188 Q482 206 504 212"/>
+<path d="M568 198 Q520 206 508 226 Q502 242 524 244"/>
+</g>
+<g fill="none" stroke="url(#gaunt)" stroke-width="16" stroke-linecap="round">
+<path d="M572 100 Q506 92 486 118 Q474 136 496 144"/>
+<path d="M574 134 Q502 128 482 152 Q470 172 494 180"/>
+<path d="M574 168 Q508 166 492 188 Q482 206 504 212"/>
+<path d="M568 198 Q520 206 508 226 Q502 242 524 244"/>
+</g>
+<g fill="none" stroke="#77828F" stroke-width="2.2" opacity="0.9" stroke-linecap="round">
+<path d="M534 96 L530 112 M512 108 L508 126"/>
+<path d="M534 130 L528 148 M508 144 L504 164"/>
+<path d="M536 166 L532 184 M514 180 L510 198"/>
+</g>
+<path d="M660 92 L708 104 L708 206 L660 216 Z" fill="url(#gaunt)" stroke="#4E5966" stroke-width="3" stroke-linejoin="round"/>
+<path d="M672 108 L698 114 M672 134 L698 140 M672 160 L698 166 M672 186 L698 192" fill="none" stroke="#6E7885" stroke-width="2.6" stroke-linecap="round"/>
+</g>
+
+<g font-family="ui-sans-serif, -apple-system, Segoe UI, Helvetica, Arial, sans-serif" font-size="17" letter-spacing="1.3" text-anchor="middle">
+<text x="182" y="366" fill="#8DA0B4">data</text>
+<text x="287" y="313" fill="#8DA0B4">batch</text>
+<text x="392" y="260" fill="#8DA0B4">architecture</text>
+<text x="424" y="74" fill="#F0B245">optimizer</text>
+</g>
+
+<g font-family="ui-sans-serif, -apple-system, Segoe UI, Helvetica, Arial, sans-serif">
+<text x="742" y="192" fill="#F2F5F9" font-size="126" font-weight="700" letter-spacing="6">bia</text>
+<text x="746" y="240" fill="#93A4B6" font-size="23" letter-spacing="1.1">Three links shut, one left open.</text>
+<rect x="746" y="266" width="372" height="1.5" fill="#33404F"/>
+<text x="746" y="302" fill="#7E8C9C" font-size="17" letter-spacing="0.6">Fewest optimizer steps to a fixed loss.</text>
+<text x="746" y="328" fill="#7E8C9C" font-size="17" letter-spacing="0.6">Measured, never claimed.</text>
+</g>
+
+</svg>
