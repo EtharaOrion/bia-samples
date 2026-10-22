@@ -1,6 +1,0 @@
-{
-  "admission_queue_limit": null,
-  "max_admit_per_step": 1,
-  "max_batch_size": 32,
-  "scheduler": "sjf"
-}
