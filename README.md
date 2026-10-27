@@ -104,3 +104,9 @@ MIT, Copyright (c) 2026 Ethara.AI. See [LICENSE](LICENSE).
 ## Contact
 
 Organization: [Ethara.AI](https://github.com/Ethara-Ai). Security and benchmark-integrity reports go privately to the address in [SECURITY.md](SECURITY.md) and never to a public issue. Contributions follow the route in [CONTRIBUTING.md](CONTRIBUTING.md).
+
+---
+
+## Copyright
+
+Copyright (c) 2026 Green Rider Technology LLP (Ethara AI). All rights reserved.
